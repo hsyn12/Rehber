@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string name="select_color">Seç</string>
+	<string name="apply_color">Uygula</string>
+	
+	<string name="colors">Renkler</string>
+	<string name="change_color_default">Varsayılan</string>
+	<string name="change_color_purple">Mor</string>
+	<string name="change_color_blue">Açık Gökyüzü</string>
+	<string name="change_color_orange">Portakal</string>
+	<string name="change_color_green">Çimen</string>
+	<string name="change_color_brown">Toprak</string>
+	<string name="change_color_grey">Gri</string>
+	<string name="change_color_teal">Turkuaz</string>
+	<string name="change_color_pink">Pembe</string>
+	<string name="change_color_lime">Limon</string>
+	<string name="change_color_amber">Kehribar</string>
+	<string name="change_color_light_green">Elma</string>
+	<string name="change_color_çikolata">Çikolata</string>
+	<string name="change_color_sky">Koyu Gökyüzü</string>
+	<string name="change_color_night">Gece</string>
+	<string name="change_color_chesnut">Kestane</string>
+	<string name="change_color_orkide">Orkide</string>
+	<string name="change_color_yonca">Yonca</string>
+	<string name="change_color_alev">Alev</string>
+	<string name="change_color_havuc">Havuç</string>
+
+	<string-array name="color_names">
+		<item>@string/change_color_default</item>
+		<item>@string/change_color_purple</item>
+		<item>@string/change_color_blue</item>
+		<item>@string/change_color_orange</item>
+		<item>@string/change_color_green</item>
+		<item>@string/change_color_brown</item>
+		<item>@string/change_color_grey</item>
+		<item>@string/change_color_teal</item>
+		<item>@string/change_color_pink</item>
+		<item>@string/change_color_lime</item>
+		<item>@string/change_color_amber</item>
+		<item>@string/change_color_light_green</item>
+		<item>@string/change_color_çikolata</item>
+		<item>@string/change_color_sky</item>
+		<item>@string/change_color_night</item>
+		<item>@string/change_color_chesnut</item>
+		<item>@string/change_color_orkide</item>
+		<item>@string/change_color_yonca</item>
+		<item>@string/change_color_alev</item>
+		<item>@string/change_color_havuc</item>
+	</string-array>
+	
+	
+</resources>

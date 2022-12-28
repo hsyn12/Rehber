@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:tools="http://schemas.android.com/tools"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:padding="@dimen/dimen_16dp">
+
+	<TextView
+			android:id="@+id/text_title_select_call_types"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerHorizontal="true"
+			android:layout_marginBottom="@dimen/dimen_16dp"
+			android:fontFamily="@font/geometric_regular"
+			android:text="@string/call_types_title"
+			android:textSize="22sp" />
+
+	<LinearLayout
+			android:id="@+id/layout_types"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/text_title_select_call_types"
+			android:orientation="horizontal"
+			android:baselineAligned="false">
+
+		<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_weight="0.5"
+				android:orientation="vertical">
+
+			<CheckBox
+					android:id="@+id/check_box_incomming"
+					style="@style/RandomCallsCheckBox"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:minHeight="48dp"
+					android:text="@string/incomming_call" />
+
+			<CheckBox
+					android:id="@+id/check_box_outgoing"
+					style="@style/RandomCallsCheckBox"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:minHeight="48dp"
+					android:text="@string/outgoing_call" />
+		</LinearLayout>
+
+		<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_weight="0.5"
+				android:orientation="vertical">
+
+			<CheckBox
+					android:id="@+id/check_box_missed"
+					style="@style/RandomCallsCheckBox"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:minHeight="48dp"
+					android:text="@string/missed_call" />
+
+			<CheckBox
+					android:id="@+id/check_box_rejected"
+					style="@style/RandomCallsCheckBox"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:minHeight="48dp"
+					android:text="@string/rejected_call" />
+		</LinearLayout>
+
+	</LinearLayout>
+
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/layout_types"
+			android:layout_marginTop="@dimen/activity_vertical_margin"
+			android:fontFamily="@font/call"
+			android:text="@string/call_types_selection_warn"
+			android:textColor="@color/c_dark_orange"
+			android:textSize="12sp"
+			tools:ignore="TextContrastCheck" />
+
+</RelativeLayout>

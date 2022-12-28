@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string name="msv_no_filter">Filtre Yok</string>
+	<string name="msv_search_hint">Ara&#8230;</string>
+</resources>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string name="word_only">only</string>
+	<string name="word_any">any</string>
+	<string name="word_has">has</string>
+	<string name="word_this_is">this</string>
+	<string name="word_contact">contact</string>
+	<string name="word_this_contact" />
+	<string name="word_call">call record</string>
+	<string name="word_his_record">kaydı</string>
+	<string name="word_record">record</string>
+	<string name="word_the_most_call">the most call records</string>
+	<string name="word_contact_has_record">This contact has</string>
+	<string name="word_contact_has_record_of">This contact is one of the %1$d contact with</string>
+	<string name="word_contact_has" />
+	<string name="word_contact_has_one_of_them">@string/word_contact_has_record_of</string>
+</resources>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<dimen name="point_size">8dp</dimen>
+	<dimen name="point_margin">4dp</dimen>
+	<color name="point_color_active">@color/green_500</color>
+	<color name="point_color_deactive">@color/white</color>
+</resources>

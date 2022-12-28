@@ -1,0 +1,46 @@
+plugins {
+    id 'com.android.library'
+}
+
+android {
+    namespace 'com.tr.hsyn.over'
+    compileSdk rootProject.compileSdk
+
+    defaultConfig {
+        minSdk rootProject.minSdk
+        targetSdk rootProject.targetSdk
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+}
+
+dependencies {
+
+    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'com.google.android.material:material:1.7.0'
+    implementation project(path: ':xbox')
+    implementation project(path: ':contactsdata')
+    implementation project(path: ':buildkeys')
+    implementation project(path: ':xlog')
+    implementation project(path: ':calldata')
+    implementation project(path: ':time')
+    implementation project(path: ':story')
+    implementation project(path: ':bool')
+    implementation project(path: ':use')
+    implementation project(path: ':label')
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.4'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
+}

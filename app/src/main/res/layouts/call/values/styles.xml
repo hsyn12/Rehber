@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<style name="CallLogTextFirst" parent="BaseText">
+		<item name="android:textSize">16sp</item>
+		<item name="android:textColor">@color/call_log_item_text_color</item>
+		<item name="android:fontFamily">@font/callb</item>
+		<item name="android:ellipsize">end</item>
+		<item name="android:maxLength">20</item>
+		<item name="android:maxLines">1</item>
+
+	</style>
+
+	<style name="CallLogTextSecondary" parent="BaseText">
+		<item name="android:textSize">13sp</item>
+		<item name="android:textColor">@color/call_log_seconds_item_text_color</item>
+		<item name="android:fontFamily">@font/call</item>
+	</style>
+
+	<style name="CallDetailsText" parent="@android:style/TextAppearance.Medium">
+		<item name="android:textSize">15sp</item>
+		<item name="android:fontFamily">@font/call</item>
+		<item name="android:maxLines">1</item>
+		<item name="android:focusable">false</item>
+		<item name="android:clickable">false</item>
+		<item name="android:enabled">false</item>
+		<item name="android:textColor">@color/summary_first_color</item>
+	</style>
+
+	<style name="CallDetailsTextSecondary" parent="@android:style/TextAppearance.Medium">
+		<item name="android:textSize">15sp</item>
+		<item name="android:fontFamily">@font/mono</item>
+		<item name="android:gravity">end</item>
+		<item name="android:textAlignment">textEnd</item>
+	</style>
+</resources>

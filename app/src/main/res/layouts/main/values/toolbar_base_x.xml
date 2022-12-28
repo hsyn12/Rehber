@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<!-- Toolbar  özelleştirmesi -->
+	<style name="ToolbarBasex" parent="android:Widget.Material.Toolbar">
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:minHeight">?attr/actionBarSize</item>
+		<item name="android:background">@color/colorPrimary</item>
+		<item name="android:layout_gravity">fill_horizontal</item>
+		<item name="popupTheme">@style/AppTheme.PopupOverlay</item>
+		<item name="android:theme">@style/AppTheme.AppBarOverlay</item>
+		<item name="titleTextAppearance">@style/ToolbarTitleAppearance</item>
+		<item name="subtitleTextAppearance">@style/ToolbarSubTitleAppearance</item>
+	</style>
+
+	<!-- Toolbar için başlık yazısı özelleştirmesi -->
+	<style name="ToolbarTitleAppearance">
+		<item name="android:textSize">20sp</item>
+		<item name="android:textColor">@color/white</item>
+		<item name="android:fontFamily">@font/geometric_light</item>
+	</style>
+
+	//Appearance
+	<!-- Toolbar için alt başlık yazısı özelleştirmesi -->
+	<style name="ToolbarSubTitleAppearance">
+		<item name="android:textSize">16sp</item>
+		<item name="android:textColor">@color/white</item>
+		<item name="android:fontFamily">@font/geometric_light</item>
+	</style>
+
+</resources>

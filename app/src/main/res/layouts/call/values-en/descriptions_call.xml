@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string name="contact_icon">Icon that will show the initials of the person\'s name</string>
+	<string name="order_number">Shows the contact\'s place in the ranking</string>
+
+</resources>

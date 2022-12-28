@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+   <color name="white">#ffffffff</color>
+   <color name="sb__background">#ff323232</color>
+   <color name="sb__text_color">#ffffffff</color>
+   <color name="sb__action_text_color">#CEFFFFFF</color>
+   <color name="sb__action_bg_color">#1affffff</color>
+   
+   <color name="default_bg_color">#BDBDBD</color>
+   <color name="default_title_color">#ffffff</color>
+   <color name="default_message_color">#ffffff</color>
+   <color name="default_action_color">#26a69a</color>
+   
+   
+   <color name="snack_bar_bg_default">#323232</color>
+   <color name="snack_bar_action_default">#FFEB3B</color>
+   
+   <!-- SnackBar message Colors-->
+   <color name="snack_bar_message_default">#FAFAFA</color>
+   <color name="snack_bar_message_red">#ded32f2f</color>
+   <color name="snack_bar_message_blue">#4fa4f9</color>
+   
+   <!-- SnackBar bg Colors-->
+   <color name="snack_bar_bg_red">#d32f2f</color>
+   <color name="snack_bar_bg_yellow">#FFEA00</color>
+   <color name="snack_bar_bg_green">#689F38</color>
+   
+   <!-- SnackBar warn message Colors-->
+   <color name="snack_bar_message_yellow">#FFEA00</color>
+   <color name="snack_bar_bg_black">#000000</color>
+   <!-- ***************************************************** -->
+   
+   <color name="snack_bar_bg_white">#ffffff</color>
+   <color name="c_black">#000000</color>
+   <color name="white_trans77">#C4FFFFFF</color>
+ 
+
+
+</resources>

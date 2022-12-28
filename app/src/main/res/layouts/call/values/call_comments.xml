@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="no_history">Kişiye ait bir arama kaydı yok</string>
+    <string name="history_size">Kişiye ait %1$d arama kaydı var</string>
+    <string name="history_size_only">Kişiye ait sadece %1$d arama kaydı var</string>
+</resources>

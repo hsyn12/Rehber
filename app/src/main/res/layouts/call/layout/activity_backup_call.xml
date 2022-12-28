@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		xmlns:tools="http://schemas.android.com/tools"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+
+	<androidx.appcompat.widget.Toolbar
+			android:id="@+id/toolbar_activity_backup"
+			style="@style/ToolbarBasex"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:elevation="5dp"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:menu="@menu/activity_call_backup_menu"
+			app:navigationIcon="@drawable/left_arrow"
+			app:title="@string/title_backup_activity"
+			app:titleTextAppearance="@style/ToolbarTitleAppearance" />
+
+	<androidx.recyclerview.widget.RecyclerView
+			android:id="@+id/list_backups"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/toolbar_activity_backup"
+			tools:listitem="@layout/backup_item" />
+
+	<ProgressBar
+			android:id="@+id/progress_backup_call"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:indeterminate="true"
+			android:visibility="gone"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent" />
+
+	<LinearLayout
+			android:id="@+id/empty_view_call_backup"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:gravity="center"
+			android:orientation="vertical"
+			android:visibility="gone"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			tools:ignore="UseCompoundDrawables">
+
+		<ImageView
+				android:layout_width="180dp"
+				android:layout_height="180dp"
+				android:contentDescription="@string/no_backup_description"
+				android:src="@drawable/call_summary"
+				app:tint="@color/black_10" />
+
+		<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/dimen_8dp"
+				android:fontFamily="@font/hk_rg"
+				android:text="@string/no_backup"
+				android:textColor="@color/black_10"
+				android:textSize="22sp" />
+	</LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

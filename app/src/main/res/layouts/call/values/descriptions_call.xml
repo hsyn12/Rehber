@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string name="contact_icon">Kişinin isminin baş harfini gösterecek olan ikon</string>
+	<string name="order_number">Kişinin sıralamadaki yerini gösterir</string>
+
+</resources>

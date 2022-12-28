@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.cardview.widget.CardView
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:tools="http://schemas.android.com/tools"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		android:layout_width="match_parent"
+		android:layout_height="84dp"
+		android:layout_marginStart="8dp"
+		android:layout_marginEnd="8dp"
+		android:layout_marginTop="6dp"
+		app:cardElevation="1dp">
+
+	<RelativeLayout
+			android:id="@+id/root_backup"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:paddingStart="@dimen/dimen_16dp"
+			android:paddingEnd="@dimen/dimen_16dp"
+			android:clickable="true"
+			android:focusable="true"
+			android:elevation="4dp">
+
+		<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:orientation="vertical"
+				android:layout_centerVertical="true">
+
+			<TextView
+					style="@style/BackupCallTextPrimary"
+					android:id="@+id/text_name_backup"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					tools:text="BackupName"/>
+
+			<TextView
+					style="@style/BackupCallTextSecondary"
+					android:id="@+id/text_date_backup"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					tools:text="BackupDate"/>
+		</LinearLayout>
+
+		<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal"
+				android:layout_alignParentEnd="true"
+				android:layout_centerVertical="true"
+				tools:ignore="RelativeOverlap,UseCompoundDrawables">
+
+			<TextView
+					android:id="@+id/text_size"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					tools:text="234"
+					android:layout_marginEnd="@dimen/dimen_16dp"
+					android:layout_gravity="center_vertical"/>
+
+			<ImageView
+					android:id="@+id/icon_delete"
+					android:padding="4dp"
+					app:tint="@color/red_500"
+					android:layout_width="36dp"
+					android:layout_height="36dp"
+					android:src="@drawable/rubbish_bin"
+					android:contentDescription="@string/delete_backup" />
+
+		</LinearLayout>
+
+	</RelativeLayout>
+</androidx.cardview.widget.CardView>
+

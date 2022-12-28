@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string name="call_log">Call Log</string>
+	<string name="call_record">Call Records</string>
+	<string name="call">Call</string>
+
+	<string name="incomming_call">Incomming Call</string>
+	<string name="outgoing_call">Outgoing Call</string>
+	<string name="missed_call">Missed Call</string>
+	<string name="rejected_call">Rejected Call</string>
+	<string name="blocked_call">Blocked Call</string>
+	<string name="deleted_call">Deleted Call</string>
+
+	<string name="incomming">Incomming</string>
+	<string name="outgoing">Outgoing</string>
+	<string name="missed">Missed</string>
+	<string name="rejected">Rejected</string>
+	<string name="blocked">Blocked</string>
+	<string name="total">Total</string>
+
+
+	<string name="delete_all">Delete All</string>
+	<string name="delete_all_calls">Delete All Calls</string>
+	<string name="transition_call">transition_call</string>
+	<string name="empty_call_list">List is empty</string>
+	<string name="no_call_app">No application found to call</string>
+	<string name="no_app">No application found to perform this action</string>
+	<string name="will_delete">will delete</string>
+	<string name="confirm_delete_action">Confirm Delete Action!!</string>
+
+	
+</resources>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.tr.hsyn.xrelativelayout.RelativeLayoutx
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		xmlns:tools="http://schemas.android.com/tools"
+		android:id="@+id/root"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:minHeight="400dp"
+		android:orientation="vertical"
+		app:maxHeightx="400dp">
+
+	<RelativeLayout
+			android:id="@+id/header"
+			android:layout_width="match_parent"
+			android:layout_height="60dp"
+			android:layout_alignParentTop="true"
+			android:layout_centerHorizontal="true"
+			android:background="@color/amber_400"
+			android:elevation="2dp"
+			android:translationZ="0dp">
+
+		<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_centerInParent="true"
+				android:fontFamily="@font/texb"
+				android:paddingEnd="66dp"
+				android:text="@string/filters"
+				android:textColor="@color/white"
+				android:textSize="24sp" />
+
+	</RelativeLayout>
+
+	<RelativeLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/header">
+
+		<androidx.recyclerview.widget.RecyclerView
+				android:id="@+id/list_call_filters"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+				tools:listitem="@layout/call_filter_dialog_item" />
+	</RelativeLayout>
+
+</com.tr.hsyn.xrelativelayout.RelativeLayoutx>

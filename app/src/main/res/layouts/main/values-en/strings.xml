@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="select_directory">Select Directory</string>
+
+    <string name="txt_close">Close</string>
+    <string name="txt_sign_in">Sign In</string>
+    <string name="the_end">\u0DF4</string>
+    <string name="permission_denied">Permission denied</string>
+    <string name="permission_permenently_denied">The required permission is automatically denied by the system. You can fix it in the permissions section of the app settings</string>
+    <string name="fix_it">Fix it</string>
+    <string name="stop">Stop</string>
+    <string name="completed">Completed</string>
+
+    <string name="search">Search</string>
+    <string name="groups">Groups</string>
+    <string name="no_permissions">No required permissions</string>
+
+    <string name="search_result">%d record found</string>
+</resources>

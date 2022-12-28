@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="testRunner" value="GRADLE" />
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="gradleJvm" value="corretto-17" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/activity" />
+            <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/atom" />
+            <option value="$PROJECT_DIR$/betty" />
+            <option value="$PROJECT_DIR$/bool" />
+            <option value="$PROJECT_DIR$/buildkeys" />
+            <option value="$PROJECT_DIR$/bungee" />
+            <option value="$PROJECT_DIR$/calldata" />
+            <option value="$PROJECT_DIR$/callfilter" />
+            <option value="$PROJECT_DIR$/codefinder" />
+            <option value="$PROJECT_DIR$/collection" />
+            <option value="$PROJECT_DIR$/colors" />
+            <option value="$PROJECT_DIR$/content" />
+            <option value="$PROJECT_DIR$/counter" />
+            <option value="$PROJECT_DIR$/daytimes" />
+            <option value="$PROJECT_DIR$/db" />
+            <option value="$PROJECT_DIR$/easing" />
+            <option value="$PROJECT_DIR$/entity" />
+            <option value="$PROJECT_DIR$/execution" />
+            <option value="$PROJECT_DIR$/executors" />
+            <option value="$PROJECT_DIR$/fastscroller" />
+            <option value="$PROJECT_DIR$/files" />
+            <option value="$PROJECT_DIR$/flipimageview" />
+            <option value="$PROJECT_DIR$/fragment" />
+            <option value="$PROJECT_DIR$/gate" />
+            <option value="$PROJECT_DIR$/historic" />
+            <option value="$PROJECT_DIR$/holder" />
+            <option value="$PROJECT_DIR$/htext" />
+            <option value="$PROJECT_DIR$/identity" />
+            <option value="$PROJECT_DIR$/keep" />
+            <option value="$PROJECT_DIR$/key" />
+            <option value="$PROJECT_DIR$/label" />
+            <option value="$PROJECT_DIR$/launcher" />
+            <option value="$PROJECT_DIR$/life" />
+            <option value="$PROJECT_DIR$/loader" />
+            <option value="$PROJECT_DIR$/message" />
+            <option value="$PROJECT_DIR$/metadata" />
+            <option value="$PROJECT_DIR$/news" />
+            <option value="$PROJECT_DIR$/nextension" />
+            <option value="$PROJECT_DIR$/page" />
+            <option value="$PROJECT_DIR$/perfectsort" />
+            <option value="$PROJECT_DIR$/permissions" />
+            <option value="$PROJECT_DIR$/phone-numbers" />
+            <option value="$PROJECT_DIR$/random" />
+            <option value="$PROJECT_DIR$/recolor" />
+            <option value="$PROJECT_DIR$/reflection" />
+            <option value="$PROJECT_DIR$/regex" />
+            <option value="$PROJECT_DIR$/register" />
+            <option value="$PROJECT_DIR$/resanim" />
+            <option value="$PROJECT_DIR$/resarrowdrawable" />
+            <option value="$PROJECT_DIR$/rescolors" />
+            <option value="$PROJECT_DIR$/resdrawcalltype" />
+            <option value="$PROJECT_DIR$/resfont" />
+            <option value="$PROJECT_DIR$/resripple" />
+            <option value="$PROJECT_DIR$/room" />
+            <option value="$PROJECT_DIR$/roomstorm" />
+            <option value="$PROJECT_DIR$/roomstormanno" />
+            <option value="$PROJECT_DIR$/rsectiondecorator" />
+            <option value="$PROJECT_DIR$/rutine" />
+            <option value="$PROJECT_DIR$/scaler" />
+            <option value="$PROJECT_DIR$/searchview" />
+            <option value="$PROJECT_DIR$/selection" />
+            <option value="$PROJECT_DIR$/selector" />
+            <option value="$PROJECT_DIR$/show" />
+            <option value="$PROJECT_DIR$/shower" />
+            <option value="$PROJECT_DIR$/string" />
+            <option value="$PROJECT_DIR$/text" />
+            <option value="$PROJECT_DIR$/textdrawable" />
+            <option value="$PROJECT_DIR$/time" />
+            <option value="$PROJECT_DIR$/treadedwork" />
+            <option value="$PROJECT_DIR$/use" />
+            <option value="$PROJECT_DIR$/vanimator" />
+            <option value="$PROJECT_DIR$/warnerbros" />
+            <option value="$PROJECT_DIR$/warnerlabel" />
+            <option value="$PROJECT_DIR$/watch" />
+            <option value="$PROJECT_DIR$/xbox" />
+            <option value="$PROJECT_DIR$/xlog" />
+            <option value="$PROJECT_DIR$/xrelativelayout" />
+            <option value="$PROJECT_DIR$/xtoolbar" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>

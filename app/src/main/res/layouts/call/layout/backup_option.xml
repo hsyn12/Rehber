@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="match_parent"
+		android:layout_height="50dp"
+		xmlns:tools="http://schemas.android.com/tools"
+		android:clickable="true"
+		android:focusable="true">
+
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/text_name_option"
+			tools:text="Geri Yükle"
+			android:layout_centerInParent="true"
+			android:textSize="20sp"
+			android:fontFamily="@font/nunito_regular"
+			android:textColor="@color/text_tree_d"/>
+	
+</RelativeLayout>

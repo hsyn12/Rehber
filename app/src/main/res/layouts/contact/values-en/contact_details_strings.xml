@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string name="contact_details_add_phone_number">Add phone number</string>
+	<string name="contact_details_contact_not_found">Contact Not Found</string>
+	<string name="show_contact_history">Call history</string>
+	<string name="no_contact_history">No contact history</string>
+	<string name="delete">Delete</string>
+	<string name="edit">Edit</string>
+	<string name="val">%3d</string>
+	<string name="calling">Call</string>
+	<string name="speaking">Speaking</string>
+</resources>
