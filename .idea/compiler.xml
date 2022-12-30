@@ -25,6 +25,9 @@
       <module name="JRehber.contactsdata" target="11" />
       <module name="JRehber.contactsdata.main" target="11" />
       <module name="JRehber.contactsdata.test" target="11" />
+      <module name="JRehber.news" target="11" />
+      <module name="JRehber.news.main" target="11" />
+      <module name="JRehber.news.test" target="11" />
       <module name="JRehber.over" target="17" />
       <module name="JRehber.registery" target="17" />
       <module name="JRehber.story" target="11" />

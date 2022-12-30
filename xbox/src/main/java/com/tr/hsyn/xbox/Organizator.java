@@ -12,21 +12,24 @@ import java.util.function.Consumer;
 
 
 /**
- * Nesne takibini yönetir.
+ * Nesnelerin takip edilebilmesine yardım eder.<br>
+ * Bir nesneye takipçi ekler yada takibi sonlandırır.<br>
+ * Bu sınıf sadece takipçileri kaydeder. Takipçilerin takip ettiği nesneler sayısal bir değer olarak tutulur.<br>
+ * Takip edilen nesnelerin asılları, bu sınıfı kullanan kodun kontrolündedir.
  */
 @SuppressWarnings("ConstantConditions")
 public final class Organizator {
 	
 	@SuppressWarnings("FieldCanBeLocal")
-	private final int DEBUG_DEGREE = 0;
+	private final int DEBUG_DEGREE = 3;
 	
 	private final Map<Integer, List<Consumer<Object>>> followers = new HashMap<>();
 	
 	/**
-	 * Buluştur.
+	 * Buluşma bekleyen takipçi var mı kontrol eder.
 	 * Verilen nesnenin takipçisi varsa buluşturulur.
 	 * Yoksa buluşma kaydı <u>yapılmaz</u>.
-	 * Buluşma işlemi takibi sonlandırır, nesnenin takibi biter.
+	 * Buluşma gerçekleşirse takip sonlandırılır, nesnenin takibi biter.
 	 *
 	 * @param key    Buluşmak istenilen nesnenin kayıt anahtarı
 	 * @param object Buluşmak istenilen nesne
@@ -53,7 +56,7 @@ public final class Organizator {
 	}
 	
 	/**
-	 * Verilen kayıt anahtarıyla bağlı nesneyi takip et.
+	 * Verilen kayıt anahtarıyla bağlı nesneyi takip eder.
 	 * Bir nesne bu anahtarla işlem gördüğünde takipçi ile buluşturulur.
 	 *
 	 * @param key      Kayıt anahtarı
@@ -61,7 +64,7 @@ public final class Organizator {
 	 * @param <T>      Takip edilen nesnenin türü
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> void addFollower(int key, Consumer<T> consumer) {
+	public <T> void follow(int key, Consumer<T> consumer) {
 		
 		var followers = this.followers.get(key);
 		
@@ -81,7 +84,7 @@ public final class Organizator {
 	}
 	
 	/**
-	 * Takibi bırak.
+	 * Verilen anahtara ait tüm takipçileri siler.
 	 *
 	 * @param key Takip edilen
 	 */
@@ -91,7 +94,7 @@ public final class Organizator {
 	}
 	
 	/**
-	 * Tüm takipçileri temizle
+	 * Tüm takipçileri siler.
 	 */
 	public void clear() {
 		
