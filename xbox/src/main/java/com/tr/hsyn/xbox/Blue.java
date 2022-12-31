@@ -71,10 +71,7 @@ public final class Blue {
 	 */
 	public static <T> void box(T object) {
 		
-		if (object != null) {
-			
-			put(getKey(object), object);
-		}
+		putObject(getKey(object), object);
 	}
 	
 	/**
@@ -91,10 +88,7 @@ public final class Blue {
 	 */
 	public static <T> void box(int key, T object) {
 		
-		if (object != null) {
-			
-			put(key, object);
-		}
+		putObject(key, object);
 	}
 	
 	/**
@@ -113,7 +107,41 @@ public final class Blue {
 		
 		if (obj != null) return obj;//! Burada buluşma yok çünkü nesne talep ediliyor
 		
-		return put(key, Clazz.create(clazz, params));
+		return putObject(key, Clazz.create(clazz, params));
+	}
+	
+	/**
+	 * Bir sınıf için anahtar döndürür.<br>
+	 * Bu anahtar, sınıfın  {@linkplain Class#getCanonicalName()} metodundan
+	 * dönen değerin hash kodudur.
+	 *
+	 * @param clazz Sınıf
+	 * @param <T>   Sınıf türü
+	 * @return Anahtar
+	 */
+	public static <T> int getKey(Class<T> clazz) {
+		
+		if (clazz != null)
+			return clazz.getCanonicalName().hashCode();
+		
+		return 0;
+	}
+	
+	/**
+	 * Bir nesne için anahtar döndürür.<br>
+	 * Bu anahtar, nesnenin  {@linkplain Class#getCanonicalName()} metodundan
+	 * dönen değerin hash kodudur.
+	 *
+	 * @param object Nesne
+	 * @param <T>    Nesne türü
+	 * @return Anahtar
+	 */
+	public static <T> int getKey(Object object) {
+		
+		if (object != null)
+			return object.getClass().getCanonicalName().hashCode();
+		
+		return 0;
 	}
 	
 	/**
@@ -130,34 +158,6 @@ public final class Blue {
 	public static <T> void meet(@NotNull Class<T> clazz, @NotNull Consumer<T> follower) {
 		
 		meet(getKey(clazz), follower);
-	}
-	
-	/**
-	 * Bir sınıf için anahtar döndürür.<br>
-	 * Bu anahtar, sınıfın  {@linkplain Class#getCanonicalName()} metodundan
-	 * dönen değerin hash kodudur.
-	 *
-	 * @param clazz Sınıf
-	 * @param <T>   Sınıf türü
-	 * @return Anahtar
-	 */
-	public static <T> int getKey(@NotNull Class<T> clazz) {
-		
-		return clazz.getCanonicalName().hashCode();
-	}
-	
-	/**
-	 * Bir nesne için anahtar döndürür.<br>
-	 * Bu anahtar, nesnenin  {@linkplain Class#getCanonicalName()} metodundan
-	 * dönen değerin hash kodudur.
-	 *
-	 * @param object Nesne
-	 * @param <T>    Nesne türü
-	 * @return Anahtar
-	 */
-	public static <T> int getKey(@NotNull Object object) {
-		
-		return object.getClass().getCanonicalName().hashCode();
 	}
 	
 	/**
@@ -179,10 +179,13 @@ public final class Blue {
 		
 		if (obj != null) {
 			
+			//- Nesne kayıtlı ise hemen buluştur ve olay bitsin
 			follower.accept(obj);
 		}
 		else {
 			
+			//- Aranan nesne kayıtlı değil
+			//- Takip başlasın
 			ORGANIZATOR.follow(key, follower);
 		}
 	}
@@ -237,7 +240,7 @@ public final class Blue {
 	 * @return Kaydedilen nesne
 	 */
 	@Nullable
-	private static <T> T put(int key, T obj) {
+	private static <T> T putObject(int key, T obj) {
 		
 		if (obj != null) {
 			
@@ -263,6 +266,9 @@ public final class Blue {
 			}
 			
 			return obj;
+		}
+		else {
+			xlog.d("null object can not be saved");
 		}
 		
 		return null;
