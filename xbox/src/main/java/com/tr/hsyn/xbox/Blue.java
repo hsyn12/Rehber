@@ -24,7 +24,7 @@ import java.util.function.IntSupplier;
  *
  * <pre>
  * Blue.box(getContext());
- * Context context = Blue.get(Context.class);
+ * Context context = Blue.getObject(Context.class);
  * // Yada
  * Blue.box(999, getContext());
  * Context context = Blue.getObject(999);
@@ -228,11 +228,12 @@ public final class Blue {
 	public static <T> T getObject(int key) {return (T) internet.get(key);}
 	
 	/**
-	 * Bir anahtarla bir nesneyi kaydet.
-	 * Bu anahtar zaten varsa yeni nesne ile güncellenir.
-	 * <p>
-	 * Bu çağrı aynı zamanda buluşma kontrolü yapar.
-	 * Eğer bir buluşma varsa nesne takipçisiyle buluşturulur ve silinir.
+	 * Verilen anahtar ile nesneyi kaydeder.<br>
+	 * Ancak bunun için nesnenin bekleyen bir <u>takipçisi olmamalı</u>.
+	 * Eğer bir takipçi varsa, nesne kaydedilmez,
+	 * takipçi ile buluşturulur ve olay biter.<br>
+	 * Eğer bir takipçi yoksa nesne kaydedilir,
+	 * aynı anahtarla kayıtlı bir nesne varsa yeni nesne ile güncellenir.<br>
 	 *
 	 * @param key Anahtar
 	 * @param obj Nesne
@@ -256,7 +257,6 @@ public final class Blue {
 				//! Bu biraz karışıklık yaratabilir.
 				//! Eğer nesne kalıcı olmalı ise ve nesnenin beklemede olan bir takipçisi varsa kaydedilmiyor.
 				//! Bu durumda takipçi, nesne kaydedildikten sonra buluşma talebinde bulunmak zorunda.
-				//! Fuck you!!
 				
 				//- Buluşma yoksa kaydediliyor
 				internet.put(key, obj);
