@@ -227,4 +227,10 @@ public class BCall implements Call, Serializable {
 		
 		this.labels = labels;
 	}
+	
+	@Override
+	public int getId() {
+		
+		return (int) getTime();
+	}
 }

@@ -2,21 +2,25 @@ package com.tr.hsyn.colors;
 
 
 import android.annotation.SuppressLint;
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
 import androidx.annotation.NonNull;
 
 import com.tr.hsyn.db.DBBase;
-import com.tr.hsyn.db.cast.DB;
-import com.tr.hsyn.db.cast.DBColumn;
-import com.tr.hsyn.db.column.Number;
-import com.tr.hsyn.db.column.Text;
+import com.tr.hsyn.db.actor.SqliteBridge;
 import com.tr.hsyn.life.Life;
+import com.tr.hsyn.registery.SimpleDatabase;
+import com.tr.hsyn.registery.Values;
+import com.tr.hsyn.registery.cast.DB;
+import com.tr.hsyn.registery.cast.DBColumn;
+import com.tr.hsyn.registery.column.Number;
+import com.tr.hsyn.registery.column.Text;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.function.Function;
 
 
 @SuppressLint("Range")
@@ -39,22 +43,13 @@ public class Colorabi extends DBBase<ColorRegister> implements ColorRegisters {
 	 */
 	private static final String TIME_UNSELECTED = "time_unselected";
 	
+	private static final DB             dbInterface = new ColorDBInterface();
+	private final        SimpleDatabase simpleDatabase;
+	
 	public Colorabi(@NonNull Context context) {
 		
 		super(context, new ColorDBInterface());
-	}
-	
-	@Override
-	protected ContentValues contentValuesOf(@NonNull ColorRegister colorData) {
-		
-		var value = new ContentValues();
-		
-		value.put(NAME, colorData.getName());
-		value.put(COLOR, colorData.getColor());
-		value.put(TIME_SELECTED, colorData.getLifeTime().getStartTime());
-		value.put(TIME_UNSELECTED, colorData.getLifeTime().getEndTime());
-		
-		return value;
+		simpleDatabase = new SqliteBridge(getWritableDatabase());
 	}
 	
 	@NonNull
@@ -70,29 +65,62 @@ public class Colorabi extends DBBase<ColorRegister> implements ColorRegisters {
 	}
 	
 	@Override
+	public @NotNull DB getDBInterface() {
+		
+		return dbInterface;
+	}
+	
+	@Override
+	public @NotNull SimpleDatabase getSimpleDatabase() {
+		
+		return simpleDatabase;
+	}
+	
+	@Override
+	public @NotNull Values contentValuesOf(@NonNull ColorRegister colorData) {
+		
+		var value = new Values();
+		
+		value.put(NAME, colorData.getName());
+		value.put(COLOR, colorData.getColor());
+		value.put(TIME_SELECTED, colorData.getLifeTime().getStartTime());
+		value.put(TIME_UNSELECTED, colorData.getLifeTime().getEndTime());
+		
+		return value;
+	}
+	
+	@Override
 	public boolean update(@NonNull ColorRegister item) {
 		
 		return update(item, item.getLifeTime().getStartTime());
 	}
 	
 	@Override
-	public int update(@NonNull List<? extends ColorRegister> items) {
+	public int add(@NotNull List<? extends ColorRegister> items, @NotNull Function<? super ColorRegister, Values> valuesFunction) {
 		
-		return (int) items.stream().filter(this::update).count();
+		var db    = getWritableDatabase();
+		int count = 0;
+		
+		try {
+			db.beginTransaction();
+			
+			for (var item : items) {
+				
+				var i = db.insert(getDatabaseInterface().getTableName(), null, convertFrom(valuesFunction.apply(item)));
+				
+				if (i != -1) count++;
+			}
+			
+			db.setTransactionSuccessful();
+		}
+		finally {
+			
+			db.endTransaction();
+		}
+		
+		return count;
 	}
 	
-	@Override
-	public boolean delete(@NonNull ColorRegister item) {
-		
-		return deleteByPrimaryKey(String.valueOf(item.getLifeTime().getStartTime()));
-	}
-	
-	@Override
-	public int delete(List<? extends ColorRegister> items) {
-		
-		List<String> keys = items.stream().map(c -> String.valueOf(c.getLifeTime().getStartTime())).collect(Collectors.toList());
-		return delete(DBBase.createSelection(TIME_SELECTED, keys));
-	}
 	
 	/**
 	 * Veri tabanı bilgileri

@@ -2,51 +2,40 @@ package com.tr.hsyn.life;
 
 
 import android.annotation.SuppressLint;
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
-
 import com.tr.hsyn.db.DBBase;
-import com.tr.hsyn.db.cast.DB;
-import com.tr.hsyn.db.cast.DBColumn;
-import com.tr.hsyn.db.column.Number;
-import com.tr.hsyn.db.column.Text;
-
+import com.tr.hsyn.db.actor.SqliteBridge;
+import com.tr.hsyn.registery.SimpleDatabase;
+import com.tr.hsyn.registery.Values;
+import com.tr.hsyn.registery.cast.DB;
+import com.tr.hsyn.registery.cast.DBColumn;
+import com.tr.hsyn.registery.column.Number;
+import com.tr.hsyn.registery.column.Text;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.function.Function;
+
 
 /**
  * Yaşam sürelerini kaydeder.
  */
 public class LifeDatabase extends DBBase<Life> implements LifeRecorder {
 	
-	private static final DB     dbInterface = new DBInterface();
-	private final        String NAME        = "name";
-	private final        String START       = "start";
-	private final        String END         = "end";
+	private static final DB             dbInterface = new DBInterface();
+	private final        String         NAME        = "name";
+	private final        String         START       = "start";
+	private final        String         END         = "end";
+	private final        SimpleDatabase simpleDatabase;
 	
 	public LifeDatabase(@NotNull Context context) {
 		
 		super(context, dbInterface);
-	}
-	
-	@Override
-	@NotNull
-	public ContentValues contentValuesOf(@NotNull Life life) {
-		
-		var values = new ContentValues();
-		
-		values.put(NAME, life.getName());
-		values.put(START, life.getStartTime());
-		values.put(END, life.getEndTime());
-		
-		return values;
+		simpleDatabase = new SqliteBridge(getWritableDatabase());
 	}
 	
 	@NotNull
@@ -59,6 +48,31 @@ public class LifeDatabase extends DBBase<Life> implements LifeRecorder {
 		long   end   = cursor.getLong(cursor.getColumnIndex(END));
 		
 		return Life.newLife(name, start, end);
+	}
+	
+	@Override
+	public @NotNull DB getDBInterface() {
+		
+		return dbInterface;
+	}
+	
+	@Override
+	public @NotNull SimpleDatabase getSimpleDatabase() {
+		
+		return simpleDatabase;
+	}
+	
+	@Override
+	@NotNull
+	public Values contentValuesOf(@NotNull Life life) {
+		
+		var values = new Values();
+		
+		values.put(NAME, life.getName());
+		values.put(START, life.getStartTime());
+		values.put(END, life.getEndTime());
+		
+		return values;
 	}
 	
 	/**
@@ -131,23 +145,29 @@ public class LifeDatabase extends DBBase<Life> implements LifeRecorder {
 	}
 	
 	@Override
-	public int update(@NotNull List<? extends Life> items) {
+	public int add(@NotNull List<? extends Life> items, @NotNull Function<? super Life, Values> valuesFunction) {
 		
-		return (int) items.stream().filter(this::update).count();
-	}
-	
-	@Override
-	public boolean delete(Life item) {
+		var db    = getWritableDatabase();
+		int count = 0;
 		
-		return deleteByPrimaryKey(Objects.requireNonNull(dbInterface.getPrimaryKey()));
-	}
-	
-	@Override
-	public int delete(@NotNull List<? extends Life> items) {
+		try {
+			db.beginTransaction();
+			
+			for (var item : items) {
+				
+				var i = db.insert(getDatabaseInterface().getTableName(), null, convertFrom(valuesFunction.apply(item)));
+				
+				if (i != -1) count++;
+			}
+			
+			db.setTransactionSuccessful();
+		}
+		finally {
+			
+			db.endTransaction();
+		}
 		
-		var ids = items.stream().map(Life::getStartTime).map(String::valueOf).collect(Collectors.toList());
-		
-		return delete(DBBase.createSelection(Objects.requireNonNull(dbInterface.getPrimaryKey()), ids));
+		return count;
 	}
 }
 

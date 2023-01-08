@@ -3,11 +3,11 @@ package com.tr.hsyn.colors;
 
 import androidx.annotation.NonNull;
 
+import com.tr.hsyn.identity.Identity;
 import com.tr.hsyn.life.Life;
-import com.tr.hsyn.life.LifeTime;
 
 
-public interface ColorRegister {
+public interface ColorRegister extends Identity {
 	
 	String getName();
 	

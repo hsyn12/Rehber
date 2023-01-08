@@ -48,7 +48,7 @@ public interface SimpleDBOperator {
 	 * @param tableName     Tablo ismi
 	 * @param selection     Silinecek satırı işaret eden seçim string'i
 	 * @param selectionArgs Seçim için gerekli argümanlar
-	 * @return Silme işlemi başarılı ise {@code true}
+	 * @return Silinen satır sayısı
 	 */
 	static int delete(@NonNull SQLiteDatabase db, @NonNull String tableName, @NonNull String selection, @Nullable String[] selectionArgs) {
 		

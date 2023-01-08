@@ -6,6 +6,7 @@ dependencies {
 
 	implementation project(path: ':time')
 	implementation project(path: ':label')
+	implementation project(path: ':identity')
 	compileOnly "org.jetbrains:annotations:${rootProject.annotations}"
 
 

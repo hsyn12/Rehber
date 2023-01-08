@@ -10,8 +10,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.tr.hsyn.db.cast.DB;
-import com.tr.hsyn.db.cast.Database;
+import com.tr.hsyn.identity.Identity;
+import com.tr.hsyn.registery.Value;
+import com.tr.hsyn.registery.Values;
+import com.tr.hsyn.registery.cast.DB;
+import com.tr.hsyn.registery.cast.Database;
+import com.tr.hsyn.xlog.xlog;
 
 import java.util.List;
 import java.util.function.Function;
@@ -25,20 +29,42 @@ import java.util.function.Function;
  * @param <T> Veri tabanına yazılacak nesne türü
  * @author hsyn 02 Nisan 2021 Cuma 12:21:54
  */
-public abstract class DBOperator<T> extends SQLiteOpenHelper implements Database<T> {
+public abstract class DBOperator<T extends Identity> extends SQLiteOpenHelper implements Database<T> {
 	
-	protected final DB databaseInterface;
+	protected final DB      databaseInterface;
+	private final   Context context;
 	
 	public DBOperator(@Nullable Context context, @NonNull DB dbInterface) {
 		
 		super(context, dbInterface.getDatabaseName(), null, dbInterface.getVersion());
 		this.databaseInterface = dbInterface;
+		this.context           = context;
+	}
+	
+	public DB getDatabaseInterface() {
+		
+		return databaseInterface;
+	}
+	
+	@Override
+	public long getRawCount() {
+		
+		return getReadableDatabase().compileStatement("select count(*) from " + databaseInterface.getTableName()).simpleQueryForLong();
+	}
+	
+	@Override
+	public long getSizeInBytes() {
+		
+		var file = context.getDatabasePath(databaseInterface.getDatabaseName());
+		return (file != null) ? file.length() : -1;
 	}
 	
 	@Override
 	public void onCreate(SQLiteDatabase sqLiteDatabase) {
 		
-		sqLiteDatabase.execSQL(databaseInterface.getCreateTableQuery());
+		var table = databaseInterface.getCreateTableQuery();
+		xlog.w("Creating table : %s", table);
+		sqLiteDatabase.execSQL(table);
 	}
 	
 	@Override
@@ -46,7 +72,6 @@ public abstract class DBOperator<T> extends SQLiteOpenHelper implements Database
 		
 	}
 	
-	@Override
 	@NonNull
 	public List<T> query(@NonNull Function<Cursor, ? extends T> function, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
 		
@@ -59,21 +84,47 @@ public abstract class DBOperator<T> extends SQLiteOpenHelper implements Database
 				.execute();
 	}
 	
-	@Override
-	public boolean add(ContentValues values) {
+	@NonNull
+	public static ContentValues convertFrom(@NonNull Values values) {
 		
-		return SimpleDBOperator.add(getWritableDatabase(), databaseInterface.getTableName(), values);
-	}
-	
-	@Override
-	public boolean update(@NonNull ContentValues values, @NonNull String selection, String[] selectionArgs) {
+		ContentValues  valuesCopy = new ContentValues();
+		Value<String>  strings    = values.getValue(Values.TYPE_STRING);
+		Value<Integer> ints       = values.getValue(Values.TYPE_INT);
+		Value<Long>    longs      = values.getValue(Values.TYPE_LONG);
+		Value<Boolean> bools      = values.getValue(Values.TYPE_BOOL);
 		
-		return SimpleDBOperator.update(getWritableDatabase(), databaseInterface.getTableName(), selection, selectionArgs, values);
-	}
-	
-	@Override
-	public int delete(@NonNull String selection, @Nullable String[] selectionArgs) {
+		if (strings != null) {
+			
+			for (var key : strings.keySet()) {
+				
+				valuesCopy.put(key, strings.get(key));
+			}
+		}
 		
-		return SimpleDBOperator.delete(getWritableDatabase(), databaseInterface.getTableName(), selection, selectionArgs);
+		if (ints != null) {
+			
+			for (var key : ints.keySet()) {
+				
+				valuesCopy.put(key, ints.get(key));
+			}
+		}
+		
+		if (longs != null) {
+			
+			for (var key : longs.keySet()) {
+				
+				valuesCopy.put(key, longs.get(key));
+			}
+		}
+		
+		if (bools != null) {
+			
+			for (var key : bools.keySet()) {
+				
+				valuesCopy.put(key, bools.get(key));
+			}
+		}
+		
+		return valuesCopy;
 	}
 }

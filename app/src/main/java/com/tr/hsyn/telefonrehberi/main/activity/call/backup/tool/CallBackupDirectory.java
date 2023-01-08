@@ -5,8 +5,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
-import com.tr.hsyn.buildkeys.BuildKeys;
 import com.tr.hsyn.calldata.Call;
+import com.tr.hsyn.key.Key;
 import com.tr.hsyn.telefonrehberi.code.registery.Register;
 import com.tr.hsyn.telefonrehberi.main.activity.call.backup.data.CallBackup;
 import com.tr.hsyn.telefonrehberi.main.dev.backup.Backup;
@@ -49,7 +49,7 @@ public class CallBackupDirectory implements BackupDirectory<Call> {
 	@WorkerThread
 	public final Backup<Call> newBackup() {
 		
-		List<Call> calls = Blue.getObject(BuildKeys.CALL_LOG);
+		List<Call> calls = Blue.getObject(Key.CALL_LOG);
 		
 		if (calls != null)
 			return newBackup(calls);

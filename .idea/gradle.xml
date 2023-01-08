@@ -46,6 +46,7 @@
             <option value="$PROJECT_DIR$/launcher" />
             <option value="$PROJECT_DIR$/life" />
             <option value="$PROJECT_DIR$/loader" />
+            <option value="$PROJECT_DIR$/map" />
             <option value="$PROJECT_DIR$/message" />
             <option value="$PROJECT_DIR$/metadata" />
             <option value="$PROJECT_DIR$/nextension" />
@@ -58,6 +59,7 @@
             <option value="$PROJECT_DIR$/reflection" />
             <option value="$PROJECT_DIR$/regex" />
             <option value="$PROJECT_DIR$/register" />
+            <option value="$PROJECT_DIR$/registery" />
             <option value="$PROJECT_DIR$/resanim" />
             <option value="$PROJECT_DIR$/resarrowdrawable" />
             <option value="$PROJECT_DIR$/rescolors" />

@@ -5,8 +5,8 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
-import com.tr.hsyn.buildkeys.BuildKeys;
 import com.tr.hsyn.collection.Lister;
+import com.tr.hsyn.key.Key;
 import com.tr.hsyn.message.Show;
 import com.tr.hsyn.metadata.Creator;
 import com.tr.hsyn.metadata.Reason;
@@ -82,6 +82,6 @@ public class RandomCallsActivity extends RandomCallsActivityGeneration {
 	@Override
 	protected List<Contact> getContacts() {
 		
-		return Lister.listOf(Blue.<List<Contact>>getObject(BuildKeys.CONTACTS));
+		return Lister.listOf(Blue.<List<Contact>>getObject(Key.CONTACTS));
 	}
 }

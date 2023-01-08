@@ -12,6 +12,7 @@ public class Black extends BlackTower {
 	@Override
 	protected void onCreate() {
 		
+		
 		super.onCreate();
 		//News.connect().addListener(new MessageListener());
 	}

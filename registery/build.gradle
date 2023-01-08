@@ -1,41 +1,15 @@
 plugins {
-    id 'com.android.library'
-}
-
-android {
-    namespace 'com.tr.hsyn.registery'
-    compileSdk rootProject.compileSdk
-
-    defaultConfig {
-        minSdk rootProject.minSdk
-        targetSdk rootProject.targetSdk
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles "consumer-rules.pro"
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
-    }
+	id 'java-library'
 }
 
 dependencies {
-    // implementation 'androidx.annotation:annotation:1.5.0'
-    implementation project(path: ':over')
-    implementation project(path: ':xlog')
-    implementation "com.google.code.gson:gson:${rootProject.gson}"
-    implementation 'io.github.pilgr:paperdb:2.7.2'
-    implementation "androidx.appcompat:appcompat:${rootProject.appcompat}"
-    implementation 'com.google.android.material:material:1.7.0'
-    implementation project(path: ':launcher')
-    //  testImplementation 'junit:junit:4.13.2'
-    //   androidTestImplementation 'androidx.test.ext:junit:1.1.4'
-    //  androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
+
+
+	implementation project(path: ':identity')
+	compileOnly "org.jetbrains:annotations:${rootProject.annotations}"
+}
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_11
+	targetCompatibility = JavaVersion.VERSION_11
 }

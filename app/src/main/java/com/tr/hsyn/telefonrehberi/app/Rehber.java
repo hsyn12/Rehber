@@ -5,13 +5,17 @@ import android.app.Application;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.tr.hsyn.buildkeys.BuildKeys;
 import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.daytimes.DayTime;
 import com.tr.hsyn.executors.MainExecutor;
 import com.tr.hsyn.keep.Keep;
+import com.tr.hsyn.key.Key;
 import com.tr.hsyn.message.Show;
+import com.tr.hsyn.telefonrehberi.code.registery.blue.BlueRegister;
 import com.tr.hsyn.xbox.Blue;
+import com.tr.hsyn.xbox.Daniel;
+import com.tr.hsyn.xbox.Rosa;
+import com.tr.hsyn.xbox.definition.Writer;
 import com.tr.hsyn.xlog.xlog;
 
 import io.paperdb.Paper;
@@ -30,12 +34,13 @@ public class Rehber extends Application {
 		Paper.init(this);
 		setExecutor();
 		
+		setBlueRegister();
+		
 		//- Bulutların üstünde
-		Blue.box(BuildKeys.CONTEXT, getApplicationContext());
+		Blue.box(Key.CONTEXT, getApplicationContext());
 		
 		//- Have a nice day
 		xlog.w(DayTime.toString(this));
-		
 		
 		com.tr.hsyn.colors.Rehber.Color.init(this);
 		Show.setPrimaryColor(Colors.getPrimaryColor());
@@ -65,4 +70,10 @@ public class Rehber extends Application {
 		});
 	}
 	
+	private void setBlueRegister() {
+		
+		var register = new BlueRegister(getApplicationContext());
+		
+		Blue.setHotel(new Rosa(new Daniel(new Writer(register))));
+	}
 }

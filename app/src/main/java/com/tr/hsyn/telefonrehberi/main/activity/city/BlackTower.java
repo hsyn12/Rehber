@@ -15,11 +15,11 @@ import androidx.annotation.NonNull;
 import androidx.core.view.MenuProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.tr.hsyn.buildkeys.BuildKeys;
 import com.tr.hsyn.bungee.Bungee;
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.execution.Runny;
+import com.tr.hsyn.key.Key;
 import com.tr.hsyn.page.MenuShower;
 import com.tr.hsyn.room.TimedRoom;
 import com.tr.hsyn.string.Stringx;
@@ -116,11 +116,13 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 		super.onCreate();
 		
 		
-		Blue.box(BuildKeys.RELATION_DEGREE, 1);
+		Blue.box(Key.RELATION_DEGREE, 1);
 		addMenuProvider(this);
 		
 		setListeners();
 		//lifeStart();
+		
+		
 	}
 	
 	@Override
@@ -158,7 +160,7 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 			
 			xlog.d("Contact Selected : %s", selectedContact);
 			
-			Blue.box(BuildKeys.CONTACT_SELECTED, selectedContact);
+			Blue.box(com.tr.hsyn.key.Key.CONTACT_SELECTED, selectedContact);
 			
 			startActivity(new Intent(this, ContactDetails.class));
 			
@@ -180,7 +182,7 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 			
 			xlog.d("Selected : %s", call);
 			
-			Blue.box(BuildKeys.CALL_SELECTED, call);
+			Blue.box(Key.CALL_SELECTED, call);
 		}
 	}
 	
@@ -227,12 +229,11 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 	protected void loadContacts() {
 		
 		//- Rehber güncelleme işlemi bitince bana haber ver
-		Blue.meet(BuildKeys.CONTACT_LIST_UPDATED, this::onContactListUpdated);
+		Blue.meet(Key.CONTACT_LIST_UPDATED, this::onContactListUpdated);
 		
 		//- Yeni veya silinen kişiler için beni uyar
-		Blue.meet(BuildKeys.NEW_CONTACTS, this::onNewContacts);
-		Blue.meet(BuildKeys.DELETED_CONTACTS, this::onDeletedContacts);
-		
+		Blue.meet(Key.NEW_CONTACTS, this::onNewContacts);
+		Blue.meet(Key.DELETED_CONTACTS, this::onDeletedContacts);
 		//- Şimdi yüklemeyi başlatabilirsin
 		super.loadContacts();
 	}

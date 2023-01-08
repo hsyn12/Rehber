@@ -1,12 +1,15 @@
 package com.tr.hsyn.life;
 
 
+import com.tr.hsyn.identity.Identity;
+
 import org.jetbrains.annotations.NotNull;
+
 
 /**
  * Hayat. Bir başlangıcı ve bir sonu olan kısıtlı süreyi temsil eder.
  */
-public interface Life {
+public interface Life extends Identity {
 	
 	/**
 	 * @return Hayatın ismi

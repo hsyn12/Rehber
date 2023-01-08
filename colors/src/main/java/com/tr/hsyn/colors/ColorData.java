@@ -36,4 +36,10 @@ public class ColorData implements ColorRegister {
 		
 		return lifeTime;
 	}
+	
+	@Override
+	public int getId() {
+		
+		return lifeTime.getId();
+	}
 }

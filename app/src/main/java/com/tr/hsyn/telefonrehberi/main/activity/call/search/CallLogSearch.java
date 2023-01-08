@@ -9,11 +9,11 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tr.hsyn.activity.ActivityView;
-import com.tr.hsyn.buildkeys.BuildKeys;
 import com.tr.hsyn.bungee.Bungee;
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.execution.Runny;
+import com.tr.hsyn.key.Key;
 import com.tr.hsyn.page.SwipeListener;
 import com.tr.hsyn.room.DigiRoom;
 import com.tr.hsyn.room.TimedRoom;
@@ -34,10 +34,10 @@ import java.util.Objects;
 
 /**
  * Arama kayıtları üzerinde arama yapmayı sağlar.
- * Arama kayıtlarını {@link BuildKeys#CALL_LOG_SEARCH_INFO} anahtarı ile alır.
+ * Arama kayıtlarını {@link Key#CALL_LOG_SEARCH_INFO} anahtarı ile alır.
  *
  * @see Blue
- * @see BuildKeys
+ * @see Key
  */
 public class CallLogSearch extends ActivityView implements OnSearchViewListener, SwipeListener {
 	
@@ -74,8 +74,8 @@ public class CallLogSearch extends ActivityView implements OnSearchViewListener,
 		info_1      = infoLayout.findViewById(R.id.text_search_info_1);
 		info_2      = infoLayout.findViewById(R.id.text_search_info_2);
 		
-		info      = Objects.requireNonNull(Blue.getObject(BuildKeys.CALL_LOG_SEARCH_INFO));
-		callStory = Objects.requireNonNull(Blue.getObject(BuildKeys.CALL_STORY));
+		info      = Objects.requireNonNull(Blue.getObject(Key.CALL_LOG_SEARCH_INFO));
+		callStory = Objects.requireNonNull(Blue.getObject(Key.CALL_STORY));
 		calls     = Objects.requireNonNull(info).getCalls();
 		
 		SwipeCallBack swipeCallBack = new SwipeCallBack(ItemTouchHelper.LEFT, this, ResourceUtil.getBitmap(this, R.drawable.delete_white));
@@ -195,7 +195,7 @@ public class CallLogSearch extends ActivityView implements OnSearchViewListener,
 				}
 				
 				//- Bu olay ana listeyi tam olarak düzenler
-				Blue.box(BuildKeys.REFRESH_CALL_LOG, true);
+				Blue.box(Key.REFRESH_CALL_LOG, true);
 			}, false);
 		}
 		else {

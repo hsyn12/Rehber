@@ -29,7 +29,6 @@
       <module name="JRehber.news.main" target="11" />
       <module name="JRehber.news.test" target="11" />
       <module name="JRehber.over" target="17" />
-      <module name="JRehber.registery" target="17" />
       <module name="JRehber.story" target="11" />
       <module name="JRehber.story.main" target="11" />
       <module name="JRehber.story.test" target="11" />

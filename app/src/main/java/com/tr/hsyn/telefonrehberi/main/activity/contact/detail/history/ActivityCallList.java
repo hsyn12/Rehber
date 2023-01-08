@@ -7,10 +7,10 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
-import com.tr.hsyn.buildkeys.BuildKeys;
 import com.tr.hsyn.bungee.Bungee;
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.execution.Runny;
+import com.tr.hsyn.key.Key;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.code.call.act.Calls;
 import com.tr.hsyn.telefonrehberi.main.code.story.call.CallStory;
@@ -24,17 +24,17 @@ import java.util.List;
 
 /**
  * Bir kişinin arama geçmişini listeler.
- * Liste {@link BuildKeys#CALL_HISTORY} anahtarı ile kayıt edilmiş olmalıdır.
+ * Liste {@link Key#CALL_HISTORY} anahtarı ile kayıt edilmiş olmalıdır.
  * Burada sadece silme işlemi yapılabilir.
  * Silinen kayıtlar kalıcı olarak silinir ve
- * {@link BuildKeys#REFRESH_CALL_LOG} anahtarına {@code true} değeri atanır.
+ * {@link Key#REFRESH_CALL_LOG} anahtarına {@code true} değeri atanır.
  */
 public class ActivityCallList extends ActivityCallHistoryView {
 	
 	/**
 	 * Arama kayıtları yöneticisi
 	 */
-	private final CallStory          callStory = Blue.getObject(BuildKeys.CALL_STORY);
+	private final CallStory          callStory = Blue.getObject(Key.CALL_STORY);
 	/**
 	 * Kişinin arama geçmişi
 	 */
@@ -46,7 +46,7 @@ public class ActivityCallList extends ActivityCallHistoryView {
 		
 		super.onCreate();
 		
-		calls = Blue.getObject(BuildKeys.CALL_HISTORY);
+		calls = Blue.getObject(Key.CALL_HISTORY);
 		
 		if (calls == null) calls = new ArrayList<>(0);
 		

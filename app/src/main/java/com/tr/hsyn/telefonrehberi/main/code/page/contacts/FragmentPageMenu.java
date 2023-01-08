@@ -14,9 +14,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.view.MenuProvider;
 
-import com.tr.hsyn.buildkeys.BuildKeys;
 import com.tr.hsyn.bungee.Bungee;
 import com.tr.hsyn.collection.Lister;
+import com.tr.hsyn.key.Key;
 import com.tr.hsyn.message.Show;
 import com.tr.hsyn.page.MenuShower;
 import com.tr.hsyn.room.TimedRoom;
@@ -92,7 +92,7 @@ public abstract class FragmentPageMenu extends FragmentContactListEditor impleme
 		
 		if (pageOwner == null || pageOwner.getCurrentPage() == 1) return false;
 		
-		if (Blue.getObject(BuildKeys.CONTACTS) == null) return false;
+		if (Blue.getObject(Key.CONTACTS) == null) return false;
 		
 		if (gateMenuSelection.enter()) {
 			

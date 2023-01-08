@@ -276,4 +276,10 @@ class BContact implements Contact {
 		
 		return (int) contactId;
 	}
+	
+	@Override
+	public int getId() {
+		
+		return (int) contactId;
+	}
 }

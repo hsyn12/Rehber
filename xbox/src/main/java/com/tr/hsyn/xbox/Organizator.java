@@ -1,7 +1,7 @@
 package com.tr.hsyn.xbox;
 
 
-import com.tr.hsyn.buildkeys.BuildKeys;
+import com.tr.hsyn.buildkeys.Key;
 import com.tr.hsyn.xlog.xlog;
 
 import java.util.ArrayList;
@@ -42,14 +42,14 @@ public final class Organizator {
 			this.followers.remove(key).forEach(follower -> follower.accept(object));
 			
 			if (DEBUG_DEGREE > 0)
-				xlog.i("Meeting is completed for '%d' [%s]", key, BuildKeys.getName(key));
+				xlog.i("Meeting is completed for '%d' [%s]", key, Key.getName(key));
 			
 			return true;
 		}
 		else {
 			
 			if (DEBUG_DEGREE > 1)
-				xlog.i("No meeting for '%d' [%s]", key, BuildKeys.getName(key));
+				xlog.i("No meeting for '%d' [%s]", key, Key.getName(key));
 		}
 		
 		return false;

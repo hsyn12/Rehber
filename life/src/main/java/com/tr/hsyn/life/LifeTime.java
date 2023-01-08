@@ -19,11 +19,13 @@ public class LifeTime implements Life {
 	public LifeTime(@NotNull String name) {this.name = name;}
 	
 	public LifeTime(@NotNull String name, long start) {
+		
 		this.name      = name;
 		this.startTime = start;
 	}
 	
 	public LifeTime(@NotNull String name, long startTime, long endTime) {
+		
 		this.name      = name;
 		this.startTime = startTime;
 		this.endTime   = endTime;
@@ -34,10 +36,10 @@ public class LifeTime implements Life {
 	 * Doğru bir yaşam süresi, başlangıcı sıfırdan büyük ve bitişi başlangıç zamanından büyük olur.
 	 *
 	 * @return Yaşam süresi.
-	 * Eğer yaşam başlamadıysa yada
-	 * sona ermediyse yada
-	 * başlama ve bitiş zamanı mantıksal olarak hatalı ise
-	 * {@code 0L} döndürür.
+	 * 		Eğer yaşam başlamadıysa yada
+	 * 		sona ermediyse yada
+	 * 		başlama ve bitiş zamanı mantıksal olarak hatalı ise
+	 *      {@code 0L} döndürür.
 	 */
 	long getLifeTime() {
 		
@@ -49,17 +51,20 @@ public class LifeTime implements Life {
 	@NotNull
 	@Override
 	public String getName() {
+		
 		return name;
 	}
 	
 	@Override
 	public long getStartTime() {
+		
 		return startTime;
 	}
 	
 	@NotNull
 	@Override
 	public Life startLife(long time) {
+		
 		this.startTime = time;
 		return this;
 	}
@@ -67,18 +72,21 @@ public class LifeTime implements Life {
 	@NotNull
 	@Override
 	public Life startLife() {
+		
 		this.startTime = System.currentTimeMillis();
 		return this;
 	}
 	
 	@Override
 	public long getEndTime() {
+		
 		return endTime;
 	}
 	
 	@NotNull
 	@Override
 	public Life endLife(long time) {
+		
 		this.endTime = time;
 		return this;
 	}
@@ -86,7 +94,14 @@ public class LifeTime implements Life {
 	@NotNull
 	@Override
 	public Life endLife() {
+		
 		endTime = System.currentTimeMillis();
 		return this;
+	}
+	
+	@Override
+	public int getId() {
+		
+		return (int) startTime;
 	}
 }

@@ -9,10 +9,10 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tr.hsyn.activity.ActivityView;
-import com.tr.hsyn.buildkeys.BuildKeys;
 import com.tr.hsyn.bungee.Bungee;
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.colors.Colors;
+import com.tr.hsyn.key.Key;
 import com.tr.hsyn.message.Show;
 import com.tr.hsyn.page.SwipeListener;
 import com.tr.hsyn.room.DigiRoom;
@@ -43,7 +43,7 @@ public class ContactSearch extends ActivityView implements OnSearchViewListener,
 	
 	private final TimedRoom            gateSelection = TimedRoom.createRoom(1000L);
 	private final DigiRoom             gateFilter    = DigiRoom.createRoom(1500L).loopDelay();
-	protected     List<Contact>        contacts      = new ArrayList<>(Objects.requireNonNull(Blue.getObject(BuildKeys.CONTACTS)));
+	protected     List<Contact>        contacts      = new ArrayList<>(Objects.requireNonNull(Blue.getObject(Key.CONTACTS)));
 	protected     RecyclerView         list;
 	protected     ProgressBar          progressBar;
 	protected     View                 emptyView;
@@ -96,7 +96,7 @@ public class ContactSearch extends ActivityView implements OnSearchViewListener,
 			
 			xlog.d("Selected : %s", selected.getName());
 			
-			Blue.box(BuildKeys.CONTACT_SELECTED, selected);
+			Blue.box(Key.CONTACT_SELECTED, selected);
 			openContactDetails();
 		}
 	}

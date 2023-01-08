@@ -7,8 +7,8 @@ import androidx.annotation.NonNull;
 
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.collection.Lister;
-import com.tr.hsyn.db.cast.Database;
 import com.tr.hsyn.keep.Keep;
+import com.tr.hsyn.registery.cast.Database;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.main.code.call.act.Calls;
 import com.tr.hsyn.telefonrehberi.main.code.database.call.CallDatabase;

@@ -3,7 +3,7 @@ package com.tr.hsyn.message;
 
 import android.app.Activity;
 
-import com.tr.hsyn.buildkeys.BuildKeys;
+import com.tr.hsyn.key.Key;
 import com.tr.hsyn.xbox.Blue;
 import com.tr.hsyn.xlog.xlog;
 
@@ -49,7 +49,7 @@ public interface IMessage<T> {
 		
 		if (relationDegree != 0) {
 			
-			Integer degree = Blue.getObject(BuildKeys.RELATION_DEGREE);
+			Integer degree = Blue.getObject(Key.RELATION_DEGREE);
 			
 			if (degree != null) {
 				

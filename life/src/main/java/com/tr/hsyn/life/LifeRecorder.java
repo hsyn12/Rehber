@@ -1,7 +1,7 @@
 package com.tr.hsyn.life;
 
 
-import com.tr.hsyn.db.cast.Database;
+import com.tr.hsyn.registery.cast.Database;
 
 import org.jetbrains.annotations.NotNull;
 

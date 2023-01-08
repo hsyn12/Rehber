@@ -2,16 +2,15 @@ package com.tr.hsyn.xbox;
 
 
 import com.tr.hsyn.keep.Keep;
+import com.tr.hsyn.key.Key;
 import com.tr.hsyn.reflection.Clazz;
+import com.tr.hsyn.xbox.definition.Hotel;
 import com.tr.hsyn.xlog.xlog;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Consumer;
-import java.util.function.IntSupplier;
 
 
 /**
@@ -43,8 +42,15 @@ import java.util.function.IntSupplier;
  */
 public final class Blue {
 	
-	private static final Map<Integer, Object> internet    = new HashMap<>();
-	private static final Organizator          ORGANIZATOR = new Organizator();
+	/**
+	 * Hotel
+	 */
+	private static Hotel hotel;
+	
+	public static void setHotel(Hotel hotel) {
+		
+		Blue.hotel = hotel;
+	}
 	
 	private static <T> void checkKeepClass(@NotNull T object) {
 		
@@ -86,7 +92,7 @@ public final class Blue {
 	 * @param object Nesne
 	 * @param <T>    Nesne türü
 	 */
-	public static <T> void box(int key, T object) {
+	public static <T> void box(@NotNull Key key, T object) {
 		
 		putObject(key, object);
 	}
@@ -102,7 +108,7 @@ public final class Blue {
 	@Nullable
 	public static <T> T box(@NotNull Class<T> clazz, @Nullable Object... params) {
 		
-		int key = getKey(clazz);
+		Key key = getKey(clazz);
 		T   obj = getObject(key);
 		
 		if (obj != null) return obj;//! Burada buluşma yok çünkü nesne talep ediliyor
@@ -119,12 +125,13 @@ public final class Blue {
 	 * @param <T>   Sınıf türü
 	 * @return Anahtar
 	 */
-	public static <T> int getKey(Class<T> clazz) {
+	@NotNull
+	public static <T> Key getKey(Class<T> clazz) {
 		
 		if (clazz != null)
-			return clazz.getCanonicalName().hashCode();
+			return Key.of(clazz.getCanonicalName().hashCode(), clazz.getCanonicalName());
 		
-		return 0;
+		return Key.ofEmpty();
 	}
 	
 	/**
@@ -136,12 +143,10 @@ public final class Blue {
 	 * @param <T>    Nesne türü
 	 * @return Anahtar
 	 */
-	public static <T> int getKey(Object object) {
+	@NotNull
+	public static <T> Key getKey(Object object) {
 		
-		if (object != null)
-			return object.getClass().getCanonicalName().hashCode();
-		
-		return 0;
+		return (object != null) ? getKey(object.getClass()) : Key.ofEmpty();
 	}
 	
 	/**
@@ -167,13 +172,13 @@ public final class Blue {
 	 * hiç bir kayıtlı bilgi kalmaz.<br>
 	 * Bu metodun amacı, bir nesnenin herhangi bir zamanda erişimini mümkün kılmak.<br>
 	 * Çünkü bir nesne talep edildiği anda kayıt edilmemiş olabilir.
-	 * Bu yüzden {@link #getObject(int)} metodu çağrıldığında nesne kayıtlı değilse {@code null} döner.<br>
+	 * Bu yüzden {@link #getObject(Key)} metodu çağrıldığında nesne kayıtlı değilse {@code null} döner.<br>
 	 *
 	 * @param key      Buluşmak istenilen nesnin kayıt anahtarı
 	 * @param follower Buluşmak isteyen kişi
 	 * @param <T>      Nesne türü
 	 */
-	public static <T> void meet(int key, @NotNull Consumer<T> follower) {
+	public static <T> void meet(@NotNull Key key, @NotNull Consumer<T> follower) {
 		
 		T obj = getObject(key);
 		
@@ -186,21 +191,8 @@ public final class Blue {
 			
 			//- Aranan nesne kayıtlı değil
 			//- Takip başlasın
-			ORGANIZATOR.follow(key, follower);
+			hotel.meet(key, follower);
 		}
-	}
-	
-	/**
-	 * Verilen anahtara ait nesneyle buluşturur.<br>
-	 * Eğer nesne yoksa takibe alır ve ilk fırsatta buluşma sağlanır.
-	 *
-	 * @param keySupplier Anahtar sağlayıcısı
-	 * @param follower    Takipçi
-	 * @param <T>         Takip edilen nesnenin türü
-	 */
-	public static <T> void meet(@NotNull IntSupplier keySupplier, @NotNull Consumer<T> follower) {
-		
-		meet(keySupplier.getAsInt(), follower);
 	}
 	
 	/**
@@ -209,9 +201,9 @@ public final class Blue {
 	 *
 	 * @param key Takip edilen nesnenin kayıt anahtarı
 	 */
-	public static void breakMeeting(int key) {
+	public static void breakMeeting(@NotNull Key key) {
 		
-		ORGANIZATOR.unFollow(key);
+		hotel.cancelMeeting(key);
 	}
 	
 	/**
@@ -224,8 +216,7 @@ public final class Blue {
 	 * @return Nesne. Yoksa {@code null}.
 	 */
 	@Nullable
-	@SuppressWarnings("unchecked")
-	public static <T> T getObject(int key) {return (T) internet.get(key);}
+	public static <T> T getObject(@NotNull Key key) {return hotel.room(key);}
 	
 	/**
 	 * Verilen anahtar ile nesneyi kaydeder.<br>
@@ -238,17 +229,23 @@ public final class Blue {
 	 * @param key Anahtar
 	 * @param obj Nesne
 	 * @param <T> Nesne türü
-	 * @return Kaydedilen nesne
+	 * @return Verilen nesne kaydedilirse kayıtlı önceki nesne (varsa), diğer tüm durumlarda {@code null}
 	 */
 	@Nullable
-	private static <T> T putObject(int key, T obj) {
+	private static <T> T putObject(@NotNull Key key, T obj) {
+		
+		if (key.isEmpty()) {
+			
+			xlog.d("Invalid Key : ", key);
+			return null;
+		}
 		
 		if (obj != null) {
 			
 			checkKeepClass(obj);
 			
 			//Buluşmayı kontrol et
-			if (!ORGANIZATOR.meet(key, obj)) {
+			if (!hotel.peek(key, obj)) {
 				
 				//! Bu alan, nesnenin bir takipçisi olmadığı anlamına geliyor
 				
@@ -259,13 +256,11 @@ public final class Blue {
 				//! Bu durumda takipçi, nesne kaydedildikten sonra buluşma talebinde bulunmak zorunda.
 				
 				//- Buluşma yoksa kaydediliyor
-				internet.put(key, obj);
+				return hotel.room(key, obj);
 				
 				//- Buluşma taleplerinin nesneleri geçici nesneler olarak düşünülmeli
 				//- Her nesne kalıcı olarak saklanırsa burası çöplüğe döner
 			}
-			
-			return obj;
 		}
 		else {
 			xlog.d("null object can not be saved");
@@ -283,10 +278,9 @@ public final class Blue {
 	 * @return Nesne
 	 */
 	@Nullable
-	@SuppressWarnings("unchecked")
-	public static <T> T remove(int key) {
+	public static <T> T remove(Key key) {
 		
-		return (T) internet.remove(key);
+		return hotel.exitFromHotel(key);
 	}
 	
 	/**
@@ -330,8 +324,7 @@ public final class Blue {
 	 */
 	public static void clear() {
 		
-		internet.clear();
-		ORGANIZATOR.clear();
+		hotel.closeTheHotel();
 		
 		xlog.i("All clear");
 	}

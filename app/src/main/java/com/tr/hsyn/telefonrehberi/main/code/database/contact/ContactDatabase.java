@@ -2,16 +2,18 @@ package com.tr.hsyn.telefonrehberi.main.code.database.contact;
 
 
 import android.annotation.SuppressLint;
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
 import androidx.annotation.NonNull;
 
 import com.tr.hsyn.db.DBBase;
-import com.tr.hsyn.db.cast.DB;
-import com.tr.hsyn.db.cast.DBColumn;
+import com.tr.hsyn.db.actor.SqliteBridge;
 import com.tr.hsyn.label.Label;
+import com.tr.hsyn.registery.SimpleDatabase;
+import com.tr.hsyn.registery.Values;
+import com.tr.hsyn.registery.cast.DB;
+import com.tr.hsyn.registery.cast.DBColumn;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.main.code.contact.act.Contacts;
 import com.tr.hsyn.telefonrehberi.main.code.contact.act.Dates;
@@ -24,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.function.Function;
 
 
 /**
@@ -32,67 +34,13 @@ import java.util.stream.Collectors;
  */
 public class ContactDatabase extends DBBase<Contact> implements DBContact {
 	
+	private static final DB             db = new DbInterface();
+	private final        SimpleDatabase simpleDatabase;
+	
 	public ContactDatabase(@NonNull Context context) {
 		
-		super(context, new DbInterface());
-	}
-	
-	@NotNull
-	private static ContentValues createValues(String key, String value) {
-		
-		var v = new ContentValues();
-		
-		if (value != null) v.put(key, value);
-		else v.putNull(key);
-		return v;
-	}
-	
-	@NotNull
-	private static ContentValues createValues(String key, long value) {
-		
-		var v = new ContentValues();
-		
-		v.put(key, value);
-		
-		return v;
-	}
-	
-	@Override
-	protected ContentValues contentValuesOf(@NonNull Contact contact) {
-		
-		
-		ContentValues values = new ContentValues();
-		
-		values.put(ContactDatabase.CONTACT_ID, contact.getContactId());
-		
-		if (contact.getName() != null) values.put(ContactDatabase.NAME, contact.getName());
-		else values.putNull(NAME);
-		
-		if (contact.getEmails() != null) values.put(EMAILS, DBContact.getList(contact.getEmails()));
-		else values.putNull(EMAILS);
-		
-		if (contact.getNumbers() != null) values.put(NUMBERS, DBContact.getList(contact.getNumbers()));
-		else values.putNull(NUMBERS);
-		
-		values.put(SAVED_DATE, contact.getDates().getSavedDate());
-		values.put(UPDATED_DATE, contact.getDates().getUpdatedDate());
-		values.put(DELETED_DATE, contact.getDates().getDeletedDate());
-		values.put(LAST_LOOK_DATE, contact.getDates().getLastLookDate());
-		values.put(LOOK_COUNT, contact.getLookCount());
-		
-		var labels = contact.getLabels();
-		
-		if (labels.isEmpty()) {
-			
-			values.putNull(LABELS);
-		}
-		else {
-			
-			var ids = Stringx.joinToString(contact.getLabelIds());
-			values.put(LABELS, ids);
-		}
-		
-		return values;
+		super(context, db);
+		simpleDatabase = new SqliteBridge(getWritableDatabase());
 	}
 	
 	@SuppressLint("Range")
@@ -121,6 +69,58 @@ public class ContactDatabase extends DBBase<Contact> implements DBContact {
 				dates,
 				labels
 		);
+	}
+	
+	@Override
+	public @NotNull DB getDBInterface() {
+		
+		return db;
+	}
+	
+	@Override
+	public @NotNull SimpleDatabase getSimpleDatabase() {
+		
+		return simpleDatabase;
+	}
+	
+	@Override
+	public @NotNull Values contentValuesOf(@NonNull Contact contact) {
+		
+		Values values = new Values();
+		
+		values.put(ContactDatabase.CONTACT_ID, contact.getContactId());
+		
+		if (contact.getName() != null) values.put(ContactDatabase.NAME, contact.getName());
+		else values.putNull(Values.TYPE_STRING, NAME);
+		
+		if (contact.getEmails() != null) values.put(EMAILS, DBContact.getList(contact.getEmails()));
+		else values.putNull(Values.TYPE_STRING, EMAILS);
+		
+		if (contact.getNumbers() != null) values.put(NUMBERS, DBContact.getList(contact.getNumbers()));
+		else values.putNull(Values.TYPE_STRING, NUMBERS);
+		
+		values.put(SAVED_DATE, contact.getDates().getSavedDate());
+		values.put(UPDATED_DATE, contact.getDates().getUpdatedDate());
+		values.put(DELETED_DATE, contact.getDates().getDeletedDate());
+		values.put(LAST_LOOK_DATE, contact.getDates().getLastLookDate());
+		values.put(LOOK_COUNT, contact.getLookCount());
+		
+		var labels = contact.getLabels();
+		
+		if (labels != null) {
+			
+			if (labels.isEmpty()) {
+				
+				values.putNull(Values.TYPE_STRING, LABELS);
+			}
+			else {
+				
+				var ids = Stringx.joinToString(contact.getLabelIds());
+				values.put(LABELS, ids);
+			}
+		}
+		
+		return values;
 	}
 	
 	@NotNull
@@ -194,29 +194,55 @@ public class ContactDatabase extends DBBase<Contact> implements DBContact {
 	}
 	
 	@Override
-	public int update(@NonNull List<? extends Contact> items) {
-		
-		return (int) items.stream().filter(this::update).count();
-	}
-	
-	@Override
 	public boolean update(@NonNull Contact contact) {
 		
 		return update(contact, contact.getContactId());
 	}
 	
 	@Override
-	public boolean delete(@NonNull Contact item) {
+	public int add(@NotNull List<? extends Contact> items, @NotNull Function<? super Contact, Values> valuesFunction) {
 		
-		return deleteByPrimaryKey(String.valueOf(item.getContactId()));
+		var db    = getWritableDatabase();
+		int count = 0;
+		
+		try {
+			db.beginTransaction();
+			
+			for (var item : items) {
+				
+				var i = db.insert(getDatabaseInterface().getTableName(), null, convertFrom(valuesFunction.apply(item)));
+				
+				if (i != -1) count++;
+			}
+			
+			db.setTransactionSuccessful();
+		}
+		finally {
+			
+			db.endTransaction();
+		}
+		
+		return count;
 	}
 	
-	@Override
-	public int delete(@NonNull List<? extends Contact> items) {
+	@NotNull
+	private static Values createValues(String key, String value) {
 		
-		List<String> keys = items.stream().map(Contact::getContactId).map(String::valueOf).collect(Collectors.toList());
+		var v = new Values();
 		
-		return delete(DBBase.createSelection(DBContact.CONTACT_ID, keys));
+		if (value != null) v.put(key, value);
+		else v.putNull(Values.TYPE_STRING, key);
+		return v;
+	}
+	
+	@NotNull
+	private static Values createValues(String key, long value) {
+		
+		var v = new Values();
+		
+		v.put(key, value);
+		
+		return v;
 	}
 	
 	private static final class DbInterface implements DB {
@@ -244,21 +270,21 @@ public class ContactDatabase extends DBBase<Contact> implements DBContact {
 			
 			return new DBColumn[]{
 					
-					Text(CONTACT_ID).primaryKey(),
-					Text(NAME),
-					Text(NUMBERS),
-					Number(LOOK_COUNT).defaultValue(0),
-					Number(SAVED_DATE).defaultValue(0),
-					Number(UPDATED_DATE).defaultValue(0),
-					Number(DELETED_DATE).defaultValue(0),
-					Number(LAST_LOOK_DATE).defaultValue(0),
-					Text(EMAILS),
-					Text(LABELS)
+					DB.text(CONTACT_ID).primaryKey(),
+					DB.text(NAME),
+					DB.text(NUMBERS),
+					DB.number(LOOK_COUNT).defaultValue(0),
+					DB.number(SAVED_DATE).defaultValue(0),
+					DB.number(UPDATED_DATE).defaultValue(0),
+					DB.number(DELETED_DATE).defaultValue(0),
+					DB.number(LAST_LOOK_DATE).defaultValue(0),
+					DB.text(EMAILS),
+					DB.text(LABELS)
 			};
 		}
 		
 		@Override
-		public String getPrimaryKey() {
+		public @NotNull String getPrimaryKey() {
 			
 			return CONTACT_ID;
 		}

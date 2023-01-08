@@ -4,8 +4,8 @@ package com.tr.hsyn.telefonrehberi.main.activity.call.backup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.tr.hsyn.buildkeys.BuildKeys;
 import com.tr.hsyn.calldata.Call;
+import com.tr.hsyn.key.Key;
 import com.tr.hsyn.message.Show;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.main.dev.backup.Backup;
@@ -30,7 +30,7 @@ public class CallBackupActivity extends CallBackupActivityRestore {
 	@Override
 	protected List<Call> getCallLogCalls() {
 		
-		return Blue.getObject(BuildKeys.CALL_LOG);
+		return Blue.getObject(Key.CALL_LOG);
 	}
 	
 	@Override

@@ -29,17 +29,19 @@ android {
 dependencies {
 
     implementation "androidx.appcompat:appcompat:${rootProject.appcompat}"
-    implementation 'com.google.android.material:material:1.7.0'
-    implementation project(path: ':rescolors')
-    implementation project(path: ':db')
-    implementation project(path: ':life')
-    implementation project(path: ':collection')
-    implementation project(path: ':xlog')
-    implementation project(path: ':textdrawable')
-    implementation project(path: ':recolor')
-    implementation project(path: ':holder')
-    implementation project(path: ':resripple')
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.4'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
+	implementation 'com.google.android.material:material:1.7.0'
+	implementation project(path: ':rescolors')
+	implementation project(path: ':db')
+	implementation project(path: ':life')
+	implementation project(path: ':collection')
+	implementation project(path: ':xlog')
+	implementation project(path: ':textdrawable')
+	implementation project(path: ':recolor')
+	implementation project(path: ':holder')
+	implementation project(path: ':resripple')
+	implementation project(path: ':registery')
+	implementation project(path: ':identity')
+	testImplementation 'junit:junit:4.13.2'
+	androidTestImplementation 'androidx.test.ext:junit:1.1.4'
+	androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
 }

@@ -8,11 +8,15 @@ dependencies {
 	implementation project(path: ':xlog')
 	implementation project(path: ':buildkeys')
 	implementation project(path: ':keep')
-    implementation project(path: ':atom')
-    implementation project(path: ':key')
+	implementation project(path: ':atom')
+	implementation project(path: ':key')
 	implementation project(path: ':label')
-    implementation project(path: ':identity')
-    compileOnly "org.jetbrains:annotations:${rootProject.annotations}"
+	implementation project(path: ':identity')
+	implementation project(path: ':entity')
+	implementation project(path: ':registery')
+	implementation project(path: ':execution')
+	implementation project(path: ':executors')
+	compileOnly "org.jetbrains:annotations:${rootProject.annotations}"
 }
 
 java {

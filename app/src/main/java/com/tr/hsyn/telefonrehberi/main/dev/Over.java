@@ -7,8 +7,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.tr.hsyn.bool.Bool;
-import com.tr.hsyn.buildkeys.BuildKeys;
 import com.tr.hsyn.calldata.Call;
+import com.tr.hsyn.key.Key;
 import com.tr.hsyn.telefonrehberi.main.code.contact.cast.Contact;
 import com.tr.hsyn.use.Use;
 import com.tr.hsyn.xbox.Blue;
@@ -24,7 +24,7 @@ import java.util.List;
  * Programın her yerinden erişilmesi gereken bazı kodlara erişim yöntemi sağlar.
  * Sınıf tamamen {@link Blue} sınıfı üzerinden çalışır.
  * {@code Blue} sınıfı kullanılırken erişilmek istenen nesnenin anahtarı bilinmek zorunda.
- * Ancak bu sınıf ({@code Over}) {@link BuildKeys} sınıfında tanımlanan nesne kodlarını
+ * Ancak bu sınıf ({@code Over}) {@link Key} sınıfında tanımlanan nesne kodlarını
  * kullandırmak yerine daha açık ve anlaşılır metotlar sunar.
  * <br>
  *
@@ -35,7 +35,7 @@ import java.util.List;
  * </code></pre>
  *
  * @see Blue
- * @see BuildKeys
+ * @see Key
  */
 public interface Over {
 	
@@ -47,7 +47,7 @@ public interface Over {
 		/**
 		 * @return Application context
 		 */
-		static Context getContext() {return Blue.getObject(BuildKeys.CONTEXT);}
+		static Context getContext() {return Blue.getObject(Key.CONTEXT);}
 		
 	}
 	
@@ -58,7 +58,7 @@ public interface Over {
 		
 		static List<Contact> getContacts() {
 			
-			return Blue.getObject(BuildKeys.CONTACTS);
+			return Blue.getObject(Key.CONTACTS);
 		}
 		
 		/**
@@ -66,7 +66,7 @@ public interface Over {
 		 */
 		static Contact getSelectedContact() {
 			
-			return Blue.getObject(BuildKeys.CONTACT_SELECTED);
+			return Blue.getObject(Key.CONTACT_SELECTED);
 		}
 		
 		/**
@@ -74,7 +74,7 @@ public interface Over {
 		 */
 		static void refreshContacts() {
 			
-			Blue.box(BuildKeys.SIGN_REFRESH_CONTACTS, true);
+			Blue.box(Key.SIGN_REFRESH_CONTACTS, true);
 		}
 		
 		/**
@@ -84,7 +84,7 @@ public interface Over {
 		 */
 		static Story<Contact> getContactManager() {
 			
-			return Blue.getObject(BuildKeys.CONTACT_STORY);
+			return Blue.getObject(Key.CONTACT_STORY);
 		}
 		
 		static void addDeleted(Contacts... contacts) {
@@ -94,7 +94,7 @@ public interface Over {
 			if (contactList == null) {
 				
 				contactList = new ArrayList<>();
-				Blue.box(BuildKeys.DELETED_CONTACTS, contactList);
+				Blue.box(Key.DELETED_CONTACTS, contactList);
 			}
 			
 			contactList.addAll(Arrays.asList(contacts));
@@ -103,7 +103,7 @@ public interface Over {
 		
 		static List<Contacts> getDeleted() {
 			
-			return Blue.getObject(BuildKeys.DELETED_CONTACTS);
+			return Blue.getObject(Key.DELETED_CONTACTS);
 		}
 	}
 	
@@ -119,7 +119,7 @@ public interface Over {
 		 */
 		static Story<Call> getCallLogManager() {
 			
-			return Blue.getObject(BuildKeys.CALL_STORY);
+			return Blue.getObject(Key.CALL_STORY);
 		}
 		
 		/**
@@ -128,7 +128,7 @@ public interface Over {
 		 */
 		static void refreshCallLog() {
 			
-			Blue.box(BuildKeys.REFRESH_CALL_LOG, true);
+			Blue.box(Key.REFRESH_CALL_LOG, true);
 		}
 		
 		/**
@@ -141,7 +141,7 @@ public interface Over {
 		 */
 		static boolean needRefreshCallLog() {
 			
-			Boolean b = Blue.getObject(BuildKeys.REFRESH_CALL_LOG);
+			Boolean b = Blue.getObject(Key.REFRESH_CALL_LOG);
 			
 			return b != null && b;
 		}
@@ -159,7 +159,7 @@ public interface Over {
 			
 			boolean b = needRefreshCallLog();
 			
-			Blue.box(BuildKeys.REFRESH_CALL_LOG, newValue);
+			Blue.box(Key.REFRESH_CALL_LOG, newValue);
 			
 			return b;
 		}
@@ -175,7 +175,7 @@ public interface Over {
 			@NonNull
 			static Bool isUpdated() {
 				
-				return new Bool(Blue.getObject(BuildKeys.CALL_LOG_UPDATED));
+				return new Bool(Blue.getObject(Key.CALL_LOG_UPDATED));
 			}
 			
 			static Bool isUpdated(@NonNull Bool newValue) {
@@ -183,7 +183,7 @@ public interface Over {
 				var u = isUpdated();
 				
 				if (!u.equals(newValue))
-					Blue.box(BuildKeys.CALL_LOG_UPDATED, newValue.bool());
+					Blue.box(Key.CALL_LOG_UPDATED, newValue.bool());
 				
 				return u;
 			}
@@ -195,18 +195,18 @@ public interface Over {
 			 */
 			static void setUpdated(@NonNull Bool state) {
 				
-				Blue.box(BuildKeys.CALL_LOG_UPDATED, state.getObject());
+				Blue.box(Key.CALL_LOG_UPDATED, state.getObject());
 			}
 			
 			@Nullable
 			static List<Call> getCalls() {
 				
-				return Blue.getObject(BuildKeys.CALL_LOG);
+				return Blue.getObject(Key.CALL_LOG);
 			}
 			
 			static void setCalls(List<Call> calls) {
 				
-				Blue.box(BuildKeys.CALL_LOG, calls);
+				Blue.box(Key.CALL_LOG, calls);
 			}
 			
 			/**

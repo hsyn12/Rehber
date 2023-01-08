@@ -5,8 +5,6 @@ import android.database.Cursor;
 
 import androidx.annotation.NonNull;
 
-import com.tr.hsyn.db.cast.OCreator;
-
 import java.util.function.Function;
 
 

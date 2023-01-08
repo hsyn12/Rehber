@@ -5,7 +5,7 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
-import com.tr.hsyn.db.cast.Database;
+import com.tr.hsyn.registery.cast.Database;
 
 
 public interface ColorRegisters extends Database<ColorRegister> {

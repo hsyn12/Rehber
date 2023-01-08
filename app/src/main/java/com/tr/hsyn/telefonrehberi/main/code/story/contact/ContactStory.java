@@ -13,10 +13,10 @@ import android.provider.ContactsContract;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.tr.hsyn.buildkeys.BuildKeys;
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.execution.Runny;
 import com.tr.hsyn.keep.Keep;
+import com.tr.hsyn.key.Key;
 import com.tr.hsyn.perfectsort.PerfectSort;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.main.code.contact.act.Contacts;
@@ -54,117 +54,6 @@ public class ContactStory implements ContactDataStory {
 		
 		this.database = database;
 		this.context  = context;
-	}
-	
-	/**
-	 * Sistem rehberine kişi ekler.
-	 *
-	 * @param resolver resolver
-	 * @param name     name
-	 * @param numbers  numbers
-	 * @return ContentProviderResult dizisi
-	 */
-	@Nullable
-	private static ContentProviderResult[] addContact(@NonNull ContentResolver resolver, @NotNull String name, @NotNull Iterable<String> numbers) {
-		
-		ArrayList<ContentProviderOperation> ops                   = new ArrayList<>();
-		int                                 rawContactInsertIndex = 0;
-		
-		ops.add(ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
-				        .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null)
-				        .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null)
-				        .build());
-		
-		
-		ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
-				        .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, rawContactInsertIndex)
-				        .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
-				        .withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, name)
-				        .build());
-		
-		for (var number : numbers)
-			ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
-					        .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, rawContactInsertIndex)
-					        .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
-					        .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, number)
-					        .withValue(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE)
-					        .build());
-		
-		
-		try {
-			return resolver.applyBatch(ContactsContract.AUTHORITY, ops);
-		}
-		catch (RemoteException | OperationApplicationException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
-	@Nullable
-	private static ContentProviderResult[] addContact(@NonNull ContentResolver resolver, Account account, @NonNull String name, @NotNull Iterable<String> numbers) {
-		
-		ArrayList<ContentProviderOperation> ops                   = new ArrayList<>();
-		int                                 rawContactInsertIndex = 0;
-		
-		ops.add(ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
-				        .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, account == null ? null : account.getType())
-				        .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, account == null ? null : account.getName())
-				        .build());
-		
-		
-		ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
-				        .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, rawContactInsertIndex)
-				        .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
-				        .withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, name)
-				        .build());
-		
-		for (var number : numbers)
-			ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
-					        .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, rawContactInsertIndex)
-					        .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
-					        .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, number)
-					        .withValue(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE)
-					        .build());
-		
-		
-		try {
-			return resolver.applyBatch(ContactsContract.AUTHORITY, ops);
-		}
-		catch (RemoteException | OperationApplicationException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
-	/**
-	 * Sistem kayıtlarından kişiyi sil.
-	 *
-	 * @param contentResolver ContentResolver
-	 * @param contactId       contact id
-	 * @return Silme başarılı olursa {@code true}.
-	 */
-	private static boolean deleteContact(@NotNull final ContentResolver contentResolver, @NotNull final String contactId) {
-		
-		Uri      contactUri  = ContactsContract.RawContacts.CONTENT_URI.buildUpon().appendQueryParameter(ContactsContract.CALLER_IS_SYNCADAPTER, "true").build();
-		String   whereClause = ContactsContract.RawContacts.CONTACT_ID + " = ?";
-		String[] args        = {contactId};
-		
-		return contentResolver.delete(contactUri, whereClause, args) > 0;
-	}
-	
-	/**
-	 * Kişileri sistem kayıtlarından siler.
-	 *
-	 * @param contentResolver contentResolver
-	 * @param contactIds      Silinecek kişilere ait contact id listesi
-	 * @return Silinen kişi sayısı
-	 */
-	private static int deleteContacts(@NotNull final ContentResolver contentResolver, @NotNull final List<String> contactIds) {
-		
-		Uri    contactUri  = ContactsContract.RawContacts.CONTENT_URI.buildUpon().appendQueryParameter(ContactsContract.CALLER_IS_SYNCADAPTER, "true").build();
-		String whereClause = Stringx.format("%s in (%s)", ContactsContract.RawContacts.CONTACT_ID, Stringx.joinToString(contactIds));
-		
-		return contentResolver.delete(contactUri, whereClause, null);
 	}
 	
 	@Override
@@ -262,7 +151,7 @@ public class ContactStory implements ContactDataStory {
 						Lister.loop(contacts.getContacts(), c -> c.getDates().setDeletedDate(date));
 						database.update(deleted);
 						
-						Blue.box(BuildKeys.DELETED_CONTACTS, deleted);
+						Blue.box(Key.DELETED_CONTACTS, deleted);
 					});
 			
 			Bool.of(newContacts.isEmpty())
@@ -274,7 +163,7 @@ public class ContactStory implements ContactDataStory {
 						var count = database.add(newContacts);
 						xlog.d("%d yeni kişi eklendi [size=%d]", count, newContacts.size());
 						
-						Blue.box(BuildKeys.NEW_CONTACTS, newContacts);
+						Blue.box(Key.NEW_CONTACTS, newContacts);
 					});
 			
 			//- Eklenen eklendi, silinen silindi
@@ -282,7 +171,7 @@ public class ContactStory implements ContactDataStory {
 			checkChanges(systemContacts, contacts.getContacts());
 		}
 		
-		Blue.box(BuildKeys.CONTACT_LIST_UPDATED, Time.currentMillis() - date);
+		Blue.box(Key.CONTACT_LIST_UPDATED, Time.currentMillis() - date);
 	}
 	
 	private void makeAllDeleted(@NotNull List<Contact> contacts, long date) {
@@ -300,7 +189,7 @@ public class ContactStory implements ContactDataStory {
 			});
 			
 			//! Tüm kişiler silindi
-			Blue.box(BuildKeys.DELETED_CONTACTS, contacts);
+			Blue.box(Key.DELETED_CONTACTS, contacts);
 		}, false);
 	}
 	
@@ -500,6 +389,117 @@ public class ContactStory implements ContactDataStory {
 		}
 		
 		return 0;
+	}
+	
+	/**
+	 * Sistem rehberine kişi ekler.
+	 *
+	 * @param resolver resolver
+	 * @param name     name
+	 * @param numbers  numbers
+	 * @return ContentProviderResult dizisi
+	 */
+	@Nullable
+	private static ContentProviderResult[] addContact(@NonNull ContentResolver resolver, @NotNull String name, @NotNull Iterable<String> numbers) {
+		
+		ArrayList<ContentProviderOperation> ops                   = new ArrayList<>();
+		int                                 rawContactInsertIndex = 0;
+		
+		ops.add(ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
+				        .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null)
+				        .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null)
+				        .build());
+		
+		
+		ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+				        .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, rawContactInsertIndex)
+				        .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
+				        .withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, name)
+				        .build());
+		
+		for (var number : numbers)
+			ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+					        .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, rawContactInsertIndex)
+					        .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
+					        .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, number)
+					        .withValue(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE)
+					        .build());
+		
+		
+		try {
+			return resolver.applyBatch(ContactsContract.AUTHORITY, ops);
+		}
+		catch (RemoteException | OperationApplicationException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@Nullable
+	private static ContentProviderResult[] addContact(@NonNull ContentResolver resolver, Account account, @NonNull String name, @NotNull Iterable<String> numbers) {
+		
+		ArrayList<ContentProviderOperation> ops                   = new ArrayList<>();
+		int                                 rawContactInsertIndex = 0;
+		
+		ops.add(ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
+				        .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, account == null ? null : account.getType())
+				        .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, account == null ? null : account.getName())
+				        .build());
+		
+		
+		ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+				        .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, rawContactInsertIndex)
+				        .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
+				        .withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, name)
+				        .build());
+		
+		for (var number : numbers)
+			ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+					        .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, rawContactInsertIndex)
+					        .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
+					        .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, number)
+					        .withValue(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE)
+					        .build());
+		
+		
+		try {
+			return resolver.applyBatch(ContactsContract.AUTHORITY, ops);
+		}
+		catch (RemoteException | OperationApplicationException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	/**
+	 * Sistem kayıtlarından kişiyi sil.
+	 *
+	 * @param contentResolver ContentResolver
+	 * @param contactId       contact id
+	 * @return Silme başarılı olursa {@code true}.
+	 */
+	private static boolean deleteContact(@NotNull final ContentResolver contentResolver, @NotNull final String contactId) {
+		
+		Uri      contactUri  = ContactsContract.RawContacts.CONTENT_URI.buildUpon().appendQueryParameter(ContactsContract.CALLER_IS_SYNCADAPTER, "true").build();
+		String   whereClause = ContactsContract.RawContacts.CONTACT_ID + " = ?";
+		String[] args        = {contactId};
+		
+		return contentResolver.delete(contactUri, whereClause, args) > 0;
+	}
+	
+	/**
+	 * Kişileri sistem kayıtlarından siler.
+	 *
+	 * @param contentResolver contentResolver
+	 * @param contactIds      Silinecek kişilere ait contact id listesi
+	 * @return Silinen kişi sayısı
+	 */
+	private static int deleteContacts(@NotNull final ContentResolver contentResolver, @NotNull final List<String> contactIds) {
+		
+		Uri    contactUri  = ContactsContract.RawContacts.CONTENT_URI.buildUpon().appendQueryParameter(ContactsContract.CALLER_IS_SYNCADAPTER, "true").build();
+		String whereClause = Stringx.format("%s in (%s)", ContactsContract.RawContacts.CONTACT_ID, Stringx.joinToString(contactIds));
+		
+		return contentResolver.delete(contactUri, whereClause, null);
 	}
 	
 	private interface ContactsHolder {

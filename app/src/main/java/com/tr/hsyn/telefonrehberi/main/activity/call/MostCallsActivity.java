@@ -13,11 +13,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.xtoolbar.Toolbarx;
 import com.tr.hsyn.activity.ActivityView;
 import com.tr.hsyn.betty.Betty;
-import com.tr.hsyn.buildkeys.BuildKeys;
 import com.tr.hsyn.bungee.Bungee;
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.colors.Colors;
+import com.tr.hsyn.key.Key;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.app.Res;
@@ -38,8 +38,8 @@ import java.util.stream.Collectors;
 
 public class MostCallsActivity extends ActivityView {
 	
-	private final int                     FILTER = Objects.requireNonNull(Blue.getObject(BuildKeys.MOST_CALLS_FILTER_TYPE));
-	private final List<Call>              calls  = Blue.getObject(BuildKeys.CALL_LOG);
+	private final int                     FILTER = Objects.requireNonNull(Blue.getObject(Key.MOST_CALLS_FILTER_TYPE));
+	private final List<Call>              calls  = Blue.getObject(Key.CALL_LOG);
 	private       List<Call>              filteredCalls;
 	private       ProgressBar             progressBar;
 	private       Drawable                imgType;

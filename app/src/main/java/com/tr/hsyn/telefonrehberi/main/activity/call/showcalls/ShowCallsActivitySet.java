@@ -1,8 +1,8 @@
 package com.tr.hsyn.telefonrehberi.main.activity.call.showcalls;
 
 
-import com.tr.hsyn.buildkeys.BuildKeys;
 import com.tr.hsyn.calldata.Call;
+import com.tr.hsyn.key.Key;
 import com.tr.hsyn.room.TimedRoom;
 import com.tr.hsyn.xbox.Blue;
 import com.tr.hsyn.xlog.xlog;
@@ -13,7 +13,7 @@ import java.util.List;
 
 public abstract class ShowCallsActivitySet extends ShowCallsActivityView {
 	
-	protected final int              SHOW_CALLS = BuildKeys.SHOW_CALLS;
+	protected final Key              SHOW_CALLS = Key.SHOW_CALLS;
 	protected final TimedRoom        gateDelete = TimedRoom.createRoom(600L);
 	protected       List<Call>       calls;
 	protected       ShowCallsAdapter adapter;

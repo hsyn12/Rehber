@@ -5,8 +5,8 @@ import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.tr.hsyn.buildkeys.BuildKeys;
 import com.tr.hsyn.calldata.Call;
+import com.tr.hsyn.key.Key;
 import com.tr.hsyn.telefonrehberi.main.code.contact.cast.Contact;
 import com.tr.hsyn.time.Time;
 import com.tr.hsyn.xbox.Blue;
@@ -101,7 +101,7 @@ public abstract class LoadingStation extends CallLogLoader {
 			pageContacts.setList(contacts);
 			xlog.d("Contacts Loaded [size=%d, loadTime=%dms]", contacts.size(), loadTime);
 			
-			Blue.box(BuildKeys.CONTACTS, contacts);
+			Blue.box(Key.CONTACTS, contacts);
 		}
 		else {
 			
@@ -145,7 +145,7 @@ public abstract class LoadingStation extends CallLogLoader {
 			var loadTime = Time.currentMillis() - getLastContactsLoadingStartTime();
 			
 			pageCallLog.setList(calls);
-			Blue.box(BuildKeys.CALL_LOG, calls);
+			Blue.box(Key.CALL_LOG, calls);
 			xlog.d("CallLog Loaded [size=%d, loadTime=%dms]", calls.size(), loadTime);
 		}
 		else {
@@ -185,8 +185,8 @@ public abstract class LoadingStation extends CallLogLoader {
 		
 		super.onResume();
 		
-		Boolean reCalls    = Blue.remove(BuildKeys.REFRESH_CALL_LOG);
-		Boolean reContacts = Blue.remove(BuildKeys.SIGN_REFRESH_CONTACTS);
+		Boolean reCalls    = Blue.remove(Key.REFRESH_CALL_LOG);
+		Boolean reContacts = Blue.remove(Key.SIGN_REFRESH_CONTACTS);
 		
 		if (reContacts != null) {
 			
