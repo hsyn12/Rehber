@@ -2,7 +2,6 @@ package com.tr.hsyn.xbox.definition;
 
 
 import com.tr.hsyn.key.Key;
-import com.tr.hsyn.xbox.Reception;
 
 import org.jetbrains.annotations.NotNull;
 

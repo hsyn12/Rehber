@@ -12,10 +12,10 @@ import com.tr.hsyn.keep.Keep;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.message.Show;
 import com.tr.hsyn.telefonrehberi.code.registery.blue.BlueRegister;
+import com.tr.hsyn.xbox.Alice;
 import com.tr.hsyn.xbox.Blue;
 import com.tr.hsyn.xbox.Daniel;
 import com.tr.hsyn.xbox.Rosa;
-import com.tr.hsyn.xbox.definition.Writer;
 import com.tr.hsyn.xlog.xlog;
 
 import io.paperdb.Paper;
@@ -74,6 +74,6 @@ public class Rehber extends Application {
 		
 		var register = new BlueRegister(getApplicationContext());
 		
-		Blue.setHotel(new Rosa(new Daniel(new Writer(register))));
+		Blue.setHotel(new Rosa(new Daniel(new Alice(register))));
 	}
 }

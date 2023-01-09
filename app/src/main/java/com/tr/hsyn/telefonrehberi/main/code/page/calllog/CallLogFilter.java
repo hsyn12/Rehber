@@ -178,7 +178,7 @@ public abstract class CallLogFilter extends CallList implements Filter, HaveCall
 			updateSubTitle();
 			checkEmpty();
 			
-			Blue.box(Key.CALL_LOG_SEARCH_INFO, new CallLogSearchInfo(filteredCalls, filter));
+			Blue.box(Key.CALL_LOG_FILTER, new CallLogSearchInfo(filteredCalls, filter));
 		}
 		else {
 			
@@ -219,7 +219,7 @@ public abstract class CallLogFilter extends CallList implements Filter, HaveCall
 	
 	private void filterAll() {
 		
-		Blue.box(Key.CALL_LOG_SEARCH_INFO, new CallLogSearchInfo(getList(), filter));
+		Blue.box(Key.CALL_LOG_FILTER, new CallLogSearchInfo(getList(), filter));
 		
 		if (filteredCalls != null) {
 			

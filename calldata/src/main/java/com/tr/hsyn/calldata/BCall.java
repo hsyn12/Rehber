@@ -229,8 +229,8 @@ public class BCall implements Call, Serializable {
 	}
 	
 	@Override
-	public int getId() {
+	public long getId() {
 		
-		return (int) getTime();
+		return getTime();
 	}
 }

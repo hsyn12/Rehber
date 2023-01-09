@@ -1,17 +1,29 @@
-package com.tr.hsyn.xbox;
+package com.tr.hsyn.xbox.definition;
 
 
 import com.tr.hsyn.key.Key;
-import com.tr.hsyn.xbox.definition.Writer;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
+/**
+ * Resepsiyon.<br>
+ * Misafirlerin odalarına giriş çıkışlarını gerçekleştirir.<br>
+ * Resepsiyon bir yazıcıya sahiptir ve tüm işlemleri kayıt altına alabilir.
+ */
 public abstract class Reception {
 	
+	/**
+	 * Yazıcı
+	 */
 	protected final Writer writer;
 	
+	/**
+	 * Yeni bir resepsiyon oluşturur.
+	 *
+	 * @param writer Kayıt Görevlisi
+	 */
 	public Reception(@NotNull Writer writer) {
 		
 		this.writer = writer;
@@ -21,7 +33,7 @@ public abstract class Reception {
 	 * Odaya erişim sağlar.
 	 *
 	 * @param key Oda anahtarı
-	 * @param <T> Odada olduğı sanılan nesne türü
+	 * @param <T> Odada olduğu sanılan nesne türü
 	 * @return Oda sakini, yoksa {@code null}
 	 */
 	@Nullable

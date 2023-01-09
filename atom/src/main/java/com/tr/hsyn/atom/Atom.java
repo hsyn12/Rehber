@@ -6,16 +6,18 @@ import com.tr.hsyn.identity.Identity;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 
 /**
  * Kimlik oluşturur
  */
 public class Atom implements Identity, Entity {
 	
-	private final int    id;
+	private final long   id;
 	private final String name;
 	
-	public Atom(int id, @NotNull String name) {
+	public Atom(long id, @NotNull String name) {
 		
 		this.id   = id;
 		this.name = name;
@@ -25,7 +27,7 @@ public class Atom implements Identity, Entity {
 	public final @NotNull String getName() {return name;}
 	
 	@Override
-	public final int getId() {return id;}
+	public long getId() {return id;}
 	
 	@Override
 	public boolean equals(Object obj) {
@@ -34,7 +36,7 @@ public class Atom implements Identity, Entity {
 	}
 	
 	@Override
-	public int hashCode() {return id;}
+	public int hashCode() {return Objects.hash(id);}
 	
 	@NotNull
 	@Override

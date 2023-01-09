@@ -100,8 +100,8 @@ public class LifeTime implements Life {
 	}
 	
 	@Override
-	public int getId() {
+	public long getId() {
 		
-		return (int) startTime;
+		return startTime;
 	}
 }

@@ -91,6 +91,27 @@ public interface ContactLabel extends Mabel {
 	 */
 	Label LABEL_MY_FRIEND      = newLabel(7, "Arkadaşım");
 	
+	@Nullable
+	default long[] getLabelIds() {
+		
+		var labels = getLabels();
+		
+		if (labels != null) {
+			
+			var ids = new long[labels.size()];
+			
+			int i = 0;
+			
+			for (var label : labels)
+				ids[i++] = label.getId();
+			
+			
+			return ids;
+		}
+		
+		return null;
+	}
+	
 	/**
 	 * Returns the {@link Label} for the given {@code labelId}.
 	 *
@@ -133,27 +154,6 @@ public interface ContactLabel extends Mabel {
 		}
 		
 		return labels;
-	}
-	
-	@Nullable
-	default int[] getLabelIds() {
-		
-		var labels = getLabels();
-		
-		if (labels != null) {
-			
-			var ids = new int[labels.size()];
-			
-			int i = 0;
-			
-			for (var label : labels)
-				ids[i++] = label.getId();
-			
-			
-			return ids;
-		}
-		
-		return null;
 	}
 	
 }

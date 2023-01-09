@@ -2,6 +2,7 @@ package com.tr.hsyn.xbox;
 
 
 import com.tr.hsyn.xbox.definition.Hotel;
+import com.tr.hsyn.xbox.definition.Reception;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

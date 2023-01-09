@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 
 /**
- * Veri tabanı oluşturmak için gereken temel bilgileri bildirir.<br>
+ * Veri tabanı oluşturmak için gereken temel bilgileri sağlama konusunda klavuzluk yapar.<br>
  *
  * @author hsyn 17 Eylül 2021 Cuma 10:25:57
  */

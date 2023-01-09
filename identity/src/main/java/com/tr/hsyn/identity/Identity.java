@@ -9,5 +9,5 @@ public interface Identity {
 	/**
 	 * @return Unique id
 	 */
-	int getId();
+	long getId();
 }

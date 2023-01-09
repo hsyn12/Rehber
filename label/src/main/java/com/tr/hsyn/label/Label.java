@@ -16,13 +16,13 @@ import java.util.Set;
  */
 public class Label extends Atom {
 	
-	public Label(int id, @NotNull String name) {
+	public Label(long id, @NotNull String name) {
 		
 		super(id, name);
 	}
 	
 	@NotNull
-	public static Label newLabel(int id, @NotNull String name) {
+	public static Label newLabel(long id, @NotNull String name) {
 		
 		return new Label(id, name);
 	}

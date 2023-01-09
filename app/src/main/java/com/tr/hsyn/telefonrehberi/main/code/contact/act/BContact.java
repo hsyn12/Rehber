@@ -278,8 +278,8 @@ class BContact implements Contact {
 	}
 	
 	@Override
-	public int getId() {
+	public long getId() {
 		
-		return (int) contactId;
+		return contactId;
 	}
 }

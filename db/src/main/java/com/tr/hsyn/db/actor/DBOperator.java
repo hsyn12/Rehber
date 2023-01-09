@@ -17,6 +17,9 @@ import com.tr.hsyn.registery.cast.DB;
 import com.tr.hsyn.registery.cast.Database;
 import com.tr.hsyn.xlog.xlog;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
@@ -41,6 +44,16 @@ public abstract class DBOperator<T extends Identity> extends SQLiteOpenHelper im
 		this.context           = context;
 	}
 	
+	@Override
+	public void onCreate(@NotNull SQLiteDatabase sqLiteDatabase) {
+		
+		var table = databaseInterface.getCreateTableQuery();
+		xlog.w("Creating table : %s", table);
+		sqLiteDatabase.execSQL(table);
+	}
+	
+	@Override
+	@NotNull
 	public DB getDatabaseInterface() {
 		
 		return databaseInterface;
@@ -60,14 +73,6 @@ public abstract class DBOperator<T extends Identity> extends SQLiteOpenHelper im
 	}
 	
 	@Override
-	public void onCreate(SQLiteDatabase sqLiteDatabase) {
-		
-		var table = databaseInterface.getCreateTableQuery();
-		xlog.w("Creating table : %s", table);
-		sqLiteDatabase.execSQL(table);
-	}
-	
-	@Override
 	public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
 		
 	}
@@ -82,6 +87,50 @@ public abstract class DBOperator<T extends Identity> extends SQLiteOpenHelper im
 				.objectFunction(function)
 				.performQuery(databaseInterface.getTableName())
 				.execute();
+	}
+	
+	@Override
+	public long insert(@NotNull String table, @Nullable String nullColumnHack, @NotNull Values values) {
+		
+		return getWritableDatabase().insert(table, nullColumnHack, convertFrom(values));
+	}
+	
+	@Override
+	public int update(@NotNull String table, @NotNull Values values, @NotNull String whereClause, @Nullable @org.jetbrains.annotations.Nullable String[] whereArgs) {
+		
+		var val = convertFrom(values);
+		xlog.w("Where    : %s", whereClause);
+		xlog.w("WhereArg : %s", Arrays.toString(whereArgs));
+		
+		var r = getWritableDatabase().update(table, val, whereClause, whereArgs);
+		
+		xlog.w("Update result : %d", r);
+		
+		return r;
+	}
+	
+	@Override
+	public int delete(@NotNull String table, @NotNull String whereClause, @Nullable String[] whereArgs) {
+		
+		return getWritableDatabase().delete(table, whereClause, whereArgs);
+	}
+	
+	@Override
+	public void beginTransaction() {
+		
+		getWritableDatabase().beginTransaction();
+	}
+	
+	@Override
+	public void endTransaction() {
+		
+		getWritableDatabase().endTransaction();
+	}
+	
+	@Override
+	public void setTransactionSuccessful() {
+		
+		getWritableDatabase().setTransactionSuccessful();
 	}
 	
 	@NonNull

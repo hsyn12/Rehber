@@ -3,6 +3,7 @@ package com.tr.hsyn.xbox;
 
 import com.tr.hsyn.execution.Runny;
 import com.tr.hsyn.key.Key;
+import com.tr.hsyn.xbox.definition.Reception;
 import com.tr.hsyn.xbox.definition.Writer;
 
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +19,7 @@ import java.util.Map;
  * 21 yaşında, genç ve idealist bir öğrenci.
  * Yakışıklı olduğu kadar küstah da.
  * Ancak işinin ehli bir resepsiyonist.
- * Misafirlerin otele giriş çıkışlarını sağlar ve bunun kayıt altına alınmasını sağlar.
+ * Misafirlerin otele giriş çıkışlarını sağlar.
  *
  * @author hsyn 5 Ocak 2023 Perşembe 19:45
  */
@@ -32,13 +33,6 @@ public class Daniel extends Reception {
 		super(writer);
 	}
 	
-	/**
-	 * Odadaki nesneyi döndürür.
-	 *
-	 * @param key Oda anahtarı
-	 * @param <T> Nesne türü
-	 * @return Nesne
-	 */
 	@Override
 	public <T> @Nullable T place(@NotNull Key key) {
 		
@@ -52,20 +46,12 @@ public class Daniel extends Reception {
 		return value;
 	}
 	
-	/**
-	 * Odaya yeni nesneyi yerleştirir.
-	 *
-	 * @param key    Oda anahtarı
-	 * @param object Yerleştirilecek nesne
-	 * @param <T>    Nesne türü
-	 * @return Odadaki önceki nesne, yoksa {@code null}
-	 */
 	@Override
 	public <T> @Nullable T place(@NotNull Key key, @NotNull T object) {
 		
 		T t = (T) OBJECT_MAP.put(key, object);
-		//add(key, t);
-		Runny.run(() -> writer.add(key, t), false);
+		
+		Runny.run(() -> writer.add(key), false);
 		
 		return t;
 	}
@@ -77,7 +63,7 @@ public class Daniel extends Reception {
 		
 		if (t != null) {
 			
-			Runny.run(() -> writer.remove(key, t), false);
+			Runny.run(() -> writer.remove(key), false);
 		}
 		
 		return t;

@@ -8,9 +8,7 @@ import android.database.Cursor;
 import androidx.annotation.NonNull;
 
 import com.tr.hsyn.db.DBBase;
-import com.tr.hsyn.db.actor.SqliteBridge;
 import com.tr.hsyn.label.Label;
-import com.tr.hsyn.registery.SimpleDatabase;
 import com.tr.hsyn.registery.Values;
 import com.tr.hsyn.registery.cast.DB;
 import com.tr.hsyn.registery.cast.DBColumn;
@@ -26,7 +24,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Function;
 
 
 /**
@@ -34,13 +31,9 @@ import java.util.function.Function;
  */
 public class ContactDatabase extends DBBase<Contact> implements DBContact {
 	
-	private static final DB             db = new DbInterface();
-	private final        SimpleDatabase simpleDatabase;
-	
 	public ContactDatabase(@NonNull Context context) {
 		
-		super(context, db);
-		simpleDatabase = new SqliteBridge(getWritableDatabase());
+		super(context, new DbInterface());
 	}
 	
 	@SuppressLint("Range")
@@ -69,18 +62,6 @@ public class ContactDatabase extends DBBase<Contact> implements DBContact {
 				dates,
 				labels
 		);
-	}
-	
-	@Override
-	public @NotNull DB getDBInterface() {
-		
-		return db;
-	}
-	
-	@Override
-	public @NotNull SimpleDatabase getSimpleDatabase() {
-		
-		return simpleDatabase;
 	}
 	
 	@Override
@@ -174,12 +155,6 @@ public class ContactDatabase extends DBBase<Contact> implements DBContact {
 		if (contact == null) return null;
 		
 		return contact.getDates();
-        /*long[] longs = getLongs(id, new String[]{SAVED_DATE, UPDATED_DATE, DELETED_DATE, LAST_LOOK_DATE});
-
-        if (longs != null)
-            return Dates.newDates(longs[0], longs[1], longs[2], longs[3]);
-
-        return null;*/
 	}
 	
 	@Override
@@ -191,38 +166,6 @@ public class ContactDatabase extends DBBase<Contact> implements DBContact {
 		values.put(LAST_LOOK_DATE, dates.getLastLookDate());
 		
 		return update(values, String.valueOf(id));
-	}
-	
-	@Override
-	public boolean update(@NonNull Contact contact) {
-		
-		return update(contact, contact.getContactId());
-	}
-	
-	@Override
-	public int add(@NotNull List<? extends Contact> items, @NotNull Function<? super Contact, Values> valuesFunction) {
-		
-		var db    = getWritableDatabase();
-		int count = 0;
-		
-		try {
-			db.beginTransaction();
-			
-			for (var item : items) {
-				
-				var i = db.insert(getDatabaseInterface().getTableName(), null, convertFrom(valuesFunction.apply(item)));
-				
-				if (i != -1) count++;
-			}
-			
-			db.setTransactionSuccessful();
-		}
-		finally {
-			
-			db.endTransaction();
-		}
-		
-		return count;
 	}
 	
 	@NotNull

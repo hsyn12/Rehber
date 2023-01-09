@@ -22,14 +22,14 @@ public class Key extends Atom {
 	public static final Key SHOW_CALLS             = Key.of(11, "Show Calls");
 	public static final Key REFRESH_CALL_LOG       = Key.of(12, "Refresh CallLog");
 	public static final Key MOST_CALLS_FILTER_TYPE = Key.of(13, "Most Calls Filter Type");
-	public static final Key CALL_LOG_SEARCH_INFO   = Key.of(14, "CallLog Search Info");
+	public static final Key CALL_LOG_FILTER        = Key.of(14, "CallLog Filter");
 	public static final Key CALL_STORY             = Key.of(15, "Call Story");
 	public static final Key CONTACT_STORY          = Key.of(16, "Contact Story");
 	public static final Key SIGN_REFRESH_CONTACTS  = Key.of(17, "Sign Referesh Contacts");
 	public static final Key CALL_HISTORY           = Key.of(18, "Call History");
 	public static final Key CALL_LOG_UPDATED       = Key.of(19, "CallLog Updated");
 	
-	public Key(int id, @NotNull String name) {
+	public Key(long id, @NotNull String name) {
 		
 		super(id, name);
 	}
@@ -40,7 +40,7 @@ public class Key extends Atom {
 	}
 	
 	@NotNull
-	public static Key of(int id, @NotNull String name) {
+	public static Key of(long id, @NotNull String name) {
 		
 		return new Key(id, name);
 	}

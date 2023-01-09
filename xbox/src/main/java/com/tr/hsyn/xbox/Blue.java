@@ -47,11 +47,24 @@ public final class Blue {
 	 */
 	private static Hotel hotel;
 	
+	/**
+	 * Nesneler için kalacak yeri belirler.
+	 *
+	 * @param hotel Otel
+	 */
 	public static void setHotel(Hotel hotel) {
 		
 		Blue.hotel = hotel;
 	}
 	
+	/**
+	 * Burada işlem görecek her nesne derleme sırasında isim değişikliğine
+	 * uğramamak için belirli bir arayüzü uygulamak zorundadır.
+	 * Bu metot, arayüzü uygulamayan sınıflar için log mesajı ile hatırlatmada bulunur.
+	 *
+	 * @param object Nesne
+	 * @param <T>    Nesne türü
+	 */
 	private static <T> void checkKeepClass(@NotNull T object) {
 		
 		var clazz = object.getClass();
@@ -309,6 +322,7 @@ public final class Blue {
 	 * @param <T>   Sınıf türü
 	 * @return Kayıtlı nesne, yoksa {@code null}
 	 */
+	@Nullable
 	public static <T> T remove(Class<T> clazz) {
 		
 		if (clazz != null) {

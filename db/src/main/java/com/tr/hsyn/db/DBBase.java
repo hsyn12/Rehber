@@ -61,7 +61,7 @@ public abstract class DBBase<T extends Identity> extends DBOperator<T> {
 	protected abstract T createObject(@NonNull final Cursor cursor);
 	
 	@SuppressLint({"DefaultLocale", "Range"})
-	@Override
+	
 	@Nullable
 	public String getString(long primaryValue, @NonNull String columnName) {
 		

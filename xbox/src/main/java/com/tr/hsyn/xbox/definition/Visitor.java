@@ -1,4 +1,4 @@
-package com.tr.hsyn.xbox;
+package com.tr.hsyn.xbox.definition;
 
 
 import com.tr.hsyn.identity.Identity;
@@ -140,8 +140,8 @@ public class Visitor implements Identity {
 	}
 	
 	@Override
-	public int getId() {
+	public long getId() {
 		
-		return key.getId();
+		return timeEnter;
 	}
 }

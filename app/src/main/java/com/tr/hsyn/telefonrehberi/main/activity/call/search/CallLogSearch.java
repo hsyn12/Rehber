@@ -34,7 +34,7 @@ import java.util.Objects;
 
 /**
  * Arama kayıtları üzerinde arama yapmayı sağlar.
- * Arama kayıtlarını {@link Key#CALL_LOG_SEARCH_INFO} anahtarı ile alır.
+ * Arama kayıtlarını {@link Key#CALL_LOG_FILTER} anahtarı ile alır.
  *
  * @see Blue
  * @see Key
@@ -74,7 +74,7 @@ public class CallLogSearch extends ActivityView implements OnSearchViewListener,
 		info_1      = infoLayout.findViewById(R.id.text_search_info_1);
 		info_2      = infoLayout.findViewById(R.id.text_search_info_2);
 		
-		info      = Objects.requireNonNull(Blue.getObject(Key.CALL_LOG_SEARCH_INFO));
+		info      = Objects.requireNonNull(Blue.getObject(Key.CALL_LOG_FILTER));
 		callStory = Objects.requireNonNull(Blue.getObject(Key.CALL_STORY));
 		calls     = Objects.requireNonNull(info).getCalls();
 		

@@ -8,16 +8,11 @@ import androidx.annotation.NonNull;
 
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.db.DBBase;
-import com.tr.hsyn.db.actor.SqliteBridge;
-import com.tr.hsyn.registery.SimpleDatabase;
 import com.tr.hsyn.registery.Values;
 import com.tr.hsyn.registery.cast.DB;
 import com.tr.hsyn.registery.cast.DBColumn;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
-import java.util.function.Function;
 
 
 /**
@@ -27,32 +22,30 @@ public class CallDatabase extends DBBase<Call> implements DBCalls {
 	
 	//==============================================================
 	//==============================================================
-	private static final DB             dbInterface     = new DBInterface();
-	private final        SimpleDatabase simpleDatabase;
+	private static final DB      dbInterface     = new DBInterface();
 	//==============================================================
 	//==============================================================
 	//======================== Columns ==============================
-	private              int            nameCol;
-	private              int            numberCol;
-	private              int            dateCol;
-	private              int            typeCol;
-	private              int            durationCol;
-	private              int            contactIdCol;
-	private              int            ringingCol;
-	private              int            deletedDateCol;
+	private              int     nameCol;
+	private              int     numberCol;
+	private              int     dateCol;
+	private              int     typeCol;
+	private              int     durationCol;
+	private              int     contactIdCol;
+	private              int     ringingCol;
+	private              int     deletedDateCol;
 	//==============================================================
-	private              int            noteCol;
-	private              int            extraCol;
+	private              int     noteCol;
+	private              int     extraCol;
 	/**
 	 * Bilgilere daha hızlı erişim için kolonlar ilk erişimde ve sadece bir kez tanımlanmaktadır.
 	 * Kolon bilgileri set edilmişse bu değişken {@code false} durumundadır.
 	 */
-	private              boolean        isColumnsNotSet = true;
+	private              boolean isColumnsNotSet = true;
 	
 	public CallDatabase(@NonNull Context context) {
 		
-		super(context, new DBInterface());
-		simpleDatabase = new SqliteBridge(getWritableDatabase());
+		super(context, dbInterface);
 	}
 	
 	@NonNull
@@ -94,18 +87,6 @@ public class CallDatabase extends DBBase<Call> implements DBCalls {
 	}
 	
 	@Override
-	public @NotNull DB getDBInterface() {
-		
-		return dbInterface;
-	}
-	
-	@Override
-	public @NotNull SimpleDatabase getSimpleDatabase() {
-		
-		return simpleDatabase;
-	}
-	
-	@Override
 	@NonNull
 	public Values contentValuesOf(@NonNull final Call call) {
 		
@@ -128,38 +109,6 @@ public class CallDatabase extends DBBase<Call> implements DBCalls {
 		else values.putNull(Values.TYPE_STRING, NOTE);
 		
 		return values;
-	}
-	
-	@Override
-	public boolean update(@NonNull Call call) {
-		
-		return update(call, call.getTime());
-	}
-	
-	@Override
-	public int add(@NotNull List<? extends Call> items, @NotNull Function<? super Call, Values> valuesFunction) {
-		
-		var db    = getWritableDatabase();
-		int count = 0;
-		
-		try {
-			db.beginTransaction();
-			
-			for (var item : items) {
-				
-				var i = db.insert(getDatabaseInterface().getTableName(), null, convertFrom(valuesFunction.apply(item)));
-				
-				if (i != -1) count++;
-			}
-			
-			db.setTransactionSuccessful();
-		}
-		finally {
-			
-			db.endTransaction();
-		}
-		
-		return count;
 	}
 	
 	/**

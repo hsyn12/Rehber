@@ -18,13 +18,10 @@ import java.util.stream.Collectors;
  *
  * @param <T> Veri türü
  */
-public interface Database<T extends Identity> {
+public interface Database<T extends Identity> extends SimpleDatabase {
 	
 	@NotNull
-	DB getDBInterface();
-	
-	@NotNull
-	SimpleDatabase getSimpleDatabase();
+	DB getDatabaseInterface();
 	
 	/**
 	 * Verilen nesne için bilgileri oluştur.<br>
@@ -40,8 +37,6 @@ public interface Database<T extends Identity> {
 	long getSizeInBytes();
 	
 	long getRawCount();
-	
-	boolean update(@NotNull T item);
 	
 	/**
 	 * Verilen id değerine sahip satırı bulur.
@@ -84,21 +79,16 @@ public interface Database<T extends Identity> {
 	@NotNull
 	List<T> queryAll(String selection, String[] selectionArgs, String sortOrder);
 	
-	/**
-	 * Veri tabanında bir kolona ait bilgiyi alır.
-	 *
-	 * @param primaryValue Bilginin alınacağı satır
-	 * @param columnName   Bilginin alınacağı kolon
-	 * @return string
-	 */
-	@Nullable
-	String getString(long primaryValue, @NotNull String columnName);
+	default boolean update(@NotNull T item) {
+		
+		return update(item, item.getId());
+	}
 	
 	default int delete(@NotNull List<? extends T> items) {
 		
 		var ids        = items.stream().map(T::getId).map(String::valueOf).collect(Collectors.toList());
-		var primaryKey = getDBInterface().getPrimaryKey();
-		return getSimpleDatabase().delete(getDBInterface().getTableName(), createSelection(primaryKey, ids), null);
+		var primaryKey = getDatabaseInterface().getPrimaryKey();
+		return delete(getDatabaseInterface().getTableName(), createSelection(primaryKey, ids), null);
 	}
 	
 	default boolean delete(@NotNull T item) {
@@ -114,7 +104,7 @@ public interface Database<T extends Identity> {
 	 */
 	default boolean deleteByPrimaryKey(String primaryValue) {
 		
-		String key = getDBInterface().getPrimaryKey();
+		String key = getDatabaseInterface().getPrimaryKey();
 		
 		return delete(createSelection(key), createArg(primaryValue)) > 0;
 	}
@@ -128,7 +118,7 @@ public interface Database<T extends Identity> {
 	 */
 	default boolean update(@NotNull Values values, @NotNull String primaryKey) {
 		
-		String primaryColumn = getDBInterface().getPrimaryKey();
+		String primaryColumn = getDatabaseInterface().getPrimaryKey();
 		
 		return update(values, createSelection(primaryColumn), createArg(primaryKey));
 	}
@@ -153,7 +143,7 @@ public interface Database<T extends Identity> {
 	 */
 	default int delete(@NotNull String selection, @Nullable String[] selectionArgs) {
 		
-		return getSimpleDatabase().delete(getDBInterface().getTableName(), selection, selectionArgs);
+		return delete(getDatabaseInterface().getTableName(), selection, selectionArgs);
 	}
 	
 	default int update(@NotNull List<? extends T> items) {
@@ -175,9 +165,9 @@ public interface Database<T extends Identity> {
 	 */
 	default boolean update(@NotNull T item, @NotNull String primaryValue) {
 		
-		var key = getDBInterface().getPrimaryKey();
+		var key = getDatabaseInterface().getPrimaryKey();
 		
-		return update(contentValuesOf(item), key + "=?", new String[]{primaryValue});
+		return update(contentValuesOf(item), createSelection(key), createArg(primaryValue));
 	}
 	
 	/**
@@ -190,7 +180,7 @@ public interface Database<T extends Identity> {
 	 */
 	default boolean update(@NotNull Values values, @NotNull String selection, String[] selectionArgs) {
 		
-		return getSimpleDatabase().update(getDBInterface().getTableName(), values, selection, selectionArgs) > 0;
+		return update(getDatabaseInterface().getTableName(), values, selection, selectionArgs) > 0;
 	}
 	
 	/**
@@ -224,24 +214,23 @@ public interface Database<T extends Identity> {
 	default int add(@NotNull List<? extends T> items, @NotNull Function<? super T, Values> valuesFunction) {
 		
 		int count = 0;
-		var db    = getSimpleDatabase();
 		
 		try {
 			
-			db.beginTransaction();
+			beginTransaction();
 			
 			for (var item : items) {
 				
-				var i = db.insert(getDBInterface().getTableName(), null, valuesFunction.apply(item));
+				var i = insert(getDatabaseInterface().getTableName(), null, valuesFunction.apply(item));
 				
 				if (i != -1) count++;
 			}
 			
-			db.setTransactionSuccessful();
+			setTransactionSuccessful();
 		}
 		finally {
 			
-			db.endTransaction();
+			endTransaction();
 		}
 		
 		return count;
@@ -255,7 +244,7 @@ public interface Database<T extends Identity> {
 	 */
 	default boolean add(Values values) {
 		
-		return getSimpleDatabase().insert(getDBInterface().getTableName(), null, values) != -1;
+		return insert(getDatabaseInterface().getTableName(), null, values) != -1;
 	}
 	
 	@NotNull

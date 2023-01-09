@@ -6,8 +6,6 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.tr.hsyn.db.DBBase;
-import com.tr.hsyn.db.actor.SqliteBridge;
-import com.tr.hsyn.registery.SimpleDatabase;
 import com.tr.hsyn.registery.Values;
 import com.tr.hsyn.registery.cast.DB;
 import com.tr.hsyn.registery.cast.DBColumn;
@@ -18,7 +16,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.function.Function;
 
 
 /**
@@ -26,16 +23,13 @@ import java.util.function.Function;
  */
 public class LifeDatabase extends DBBase<Life> implements LifeRecorder {
 	
-	private static final DB             dbInterface = new DBInterface();
-	private final        String         NAME        = "name";
-	private final        String         START       = "start";
-	private final        String         END         = "end";
-	private final        SimpleDatabase simpleDatabase;
+	private final String NAME  = "name";
+	private final String START = "start";
+	private final String END   = "end";
 	
 	public LifeDatabase(@NotNull Context context) {
 		
-		super(context, dbInterface);
-		simpleDatabase = new SqliteBridge(getWritableDatabase());
+		super(context, new DBInterface());
 	}
 	
 	@NotNull
@@ -48,18 +42,6 @@ public class LifeDatabase extends DBBase<Life> implements LifeRecorder {
 		long   end   = cursor.getLong(cursor.getColumnIndex(END));
 		
 		return Life.newLife(name, start, end);
-	}
-	
-	@Override
-	public @NotNull DB getDBInterface() {
-		
-		return dbInterface;
-	}
-	
-	@Override
-	public @NotNull SimpleDatabase getSimpleDatabase() {
-		
-		return simpleDatabase;
 	}
 	
 	@Override
@@ -138,37 +120,6 @@ public class LifeDatabase extends DBBase<Life> implements LifeRecorder {
 		return find(START + " = " + aLife.getStartTime() + " and " + NAME + " = ?", new String[]{aLife.getName()}, this::createObject);
 	}
 	
-	@Override
-	public boolean update(@NotNull Life item) {
-		
-		return update(item, item.getStartTime());
-	}
-	
-	@Override
-	public int add(@NotNull List<? extends Life> items, @NotNull Function<? super Life, Values> valuesFunction) {
-		
-		var db    = getWritableDatabase();
-		int count = 0;
-		
-		try {
-			db.beginTransaction();
-			
-			for (var item : items) {
-				
-				var i = db.insert(getDatabaseInterface().getTableName(), null, convertFrom(valuesFunction.apply(item)));
-				
-				if (i != -1) count++;
-			}
-			
-			db.setTransactionSuccessful();
-		}
-		finally {
-			
-			db.endTransaction();
-		}
-		
-		return count;
-	}
 }
 
 /**

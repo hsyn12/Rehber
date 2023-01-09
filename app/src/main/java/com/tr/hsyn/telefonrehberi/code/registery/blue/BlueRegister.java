@@ -6,31 +6,46 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.tr.hsyn.db.DBBase;
-import com.tr.hsyn.db.actor.SqliteBridge;
 import com.tr.hsyn.key.Key;
-import com.tr.hsyn.registery.SimpleDatabase;
 import com.tr.hsyn.registery.Values;
 import com.tr.hsyn.registery.cast.DB;
 import com.tr.hsyn.registery.cast.DBColumn;
-import com.tr.hsyn.xbox.Visitor;
+import com.tr.hsyn.xbox.Blue;
+import com.tr.hsyn.xbox.definition.Visitor;
 
 import org.jetbrains.annotations.NotNull;
 
 
+/**
+ * {@link Blue} sınıfının işleme aldığı nesnelerin kayda girecek olan bilgilerini sağlar ve
+ * bu bilgilerin tutulacağı veri tabanı rolünü oynar.
+ */
 public class BlueRegister extends DBBase<Visitor> {
 	
-	private static final String         TIME_ENTER  = "time_enter";
-	private static final String         TIME_EXIT   = "time_exit";
-	private static final String         NAME        = "name";
-	private static final String         ID          = "id";
-	private static final String         INTERACTION = "interaction";
-	private static final DB             dbInterface = new DBInterface();
-	private final        SimpleDatabase simpleDatabase;
+	/**
+	 * Nesnenin kayda girdiği zaman
+	 */
+	private static final String TIME_ENTER  = "time_enter";
+	/**
+	 * Nesnenin kayıttan çıkarıldı zaman
+	 */
+	private static final String TIME_EXIT   = "time_exit";
+	/**
+	 * Kayıt ismi
+	 */
+	private static final String NAME        = "name";
+	/**
+	 * Kayıt kimliği
+	 */
+	private static final String ID          = "id";
+	/**
+	 * Erişim sayısı
+	 */
+	private static final String INTERACTION = "interaction";
 	
 	public BlueRegister(@NotNull Context context) {
 		
-		super(context, dbInterface);
-		simpleDatabase = new SqliteBridge(getWritableDatabase());
+		super(context, new DBInterface());
 	}
 	
 	@SuppressLint("Range")
@@ -55,26 +70,9 @@ public class BlueRegister extends DBBase<Visitor> {
 		v.put(TIME_EXIT, item.getTimeExit());
 		v.put(NAME, item.getKey().getName());
 		v.put(ID, item.getKey().getId());
+		v.put(INTERACTION, item.getInteraction());
 		
 		return v;
-	}
-	
-	@Override
-	public @NotNull DB getDBInterface() {
-		
-		return dbInterface;
-	}
-	
-	@Override
-	public @NotNull SimpleDatabase getSimpleDatabase() {
-		
-		return simpleDatabase;
-	}
-	
-	@Override
-	public boolean update(@NotNull Visitor item) {
-		
-		return update(item, item.getTimeEnter());
 	}
 	
 	private static class DBInterface implements DB {
