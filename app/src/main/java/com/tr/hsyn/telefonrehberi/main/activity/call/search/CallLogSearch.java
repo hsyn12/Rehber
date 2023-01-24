@@ -13,10 +13,11 @@ import com.tr.hsyn.bungee.Bungee;
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.execution.Runny;
+import com.tr.hsyn.gate.AutoGate;
+import com.tr.hsyn.gate.DigiGate;
+import com.tr.hsyn.gate.Gate;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.page.SwipeListener;
-import com.tr.hsyn.room.DigiRoom;
-import com.tr.hsyn.room.TimedRoom;
 import com.tr.hsyn.searchview.MaterialSearchView;
 import com.tr.hsyn.searchview.OnSearchViewListener;
 import com.tr.hsyn.string.Stringx;
@@ -42,8 +43,8 @@ import java.util.Objects;
 public class CallLogSearch extends ActivityView implements OnSearchViewListener, SwipeListener {
 	
 	protected final long               TIME_PASS_INTERVAL = 1000L;
-	protected final TimedRoom          keepItemSelection  = TimedRoom.createRoom(TIME_PASS_INTERVAL);
-	private final   DigiRoom           gateFilter         = DigiRoom.createRoom(1500L).loopDelay();
+	protected final Gate               keepItemSelection  = AutoGate.newGate(TIME_PASS_INTERVAL);
+	private final   DigiGate           gateFilter         = (DigiGate) DigiGate.newGate(1500L).loop();
 	protected       CallStory          callStory;
 	protected       CallLogSearchInfo  info;
 	protected       List<Call>         calls;
@@ -165,7 +166,7 @@ public class CallLogSearch extends ActivityView implements OnSearchViewListener,
 		
 		searchText = newText;
 		
-		gateFilter.enterTheRoom(this::filter);
+		gateFilter.enter(this::filter);
 	}
 	
 	@Override

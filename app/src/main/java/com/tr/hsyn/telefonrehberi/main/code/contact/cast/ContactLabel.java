@@ -122,7 +122,7 @@ public interface ContactLabel extends Mabel {
 	static Label getLabel(@CLabel int labelId) {
 		
 		//@off
-        switch (labelId) {
+		switch (labelId) {
             case FAMILY:            return LABEL_FAMILY;
             case MY_BEST_FRIEND:    return LABEL_MY_BEST_FRIEND;
             case MY_BROTHER:        return LABEL_MY_BROTHER;
@@ -131,8 +131,8 @@ public interface ContactLabel extends Mabel {
             case MY_FRIEND:         return LABEL_MY_FRIEND;
             case MY_MUM:            return LABEL_MY_MUM;
             case MY_SISTER:         return LABEL_MY_SISTER;
-        }
-        //@on
+		}
+		//@on
 		
 		throw new IllegalArgumentException("This is not a standart label id : " + labelId);
 	}

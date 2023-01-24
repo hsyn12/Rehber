@@ -25,64 +25,64 @@ import javax.tools.Diagnostic;
 @SupportedSourceVersion(SourceVersion.RELEASE_11)
 @AutoService(Processor.class)
 public class WarnTurner extends AbstractProcessor {
-
-    protected Messager messager;
-
-    @Override
-    public synchronized void init(ProcessingEnvironment processingEnv) {
-
-        super.init(processingEnv);
-
-        messager = processingEnv.getMessager();
-    }
-
-    @Override
-    public boolean process(Set<? extends TypeElement> annotations, @Nonnull RoundEnvironment roundEnv) {
-
-        var elements = roundEnv.getElementsAnnotatedWith(Remember.class);
-
-        if (elements.isEmpty()) return true;
-
-        elements.forEach(this::inspectAnnotation);
-
-        return true;
-    }
-
-    private void inspectAnnotation(@Nonnull Element element) {
-
-        var annotation = element.getAnnotation(Remember.class);
-
-        Name   name   = element.getSimpleName();
-        String note   = annotation.note();
-        String time   = annotation.time();
-        String writer = annotation.writer();
-
-        Element enclosed = element.getEnclosingElement();
-
-        //noinspection StringBufferReplaceableByString
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("Remember ")
-                .append("\"")
-                .append(name)
-                .append("\"")
-                .append(" in the <")
-                .append(enclosed)
-                .append("> [")
-                .append("note=")
-                .append(note.isEmpty() ? "-" : note).append(", ")
-                .append("time=")
-                .append(time.isEmpty() ? "-" : time).append(", ")
-                .append("writer=")
-                .append(writer.isEmpty() ? "-" : writer)
-                .append("]");
-
-        log(sb.toString());
-
-    }
-
-    private void log(Object message, Object... args) {
-
-        messager.printMessage(Diagnostic.Kind.WARNING, String.format(message.toString(), args));
-    }
+	
+	protected Messager messager;
+	
+	@Override
+	public synchronized void init(ProcessingEnvironment processingEnv) {
+		
+		super.init(processingEnv);
+		
+		messager = processingEnv.getMessager();
+	}
+	
+	@Override
+	public boolean process(Set<? extends TypeElement> annotations, @Nonnull RoundEnvironment roundEnv) {
+		
+		var elements = roundEnv.getElementsAnnotatedWith(Remember.class);
+		
+		if (elements.isEmpty()) return true;
+		
+		elements.forEach(this::inspectAnnotation);
+		
+		return true;
+	}
+	
+	private void inspectAnnotation(@Nonnull Element element) {
+		
+		var annotation = element.getAnnotation(Remember.class);
+		
+		Name   name   = element.getSimpleName();
+		String note   = annotation.note();
+		String time   = annotation.time();
+		String writer = annotation.writer();
+		
+		Element enclosed = element.getEnclosingElement();
+		
+		//noinspection StringBufferReplaceableByString
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("Remember ")
+				.append("\"")
+				.append(name)
+				.append("\"")
+				.append(" in the <")
+				.append(enclosed)
+				.append("> [")
+				.append("note=")
+				.append(note.isEmpty() ? "-" : note).append(", ")
+				.append("time=")
+				.append(time.isEmpty() ? "-" : time).append(", ")
+				.append("writer=")
+				.append(writer.isEmpty() ? "-" : writer)
+				.append("]");
+		
+		log(sb.toString());
+		
+	}
+	
+	private void log(Object message, Object... args) {
+		
+		messager.printMessage(Diagnostic.Kind.WARNING, String.format(message.toString(), args));
+	}
 }

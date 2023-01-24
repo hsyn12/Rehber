@@ -19,7 +19,7 @@ import java.util.List;
 
 
 /**
- * <h1>Over</h1>
+ * <h2>Over</h2>
  * <p>
  * Programın her yerinden erişilmesi gereken bazı kodlara erişim yöntemi sağlar.
  * Sınıf tamamen {@link Blue} sınıfı üzerinden çalışır.

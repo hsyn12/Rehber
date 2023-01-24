@@ -11,7 +11,7 @@ import com.tr.hsyn.executors.MainExecutor;
 import com.tr.hsyn.keep.Keep;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.message.Show;
-import com.tr.hsyn.telefonrehberi.code.registery.blue.BlueRegister;
+import com.tr.hsyn.telefonrehberi.main.code.database.blue.BlueRegister;
 import com.tr.hsyn.xbox.Alice;
 import com.tr.hsyn.xbox.Blue;
 import com.tr.hsyn.xbox.Daniel;

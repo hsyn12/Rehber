@@ -202,6 +202,17 @@ public final class Lister {
 	}
 	
 	/**
+	 * Dizi üzerinde döngü oluşturur.
+	 *
+	 * @param list     Dizi
+	 * @param consumer Döngü işleyicisi
+	 */
+	public static <T> void loop(T @NotNull [] list, @NotNull Consumer<T> consumer) {
+		
+		for (int i = 0; i < list.length; i++) consumer.accept(list[i]);
+	}
+	
+	/**
 	 * Sıfırdan başlayarak verilen sayıya kadar döngü oluşturur.
 	 *
 	 * @param loop     Döngü sayısı

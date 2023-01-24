@@ -19,15 +19,17 @@ import com.tr.hsyn.bungee.Bungee;
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.execution.Runny;
+import com.tr.hsyn.gate.AutoGate;
+import com.tr.hsyn.gate.Gate;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.page.MenuShower;
-import com.tr.hsyn.room.TimedRoom;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.code.android.dialog.Dialog;
 import com.tr.hsyn.telefonrehberi.main.activity.city.station.LoadingStation;
 import com.tr.hsyn.telefonrehberi.main.activity.color.ColorsActivity;
 import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.ContactDetails;
+import com.tr.hsyn.telefonrehberi.main.code.contact.act.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.code.contact.act.Contacts;
 import com.tr.hsyn.telefonrehberi.main.code.contact.cast.Contact;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
@@ -45,7 +47,7 @@ import java.util.List;
 
 
 /**
- * <h1>BlackTower</h1>
+ * <h2>BlackTower</h2>
  * <p>
  * Kara Kule. Bazı önemli olayları izler ve işler.
  *
@@ -93,17 +95,17 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 	 * Kişiler listesi üzerindeki seçim işleminin hızını düzenler.<br>
 	 * Listeden bir kişi seçildiğinde, {@link #GATE_WAIT_DURATION} süresi geçilmeden tekrar bir seçim yapılamaz.
 	 */
-	private final   TimedRoom                      keepContactSelection = TimedRoom.createRoom(GATE_WAIT_DURATION);
+	private final   Gate                           keepContactSelection = AutoGate.newGate(GATE_WAIT_DURATION);
 	/**
 	 * Arama kayıtları listesi üzerindeki seçim işleminin hızını düzenler.<br>
 	 * Listeden bir kişi seçildiğinde, {@link #GATE_WAIT_DURATION} süresi geçilmeden tekrar bir seçim yapılamaz.
 	 */
-	private final   TimedRoom                      keepCallSelection    = TimedRoom.createRoom(GATE_WAIT_DURATION);
+	private final   Gate                           keepCallSelection    = AutoGate.newGate(GATE_WAIT_DURATION);
 	/**
 	 * Telefon aramalarını kontrol eder ve {@link #GATE_WAIT_DURATION} süresi geçilmeden
 	 * sonraki aramayı kabul etmez.
 	 */
-	private final   TimedRoom                      keepCallAction       = TimedRoom.createRoom(GATE_WAIT_DURATION);
+	private final   Gate                           keepCallAction       = AutoGate.newGate(GATE_WAIT_DURATION);
 	/**
 	 * {@linkplain MenuEditor}
 	 */
@@ -219,25 +221,6 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 		super.onDestroy();
 	}
 	
-	protected void onContactListUpdated(Long duration) {
-		
-		xlog.d("Rehber kontrolleri tamamlandı [%dms]", duration);
-	}
-	
-	@CallSuper
-	@Override
-	protected void loadContacts() {
-		
-		//- Rehber güncelleme işlemi bitince bana haber ver
-		Blue.meet(Key.CONTACT_LIST_UPDATED, this::onContactListUpdated);
-		
-		//- Yeni veya silinen kişiler için beni uyar
-		Blue.meet(Key.NEW_CONTACTS, this::onNewContacts);
-		Blue.meet(Key.DELETED_CONTACTS, this::onDeletedContacts);
-		//- Şimdi yüklemeyi başlatabilirsin
-		super.loadContacts();
-	}
-	
 	protected void onSelectedContactDeleted(@NonNull Contact contact) {
 		
 		xlog.d("Selected contact deleted : %s", contact);
@@ -252,23 +235,11 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 		Use.ifNotNull(Over.Contacts.getSelectedContact(), this::checkSelectedContact);
 	}
 	
-	private void onNewContacts(List<Contact> contacts) {
-		
-		xlog.d("New Contacts : %s", contacts);
-		Runny.run(() -> Lister.loop(contacts, pageContacts::addItem));
-	}
-	
-	private void onDeletedContacts(List<Contact> contacts) {
-		
-		xlog.d("Deleted Contacts : %s [size=%d]", contacts, contacts.size());
-		Runny.run(() -> Lister.loop(contacts, pageContacts::deleteItem));
-	}
-	
 	/**
 	 * Seçilen kişinin silinme durumunu kontrol eder.<br>
 	 * Bazı yerlerde veri tabanına direk erişim vardır ancak görsel bağlantıları yoktur,
 	 * böyle yerlerde kişi ile ilgili güncellemeler veri tabanı üzerinde yapılır ve
-	 * dönüşte kişinin ilişki olduğu görsel nesneler kişiyi kontrol ederek
+	 * dönüşte kişinin ilişkili olduğu görsel nesneler kişiyi kontrol ederek
 	 * bir güncelleme olup olmadığa bakar ve
 	 * sadece görsel güncellemeyi icraa eder.<br>
 	 * Bu metot kişiyi kontrol eder ve silinmiş ise kişiyi kişiler listesinden çıkarır.
@@ -277,7 +248,7 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 	 */
 	private void checkSelectedContact(@NonNull Contact selectedContact) {
 		
-		if (selectedContact.getDates() != null && selectedContact.getDeletedDate() != 0L) {
+		if (ContactKey.GETTER.isDeleted(selectedContact)) {
 			
 			onSelectedContactDeleted(selectedContact);
 		}

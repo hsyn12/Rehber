@@ -25,6 +25,8 @@
             <option value="$PROJECT_DIR$/colors" />
             <option value="$PROJECT_DIR$/content" />
             <option value="$PROJECT_DIR$/counter" />
+            <option value="$PROJECT_DIR$/datakey" />
+            <option value="$PROJECT_DIR$/datboxer" />
             <option value="$PROJECT_DIR$/daytimes" />
             <option value="$PROJECT_DIR$/db" />
             <option value="$PROJECT_DIR$/easing" />
@@ -40,12 +42,14 @@
             <option value="$PROJECT_DIR$/holder" />
             <option value="$PROJECT_DIR$/htext" />
             <option value="$PROJECT_DIR$/identity" />
+            <option value="$PROJECT_DIR$/integer" />
             <option value="$PROJECT_DIR$/keep" />
             <option value="$PROJECT_DIR$/key" />
             <option value="$PROJECT_DIR$/label" />
             <option value="$PROJECT_DIR$/launcher" />
             <option value="$PROJECT_DIR$/life" />
             <option value="$PROJECT_DIR$/loader" />
+            <option value="$PROJECT_DIR$/long" />
             <option value="$PROJECT_DIR$/map" />
             <option value="$PROJECT_DIR$/message" />
             <option value="$PROJECT_DIR$/metadata" />

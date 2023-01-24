@@ -14,6 +14,7 @@ public class Black extends BlackTower {
 		
 		
 		super.onCreate();
-		//News.connect().addListener(new MessageListener());
+		
+		
 	}
 }

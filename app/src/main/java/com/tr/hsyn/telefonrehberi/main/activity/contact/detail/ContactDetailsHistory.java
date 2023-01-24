@@ -14,12 +14,14 @@ import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.execution.Runny;
 import com.tr.hsyn.execution.Work;
+import com.tr.hsyn.gate.DigiGate;
+import com.tr.hsyn.gate.Gate;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
-import com.tr.hsyn.room.DigiRoom;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.history.ActivityCallList;
 import com.tr.hsyn.telefonrehberi.main.code.cast.PermissionHolder;
+import com.tr.hsyn.telefonrehberi.main.code.contact.act.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
 import com.tr.hsyn.xbox.Blue;
 import com.tr.hsyn.xlog.xlog;
@@ -44,8 +46,8 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	 * herhangi bir kontrol yapmaya gerek olmaz.
 	 */
 	protected final int        RC_CALL_LOG     = 45;
-	private final   DigiRoom   gateHistory     = DigiRoom.createRoom(1000L);
-	private final   DigiRoom   gateShowHistory = DigiRoom.createRoom(1000L);
+	private final   DigiGate   gateHistory     = DigiGate.newGate(1000L);
+	private final   Gate       gateShowHistory = DigiGate.newGate(1000L);
 	/**
 	 * Kişinin arama geçmişi
 	 */
@@ -56,12 +58,13 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	private         boolean    isPermissionsRequested;
 	
 	@Override
-	protected void onCreate() {
+	protected void prepare() {
 		
-		super.onCreate();
+		super.prepare();
 		
+		List<String> numbers = contact.getData(ContactKey.NUMBERS);
 		//- Telefon numarası yoksa hiçbir işleme gerek yok
-		if (contact.getNumbers() != null && !contact.getNumbers().isEmpty()) {
+		if (numbers != null && !numbers.isEmpty()) {
 			
 			setHistory();
 		}
@@ -167,7 +170,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 		//- Kişiye ait arama kayıtlarını döndür
 		
 		return calls.stream()
-				.filter(c -> PhoneNumbers.containsNumber(contact.getNumbers(), c.getNumber()))
+				.filter(c -> PhoneNumbers.containsNumber(contact.getData(ContactKey.NUMBERS), c.getNumber()))
 				.collect(Collectors.toList());
 	}
 	
@@ -179,7 +182,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 		//- Eğer görünüme kullanıcı tıklıyorsa kapıya takılmak zorunda,
 		//- biz tıklıyorsak (metodu biz çağırıyorsak) direk girmemiz lazım
 		
-		if (gateHistory.enterTheRoom(this::hideProgress) || view == null) {
+		if (gateHistory.enter(this::hideProgress) || view == null) {
 			
 			//- Karışıklık burada başlıyor
 			//- Çünkü kişinin geçmişine gidildiyse ve bir silme işlemi gerçekleşti ise

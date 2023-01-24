@@ -12,11 +12,12 @@ import com.tr.hsyn.activity.ActivityView;
 import com.tr.hsyn.bungee.Bungee;
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.colors.Colors;
+import com.tr.hsyn.gate.AutoGate;
+import com.tr.hsyn.gate.DigiGate;
+import com.tr.hsyn.gate.Gate;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.message.Show;
 import com.tr.hsyn.page.SwipeListener;
-import com.tr.hsyn.room.DigiRoom;
-import com.tr.hsyn.room.TimedRoom;
 import com.tr.hsyn.searchview.MaterialSearchView;
 import com.tr.hsyn.searchview.OnSearchViewListener;
 import com.tr.hsyn.telefonrehberi.R;
@@ -24,7 +25,7 @@ import com.tr.hsyn.telefonrehberi.code.Phone;
 import com.tr.hsyn.telefonrehberi.code.ResourceUtil;
 import com.tr.hsyn.telefonrehberi.code.android.ui.swipe.ContactSwipeCallBack;
 import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.ContactDetails;
-import com.tr.hsyn.telefonrehberi.main.code.contact.act.Contacts;
+import com.tr.hsyn.telefonrehberi.main.code.contact.act.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.code.contact.cast.Contact;
 import com.tr.hsyn.xbox.Blue;
 import com.tr.hsyn.xlog.xlog;
@@ -41,8 +42,8 @@ import java.util.Objects;
  */
 public class ContactSearch extends ActivityView implements OnSearchViewListener, SwipeListener {
 	
-	private final TimedRoom            gateSelection = TimedRoom.createRoom(1000L);
-	private final DigiRoom             gateFilter    = DigiRoom.createRoom(1500L).loopDelay();
+	private final Gate                 gateSelection = AutoGate.newGate(1000L);
+	private final DigiGate             gateFilter    = (DigiGate) DigiGate.newGate(1500L).loop();
 	protected     List<Contact>        contacts      = new ArrayList<>(Objects.requireNonNull(Blue.getObject(Key.CONTACTS)));
 	protected     RecyclerView         list;
 	protected     ProgressBar          progressBar;
@@ -141,7 +142,7 @@ public class ContactSearch extends ActivityView implements OnSearchViewListener,
 		
 		for (int i = 0; i < contacts.size(); ) {
 			
-			var numbers = contacts.get(i).getNumbers();
+			var numbers = ContactKey.GETTER.getNumbers(contacts.get(i));
 			
 			//- Biden fazla numarası olanlar
 			if (numbers != null && numbers.size() > 1) {
@@ -151,9 +152,9 @@ public class ContactSearch extends ActivityView implements OnSearchViewListener,
 				
 				for (var number : numbers) {
 					
-					var _contact = Contacts.newContact(contact);
+					var _contact = new Contact(contact);
 					
-					_contact.setNumbers(Lister.listOf(number));
+					ContactKey.SETTER.setNumbers(_contact, Lister.listOf(number));
 					contacts.add(i++, _contact);
 				}
 			}
@@ -193,7 +194,7 @@ public class ContactSearch extends ActivityView implements OnSearchViewListener,
 		
 		searchText = newText;
 		
-		gateFilter.enterTheRoom(this::filter);
+		gateFilter.enter(this::filter);
 	}
 	
 	private void filter() {
@@ -210,7 +211,7 @@ public class ContactSearch extends ActivityView implements OnSearchViewListener,
 		
 		xlog.d("Swiped : %s", contact.getName());
 		
-		var numbers = contact.getNumbers();
+		var numbers = ContactKey.GETTER.getNumbers(contact);
 		
 		if (numbers != null && !numbers.isEmpty()) {
 			

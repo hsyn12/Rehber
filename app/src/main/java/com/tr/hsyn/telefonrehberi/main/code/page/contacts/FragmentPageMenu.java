@@ -16,10 +16,11 @@ import androidx.core.view.MenuProvider;
 
 import com.tr.hsyn.bungee.Bungee;
 import com.tr.hsyn.collection.Lister;
+import com.tr.hsyn.gate.AutoGate;
+import com.tr.hsyn.gate.Gate;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.message.Show;
 import com.tr.hsyn.page.MenuShower;
-import com.tr.hsyn.room.TimedRoom;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.activity.contact.search.ContactSearch;
 import com.tr.hsyn.telefonrehberi.main.dev.menu.MenuEditor;
@@ -30,7 +31,7 @@ import com.tr.hsyn.xbox.Blue;
 
 public abstract class FragmentPageMenu extends FragmentContactListEditor implements MenuProvider, MenuShower {
 	
-	private final TimedRoom  gateMenuSelection = TimedRoom.createRoom(1000L);
+	private final Gate       gateMenuSelection = AutoGate.newGate(1000L);
 	private       int        menuPrepared;
 	//private       Menu       menu;
 	private       MenuEditor menuEditor;

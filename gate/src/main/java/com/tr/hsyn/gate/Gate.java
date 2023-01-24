@@ -1,9 +1,9 @@
 package com.tr.hsyn.gate;
 
 
-import org.jetbrains.annotations.NotNull;
+import com.tr.hsyn.gate.dev.SimpleGate;
 
-import java.util.concurrent.atomic.AtomicBoolean;
+import org.jetbrains.annotations.NotNull;
 
 
 /**
@@ -15,34 +15,24 @@ public interface Gate {
 	/**
 	 * @return Kapı açıksa {@code true}, kapalıysa {@code false}
 	 */
-	boolean isGateOpen();
-
+	boolean isOpen();
+	
 	/**
-	 * Kapıyı aç.
+	 * Kapıdan giriş yapılmasını sağlar.
+	 *
+	 * @return Çağrı yapıldığında kapı açıksa kapanır ve {@code true} döner, kapı kapalıysa giriş yapılamaz ve {@code false} döner.
 	 */
-	void openTheGate();
-
+	boolean enter();
+	
 	/**
-	 * Kapıyı kapat.
+	 * Çıkış yapar ve kapı açılır
 	 */
-	void closeTheGate();
+	void exit();
 	
 	@NotNull
-	static Gate createGate(){
+	static Gate newGate() {
 		
-		return new Gate() {
-
-			private final AtomicBoolean _gate = new AtomicBoolean(true);
-			
-			@Override
-			public boolean isGateOpen() {return _gate.get();}
-
-			@Override
-			public void openTheGate() {_gate.set(true);}
-
-			@Override
-			public void closeTheGate() {_gate.set(false);}
-		};
+		return new SimpleGate();
 	}
 	
 }

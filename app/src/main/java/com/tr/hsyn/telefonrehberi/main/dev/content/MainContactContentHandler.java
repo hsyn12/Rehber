@@ -11,7 +11,6 @@ import androidx.annotation.Nullable;
 import com.tr.hsyn.content.handler.ContentHandler;
 import com.tr.hsyn.perfectsort.PerfectSort;
 import com.tr.hsyn.telefonrehberi.main.code.contact.cast.Contact;
-import com.tr.hsyn.telefonrehberi.main.code.contact.act.Contacts;
 
 import java.util.Comparator;
 
@@ -22,55 +21,50 @@ import java.util.Comparator;
  * Ana ekran için bu kadarı yeterli.
  */
 public class MainContactContentHandler implements ContentHandler<Contact> {
-
-
-    private final String[]        PROJECTION = {
-            ContactsContract.Contacts._ID,
-            ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
-            ContactsContract.Contacts.PHOTO_THUMBNAIL_URI,
-            ContactsContract.Contacts.PHOTO_URI
-    };
-    private       int             contactIdCol;
-    private       int             nameCol;
-    private       int             picCol;
-    private       int             bigPicCol;
-    private       ContentResolver contentResolver;
-
-    @Override
-    public void onCreateCursor(@NonNull ContentResolver contentResolver, @NonNull Cursor cursor) {
-
-        this.contentResolver = contentResolver;
-        contactIdCol         = cursor.getColumnIndex(PROJECTION[0]);
-        nameCol              = cursor.getColumnIndex(PROJECTION[1]);
-        picCol               = cursor.getColumnIndex(PROJECTION[2]);
-        bigPicCol            = cursor.getColumnIndex(PROJECTION[3]);
-    }
-
-    @NonNull
-    @Override
-    public Contact handle(@NonNull final Cursor cursor) {
-
-        var contact = Contacts.newContact(
-                cursor.getLong(contactIdCol),
-                cursor.getString(nameCol),
-                cursor.getString(picCol),
-                cursor.getString(bigPicCol));
-
-        Contacts.setContact(contentResolver, contact);
-
-        return contact;
-    }
-
-    @Override
-    public String[] getProjection() {
-
-        return PROJECTION;
-    }
-
-    @Nullable
-    @Override
-    public Comparator<Contact> getComparator() {
-
-        return PerfectSort.comparator(Contact::getName);
-    }
+	
+	
+	private final String[]        PROJECTION = {
+			ContactsContract.Contacts._ID,
+			ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
+			ContactsContract.Contacts.PHOTO_THUMBNAIL_URI,
+			ContactsContract.Contacts.PHOTO_URI
+	};
+	private       int             contactIdCol;
+	private       int             nameCol;
+	private       int             picCol;
+	private       int             bigPicCol;
+	private       ContentResolver contentResolver;
+	
+	@Override
+	public void onCreateCursor(@NonNull ContentResolver contentResolver, @NonNull Cursor cursor) {
+		
+		this.contentResolver = contentResolver;
+		contactIdCol         = cursor.getColumnIndex(PROJECTION[0]);
+		nameCol              = cursor.getColumnIndex(PROJECTION[1]);
+		picCol               = cursor.getColumnIndex(PROJECTION[2]);
+		bigPicCol            = cursor.getColumnIndex(PROJECTION[3]);
+	}
+	
+	@NonNull
+	@Override
+	public Contact handle(@NonNull final Cursor cursor) {
+		
+		return new Contact(
+				cursor.getLong(contactIdCol),
+				cursor.getString(nameCol),
+				cursor.getString(picCol));
+	}
+	
+	@Override
+	public String[] getProjection() {
+		
+		return PROJECTION;
+	}
+	
+	@Nullable
+	@Override
+	public Comparator<Contact> getComparator() {
+		
+		return PerfectSort.comparator(Contact::getName);
+	}
 }

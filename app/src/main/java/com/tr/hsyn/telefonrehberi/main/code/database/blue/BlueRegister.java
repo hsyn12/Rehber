@@ -1,4 +1,4 @@
-package com.tr.hsyn.telefonrehberi.code.registery.blue;
+package com.tr.hsyn.telefonrehberi.main.code.database.blue;
 
 
 import android.annotation.SuppressLint;

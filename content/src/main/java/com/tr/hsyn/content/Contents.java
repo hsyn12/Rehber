@@ -99,6 +99,7 @@ public class Contents {
 	
 	/**
 	 * Kişinin ekstra bilgilerini sunan adresi döndürür.
+	 * Dönen adress, kişiyle ilgili hemen hemen tüm bilgileri barındırır.
 	 *
 	 * @param contactId contactId
 	 * @return Uri
@@ -131,11 +132,6 @@ public class Contents {
 	public static Cursor createCursor(@NonNull final ContentResolver contentResolver, @NonNull final Uri uri, @Nullable final String[] projection) {
 		
 		return createCursor(contentResolver, uri, projection, null, null, null);
-	}
-	
-	public interface Contacts {
-		
-		
 	}
 	
 }

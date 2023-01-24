@@ -19,7 +19,6 @@ import com.tr.hsyn.xlog.xlog;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
@@ -98,15 +97,8 @@ public abstract class DBOperator<T extends Identity> extends SQLiteOpenHelper im
 	@Override
 	public int update(@NotNull String table, @NotNull Values values, @NotNull String whereClause, @Nullable @org.jetbrains.annotations.Nullable String[] whereArgs) {
 		
-		var val = convertFrom(values);
-		xlog.w("Where    : %s", whereClause);
-		xlog.w("WhereArg : %s", Arrays.toString(whereArgs));
 		
-		var r = getWritableDatabase().update(table, val, whereClause, whereArgs);
-		
-		xlog.w("Update result : %d", r);
-		
-		return r;
+		return getWritableDatabase().update(table, convertFrom(values), whereClause, whereArgs);
 	}
 	
 	@Override

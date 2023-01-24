@@ -7,7 +7,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:fitsSystemWindows="true"
-		tools:context=".main.activity.city.center.contacts.detail.ContactDetails">
+		tools:context=".main.activity.contact.detail.ContactDetails">
 
 	<com.google.android.material.appbar.AppBarLayout
 			android:id="@+id/appbar"
@@ -51,10 +51,11 @@
 	-->
 
 	<androidx.core.widget.NestedScrollView
-			android:id="@+id/nestedScrollView"
+			android:id="@+id/contact_details_nested_scroll_view"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:fillViewport="false"
+			android:layout_marginTop="@dimen/dimen_8dp"
+			android:fillViewport="true"
 			app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
 		<LinearLayout

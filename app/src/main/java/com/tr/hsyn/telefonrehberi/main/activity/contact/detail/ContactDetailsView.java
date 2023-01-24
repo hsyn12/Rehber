@@ -22,67 +22,79 @@ import com.tr.hsyn.vanimator.ViewAnimator;
  * Kişinin detayları için görsel öğeleri hazırlar.
  */
 public abstract class ContactDetailsView extends ActivityView {
-
-    /**
-     * Kişinin resmi
-     */
-    protected ImageView               image;
-    /**
-     * Kişinin çeşitli bilgilerini gösterecek olan öğelerin kapsayıcısı.
-     * Tüm öğeler bunun içine eklenecek
-     */
-    protected ViewGroup               mainContainer;
-    /**
-     * Kişinin telefon numaraları
-     */
-    protected ViewGroup               numbersLayout;
-    protected CollapsingToolbarLayout collapsingToolbarLayout;
-    protected ProgressBar             progressBar;
-
-    protected abstract void editContact();
-
-    @Override
-    protected int getLayoutId() {return R.layout.activity_contact_details;}
-
-    @Override
-    protected void onCreate() {
-
-        image                   = findView(R.id.image);
-        mainContainer           = findView(R.id.contact_details_main_container);
-        numbersLayout           = findView(R.id.numbers);
-        collapsingToolbarLayout = findView(R.id.collapsing_toolbar);
-        progressBar             = findView(R.id.progress_contact_details);
-
-        Toolbar toolbar = findView(R.id.toolbar_contact_details);
-
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(v -> onBackPressed());
-        Colors.changeStatusBarColor(this);
-
-        Runny.run(this::showActionButton, 700L);
-    }
-
-    protected void onClickEdit(View view) {
-
-        editContact();
-    }
-
-    private void showActionButton() {
-
-        FloatingActionButton actionButton = findView(R.id.contact_details_action_button);
-
-        actionButton.setBackgroundTintList(ColorStateList.valueOf(Colors.getPrimaryColor()));
-        actionButton.setVisibility(View.VISIBLE);
-
-        actionButton.setOnClickListener(this::onClickEdit);
-
-        ViewAnimator.on(actionButton)
-                .translationX(200, 0)
-                .rotation(180, 0)
-                .duration(600L)
-                .start();
-
-    }
-
-
+	
+	/**
+	 * Kişinin resmi
+	 */
+	protected ImageView               image;
+	/**
+	 * Kişinin çeşitli bilgilerini gösterecek olan öğelerin kapsayıcısı.
+	 * Tüm öğeler bunun içine eklenecek
+	 */
+	protected ViewGroup               mainContainer;
+	/**
+	 * Kişinin telefon numaraları
+	 */
+	protected ViewGroup               numbersLayout;
+	protected CollapsingToolbarLayout collapsingToolbarLayout;
+	protected ProgressBar             progressBar;
+	
+	protected abstract void editContact();
+	
+	@Override
+	protected int getLayoutId() {return R.layout.activity_contact_details;}
+	
+	@Override
+	protected void onCreate() {
+		
+		image                   = findView(R.id.image);
+		mainContainer           = findView(R.id.contact_details_main_container);
+		numbersLayout           = findView(R.id.numbers);
+		collapsingToolbarLayout = findView(R.id.collapsing_toolbar);
+		progressBar             = findView(R.id.progress_contact_details);
+		
+		int primaryColor    = Colors.getPrimaryColor();
+		int backgroundColor = Colors.lighter(primaryColor, 0.91f);
+		var scrollView      = findView(R.id.contact_details_nested_scroll_view);
+		var main            = findView(R.id.coordinator);
+		
+		scrollView.setBackgroundColor(backgroundColor);
+		main.setBackgroundColor(backgroundColor);
+		
+		Toolbar toolbar = findView(R.id.toolbar_contact_details);
+		
+		setSupportActionBar(toolbar);
+		toolbar.setNavigationOnClickListener(v -> onBackPressed());
+		Colors.changeStatusBarColor(this);
+		
+		Runny.run(this::showActionButton, 700L);
+	}
+	
+	protected void onClickEdit(View view) {
+		
+		editContact();
+	}
+	
+	protected void removeDetailView(View view) {
+		
+		mainContainer.removeView(view);
+	}
+	
+	private void showActionButton() {
+		
+		FloatingActionButton actionButton = findView(R.id.contact_details_action_button);
+		
+		actionButton.setBackgroundTintList(ColorStateList.valueOf(Colors.getPrimaryColor()));
+		actionButton.setVisibility(View.VISIBLE);
+		
+		actionButton.setOnClickListener(this::onClickEdit);
+		
+		ViewAnimator.on(actionButton)
+				.translationX(200, 0)
+				.rotation(180, 0)
+				.duration(600L)
+				.start();
+		
+	}
+	
 }
