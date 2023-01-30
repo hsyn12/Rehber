@@ -25,8 +25,8 @@ public class Key extends Atom {
 	public static final Key CALL_LOG_FILTER        = Key.of(14, "CallLog Filter");
 	public static final Key CALL_STORY             = Key.of(15, "Call Story");
 	@Deprecated(forRemoval = true)
-	public static final Key CONTACT_STORY = Key.of(16, "Contact Story");
-	public static final Key SIGN_REFRESH_CONTACTS  = Key.of(17, "Sign Referesh Contacts");
+	public static final Key CONTACT_STORY          = Key.of(16, "Contact Story");
+	public static final Key REFRESH_CONTACTS       = Key.of(17, "Sign Referesh Contacts");
 	public static final Key CALL_HISTORY           = Key.of(18, "Call History");
 	public static final Key CALL_LOG_UPDATED       = Key.of(19, "CallLog Updated");
 	

@@ -28,11 +28,11 @@ import java.util.List;
  * kullandırmak yerine daha açık ve anlaşılır metotlar sunar.
  * <br>
  *
- * <pre><code>
- * Story&lt;Contact&gt; contactManager = Blue.get(BuildKeys.CONTACT_STORY); // yerine
- * Story&lt;Contact&gt; contactManager = Over.Contact.getContactManager(); // kullanılır
+ * <pre>{@code
+ * List<Contact> contacts = Blue.getObject(Key.CONTACTS); // yerine
+ * List<Contact> contacts =  Over.Contact.getContacts(); // kullanılır
  * // İkisi de aynı nesneyi döndürür
- * </code></pre>
+ * }</pre>
  *
  * @see Blue
  * @see Key
@@ -74,7 +74,7 @@ public interface Over {
 		 */
 		static void refreshContacts() {
 			
-			Blue.box(Key.SIGN_REFRESH_CONTACTS, true);
+			Blue.box(Key.REFRESH_CONTACTS, true);
 		}
 		
 		/**
@@ -111,6 +111,16 @@ public interface Over {
 	 * Arama kayıtları dizini
 	 */
 	interface CallLog {
+		
+		/**
+		 * Arama kayıtlarının olup olmadığını bildirir.
+		 *
+		 * @return Arama kayıtları set edilmişse {@code true}, aksi halde {@code false}
+		 */
+		static boolean exist() {
+			
+			return Blue.exist(Key.CALL_LOG);
+		}
 		
 		/**
 		 * Arama kayıtları yöneticisini döndürür.
@@ -234,7 +244,7 @@ public interface Over {
 				 * Arama kayıtlarını siler.
 				 *
 				 * @param calls Ana listeden silinecek kayıtlar
-				 * @return Silinebilen kayıt sayısı
+				 * @return Silinen kayıt sayısı
 				 */
 				static int delete(Call... calls) {
 					

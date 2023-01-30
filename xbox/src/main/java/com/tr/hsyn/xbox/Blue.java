@@ -3,7 +3,6 @@ package com.tr.hsyn.xbox;
 
 import com.tr.hsyn.keep.Keep;
 import com.tr.hsyn.key.Key;
-import com.tr.hsyn.reflection.Clazz;
 import com.tr.hsyn.xbox.definition.Hotel;
 import com.tr.hsyn.xlog.xlog;
 
@@ -108,25 +107,6 @@ public final class Blue {
 	public static <T> void box(@NotNull Key key, T object) {
 		
 		putObject(key, object);
-	}
-	
-	/**
-	 * Verilen sınıfın kayıtlı bir nesnesi varsa döndürülür.
-	 * Yoksa, nesne oluşturulur kaydedilir ve döndürülür.
-	 *
-	 * @param clazz Sınıf
-	 * @param <T>   Sınıf türü
-	 * @return Sınıf nesnesi
-	 */
-	@Nullable
-	public static <T> T box(@NotNull Class<T> clazz, @Nullable Object... params) {
-		
-		Key key = getKey(clazz);
-		T   obj = getObject(key);
-		
-		if (obj != null) return obj;//! Burada buluşma yok çünkü nesne talep ediliyor
-		
-		return putObject(key, Clazz.create(clazz, params));
 	}
 	
 	/**
@@ -331,6 +311,11 @@ public final class Blue {
 		}
 		
 		return null;
+	}
+	
+	public static boolean exist(@NotNull Key key) {
+		
+		return hotel.exist(key);
 	}
 	
 	/**

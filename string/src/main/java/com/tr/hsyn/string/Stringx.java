@@ -142,6 +142,10 @@ public final class Stringx {
 		return true;
 	}
 	
+	/**
+	 * @param str String
+	 * @return Tüm string rakamlardan oluşuyorsa {@code true}, aksi halde {@code false}
+	 */
 	public static boolean isDigit(@NotNull String str) {
 		
 		for (char c : str.toCharArray()) if (!Character.isDigit(c)) return false;

@@ -54,18 +54,10 @@ public class ContactDetailsMenu extends CallSummary {
 	@CallSuper
 	protected void onClickDeleteMenu() {
 		
-		//- Nihai silme işlemi bu kişiyi dönüşte kontrol edecek olan sınıfa ait.
+		//- Nihai silme işlemi bu kişiyi dönüşte kontrol edecek olan kişiye ait.
 		contact.setData(ContactKey.DELETED, true);
 		
-		/*if (story.updateFromDatabase(contact)) {
-			
-			xlog.d("Kişi silindi : %s", contact.getName());
-		}
-		else {
-			
-			xlog.d("Kişi silinemedi : %s", contact.getName());
-		}*/
-		
+		//- Dön
 		onBackPressed();
 	}
 	
@@ -120,7 +112,7 @@ public class ContactDetailsMenu extends CallSummary {
 	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		
 		switch (item.getItemId()) {
-			//- hello
+			
 			case R.id.delete_contact_menu_item:
 				
 				onClickDeleteMenu();
@@ -131,7 +123,6 @@ public class ContactDetailsMenu extends CallSummary {
 				onClickEditMenu();
 				return true;
 		}
-		
 		
 		return super.onOptionsItemSelected(item);
 	}

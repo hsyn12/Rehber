@@ -1,14 +1,15 @@
 package com.tr.hsyn.time;
 
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
+
 
 /**
  * Birden fazla {@link Duration} nesnesinin kullanılabilmesini sağlar.<br>
@@ -42,6 +43,7 @@ public class DurationGroup {
 	}
 	
 	DurationGroup(@NotNull Builder builder) {
+		
 		year      = builder.year;
 		month     = builder.month;
 		day       = builder.day;
@@ -53,34 +55,42 @@ public class DurationGroup {
 	}
 	
 	public Duration getYear() {
+		
 		return year;
 	}
 	
 	public Duration getMonth() {
+		
 		return month;
 	}
 	
 	public Duration getDay() {
+		
 		return day;
 	}
 	
 	public Duration getHour() {
+		
 		return hour;
 	}
 	
 	public Duration getMinute() {
+		
 		return minute;
 	}
 	
 	public Duration getSecond() {
+		
 		return second;
 	}
 	
 	public Duration getMilliSecond() {
+		
 		return mlSecond;
 	}
 	
 	public List<Duration> getDurations() {
+		
 		return durations;
 	}
 	
@@ -91,7 +101,7 @@ public class DurationGroup {
 	}
 	
 	@NotNull
-	private List<Duration> getNotZeroDurations() {
+	private LinkedList<Duration> getNotZeroDurations() {
 		
 		LinkedList<Duration> result = new LinkedList<>();
 		
@@ -108,6 +118,7 @@ public class DurationGroup {
 	
 	@NotNull
 	public Duration getDuration(Unit timeUnit) {
+		
 		return durations.stream().filter(d -> d.getUnit().equals(timeUnit)).findFirst().orElse(Duration.ofZero(timeUnit));
 	}
 	
@@ -118,6 +129,7 @@ public class DurationGroup {
 	 * @return Belirtilen zaman birimi kullanılmış ve sıfırdan farklı bir değer verilmişse {@code true}, aksi halde {@code false}
 	 */
 	public boolean exists(@NotNull Unit timeUnit) {
+		
 		return durations.stream().anyMatch(duration -> duration.getUnit().equals(timeUnit) && duration.isNotZero());
 	}
 	
@@ -131,7 +143,7 @@ public class DurationGroup {
 	 */
 	public LocalDateTime toLocalDateTime() {
 		
-		var date = Time.now().getDateTime();
+		var date = Time.time().getDateTime();
 		
 		for (var duration : durations) {
 			
@@ -226,6 +238,7 @@ public class DurationGroup {
 	
 	@SuppressWarnings("UnusedReturnValue")
 	public static final class Builder {
+		
 		private Duration year     = Duration.ofYear(0);
 		private Duration month    = Duration.ofMonth(0);
 		private Duration day      = Duration.ofDay(0);
@@ -248,42 +261,50 @@ public class DurationGroup {
 		}
 		
 		public Builder year(long year) {
+			
 			this.year = Duration.ofYear(year);
 			return this;
 		}
 		
 		public Builder month(@Range(from = 0, to = Long.MAX_VALUE) long month) {
+			
 			this.month = Duration.ofMonth(month);
 			return this;
 		}
 		
 		public Builder day(@Range(from = 0, to = Long.MAX_VALUE) long day) {
+			
 			this.day = Duration.ofDay(day);
 			return this;
 		}
 		
 		public Builder hour(@Range(from = 0, to = Long.MAX_VALUE) long hour) {
+			
 			this.hour = Duration.ofHour(hour);
 			return this;
 		}
 		
 		public Builder minute(@Range(from = 0, to = Long.MAX_VALUE) long minute) {
+			
 			this.minute = Duration.ofMinute(minute);
 			return this;
 		}
 		
 		public Builder second(@Range(from = 0, to = Long.MAX_VALUE) long second) {
+			
 			this.second = Duration.ofSecond(second);
 			return this;
 		}
 		
 		public Builder milliSecond(@Range(from = 0, to = Long.MAX_VALUE) long mlSecond) {
+			
 			this.mlSecond = Duration.ofMillisecond(mlSecond);
 			return this;
 		}
 		
 		@NotNull
 		public DurationGroup build() {
+			
 			return new DurationGroup(this);
 		}
 	}

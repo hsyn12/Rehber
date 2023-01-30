@@ -60,7 +60,7 @@ public class CallGenerator implements Generator<Call> {
 		this.maxDuration = maxDuration < 1 ? 10 : maxDuration;
 		this.trackFree   = trackFree;
 		this.types       = types.length > 1 ? types : new Integer[]{CallType.INCOMING, CallType.OUTGOING};
-		today            = Time.currentMillis();
+		today            = Time.now();
 		
 		//- Başlama zamanı bugünden büyükse biraz geri alalım
 		if (startDate > today || startDate <= 0) start = Time.NotNow.months(-6);

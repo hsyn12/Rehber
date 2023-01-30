@@ -271,7 +271,7 @@ public final class Lister {
 	 * Liste elemanlarını belirtilen fonksiyona göre gruplar.<br><br>
 	 *
 	 * <pre>{@code
-	 * var list = toList("a", "ab", "abc", "abcd", "e", "ef", "efg", "efgh");
+	 * var list = listOf("a", "ab", "abc", "abcd", "e", "ef", "efg", "efgh");
 	 * var g = group(list, String::length);
 	 * System.out.printf("%s\n", g);
 	 * // {1=[a, e], 2=[ab, ef], 3=[abc, efg], 4=[abcd, efgh]}
@@ -284,7 +284,7 @@ public final class Lister {
 	 * @param keyMapper gruplama kriteri için fonksiyon
 	 * @param <T>       liste eleman türü
 	 * @param <R>       gruplama kriterinin türü
-	 * @return Verilen kritere göre gruplanmış liste
+	 * @return Verilen kritere göre gruplanmış elemanlardan oluşan bir {@code Map} nesnesi
 	 */
 	public static <T, R> @NotNull Map<R, List<T>> group(@NotNull List<? extends T> list, @NotNull Function<? super T, ? extends R> keyMapper) {
 		
@@ -327,6 +327,15 @@ public final class Lister {
 		return list.stream().map(applier).collect(Collectors.toList());
 	}
 	
+	/**
+	 * Verilen fonksiyonu listeye uygulayarak yeni bir liste döndürür.
+	 *
+	 * @param list    liste
+	 * @param applier listeye uygulanacak fonksiyon
+	 * @param <X>     fonksiyonun döndürdüğü nesne türü ve doğal olarak dönecek olan listenin eleman türü
+	 * @param <Y>     verilen listenin eleman türü
+	 * @return uygulanan fonksiyondan dönen nesnelerin listesi
+	 */
 	@NotNull
 	public static <X, Y> List<X> mapNotNull(@NotNull Collection<? extends Y> list, @NotNull Function<Y, ? extends X> applier) {
 		

@@ -15,14 +15,14 @@ import java.util.Map;
 /**
  * Bir kişiye ait arama özeti bilgilerini tutar
  */
-public class CallSummaryInfo {
+public class CallHistory {
 	
 	private final Contact                  contact;
 	private final Map<Integer, List<Call>> calls;
 	private       int                      incomingDuration;
 	private       int                      outgoingDuration;
 	
-	public CallSummaryInfo(Contact contact, Map<Integer, List<Call>> calls) {
+	public CallHistory(Contact contact, Map<Integer, List<Call>> calls) {
 		
 		this.contact = contact;
 		this.calls   = calls;

@@ -39,7 +39,7 @@ public abstract class ContactsLoader extends BigBank implements ThreadedWork, UI
 	@CallSuper
 	protected void loadContacts() {
 		
-		contactsLoadStartTime = Time.currentMillis();
+		contactsLoadStartTime = Time.now();
 		completeWork(() -> getContactsLoader().load())
 				.orTimeout(15L, TimeUnit.SECONDS)
 				.whenCompleteAsync(this::onContactsLoaded, getUIThreadExecutor());

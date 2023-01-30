@@ -82,7 +82,10 @@ public class SimpleDigiGate extends SimpleAutoGate implements DigiGate, Obserabl
 	protected void open() {
 		
 		super.open();
-		delayedRunner.setDone(false);
+		
+		if (delayedRunner != null)
+			delayedRunner.setDone(false);
+		
 		gateState.set(true);
 	}
 	

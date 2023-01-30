@@ -17,6 +17,7 @@ import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.message.Show;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
+import com.tr.hsyn.telefonrehberi.code.Phone;
 import com.tr.hsyn.telefonrehberi.main.code.contact.act.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.code.contact.act.Contacts;
 import com.tr.hsyn.telefonrehberi.main.code.contact.act.handler.MimeTypeHandlers;
@@ -69,7 +70,7 @@ public abstract class ContactDetailsHeadWay extends ContactDetailsView implement
 	
 	/**
 	 * Kişi detayları alındıktan sonra çağrılır.
-	 * Bu çağrıdan önce önce kişi ile ilgili yapılacak işlemler boşa çıkar.
+	 * Bu çağrıdan önce kişi ile ilgili yapılacak işlemler boşa çıkar.
 	 */
 	@CallSuper
 	protected void prepare() {
@@ -135,8 +136,7 @@ public abstract class ContactDetailsHeadWay extends ContactDetailsView implement
 	
 	private void setNumbers() {
 		
-		List<String> numbers = ContactKey.GETTER.getNumbers(contact);
-		
+		List<String> numbers = contact.getData(ContactKey.NUMBERS);
 		
 		if (numbers != null && !numbers.isEmpty()) {
 			
@@ -182,16 +182,21 @@ public abstract class ContactDetailsHeadWay extends ContactDetailsView implement
 	private void onClickNoNumber(@NonNull View view) {
 		
 		xlog.d("Telefon numarası ekle");
+		
+		onClickEdit(view);
 	}
 	
 	private void onClickMessage(@NonNull View view) {
 		
 		xlog.d("Message to : %s", view.getTag());
+		openMessages((String) view.getTag());
 	}
 	
 	private void onClickCall(@NonNull View view) {
 		
 		xlog.d("Call to : %s", view.getTag());
+		
+		Phone.makeCall(this, (String) view.getTag());
 	}
 	
 	private void onClickEmail(@NonNull View view) {
@@ -201,7 +206,6 @@ public abstract class ContactDetailsHeadWay extends ContactDetailsView implement
 		xlog.d("Email clicked : %s", email);
 		
 		sendEmailIntent(email);
-		
 	}
 	
 	private void sendEmailIntent(String email) {

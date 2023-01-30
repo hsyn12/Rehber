@@ -268,7 +268,7 @@ public class CallStory implements Story<Call> {
 		
 		int count = deleteFromSystem(items);
 		
-		long time = Time.currentMillis();
+		long time = Time.now();
 		items.forEach(c -> c.setDeletedDate(time));
 		
 		updateFromDatabase(items);

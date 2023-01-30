@@ -48,7 +48,7 @@ public abstract class RandomCallsActivityRegister extends RandomCallsActivitySer
 		
 		register          = Register.on(this, "random_calls_activity");
 		dateStart         = register.getLong(GENERATION_DATE_START, Time.NotNow.months(-6));
-		dateEnd           = register.getLong(GENERATION_DATE_END, Time.currentMillis());
+		dateEnd           = register.getLong(GENERATION_DATE_END, Time.now());
 		selectedContacts  = _getSelectedContacts();
 		generationCount   = register.getInt(GENERATION_COUNT, 10);
 		callTypeIncomming = getCallType(CALL_TYPE_STATE_INCOMMING);

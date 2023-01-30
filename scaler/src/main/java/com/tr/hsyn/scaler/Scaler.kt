@@ -2,8 +2,7 @@ package com.tr.hsyn.scaler
 
 /**
  * > ## Ölçekleyici. ##
- *
- * > ## =================== ##
+ * ===================
  *
  * > Bir şeyin miktar olarak az mı çok mu olduğunu nasıl
  * > anlarız?
@@ -22,107 +21,119 @@ package com.tr.hsyn.scaler
  * > miktarın az mı çok mu olduğunu anlamımızı sağlar. Bunun için
  * > 4 çokluk belirlendi.
  *
- * > 1. [MIN] en az
+ * 1. [MIN] en az
  *
- * > 2. [MID] normal
+ * 2. [MID] normal
  *
- * > 3. [MAX] çok
+ * 3. [MAX] çok
  *
- * > 4. [LARGE] aşırı
+ * 4. [LARGE] aşırı
  *
  * > [getQuantity] metodu bu 4 değişmezden birini döndürür.
  * Ve diğer metotlar bu değişmezleri sorgulayarak ne olduğunu anlamamızı sağlar.
  *
+ *    val scaler = new Scaler(10, 2f);
+ *    //bu nesne için minimum değer 10 ve aşağısıdır. (..., 10]
+ *    //orta değer (10, 10 * scale] aralığıdır. (10, 20] on ve yirmi arası
+ *    //yüksek değer (orta, 10 * scale * 2] aralığıdır. (20, 40] yürmi ve kırk arası
+ *    //en yüksek değer (yüksek, 10 * scale * 3] aralığıdır. (40, ...) kırk ve üzeri
+ *
  * @author hsyn 23.08.2022 18:14:23
  */
 interface Scaler {
-
-    /**
-     * Verilen değerin miktarını döndürür.
-     *
-     * @param size Miktarı öğrenilmek istenen değer
-     * @return miktar
-     * @see [MIN]
-     * @see [MID]
-     * @see [MAX]
-     * @see [LARGE]
-     */
-    fun getQuantity(size: Int): Int
-
-    /**
-     * @param quantity Miktar. [getQuantity] metodundan dönen değer
-     *     olmalı.
-     * @return
-     */
-    fun isMin(quantity: Int): Boolean = quantity == MIN
-
-    /**
-     * @param quantity Miktar. [getQuantity] metodundan dönen değer
-     *     olmalı.
-     * @return
-     */
-    fun isMid(quantity: Int): Boolean = quantity == MID
-
-    /**
-     * @param quantity Miktar. [getQuantity] metodundan dönen değer
-     *     olmalı.
-     * @return
-     */
-    fun isMax(quantity: Int): Boolean = quantity == MAX
-
-    /**
-     * @param quantity Miktar. [getQuantity] metodundan dönen değer
-     *     olmalı.
-     * @return
-     */
-    fun isLarge(quantity: Int): Boolean = quantity == LARGE
-
-    companion object {
-
-        /**
-         * > Yeni bir ölçekleyici oluşturur.
-         *
-         * > [base] değeri taban değerdir.
-         * Yani [MIN] değerini belirler. [scale] ise [base] değerinin çarpılacağı katsayıdır.
-
-         * [MID] için `1 * base * scale`
-         * # -------------------------
-         * [MAX] için `2 * base * scale`
-         * # -------------------------
-         * [LARGE] için `3 * base * scale`
-         * # -------------------------
-         *
-         * #
-         *    val scaler = new Scaler(10, 2f);
-         *    //bu nesne için minimum değer 10 ve aşağısıdır. (..., 10]
-         *    //orta değer (10, 10 * scale] aralığıdır. (10, 20]
-         *    //yüksek değer (orta, 10 * scale * 2] aralığıdır. (20, 40]
-         *    //en yüksek değer (yüksek, 10 * scale * 3] aralığıdır. (40, ...)
-         *
-         * @param base Base
-         * @param scale Scale
-         * @return [Scaler]
-         */
-        @JvmStatic
-        fun createNewScaler(base: Int, scale: Float): Scaler {
-
-            return Scale(base, scale)
-        }
-    }
+	
+	/**
+	 * Verilen değerin miktarını döndürür.
+	 *
+	 * @param size Miktarı öğrenilmek istenen değer
+	 * @return miktar
+	 * @see [MIN]
+	 * @see [MID]
+	 * @see [MAX]
+	 * @see [LARGE]
+	 */
+	fun getQuantity(size: Int): Int
+	
+	/**
+	 * @param quantity Miktar. [getQuantity] metodundan dönen değer
+	 *     olmalı.
+	 * @return
+	 */
+	fun isMin(quantity: Int): Boolean = quantity == MIN
+	
+	/**
+	 * @param quantity Miktar. [getQuantity] metodundan dönen değer
+	 *     olmalı.
+	 * @return
+	 */
+	fun isMid(quantity: Int): Boolean = quantity == MID
+	
+	/**
+	 * @param quantity Miktar. [getQuantity] metodundan dönen değer
+	 *     olmalı.
+	 * @return
+	 */
+	fun isMax(quantity: Int): Boolean = quantity == MAX
+	
+	/**
+	 * @param quantity Miktar. [getQuantity] metodundan dönen değer
+	 *     olmalı.
+	 * @return
+	 */
+	fun isLarge(quantity: Int): Boolean = quantity == LARGE
+	
+	companion object {
+		
+		/**
+		 * ## Yeni bir ölçekleyici oluşturur.
+		 *
+		 * [base] değeri taban değerdir.
+		 * Yani [MIN] değerini belirler. [scale] ise [base] değerinin çarpılacağı katsayıdır.
+		 
+		 * [MID] için `1 * base * scale`
+		 * # -------------------------
+		 * [MAX] için `2 * base * scale`
+		 * # -------------------------
+		 * [LARGE] için `3 * base * scale`
+		 * # -------------------------
+		 *
+		 *
+		 *    val scaler = new Scaler(10, 2f);
+		 *    //bu nesne için minimum değer 10 ve aşağısıdır. (..., 10]
+		 *    //orta değer (10, 10 * scale] aralığıdır. (10, 20]
+		 *    //yüksek değer (orta, 10 * scale * 2] aralığıdır. (20, 40]
+		 *    //en yüksek değer (yüksek, 10 * scale * 3] aralığıdır. (40, ...)
+		 *
+		 * @param base Base
+		 * @param scale Scale
+		 * @return [Scaler]
+		 */
+		@JvmStatic
+		fun createNewScaler(base: Int, scale: Float): Scaler {
+			
+			return Scale(base, scale)
+		}
+	}
 }
 
 
 private class Scale(val base: Int, val scale: Float) : Scaler {
-
-    override fun getQuantity(size: Int): Int {
-
-        if (size <= base) return MIN
-
-        val _scale = (scale * base).toInt()
-
-        if (size <= _scale) return MID
-        return if (size <= _scale * 2) MAX else LARGE
-    }
+	
+	/**
+	 * Verilen çokluğun niceliğini döndürür.
+	 *
+	 * @param size Niceliği öğrenilmek istenen çokluk
+	 * @return [MIN], [MID], [MAX], [LARGE] değerlerinden biri
+	 */
+	override fun getQuantity(size: Int): Int {
+		
+		if (size <= base) return MIN
+		
+		val _scale = (scale * base).toInt()
+		
+		if (size <= _scale) return MID
+		return if (size <= _scale * 2) MAX else LARGE
+	}
 }
 
 /**

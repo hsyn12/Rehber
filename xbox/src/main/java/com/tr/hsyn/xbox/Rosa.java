@@ -1,6 +1,7 @@
 package com.tr.hsyn.xbox;
 
 
+import com.tr.hsyn.key.Key;
 import com.tr.hsyn.xbox.definition.Hotel;
 import com.tr.hsyn.xbox.definition.Reception;
 
@@ -65,6 +66,12 @@ public class Rosa extends Hotel {
 	public <T> T room(com.tr.hsyn.key.@NotNull Key key, @NotNull T object) {
 		
 		return reception.place(key, object);
+	}
+	
+	@Override
+	public boolean exist(@NotNull Key key) {
+		
+		return reception.exist(key);
 	}
 	
 	@Override

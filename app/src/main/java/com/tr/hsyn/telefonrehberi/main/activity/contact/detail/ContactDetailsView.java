@@ -17,6 +17,8 @@ import com.tr.hsyn.execution.Runny;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.vanimator.ViewAnimator;
 
+import org.jetbrains.annotations.NotNull;
+
 
 /**
  * Kişinin detayları için görsel öğeleri hazırlar.
@@ -28,8 +30,8 @@ public abstract class ContactDetailsView extends ActivityView {
 	 */
 	protected ImageView               image;
 	/**
-	 * Kişinin çeşitli bilgilerini gösterecek olan öğelerin kapsayıcısı.
-	 * Tüm öğeler bunun içine eklenecek
+	 * Kişinin çeşitli bilgilerini gösterecek olan görsel öğelerin kapsayıcısı.
+	 * Kişi detayı için hazırlanan tüm görsel elemanlar bu kapsayıcının içine eklenir.
 	 */
 	protected ViewGroup               mainContainer;
 	/**
@@ -39,6 +41,9 @@ public abstract class ContactDetailsView extends ActivityView {
 	protected CollapsingToolbarLayout collapsingToolbarLayout;
 	protected ProgressBar             progressBar;
 	
+	/**
+	 * Kişi için düzenleme sayfasını aç
+	 */
 	protected abstract void editContact();
 	
 	@Override
@@ -75,9 +80,24 @@ public abstract class ContactDetailsView extends ActivityView {
 		editContact();
 	}
 	
+	/**
+	 * Kişi detaylarından görsel eleman çıkarır.
+	 *
+	 * @param view Görünümden çıkarılacak görsel eleman
+	 */
 	protected void removeDetailView(View view) {
 		
 		mainContainer.removeView(view);
+	}
+	
+	/**
+	 * Kişi detaylarına görsel eleman ekler.
+	 *
+	 * @param view Eklenecek görsel eleman
+	 */
+	protected void addDetailView(@NotNull View view) {
+		
+		mainContainer.addView(view);
 	}
 	
 	private void showActionButton() {

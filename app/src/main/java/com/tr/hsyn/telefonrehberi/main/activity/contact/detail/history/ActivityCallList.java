@@ -23,7 +23,7 @@ import java.util.List;
 
 
 /**
- * Bir kişinin arama geçmişini listeler.
+ * Bir kişinin arama geçmişi listesinden oluşan bir ekran.
  * Liste {@link Key#CALL_HISTORY} anahtarı ile kayıt edilmiş olmalıdır.
  * Burada sadece silme işlemi yapılabilir.
  * Silinen kayıtlar kalıcı olarak silinir ve

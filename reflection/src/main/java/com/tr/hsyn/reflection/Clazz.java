@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
  */
 public final class Clazz {
 	
-	
 	@Nullable
 	private static Class<?>[] getTypes(@Nullable final Object... parameters) {
 		
@@ -159,7 +158,6 @@ public final class Clazz {
 		
 		return null;
 	}
-	
 	
 	/**
 	 * Metot ara.
@@ -329,10 +327,6 @@ public final class Clazz {
 		
 		return types;
 	}
-	
-	private final       int          test1 = 2;
-	public static final long         test2 = 4;
-	private             List<String> list  = new ArrayList<>(0);
 	
 	public static void main(String... args) {
 		

@@ -96,7 +96,7 @@ public abstract class LoadingStation extends CallLogLoader {
 		
 		if (throwable == null) {
 			
-			var loadTime = Time.currentMillis() - getLastContactsLoadingStartTime();
+			var loadTime = Time.now() - getLastContactsLoadingStartTime();
 			
 			pageContacts.setList(contacts);
 			xlog.d("Contacts Loaded [size=%d, loadTime=%dms]", contacts.size(), loadTime);
@@ -142,7 +142,7 @@ public abstract class LoadingStation extends CallLogLoader {
 		
 		if (throwable == null) {
 			
-			var loadTime = Time.currentMillis() - getLastContactsLoadingStartTime();
+			var loadTime = Time.now() - getLastContactsLoadingStartTime();
 			
 			pageCallLog.setList(calls);
 			Blue.box(Key.CALL_LOG, calls);
@@ -186,7 +186,7 @@ public abstract class LoadingStation extends CallLogLoader {
 		super.onResume();
 		
 		Boolean reCalls    = Blue.remove(Key.REFRESH_CALL_LOG);
-		Boolean reContacts = Blue.remove(Key.SIGN_REFRESH_CONTACTS);
+		Boolean reContacts = Blue.remove(Key.REFRESH_CONTACTS);
 		
 		if (reContacts != null) {
 			

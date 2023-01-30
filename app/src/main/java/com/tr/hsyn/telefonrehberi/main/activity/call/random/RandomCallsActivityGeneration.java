@@ -144,13 +144,13 @@ public abstract class RandomCallsActivityGeneration extends RandomCallsActivityM
 	@Override
 	public void onProgress(@NonNull Call value, int currentProgress, int total) {
 		
-		var now = Time.currentMillis();
+		var now = Time.now();
 		
 		if (now - progressWriteTime > 300) {
 			
 			textCurrentProgress.animateText(value.getNumber());
 			textProgress.setText(String.format("%d %%", (currentProgress * 100) / total));
-			progressWriteTime = Time.currentMillis();
+			progressWriteTime = Time.now();
 		}
 		
 		progressGeneration.setProgress(currentProgress + 1);

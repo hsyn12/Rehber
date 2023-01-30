@@ -407,7 +407,6 @@ public class Spans {
 	 * @see EasyEditSpan
 	 * @see EasyEditSpan#EasyEditSpan(PendingIntent)
 	 */
-	@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 	public static Span edit(@NonNull final PendingIntent pendingIntent) {
 		
 		return new Span(() -> new EasyEditSpan(pendingIntent));
@@ -505,7 +504,6 @@ public class Spans {
 	/**
 	 * @see LocaleSpan#LocaleSpan(Locale)
 	 */
-	@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
 	public static Span locale(@NonNull final Locale locale) {
 		
 		return new Span(() -> new LocaleSpan(locale));
@@ -514,7 +512,6 @@ public class Spans {
 	/**
 	 * @see LocaleSpan#LocaleSpan(LocaleList)
 	 */
-	@RequiresApi(api = Build.VERSION_CODES.N)
 	public static Span locale(@NonNull final LocaleList localeList) {
 		
 		return new Span(() -> new LocaleSpan(localeList));

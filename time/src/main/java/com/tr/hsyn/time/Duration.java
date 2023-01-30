@@ -1,10 +1,11 @@
 package com.tr.hsyn.time;
 
+
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Range;
 
 import java.util.List;
 import java.util.Objects;
+
 
 /**
  * Bir <b><i>süre</i></b> belirtmeyi sağlar.<br>
@@ -66,6 +67,7 @@ public class Duration {
 	 * @return Type of the unit
 	 */
 	public Unit getUnit() {
+		
 		return unit;
 	}
 	
@@ -73,6 +75,7 @@ public class Duration {
 	 * @return Amount of the time
 	 */
 	public long getValue() {
+		
 		return value;
 	}
 	
@@ -80,6 +83,7 @@ public class Duration {
 	 * @return Returns {@code true} if Duration is empty, {@code false} otherwise
 	 */
 	public boolean isZero() {
+		
 		return value == 0L;
 	}
 	
@@ -87,6 +91,7 @@ public class Duration {
 	 * @return Returns {@code true} if Duration is not empty, {@code false} otherwise
 	 */
 	public boolean isNotZero() {
+		
 		return value != 0L;
 	}
 	
@@ -139,11 +144,13 @@ public class Duration {
 	 */
 	@Override
 	public boolean equals(Object o) {
+		
 		return o instanceof Duration && unit.equals(((Duration) o).getUnit()) && value == ((Duration) o).getValue();
 	}
 	
 	@Override
 	public int hashCode() {
+		
 		return Objects.hash(unit, value);
 	}
 	
@@ -191,7 +198,7 @@ public class Duration {
 	 * @param years Number of years
 	 */
 	@NotNull
-	public static Duration ofYear(@Range(from = Long.MIN_VALUE, to = Long.MAX_VALUE) long years) {return of(Unit.YEAR, years);}
+	public static Duration ofYear(long years) {return of(Unit.YEAR, years);}
 	
 	/**
 	 * Creates a new Duration with given months.
@@ -199,7 +206,8 @@ public class Duration {
 	 * @param months Number of months
 	 */
 	@NotNull
-	public static Duration ofMonth(@Range(from = Long.MIN_VALUE, to = Long.MAX_VALUE) long months) {
+	public static Duration ofMonth(long months) {
+		
 		return of(Unit.MONTH, months);
 	}
 	
@@ -209,7 +217,7 @@ public class Duration {
 	 * @param days Number of days
 	 */
 	@NotNull
-	public static Duration ofDay(@Range(from = Long.MIN_VALUE, to = Long.MAX_VALUE) long days) {return of(Unit.DAY, days);}
+	public static Duration ofDay(long days) {return of(Unit.DAY, days);}
 	
 	/**
 	 * Creates a new Duration with given hours.
@@ -217,7 +225,7 @@ public class Duration {
 	 * @param hours Number of hours
 	 */
 	@NotNull
-	public static Duration ofHour(@Range(from = Long.MIN_VALUE, to = Long.MAX_VALUE) long hours) {return of(Unit.HOUR, hours);}
+	public static Duration ofHour(long hours) {return of(Unit.HOUR, hours);}
 	
 	/**
 	 * Creates a new Duration with given minutes.
@@ -225,7 +233,7 @@ public class Duration {
 	 * @param minutes Number of minutes
 	 */
 	@NotNull
-	public static Duration ofMinute(@Range(from = Long.MIN_VALUE, to = Long.MAX_VALUE) long minutes) {return of(Unit.MINUTE, minutes);}
+	public static Duration ofMinute(long minutes) {return of(Unit.MINUTE, minutes);}
 	
 	/**
 	 * Creates a new Duration with given seconds.
@@ -233,7 +241,7 @@ public class Duration {
 	 * @param seconds Number of second
 	 */
 	@NotNull
-	public static Duration ofSecond(@Range(from = Long.MIN_VALUE, to = Long.MAX_VALUE) long seconds) {return of(Unit.SECOND, seconds);}
+	public static Duration ofSecond(long seconds) {return of(Unit.SECOND, seconds);}
 	
 	/**
 	 * Creates a new Duration with given milliseconds.
@@ -241,7 +249,7 @@ public class Duration {
 	 * @param milliseconds Number of milliseconds
 	 **/
 	@NotNull
-	public static Duration ofMillisecond(@Range(from = Long.MIN_VALUE, to = Long.MAX_VALUE) long milliseconds) {return of(Unit.MILLISECOND, milliseconds);}
+	public static Duration ofMillisecond(long milliseconds) {return of(Unit.MILLISECOND, milliseconds);}
 	
 	
 }

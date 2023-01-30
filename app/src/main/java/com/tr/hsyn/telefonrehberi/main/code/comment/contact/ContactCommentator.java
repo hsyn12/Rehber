@@ -18,8 +18,6 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface ContactCommentator extends Commentator<Contact> {
 	
-	@NotNull
-	CharSequence commentSavedDate();
 	
 	@NotNull
 	CharSequence commentHistory();
@@ -44,4 +42,6 @@ public interface ContactCommentator extends Commentator<Contact> {
 		xlog.d("Wrong moody : %d", moody.ordinal());
 		return new DefaultContactCommentator(store);
 	}
+	
+	
 }

@@ -50,6 +50,8 @@ public abstract class Hotel {
 	 */
 	public abstract <T> T room(@NotNull Key key, T object);
 	
+	public abstract boolean exist(@NotNull Key key);
+	
 	/**
 	 * Bir odaya bir misafirin yerleştirildiğini bildirir.
 	 * Misafir ile görüşmek isteyen beklemede biri var mı kontrol eder, varsa görüştürür.

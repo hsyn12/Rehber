@@ -57,6 +57,12 @@ public class Daniel extends Reception {
 	}
 	
 	@Override
+	public boolean exist(@NotNull Key key) {
+		
+		return OBJECT_MAP.containsKey(key);
+	}
+	
+	@Override
 	public <T> T exit(@NotNull Key key) {
 		
 		T t = (T) OBJECT_MAP.remove(key);

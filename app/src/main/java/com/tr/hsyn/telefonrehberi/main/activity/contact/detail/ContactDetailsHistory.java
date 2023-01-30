@@ -14,6 +14,7 @@ import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.execution.Runny;
 import com.tr.hsyn.execution.Work;
+import com.tr.hsyn.gate.AutoGate;
 import com.tr.hsyn.gate.DigiGate;
 import com.tr.hsyn.gate.Gate;
 import com.tr.hsyn.key.Key;
@@ -46,8 +47,8 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	 * herhangi bir kontrol yapmaya gerek olmaz.
 	 */
 	protected final int        RC_CALL_LOG     = 45;
-	private final   DigiGate   gateHistory     = DigiGate.newGate(1000L);
-	private final   Gate       gateShowHistory = DigiGate.newGate(1000L);
+	private final   Gate       gateHistory     = DigiGate.newGate(1000L, this::hideProgress);
+	private final   Gate       gateShowHistory = AutoGate.newGate(1000L);
 	/**
 	 * Kişinin arama geçmişi
 	 */
@@ -130,15 +131,13 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 		
 		//- Eğer arama kayıtları en az bir kez yüklenmiş ise sorun yok
 		//- Ancak yüklenmemiş ise, kayıtların buradan yüklenmesi biraz karışıklık yaratabilir.
-		
 		List<Call> calls = Over.CallLog.Calls.getCalls();
 		
 		//- Öncelikle arama kayıtları izinlerine bakılmalı
-		
 		if (hasCallLogPermissions()) {
 			
 			//- Arama kayıtları izinleri, kayıtların en az bir kez yüklendiğini gösterir
-			//- Ancak bu yükleme yükleme istasyonunda mı yoksa burada mı gerçekleşti bilmiyoruz
+			//- Ancak bu yükleme, yükleme istasyonunda mı yoksa burada mı gerçekleşti bilmiyoruz
 			//- Kullanıcı uygulamayı ilk kez açıp, kişiler listesinden bir tıkla buraya gelmiş olabilir
 			//- Durum böyle ise bu değişkenin null olması gerek
 			
@@ -162,6 +161,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 			//- İzinler yok
 			//- Demekki zor yoldan ilerleyeceğiz
 			//- İzinlerin cevabı geldiğinde yeni liste oluşturacağız
+			//- İzinleri şimdi sormuyoruz çünkü kullanıcının tıklaması gerek
 			//- Şimdilik boş dönüyoruz
 			
 			return new ArrayList<>(0);
@@ -182,7 +182,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 		//- Eğer görünüme kullanıcı tıklıyorsa kapıya takılmak zorunda,
 		//- biz tıklıyorsak (metodu biz çağırıyorsak) direk girmemiz lazım
 		
-		if (gateHistory.enter(this::hideProgress) || view == null) {
+		if (gateHistory.enter() || view == null) {
 			
 			//- Karışıklık burada başlıyor
 			//- Çünkü kişinin geçmişine gidildiyse ve bir silme işlemi gerçekleşti ise

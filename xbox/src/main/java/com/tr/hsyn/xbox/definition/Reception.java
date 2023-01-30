@@ -50,6 +50,8 @@ public abstract class Reception {
 	@Nullable
 	public abstract <T> T place(@NotNull Key key, @NotNull T object);
 	
+	public abstract boolean exist(@NotNull Key key);
+	
 	/**
 	 * Odayı boşaltır.
 	 *

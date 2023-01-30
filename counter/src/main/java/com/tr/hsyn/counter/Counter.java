@@ -25,7 +25,7 @@ public class Counter<T> {
 	 * Verilen elemanı listede sayar.
 	 *
 	 * @param item Sayılacak eleman
-	 * @return elemanın listede geçme sayısı
+	 * @return Elemanın listede geçme sayısı
 	 */
 	public long count(@NotNull T item) {
 		
@@ -52,7 +52,7 @@ public class Counter<T> {
 	public <S> long count(@NotNull T item, @NotNull Function<T, S> mapper) {
 		
 		long count = 0L;
-		var  s     = mapper.apply(item);
+		S    s     = mapper.apply(item);
 		
 		for (var t : list)
 			if (mapper.apply(t).equals(s)) count++;
