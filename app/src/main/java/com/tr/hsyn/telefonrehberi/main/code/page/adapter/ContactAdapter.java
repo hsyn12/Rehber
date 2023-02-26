@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.colors.ColorHolder;
 import com.tr.hsyn.colors.Colors;
+import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.fastscroller.FastScrollRecyclerView;
 import com.tr.hsyn.perfectsort.PerfectSort;
 import com.tr.hsyn.rsectiondecorator.SectionsAdapterInterface;
@@ -24,7 +25,6 @@ import com.tr.hsyn.selection.ItemIndexListener;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.code.cast.ItemAdapter;
-import com.tr.hsyn.telefonrehberi.main.code.contact.cast.Contact;
 import com.tr.hsyn.textdrawable.TextDrawable;
 
 import java.util.HashMap;

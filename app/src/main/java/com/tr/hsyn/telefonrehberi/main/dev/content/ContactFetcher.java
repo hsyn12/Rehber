@@ -1,9 +1,9 @@
 package com.tr.hsyn.telefonrehberi.main.dev.content;
 
 
+import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.content.fetcher.ContentFetcher;
 import com.tr.hsyn.content.requestor.ContentRequester;
-import com.tr.hsyn.telefonrehberi.main.code.contact.cast.Contact;
 
 
 public class ContactFetcher implements ContentFetcher<Contact> {

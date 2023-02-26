@@ -13,6 +13,7 @@ import com.tr.hsyn.execution.Runny;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.code.call.act.Calls;
+import com.tr.hsyn.telefonrehberi.main.code.call.cast.CallKey;
 import com.tr.hsyn.telefonrehberi.main.code.story.call.CallStory;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
 import com.tr.hsyn.xbox.Blue;
@@ -82,7 +83,7 @@ public class ActivityCallList extends ActivityCallHistoryView {
 			
 			var call = calls.get(0);
 			
-			if (call.getContactId() != 0) {
+			if (call.getLong(CallKey.CONTACT_ID, 0L) != 0L) {
 				
 				var name = Calls.getContactName(getContentResolver(), call.getNumber());
 				
@@ -116,7 +117,7 @@ public class ActivityCallList extends ActivityCallHistoryView {
 		
 		Runny.run(() -> {
 			
-			var deleted = callStory.delete(call);
+			boolean deleted = callStory.delete(call);
 			
 			if (deleted) {
 				
@@ -156,7 +157,7 @@ public class ActivityCallList extends ActivityCallHistoryView {
 			if (deleted == deletedCalls.size()) {
 				
 				long now = System.currentTimeMillis();
-				deletedCalls.forEach(c -> c.setDeletedDate(now));
+				deletedCalls.forEach(c -> c.setData(CallKey.DELETED_DATE, now));
 				
 				var _deleted = callStory.updateFromDatabase(deletedCalls);
 				

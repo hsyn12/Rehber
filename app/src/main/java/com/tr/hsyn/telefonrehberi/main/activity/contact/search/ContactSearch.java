@@ -12,6 +12,7 @@ import com.tr.hsyn.activity.ActivityView;
 import com.tr.hsyn.bungee.Bungee;
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.colors.Colors;
+import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.gate.AutoGate;
 import com.tr.hsyn.gate.DigiGate;
 import com.tr.hsyn.gate.Gate;
@@ -26,7 +27,6 @@ import com.tr.hsyn.telefonrehberi.code.ResourceUtil;
 import com.tr.hsyn.telefonrehberi.code.android.ui.swipe.ContactSwipeCallBack;
 import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.ContactDetails;
 import com.tr.hsyn.telefonrehberi.main.code.contact.act.ContactKey;
-import com.tr.hsyn.telefonrehberi.main.code.contact.cast.Contact;
 import com.tr.hsyn.xbox.Blue;
 import com.tr.hsyn.xlog.xlog;
 
@@ -142,7 +142,7 @@ public class ContactSearch extends ActivityView implements OnSearchViewListener,
 		
 		for (int i = 0; i < contacts.size(); ) {
 			
-			var numbers = ContactKey.GETTER.getNumbers(contacts.get(i));
+			List<String> numbers = contacts.get(i).getData(ContactKey.NUMBERS);
 			
 			//- Biden fazla numarası olanlar
 			if (numbers != null && numbers.size() > 1) {
@@ -154,7 +154,7 @@ public class ContactSearch extends ActivityView implements OnSearchViewListener,
 					
 					var _contact = new Contact(contact);
 					
-					ContactKey.SETTER.setNumbers(_contact, Lister.listOf(number));
+					ContactKey.setNumbers(_contact, Lister.listOf(number));
 					contacts.add(i++, _contact);
 				}
 			}
@@ -211,7 +211,7 @@ public class ContactSearch extends ActivityView implements OnSearchViewListener,
 		
 		xlog.d("Swiped : %s", contact.getName());
 		
-		var numbers = ContactKey.GETTER.getNumbers(contact);
+		List<String> numbers = contact.getData(ContactKey.NUMBERS);
 		
 		if (numbers != null && !numbers.isEmpty()) {
 			

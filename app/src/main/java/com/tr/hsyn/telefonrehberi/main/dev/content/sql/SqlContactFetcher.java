@@ -3,9 +3,9 @@ package com.tr.hsyn.telefonrehberi.main.dev.content.sql;
 
 import androidx.annotation.NonNull;
 
+import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.content.fetcher.SQLContentFetcher;
 import com.tr.hsyn.content.requestor.SQLContentRequester;
-import com.tr.hsyn.telefonrehberi.main.code.contact.cast.Contact;
 
 
 public class SqlContactFetcher implements SQLContentFetcher<Contact> {

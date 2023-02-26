@@ -4,7 +4,7 @@ package com.tr.hsyn.string;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
-import com.tr.hsyn.regex.Rego;
+import com.tr.hsyn.regex.Nina;
 import com.tr.hsyn.regex.cast.Modifier;
 
 import org.jetbrains.annotations.NotNull;
@@ -243,19 +243,19 @@ public final class Stringx {
 	 */
 	public static boolean isMatch(String word, String searchText, boolean ignoreCase) {
 		
-		if (Rego.Test.isNoboe(word) || Rego.Test.isNoboe(searchText)) return false;
+		if (Nina.Test.isNoboe(word) || Nina.Test.isNoboe(searchText)) return false;
 		
 		if (word.length() < searchText.length()) return false;
 		
-		searchText = Rego.Edit.removeWhiteSpaces(searchText);
+		searchText = Nina.Edit.removeWhiteSpaces(searchText);
 		
-		var reg = Rego.newRegex().space().zeroOrMore();
+		var reg = Nina.regex().space().zeroOrMore();
 		
-		if (ignoreCase) reg.add(Modifier.of().ignoreCase());
+		if (ignoreCase) reg.with(Modifier.of().ignoreCase());
 		
 		for (int i = 0; i < searchText.length(); i++) {
 			
-			reg.add(searchText.charAt(i))
+			reg = reg.with(searchText.charAt(i))
 					.space()
 					.zeroOrMore();
 		}
@@ -443,18 +443,18 @@ public final class Stringx {
 	 */
 	public static Integer @NotNull [] indexOfMatches(String word, String searchText, boolean ignoreCase) {
 		
-		if (Rego.Test.isNoboe(word) || Rego.Test.isNoboe(searchText)) return new Integer[0];
+		if (Nina.Test.isNoboe(word) || Nina.Test.isNoboe(searchText)) return new Integer[0];
 		
-		searchText = Rego.Edit.removeWhiteSpaces(searchText);
+		searchText = Nina.Edit.removeWhiteSpaces(searchText);
 		
-		var reg = Rego.newRegex();
+		var reg = Nina.regex();
 		
 		if (ignoreCase) reg.ignoreCase();
 		
 		for (int i = 0; i < searchText.length(); i++)
-		     reg.space().zeroOrMore().add(searchText.charAt(i));
+		     reg = reg.space().zeroOrMore().with(searchText.charAt(i));
 		
-		var indexes = reg.indexesOf(word);
+		var indexes = reg.findAll(word);
 		
 		Integer[] result = new Integer[indexes.size() * 2];
 		
@@ -760,6 +760,78 @@ public final class Stringx {
 		s2 = trimWhiteSpaces(s2);
 		
 		return s1.equals(s2);
+	}
+	
+	/**
+	 * İki string nesnenin sayısal içeriklerini karşılaştırır.
+	 * Karşılaştırma, nesnelerin sayısal olmayan tüm karakterleri çıkarılarak yapılır.
+	 * Yani karşılaştırılacak string nesnelerin içinde sayısal olmayan karakterler bulunabilir.<br>
+	 * İki {@code null} nesne birbirine eşit değildir.<br>
+	 * İki boş string birbirine eşit değildir.
+	 * Karşılaştırmanın yapılması için
+	 * nesnelerin içinde en az bir tane sayısal karakterin olması gerek.<br>
+	 *
+	 *
+	 * <pre>
+	 * equalsNumbers(null, null); // false
+	 * equalsNumbers(null, ""); // false
+	 * equalsNumbers("", ""); // false
+	 * equalsNumbers("hsyn1204", "h1s2y0n4"); // true
+	 * </pre>
+	 *
+	 * @param s1 Sayı
+	 * @param s2 Sayı
+	 * @return İki sayı birbirine eşitse {@code true}, değilse {@code false}
+	 */
+	public static boolean equalsNumbers(String s1, String s2) {
+		
+		return equalsNumbers(s1, s2, 0);
+	}
+	
+	/**
+	 * İki sayısal değer içeren string nesneyi eşitlik için karşılaştırır.
+	 * Nesneler sayısal olmayan karakterler içerebilir,
+	 * karşılaştırma bu karakterler çıkarılarak yapılır.
+	 * Bu bir sayısal karşılaştırma olduğu için iki {@code null} nesne birbirine eşit olamaz.
+	 * Ve iki boş string de birbirine eşit olmaz.
+	 *
+	 * <pre>
+	 * equalsNumbers(null, null, 0); // false
+	 * equalsNumbers(null, "", 0); // false
+	 * equalsNumbers("", "", 0); // false
+	 * equalsNumbers("", "", 0); // false
+	 * equalsNumbers("hsyn1204", "h1s2y0n4", 0); // true
+	 * equalsNumbers("123", "2", 0); // false
+	 * equalsNumbers("123", "2", 2); // true
+	 * // tolerans değeri, nesnelerden biri diğerini içeriyorsa,
+	 * // iki nesnenin karakter sayıları arasında en fazla kaç karakter fark olması gerektiğini bildirir.
+	 *
+	 * </pre>
+	 *
+	 * @param s1        String
+	 * @param s2        String
+	 * @param tolerance Tolerans
+	 * @return İki string sayısal olarak eşitse {@code true}, değilse {@code false}
+	 */
+	public static boolean equalsNumbers(String s1, String s2, int tolerance) {
+		
+		if (s1 == null || s2 == null) return false;
+		
+		s1 = Stringx.trimNonDigits(s1);
+		s2 = Stringx.trimNonDigits(s2);
+		
+		if (s1.isBlank() || s2.isBlank()) return false;
+		
+		if (s1.equals(s2)) return true;
+		
+		int i1 = s1.length();
+		int i2 = s2.length();
+		
+		if (i1 == i2) return false;
+		
+		if (s2.contains(s1) || s1.contains(s2))
+			return Math.abs(i1 - i2) <= tolerance;
+		else return false;
 	}
 	
 }

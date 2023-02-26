@@ -173,10 +173,12 @@ dependencies {
 	implementation project(path: ':long')
 	implementation project(path: ':datboxer')
 	implementation project(path: ':datakey')
+	implementation project(path: ':contactdata')
+	implementation project(path: ':tryme')
 	annotationProcessor project(path: ':warnerbros')
 
 	implementation "androidx.appcompat:appcompat:${rootProject.appcompat}"
-	implementation 'com.google.android.material:material:1.7.0'
+	implementation 'com.google.android.material:material:1.8.0'
 	implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 	testImplementation 'junit:junit:4.13.2'
 	androidTestImplementation 'androidx.test.ext:junit:1.1.5'

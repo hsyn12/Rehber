@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.collection.Lister;
-import com.tr.hsyn.telefonrehberi.main.code.contact.cast.Contact;
+import com.tr.hsyn.contactdata.Contact;
 
 import java.util.ArrayList;
 import java.util.List;

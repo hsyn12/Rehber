@@ -25,9 +25,15 @@
       <module name="JRehber.contactsdata" target="11" />
       <module name="JRehber.contactsdata.main" target="11" />
       <module name="JRehber.contactsdata.test" target="11" />
+      <module name="JRehber.funcbuster" target="11" />
+      <module name="JRehber.funcbuster.main" target="11" />
+      <module name="JRehber.funcbuster.test" target="11" />
       <module name="JRehber.news" target="11" />
       <module name="JRehber.news.main" target="11" />
       <module name="JRehber.news.test" target="11" />
+      <module name="JRehber.objext" target="11" />
+      <module name="JRehber.objext.main" target="11" />
+      <module name="JRehber.objext.test" target="11" />
       <module name="JRehber.over" target="17" />
       <module name="JRehber.story" target="11" />
       <module name="JRehber.story.main" target="11" />

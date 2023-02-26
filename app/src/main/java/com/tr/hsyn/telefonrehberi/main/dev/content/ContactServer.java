@@ -5,10 +5,10 @@ import android.content.ContentResolver;
 
 import androidx.annotation.NonNull;
 
+import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.content.fetcher.ContentFetcher;
 import com.tr.hsyn.content.requestor.ContentRequester;
 import com.tr.hsyn.content.server.Server;
-import com.tr.hsyn.telefonrehberi.main.code.contact.cast.Contact;
 
 import java.util.List;
 

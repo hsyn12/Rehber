@@ -5,9 +5,9 @@ import android.database.sqlite.SQLiteDatabase;
 
 import androidx.annotation.NonNull;
 
+import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.content.handler.SQLContentHandler;
 import com.tr.hsyn.content.requestor.SQLContentRequester;
-import com.tr.hsyn.telefonrehberi.main.code.contact.cast.Contact;
 
 
 public class SqlContactRequester implements SQLContentRequester<Contact> {

@@ -6,9 +6,9 @@ import android.database.Cursor;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.content.handler.SQLContentHandler;
 import com.tr.hsyn.perfectsort.PerfectSort;
-import com.tr.hsyn.telefonrehberi.main.code.contact.cast.Contact;
 
 import org.jetbrains.annotations.NotNull;
 

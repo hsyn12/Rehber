@@ -7,7 +7,7 @@ import java.util.Objects;
 /**
  * Double integer, Long.
  */
-public final class DInt {
+public final class DInt implements Long {
 	
 	private final long value;
 	
@@ -16,6 +16,7 @@ public final class DInt {
 		this.value = value;
 	}
 	
+	@Override
 	public long getLong() {
 		
 		return value;
@@ -27,9 +28,9 @@ public final class DInt {
 		return obj instanceof DInt && value == ((DInt) obj).value;
 	}
 	
-	public boolean equals(DInt obj) {
+	public boolean equals(Long obj) {
 		
-		return obj != null && value == obj.value;
+		return obj != null && value == obj.getLong();
 	}
 	
 	@Override

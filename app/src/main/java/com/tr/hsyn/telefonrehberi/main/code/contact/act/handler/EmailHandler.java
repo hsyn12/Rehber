@@ -1,8 +1,8 @@
 package com.tr.hsyn.telefonrehberi.main.code.contact.act.handler;
 
 
+import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.telefonrehberi.main.code.contact.act.ContactKey;
-import com.tr.hsyn.telefonrehberi.main.code.contact.cast.Contact;
 
 import org.jetbrains.annotations.NotNull;
 

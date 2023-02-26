@@ -3,9 +3,9 @@ package com.tr.hsyn.telefonrehberi.main.code.contact.act.handler;
 
 import android.provider.ContactsContract;
 
+import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.telefonrehberi.main.code.contact.act.ContactKey;
-import com.tr.hsyn.telefonrehberi.main.code.contact.cast.Contact;
 
 import org.jetbrains.annotations.NotNull;
 

@@ -10,57 +10,47 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
-/**
- * Veri saklayıcısı.<br>
- * Verileri bir anahtar ile saklar ve aynı anahtar ile erişim sağlar.
- *
- * @see DataKey
- */
 @SuppressWarnings("unchecked")
-public class DatBoxer {
+public class DatBoxer implements Objext {
 	
 	/**
-	 * Object Box
+	 * Object Box.<br>
+	 * Alt sınıfların kendine özel bilgiler saklaması için protected kalmalı.
 	 */
-	private final Map<DataKey, Object> datamap = new HashMap<>();
+	protected final Map<DataKey, Object> datamap = new HashMap<>();
 	
-	/**
-	 * Veriyi hem saklamayı hem silmeyi sağlar.
-	 *
-	 * @param key  Anahtar
-	 * @param data Veri
-	 * @param <T>  Veri türü
-	 * @return Eğer veri {@code null} değilse kaydedilir ve aynı yerde saklanan önceki veri döndürülür.
-	 * 		Daha önce veri kaydedilmemişse {@code null} döner.<br>
-	 * 		Eğer veri {@code null} ise ve verilen anahtarla bir kayıt tutuluyorsa bu kayıt silinir ve silinen kayıt döndürülür.
-	 */
+	@Override
 	@Nullable
-	public <T> T setData(@NotNull DataKey key, T data) {
+	public <T> T getData(@NotNull DataKey key) {
+		
+		if (key.isReadable()) return (T) datamap.get(key);
+		else xlog.i("Data is not readable : %s", key);
+		
+		return null;
+	}
+	
+	@Override
+	@Nullable
+	public <T> T setData(@NotNull DataKey key, @Nullable T data) {
 		
 		if (key.isWritable()) {
 			
 			//- Beklenen durum
-			if (data != null)
-				return (T) datamap.put(key, data);
+			if (data != null) return (T) datamap.put(key, data);
 			
 			//- Var olan bir veriye null yazılmak isteniyorsa
-			if (datamap.get(key) != null)
-				return (T) datamap.remove(key);
+			if (datamap.get(key) != null) return (T) datamap.remove(key);
 		}
 		else xlog.i("Data is not writable : %s", key);
 		
 		return null;
 	}
 	
-	/**
-	 * Bool veriler için {@code null} kontrolü yapar.
-	 *
-	 * @param key Anahtar
-	 * @return Eğer istenen veri yoksa {@code false}, varsa bool veri
-	 */
-	public boolean getBoolData(@NotNull DataKey key) {
+	@Override
+	public boolean getBool(@NotNull DataKey key) {
 		
 		if (key.isReadable()) {
 			
@@ -72,30 +62,55 @@ public class DatBoxer {
 		return false;
 	}
 	
-	/**
-	 * Kayıtlı veriyi döndürür.
-	 *
-	 * @param key Anahtar
-	 * @param <T> Kayıtlı veri türü
-	 * @return Veri, yoksa {@code null}
-	 */
-	@Nullable
-	public <T> T getData(@NotNull DataKey key) {
+	@Override
+	public boolean getBool(@NotNull DataKey key, boolean defaultValue) {
 		
-		if (key.isReadable()) return (T) datamap.get(key);
-		else xlog.i("Data is not readable : %s", key);
+		if (key.isReadable()) {
+			
+			Boolean data = (Boolean) datamap.get(key);
+			
+			return data != null && data;
+		}
 		
-		return null;
+		return defaultValue;
 	}
 	
+	@Override
+	public int getInt(@NotNull DataKey key, int defaultValue) {
+		
+		if (key.isReadable()) {
+			
+			Integer data = (Integer) datamap.get(key);
+			
+			return data != null ? data : defaultValue;
+		}
+		
+		return defaultValue;
+	}
+	
+	@Override
+	public long getLong(@NotNull DataKey key, long defaultValue) {
+		
+		if (key.isReadable()) {
+			
+			Long data = (Long) datamap.get(key);
+			
+			return data != null ? data : defaultValue;
+		}
+		
+		return defaultValue;
+	}
+	
+	@Override
 	@NotNull
 	public Set<DataKey> keySet() {
 		
-		return datamap.keySet();
+		return datamap.keySet().stream().filter(key -> key.isReadable() || key.isWritable()).collect(Collectors.toSet());
 	}
 	
-	public boolean containsKey(DataKey key) {
+	@Override
+	public boolean exist(@NotNull DataKey key) {
 		
-		return datamap.containsKey(key);
+		return key.isReadable() && datamap.containsKey(key);
 	}
 }

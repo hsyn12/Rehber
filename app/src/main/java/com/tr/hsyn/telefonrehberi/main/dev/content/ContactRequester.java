@@ -5,9 +5,9 @@ import android.content.ContentResolver;
 import android.net.Uri;
 import android.provider.ContactsContract;
 
+import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.content.handler.ContentHandler;
 import com.tr.hsyn.content.requestor.ContentRequester;
-import com.tr.hsyn.telefonrehberi.main.code.contact.cast.Contact;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

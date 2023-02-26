@@ -13,9 +13,9 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tr.hsyn.colors.Colors;
+import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
-import com.tr.hsyn.telefonrehberi.main.code.contact.cast.Contact;
 import com.tr.hsyn.textdrawable.TextDrawable;
 
 import java.util.List;

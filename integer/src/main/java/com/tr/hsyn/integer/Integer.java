@@ -1,6 +1,9 @@
 package com.tr.hsyn.integer;
 
 
+/**
+ * Daha hafif bir {@link java.lang.Integer} sınıfı
+ */
 public class Integer implements Int {
 	
 	private final int val;

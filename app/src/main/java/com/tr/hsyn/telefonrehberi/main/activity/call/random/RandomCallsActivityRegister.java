@@ -4,8 +4,8 @@ package com.tr.hsyn.telefonrehberi.main.activity.call.random;
 import androidx.annotation.NonNull;
 
 import com.tr.hsyn.calldata.Call;
+import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.register.Register;
-import com.tr.hsyn.telefonrehberi.main.code.contact.cast.Contact;
 import com.tr.hsyn.time.Time;
 
 import java.util.ArrayList;

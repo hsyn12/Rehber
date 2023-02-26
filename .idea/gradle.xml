@@ -7,7 +7,7 @@
         <option name="testRunner" value="GRADLE" />
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleJvm" value="corretto-17" />
+        <option name="gradleJvm" value="Embedded JDK" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
@@ -23,6 +23,7 @@
             <option value="$PROJECT_DIR$/codefinder" />
             <option value="$PROJECT_DIR$/collection" />
             <option value="$PROJECT_DIR$/colors" />
+            <option value="$PROJECT_DIR$/contactdata" />
             <option value="$PROJECT_DIR$/content" />
             <option value="$PROJECT_DIR$/counter" />
             <option value="$PROJECT_DIR$/datakey" />
@@ -86,6 +87,7 @@
             <option value="$PROJECT_DIR$/textdrawable" />
             <option value="$PROJECT_DIR$/time" />
             <option value="$PROJECT_DIR$/treadedwork" />
+            <option value="$PROJECT_DIR$/tryme" />
             <option value="$PROJECT_DIR$/use" />
             <option value="$PROJECT_DIR$/vanimator" />
             <option value="$PROJECT_DIR$/warnerbros" />

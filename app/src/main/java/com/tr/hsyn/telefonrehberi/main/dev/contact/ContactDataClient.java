@@ -5,7 +5,7 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
-import com.tr.hsyn.telefonrehberi.main.code.contact.cast.Contact;
+import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
 
 

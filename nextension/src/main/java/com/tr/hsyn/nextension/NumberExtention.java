@@ -4,6 +4,7 @@ package com.tr.hsyn.nextension;
 import com.tr.hsyn.nextension.extension.AblativeNumber;
 import com.tr.hsyn.nextension.extension.AccusativeNumber;
 import com.tr.hsyn.nextension.extension.DativeNumber;
+import com.tr.hsyn.nextension.extension.DayNumber;
 import com.tr.hsyn.nextension.extension.LocativeNumber;
 import com.tr.hsyn.nextension.extension.PossessiveNumber;
 
@@ -14,6 +15,11 @@ import org.jetbrains.annotations.NotNull;
  * Sayılara ek bulan sınıfları tanımlar ve bu iş için gerekli bazı yardımcı metotlar sağlar.
  */
 public interface NumberExtention {
+	
+	/**
+	 * Gün bildiren ek türü (1'i, 2'si, 24'i, 29'u vb)
+	 */
+	int TYPE_DAY = 3000;
 	
 	/**
 	 * Sayının sonuna eklenecek uygun eki döndürür.
@@ -69,6 +75,7 @@ public interface NumberExtention {
 			case Extension.TYPE_POSS: return new PossessiveNumber();
 			case Extension.TYPE_IN_TO: return new AccusativeNumber();
 			case Extension.TYPE_AT: return new LocativeNumber();
+			case NumberExtention.TYPE_DAY: return new DayNumber();
 			
 			default: throw new IllegalArgumentException("There is no extension class for type : " + type);
 		}

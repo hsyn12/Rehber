@@ -11,6 +11,7 @@ import com.tr.hsyn.keep.Keep;
 import com.tr.hsyn.registery.cast.Database;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.main.code.call.act.Calls;
+import com.tr.hsyn.telefonrehberi.main.code.call.cast.CallKey;
 import com.tr.hsyn.telefonrehberi.main.code.database.call.CallDatabase;
 import com.tr.hsyn.telefonrehberi.main.dev.Story;
 import com.tr.hsyn.time.Time;
@@ -90,7 +91,7 @@ public class CallStory implements Story<Call> {
 				
 				long now = System.currentTimeMillis();
 				
-				databaseCalls.forEach(c -> c.setDeletedDate(now));
+				databaseCalls.forEach(c -> c.setData(CallKey.DELETED_DATE, now));
 				
 				database.update(databaseCalls);
 				return new ArrayList<>(0);
@@ -117,7 +118,7 @@ public class CallStory implements Story<Call> {
 						
 						long now = System.currentTimeMillis();
 						
-						deletedCalls.forEach(c -> c.setDeletedDate(now));
+						deletedCalls.forEach(c -> c.setData(CallKey.DELETED_DATE, now));
 						
 						database.update(deletedCalls);
 						
@@ -269,7 +270,7 @@ public class CallStory implements Story<Call> {
 		int count = deleteFromSystem(items);
 		
 		long time = Time.now();
-		items.forEach(c -> c.setDeletedDate(time));
+		items.forEach(c -> c.setData(CallKey.DELETED_DATE, time));
 		
 		updateFromDatabase(items);
 		

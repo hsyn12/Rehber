@@ -3,7 +3,7 @@ package com.tr.hsyn.telefonrehberi.main.code.contact.act.handler;
 
 import androidx.annotation.Nullable;
 
-import com.tr.hsyn.telefonrehberi.main.code.contact.cast.Contact;
+import com.tr.hsyn.contactdata.Contact;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -22,7 +22,8 @@ public abstract class MimeTypeHandler {
 	public abstract void applyResult(@NotNull Contact contact);
 	
 	public final
-	@NotNull String getMimeType() {
+	@NotNull
+	String getMimeType() {
 		
 		return mimeType;
 	}

@@ -6,13 +6,13 @@ import android.view.View;
 import androidx.annotation.NonNull;
 
 import com.tr.hsyn.collection.Lister;
+import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.message.Show;
 import com.tr.hsyn.metadata.Creator;
 import com.tr.hsyn.metadata.Reason;
 import com.tr.hsyn.selector.ItemSelector;
 import com.tr.hsyn.telefonrehberi.R;
-import com.tr.hsyn.telefonrehberi.main.code.contact.cast.Contact;
 import com.tr.hsyn.xbox.Blue;
 
 import java.util.List;

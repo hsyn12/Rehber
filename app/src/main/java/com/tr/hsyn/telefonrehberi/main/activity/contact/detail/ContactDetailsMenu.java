@@ -55,7 +55,7 @@ public class ContactDetailsMenu extends CallSummary {
 	protected void onClickDeleteMenu() {
 		
 		//- Nihai silme işlemi bu kişiyi dönüşte kontrol edecek olan kişiye ait.
-		contact.setData(ContactKey.DELETED, true);
+		contact.setData(ContactKey.DELETED_DATE, true);
 		
 		//- Dön
 		onBackPressed();

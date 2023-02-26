@@ -2,9 +2,9 @@ package com.tr.hsyn.telefonrehberi.main.activity.city;
 
 
 import com.tr.hsyn.calldata.Call;
+import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.telefonrehberi.main.code.contact.act.Contacts;
-import com.tr.hsyn.telefonrehberi.main.code.contact.cast.Contact;
 import com.tr.hsyn.telefonrehberi.main.code.database.call.CallDatabase;
 import com.tr.hsyn.telefonrehberi.main.code.story.call.CallStory;
 import com.tr.hsyn.telefonrehberi.main.dev.Loader;
@@ -55,7 +55,8 @@ public abstract class BigBank extends NorthBridge {
 		return this::loadContacts;
 	}
 	
-	private @NotNull List<Contact> loadContacts() {
+	private @NotNull
+	List<Contact> loadContacts() {
 		
 		return Contacts.getSimpleContactList(getContentResolver());
 	}

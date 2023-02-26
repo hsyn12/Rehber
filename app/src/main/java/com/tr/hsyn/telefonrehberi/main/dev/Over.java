@@ -8,8 +8,8 @@ import androidx.annotation.Nullable;
 
 import com.tr.hsyn.bool.Bool;
 import com.tr.hsyn.calldata.Call;
+import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.key.Key;
-import com.tr.hsyn.telefonrehberi.main.code.contact.cast.Contact;
 import com.tr.hsyn.use.Use;
 import com.tr.hsyn.xbox.Blue;
 

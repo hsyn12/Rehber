@@ -3,6 +3,7 @@ package com.tr.hsyn.telefonrehberi.main.code.contact.act;
 
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.provider.ContactsContract;
@@ -10,13 +11,13 @@ import android.provider.ContactsContract;
 import androidx.annotation.NonNull;
 
 import com.tr.hsyn.collection.Lister;
+import com.tr.hsyn.contactdata.Contact;
+import com.tr.hsyn.contactdata.ContactDat;
 import com.tr.hsyn.content.Contents;
 import com.tr.hsyn.label.Label;
 import com.tr.hsyn.perfectsort.PerfectSort;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.telefonrehberi.main.code.contact.act.handler.MimeTypeHandler;
-import com.tr.hsyn.telefonrehberi.main.code.contact.cast.Contact;
-import com.tr.hsyn.telefonrehberi.main.code.contact.cast.ContactDat;
 import com.tr.hsyn.telefonrehberi.main.dev.contact.system.ContactColumns;
 
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +31,6 @@ import java.util.Set;
  * Sistem rehberi üzerinde çalışan genel işlemleri tanımlar.<br>
  */
 public interface Contacts extends ContactColumns {
-	
 	
 	@NotNull
 	static Contact newContact(Contact contact) {
@@ -423,5 +423,46 @@ public interface Contacts extends ContactColumns {
 		return new ArrayList<>(0);
 	}
 	
+	static long getContactId(@NotNull Context context, @NotNull String phoneNumber) {
+		
+		if (phoneNumber.isBlank()) return 0;
+		
+		var resolver = context.getContentResolver();
+		
+		var cursor = resolver.query(
+				ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+				Lister.arrayOf(ContactsContract.CommonDataKinds.Phone.NUMBER, ContactsContract.CommonDataKinds.Phone.CONTACT_ID),
+				null,
+				null,
+				null,
+				null
+		);
+		
+		if (cursor == null) return 0;
+		
+		if (cursor.getCount() == 0) {
+			
+			cursor.close();
+			return 0;
+		}
+		
+		long id        = 0;
+		int  idCol     = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID);
+		int  numberCol = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+		
+		while (cursor.moveToNext()) {
+			
+			String number = cursor.getString(numberCol);
+			
+			if (PhoneNumbers.equals(phoneNumber, number)) {
+				
+				id = cursor.getLong(idCol);
+				break;
+			}
+		}
+		
+		cursor.close();
+		return id;
+	}
 	
 }

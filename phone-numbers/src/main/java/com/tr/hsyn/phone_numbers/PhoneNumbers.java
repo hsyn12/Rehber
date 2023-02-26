@@ -44,9 +44,7 @@ public class PhoneNumbers {
 		
 		if (number.length() <= size) return number;
 		
-		int startIndex = number.length() - size;
-		
-		return number.substring(startIndex);
+		return number.substring(number.length() - size);
 	}
 	
 	/**
@@ -163,21 +161,16 @@ public class PhoneNumbers {
 	}
 	
 	/**
-	 * İki telefon numarasını eşitlik için karşılaştırır.
-	 * Eğer uzunluk kuralı ({@code ignoreLength}) ihmal edilirse ({@linkplain #N_MIN}, {@linkplain #N_MAX}),
-	 * numaralar eşit uzunlukta olmadığı sürece {@code false} döner.
-	 * Bunun amacı herhangi uzunlukta sayısal bir string'i karşılaştırabilmek.
-	 * {@link #equals(String, String)} metodu numaraları birbirinin içinde geçme
-	 * durumuna göre de değerlendirir, {@code ignoreLength false} olursa bu metot da aynı işi yapar.
-	 * Ancak {@code ignoreLength true} olursa birbirinin içinde geçme durumu kontrol edilmez.
-	 * Bu sebeple aynı uzunlukta gelmeleri gerek. <br><br>
+	 * İki numarayı eşitlik için karşılaştırır.<br>
+	 * Aradaki boşluk ve sayısal olmayan karakterler önemli değil,
+	 * sadece sayısal bölümler karşılaştırılır.<br><br>
 	 *
 	 *
-	 * <pre>equalsNumbers("+90543 4937530", "5 4 3 4 9 3 7 5 3 0", true) = false</pre>
-	 * <pre>equalsNumbers("+90(543) 4937530", "5 4 3 4 9 3 7 5 3 0", true) = false</pre>
-	 * <pre>equalsNumbers("90(543) 4937530", "05 4 3 4 (9 3) 7 5 3 0", true) = false</pre>
-	 * <pre>equalsNumbers("90(543)s 4937530", "05 4 3 4 (9 3) 7 5 3 0", true) = false</pre>
-	 * <pre>equalsNumbers("5 ", " 5", true) = true // Uzunluk kuralı dikkate alınmıyor </pre><br>
+	 * <pre>equalsNumbers("+90543 4937530", "5 4 3 4 9 3 7 5 3 0");// true</pre>
+	 * <pre>equalsNumbers("+90(543) 4937530", "5 4 3 4 9 3 7 5 3 0");// true</pre>
+	 * <pre>equalsNumbers("90(543) 4937530", "05 4 3 4 (9 3) 7 5 3 0");// true</pre>
+	 * <pre>equalsNumbers("90(543)s 4937530", "05 4 3 4 (9 3) 7 5 3 0";// true</pre>
+	 * <pre>equalsNumbers("5 ", " 5");// true</pre><br>
 	 *
 	 * @param number1 Number1
 	 * @param number2 Number2
@@ -194,6 +187,7 @@ public class PhoneNumbers {
 		
 		return n1.equals(n2);
 	}
+	
 	
 	/**
 	 * İki telefon numarası listesini eşitlik için kontrol eder.
@@ -228,7 +222,6 @@ public class PhoneNumbers {
 			
 			return match == numbers1.size();
 		}
-		
 		
 		return false;
 	}

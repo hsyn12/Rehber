@@ -3,9 +3,9 @@ package com.tr.hsyn.telefonrehberi.main.activity.city.station;
 
 import androidx.annotation.CallSuper;
 
+import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.telefonrehberi.app.UIThread;
 import com.tr.hsyn.telefonrehberi.main.activity.city.BigBank;
-import com.tr.hsyn.telefonrehberi.main.code.contact.cast.Contact;
 import com.tr.hsyn.time.Time;
 import com.tr.hsyn.treadedwork.ThreadedWork;
 

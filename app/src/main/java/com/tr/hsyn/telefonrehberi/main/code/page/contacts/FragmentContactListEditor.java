@@ -2,10 +2,10 @@ package com.tr.hsyn.telefonrehberi.main.code.page.contacts;
 
 
 import com.tr.hsyn.collection.Editor;
+import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.page.ListEditor;
 import com.tr.hsyn.perfectsort.PerfectSort;
 import com.tr.hsyn.string.Stringx;
-import com.tr.hsyn.telefonrehberi.main.code.contact.cast.Contact;
 import com.tr.hsyn.xlog.xlog;
 
 import org.jetbrains.annotations.NotNull;

@@ -22,6 +22,7 @@ import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.app.Res;
 import com.tr.hsyn.telefonrehberi.main.activity.call.MostCallsActivity;
 import com.tr.hsyn.telefonrehberi.main.activity.call.search.CallLogSearchInfo;
+import com.tr.hsyn.telefonrehberi.main.code.call.cast.CallKey;
 import com.tr.hsyn.telefonrehberi.main.code.call.cast.Filter;
 import com.tr.hsyn.telefonrehberi.main.code.cast.BackPressObserver;
 import com.tr.hsyn.telefonrehberi.main.code.page.adapter.CallAdapter;
@@ -136,7 +137,7 @@ public abstract class CallLogFilter extends CallList implements Filter, HaveCall
 			switch (type) {
 				
 				case Res.Calls.FILTER_INCOMING:
-					filteredCalls = getList().stream().filter(CallType::isIncoming).collect(Collectors.toList());
+					filteredCalls = getList().stream().filter(Call::isIncoming).collect(Collectors.toList());
 					break;
 				case Res.Calls.FILTER_OUTGOING:
 					filteredCalls = getList().stream().filter(CallType::isOutgoing).collect(Collectors.toList());
@@ -152,7 +153,7 @@ public abstract class CallLogFilter extends CallList implements Filter, HaveCall
 					break;
 				
 				case Res.Calls.FILTER_RANDOM:
-					filteredCalls = getList().stream().filter(Call::isRandom).collect(Collectors.toList());
+					filteredCalls = getList().stream().filter(call -> call.getBool(CallKey.RANDOM)).collect(Collectors.toList());
 					break;
 			}
 			

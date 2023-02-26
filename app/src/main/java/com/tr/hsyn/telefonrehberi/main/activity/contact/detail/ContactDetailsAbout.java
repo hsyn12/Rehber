@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tr.hsyn.colors.Colors;
+import com.tr.hsyn.execution.Runny;
 import com.tr.hsyn.gate.AutoGate;
 import com.tr.hsyn.gate.Gate;
 import com.tr.hsyn.telefonrehberi.R;
@@ -16,9 +17,6 @@ import com.tr.hsyn.telefonrehberi.main.code.comment.contact.ContactCommentator;
 import com.tr.hsyn.telefonrehberi.main.code.contact.act.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
 import com.tr.hsyn.vanimator.ViewAnimator;
-import com.tr.hsyn.xlog.xlog;
-
-import java.util.List;
 
 
 public class ContactDetailsAbout extends ContactDetailsMenu {
@@ -26,24 +24,22 @@ public class ContactDetailsAbout extends ContactDetailsMenu {
 	//- Burada kişi hakkında bazı kayda değer bilgileri
 	//- kompozisyon halinde sunmak istiyoruz.
 	
-	private       boolean      isOpenAboutView;
-	private       ViewGroup    view_about_content;
-	private       TextView     text_about;
-	private final Gate         gateAbout = AutoGate.newGate(1000L);
-	private       CharSequence comment;
-	private       boolean      reComment = true;
+	private       boolean   isOpenAboutView;
+	private       ViewGroup view_about_content;
+	private       TextView  text_about;
+	private final Gate      gateAbout = AutoGate.newGate(2000L);
+	private       boolean   reComment = true;
 	
 	@Override
 	protected void onHistoryUpdate() {
 		
 		super.onHistoryUpdate();
 		
-		List<String> numbers = contact.getData(ContactKey.NUMBERS);
-		
-		if (numbers == null || numbers.isEmpty()) return;
-		
-		if (Over.CallLog.exist()) {
-			
+		//! Kişi hakkında bilgi sağlayabilmek için
+		//! arama kayıtları gerekli.
+		//! Ayrıca kişiye ait bir telefon numarası.
+		//! Bunlar yoksa 'Hakkında' bölümü olmayacak
+		if (contact.exist(ContactKey.NUMBERS) && Over.CallLog.exist()) {
 			reComment = true;
 			setupCommentViews();
 		}
@@ -54,12 +50,25 @@ public class ContactDetailsAbout extends ContactDetailsMenu {
 		if (reComment) {
 			
 			reComment = false;
-			ContactCommentator commentator = ContactCommentator.createCommentator(this);
-			comment = commentator.commentate(contact);
-			text_about.setText(comment);
+			
+			Runny.run(() -> {
+				
+				ContactCommentator commentator = ContactCommentator.createCommentator(this);
+				var                comment     = commentator.commentate(contact);
+				
+				Runny.run(() -> onCommentReady(comment));
+			}, false);
 		}
+		else {
+			
+			animateAboutView();
+		}
+	}
+	
+	private void onCommentReady(CharSequence comment) {
 		
-		xlog.d(comment);
+		text_about.setText(comment);
+		animateAboutView();
 	}
 	
 	@SuppressLint("InflateParams")
@@ -82,10 +91,8 @@ public class ContactDetailsAbout extends ContactDetailsMenu {
 	
 	private void onClickHeader(View view) {
 		
-		comment();
-		
 		if (gateAbout.enter()) {
-			animateAboutView();
+			comment();
 		}
 	}
 	

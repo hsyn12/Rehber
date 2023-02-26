@@ -12,9 +12,9 @@ import android.provider.ContactsContract;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.tr.hsyn.contactdata.Account;
 import com.tr.hsyn.keep.Keep;
 import com.tr.hsyn.string.Stringx;
-import com.tr.hsyn.telefonrehberi.main.code.contact.cast.Account;
 
 import org.jetbrains.annotations.NotNull;
 

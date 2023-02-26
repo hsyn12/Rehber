@@ -6,8 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.tr.hsyn.calldata.Call;
+import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.key.Key;
-import com.tr.hsyn.telefonrehberi.main.code.contact.cast.Contact;
 import com.tr.hsyn.time.Time;
 import com.tr.hsyn.xbox.Blue;
 import com.tr.hsyn.xlog.xlog;

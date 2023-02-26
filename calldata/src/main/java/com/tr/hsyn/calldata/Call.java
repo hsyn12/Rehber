@@ -1,53 +1,99 @@
 package com.tr.hsyn.calldata;
 
 
+import com.tr.hsyn.datboxer.DatBoxer;
 import com.tr.hsyn.identity.Identity;
-import com.tr.hsyn.label.Mabel;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 
 
 /**
- * interface for database call
+ * Class for call data
  */
-public interface Call extends SystemCall, Serializable, Mabel, Deletable, Identity {
+public class Call extends DatBoxer implements CallContact, CallTime, CallDuration, CallType, Serializable, Identity {
 	
+	private final String number;
+	private final int    type;
+	private final long   time;
+	private final int    duration;
+	//- Sistemden alınacak bilgiler
+	private       String name;
 	/**
-	 * @return contact id
+	 * Eksra bilgiler.
 	 */
-	long getContactId();
+	private       String extra;//- random ve trackType burada olacak
+	//-------------------------------
 	
-	void setContactId(long id);
-	
-	/**
-	 * @return note
-	 */
-	String getNote();
-	
-	void setNote(String note);
-	
-	/**
-	 * @return ringing duration
-	 */
-	long getRingingDuration();
-	
-	@NotNull
-	Call withDeletedDate(long date);
-	
-	boolean equals(final long contactId);
-	
-	@NotNull
-	static Call newCall(String name, String number, int type, long time, int duration, String extra, long contactId, String note, long deletedDate, long ringingDuration) {
+	public Call(String name, String number, int type, long time, int duration) {
 		
-		return new BCall(name, number, type, time, duration, extra, contactId, deletedDate, note, ringingDuration);
+		this.name     = name;
+		this.number   = number;
+		this.time     = time;
+		this.type     = type;
+		this.duration = duration;
 	}
 	
-	@NotNull
-	static Call newCall(String name, String number, int type, long time, int duration, String extra) {
+	public Call(String name, String number, int type, long time, int duration, String extra) {
 		
-		return new BCall(name, number, type, time, duration, extra);
+		this.name     = name;
+		this.number   = number;
+		this.time     = time;
+		this.type     = type;
+		this.duration = duration;
+		this.extra    = extra;
 	}
+	
+	public String getExtra() {
+		
+		return extra;
+	}
+	
+	public void setExtra(String extra) {
+		
+		this.extra = extra;
+	}
+	
+	@Override
+	public String getName() {
+		
+		return name;
+	}
+	
+	@Override
+	public void setName(String name) {
+		
+		this.name = name;
+	}
+	
+	@Override
+	public String getNumber() {
+		
+		return number;
+	}
+	
+	@Override
+	public int getDuration() {
+		
+		return duration;
+	}
+	
+	@Override
+	public long getTime() {
+		
+		return time;
+	}
+	
+	@Override
+	public int getType() {
+		
+		return type;
+	}
+	
+	@Override
+	public long getId() {
+		
+		return time;
+	}
+	
 	
 }

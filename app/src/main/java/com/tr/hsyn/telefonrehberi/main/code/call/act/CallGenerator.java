@@ -9,11 +9,12 @@ import androidx.annotation.Size;
 
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.calldata.CallType;
+import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.random.Randoom;
+import com.tr.hsyn.telefonrehberi.main.code.call.cast.CallKey;
 import com.tr.hsyn.telefonrehberi.main.code.cast.Generator;
 import com.tr.hsyn.telefonrehberi.main.code.contact.act.ContactKey;
-import com.tr.hsyn.telefonrehberi.main.code.contact.cast.Contact;
 import com.tr.hsyn.time.Time;
 import com.tr.hsyn.xlog.xlog;
 
@@ -136,11 +137,13 @@ public class CallGenerator implements Generator<Call> {
 			}
 		}
 		
-		String extra = String.format("%s;t;%d", Calls.ACCOUNT_ID, trackType);
+		Call call = new Call(contact.getName(), number, callType, date, duration);
 		
-		
-		return Call.newCall(contact.getName(), number, callType, date, duration, extra, contact.getContactId(), null, 0L, ringingDuration);
-		
+		call.setData(CallKey.RINGING_DURATION, ringingDuration);
+		call.setData(CallKey.TRACK_TYPE, trackType);
+		call.setData(CallKey.RANDOM, true);
+		call.setExtra(Calls.createExtraInfo(call));
+		return call;
 	}
 	
 	private Contact getContact() {

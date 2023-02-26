@@ -18,6 +18,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.tr.hsyn.bungee.Bungee;
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.collection.Lister;
+import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.execution.Runny;
 import com.tr.hsyn.gate.AutoGate;
 import com.tr.hsyn.gate.Gate;
@@ -31,7 +32,6 @@ import com.tr.hsyn.telefonrehberi.main.activity.color.ColorsActivity;
 import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.ContactDetails;
 import com.tr.hsyn.telefonrehberi.main.code.contact.act.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.code.contact.act.Contacts;
-import com.tr.hsyn.telefonrehberi.main.code.contact.cast.Contact;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
 import com.tr.hsyn.telefonrehberi.main.dev.menu.MenuEditor;
 import com.tr.hsyn.telefonrehberi.main.dev.menu.MenuManager;
@@ -248,7 +248,7 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 	 */
 	private void checkSelectedContact(@NonNull Contact selectedContact) {
 		
-		if (ContactKey.GETTER.isDeleted(selectedContact)) {
+		if (ContactKey.isDeleted(selectedContact)) {
 			
 			onSelectedContactDeleted(selectedContact);
 		}
@@ -368,4 +368,11 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 		menuManager.setVisible(menuManager.getMenuItemResourceIds(), show);
 	}
 	
+	@Override
+	protected void onCallLogLoaded(List<Call> calls, Throwable throwable) {
+		
+		super.onCallLogLoaded(calls, throwable);
+		
+		
+	}
 }

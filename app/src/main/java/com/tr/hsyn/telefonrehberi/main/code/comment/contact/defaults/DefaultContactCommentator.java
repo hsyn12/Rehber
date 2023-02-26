@@ -21,9 +21,6 @@ import com.tr.hsyn.telefonrehberi.main.code.comment.contact.ContactCommentator;
 import com.tr.hsyn.telefonrehberi.main.code.comment.contact.dialog.MostCallDialog;
 import com.tr.hsyn.telefonrehberi.main.code.comment.contact.dialog.MostCallItemViewData;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.ShowCallsDialog;
-import com.tr.hsyn.telefonrehberi.main.code.contact.act.ContactKey;
-import com.tr.hsyn.telefonrehberi.main.code.contact.cast.Contact;
-import com.tr.hsyn.telefonrehberi.main.dev.Over;
 import com.tr.hsyn.text.Span;
 import com.tr.hsyn.text.Spanner;
 import com.tr.hsyn.text.Spans;
@@ -31,107 +28,43 @@ import com.tr.hsyn.time.Time;
 import com.tr.hsyn.time.Unit;
 import com.tr.hsyn.xlog.xlog;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 /**
  * Varsayılan kişi yorumcusu<br>
  * Kişi ile ilgili en genel konuları yorumlar.
  */
-public class DefaultContactCommentator implements ContactCommentator {
+public class DefaultContactCommentator extends ContactCommentator {
 	
-	protected final String              DEFAULT_DATE_FORMAT = "d.M.yyyy";
-	protected final ContactCommentStore store;
-	protected final List<Call>          calls;
-	protected       List<Call>          history;
-	protected       Contact             contact;
-	private final   Spanner             comment             = new Spanner();
+	//protected final String  DEFAULT_DATE_FORMAT = "d.M.yyyy";
 	
 	public DefaultContactCommentator(ContactCommentStore commentStore) {
 		
-		this.store = commentStore;
-		calls      = Over.CallLog.Calls.getCalls();
-	}
-	
-	@NotNull
-	private List<Call> getContactHistory() {
-		
-		var calls = Over.CallLog.Calls.getCalls();
-		
-		if (calls != null)
-			return calls
-					.stream()
-					.filter(call -> PhoneNumbers.containsNumber(contact.getData(ContactKey.NUMBERS), call.getNumber()))
-					.collect(Collectors.toList());
-		else return new ArrayList<>(0);
-	}
-	
-	@NotNull
-	@Override
-	public CharSequence commentate(@NotNull Contact subject) {
-		
-		contact      = subject;
-		this.history = getContactHistory();
-		
-		Spanner comment = new Spanner();
-		
-		comment.append(commentHistory());
-		
-		return comment;
-	}
-	
-	protected int getColor(int id) {
-		
-		return store.getActivity().getColor(id);
+		super(commentStore);
 	}
 	
 	private void historyQuantityComment() {
 		
 		//- 10'a 3 ölçek
 		//- orta değer (10, 10 * 3] aralığı
-		var scaler = Scaler.createNewScaler(10, 3f);
-		int scale  = scaler.getQuantity(history.size());
+		Scaler  scaler = Scaler.createNewScaler(10, 3f);
+		int     scale  = scaler.getQuantity(history.size());
+		Spanner name   = new Spanner();
 		
-		if (scaler.isMin(scale)) {
-			
-			comment.append(store.historySizeOnly(history.size()));
-		}
-		else {
-			
-			ShowCallsDialog      showCallsDialog = new ShowCallsDialog(store.getActivity(), history, null, null);
-			View.OnClickListener listener        = View -> showCallsDialog.show();
-			
-			var name = contact.getName();
-			
-			if (name != null && !PhoneNumbers.isPhoneNumber(name, true)) {
-				
-				name = Stringx.toTitle(name);
-				comment.append(Stringx.format("%s", name), Spans.bold())
-						.append(Stringx.format("'%s ait ", WordExtension.getWordExt(name, Extension.TYPE_TO)));
-				
-				
-			}
-			else {
-				
-				comment.append("Kişiye ait ");
-				
-			}
-			
-			
-			comment.append(Stringx.format("%s", store.sizeCall(history.size())), Spans.click(listener, getColor(com.tr.hsyn.rescolors.R.color.orange_500)), Spans.underline())
-					.append(" kaydı var");
-		}
+		if (contact.getName() != null && !PhoneNumbers.isPhoneNumber(contact.getName(), true))
+			name.append(contact.getName(), Spans.bold())
+					.append(Stringx.format("'%s ait ", WordExtension.getWordExt(contact.getName(), Extension.TYPE_TO)));
+		else name.append("Kişiye ait ");
 		
-		comment.append(". ");
-	}
-	
-	private void noHistoryComment() {
+		ShowCallsDialog      showCallsDialog = new ShowCallsDialog(store.getActivity(), history);
+		View.OnClickListener listener        = View -> showCallsDialog.show();
 		
-		comment.append(store.noHistory()).append(". ");
+		if (scaler.isMin(scale))
+			comment.append(name).append("sadece ");
+		
+		comment.append(Stringx.format("%s", store.sizeCall(history.size())), Spans.click(listener, getColor(com.tr.hsyn.rescolors.R.color.orange_500)), Spans.underline())
+				.append(" kaydı var. ");
 	}
 	
 	private void mostCallComments() {
@@ -149,7 +82,8 @@ public class DefaultContactCommentator implements ContactCommentator {
 			//- Bu kişinin arama kayıtları, tüm arama kayıtlarının yüzde kaçı oluyor?
 			int percent = (history.size() * 100) / calls.size();
 			
-			comment.append(Stringx.format("Bu kayıtlar, tüm arama kayıtlarının yüzde %d'%s oluyor. ", percent, NumberExtention.getNumberExt(percent, Extension.TYPE_IN_TO)));
+			if (percent > 0)
+				comment.append(Stringx.format("Bu kayıtlar, tüm arama kayıtlarının yüzde %d'%s oluyor. ", percent, NumberExtention.getNumberExt(percent, NumberExtention.TYPE_DAY)));
 			
 			comment.append(Stringx.format("Tüm arama kayıtları %d farklı kişiden oluşuyor ", differentPerson));
 			
@@ -242,9 +176,8 @@ public class DefaultContactCommentator implements ContactCommentator {
 		}
 	}
 	
-	@NotNull
 	@Override
-	public CharSequence commentHistory() {
+	public void commentContact() {
 		
 		boolean noHistory = history.isEmpty();
 		
@@ -259,10 +192,16 @@ public class DefaultContactCommentator implements ContactCommentator {
 			
 			historyQuantityComment();
 			mostCallComments();
-			//addFirstLastCallComment();
+		}
+	}
+	
+	private void noHistoryComment() {
+		
+		if (contactName.isContact()) {
+			
+			
 		}
 		
-		return comment;
 	}
 	
 	

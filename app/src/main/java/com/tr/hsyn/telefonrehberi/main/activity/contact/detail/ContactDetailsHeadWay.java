@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.tr.hsyn.colors.Colors;
+import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.message.Show;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
@@ -22,7 +23,6 @@ import com.tr.hsyn.telefonrehberi.main.code.contact.act.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.code.contact.act.Contacts;
 import com.tr.hsyn.telefonrehberi.main.code.contact.act.handler.MimeTypeHandlers;
 import com.tr.hsyn.telefonrehberi.main.code.contact.act.handler.NumberHandler;
-import com.tr.hsyn.telefonrehberi.main.code.contact.cast.Contact;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
 import com.tr.hsyn.textdrawable.TextDrawable;
 import com.tr.hsyn.treadedwork.ThreadedWork;
@@ -81,7 +81,7 @@ public abstract class ContactDetailsHeadWay extends ContactDetailsView implement
 	
 	private void checkDetails() {
 		
-		boolean detailsApplied = contact.getBoolData(ContactKey.DETAILS_APPLIED);
+		boolean detailsApplied = contact.getBool(ContactKey.DETAILS_APPLIED);
 		
 		if (!detailsApplied) {
 			
@@ -113,7 +113,7 @@ public abstract class ContactDetailsHeadWay extends ContactDetailsView implement
 		collapsingToolbarLayout.setExpandedTitleTypeface(font);
 		collapsingToolbarLayout.setTitle(contact.getName());
 		
-		String bPic = ContactKey.GETTER.getBigPic(contact);
+		String bPic = contact.getData(ContactKey.BIG_PIC);
 		
 		if (bPic != null) {
 			

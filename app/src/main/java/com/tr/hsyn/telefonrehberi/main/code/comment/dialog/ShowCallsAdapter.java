@@ -20,6 +20,7 @@ import com.tr.hsyn.files.Files;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
+import com.tr.hsyn.telefonrehberi.main.code.call.cast.CallKey;
 import com.tr.hsyn.textdrawable.TextDrawable;
 import com.tr.hsyn.time.Time;
 
@@ -61,7 +62,7 @@ public class ShowCallsAdapter extends RecyclerView.Adapter<ShowCallsAdapter.Hold
 		
 		holder.type.setImageDrawable(type);
 		holder.speakDuration.setText(Files.formatSeconds(call.getDuration()));
-		holder.ringingDuration.setText(Files.formatMilliSeconds(call.getRingingDuration()));
+		holder.ringingDuration.setText(Files.formatMilliSeconds(call.getLong(CallKey.RINGING_DURATION, 0L)));
 		holder.date.setText(Time.toString(call.getTime(), "d MMMM yyyy HH:mm"));
 		
 		String letter = getLeter(name);

@@ -9,11 +9,11 @@ import com.tr.hsyn.watch.observable.Observer;
 
 
 public interface GenerationService extends GenerationRuler {
-
-    void setForeground(boolean isForeground);
-
-    void listenServiceWorking(@Nullable Observer<Boolean> listener);
-
-    void listenGeneration(ProgressListener<Call> progressListener);
-
+	
+	void setForeground(boolean isForeground);
+	
+	void listenServiceWorking(@Nullable Observer<Boolean> listener);
+	
+	void listenGeneration(ProgressListener<Call> progressListener);
+	
 }

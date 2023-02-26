@@ -16,13 +16,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.common.base.CharMatcher;
 import com.tr.hsyn.colors.Colors;
+import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.execution.Runny;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.selection.ItemIndexListener;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.code.contact.act.ContactKey;
-import com.tr.hsyn.telefonrehberi.main.code.contact.cast.Contact;
 import com.tr.hsyn.text.Spanner;
 import com.tr.hsyn.text.Spans;
 import com.tr.hsyn.textdrawable.TextDrawable;
@@ -91,7 +91,7 @@ public class ContactSearchAdapter extends RecyclerView.Adapter<ContactSearchAdap
 		
 		holder.name.setText(name);
 		
-		var numbers = ContactKey.GETTER.getNumbers(contact);
+		List<String> numbers = contact.getData(ContactKey.NUMBERS);
 		
 		if (numbers != null && !numbers.isEmpty()) {
 			
@@ -192,7 +192,7 @@ public class ContactSearchAdapter extends RecyclerView.Adapter<ContactSearchAdap
 	@SuppressWarnings("ConstantConditions")
 	private List<Contact> searchByNumber(String searchText) {
 		
-		return contacts.stream().filter(c -> ContactKey.GETTER.getNumbers(c) != null && !ContactKey.GETTER.getNumbers(c).isEmpty() && Stringx.isMatch(ContactKey.GETTER.getNumbers(c).get(0), searchText)).collect(Collectors.toList());
+		return contacts.stream().filter(c -> c.getData(ContactKey.NUMBERS) != null && !ContactKey.getNumbers(c).isEmpty() && Stringx.isMatch(ContactKey.getNumbers(c).get(0), searchText)).collect(Collectors.toList());
 	}
 	
 	private void setHightlight(Holder holder) {

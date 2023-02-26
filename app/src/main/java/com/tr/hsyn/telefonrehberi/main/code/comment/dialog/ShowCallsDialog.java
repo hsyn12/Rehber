@@ -28,6 +28,12 @@ public class ShowCallsDialog {
 	private final AlertDialog dialog;
 	
 	@SuppressLint("InflateParams")
+	public ShowCallsDialog(@NotNull Activity activity, @NotNull List<Call> calls) {
+		
+		this(activity, calls, null, null);
+		
+	}
+	
 	public ShowCallsDialog(@NotNull Activity activity, @NotNull List<Call> calls, String title, String subTitle) {
 		
 		RelativeLayoutx view = (RelativeLayoutx) activity.getLayoutInflater().inflate(R.layout.call_list, null, false);
