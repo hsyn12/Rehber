@@ -260,85 +260,13 @@ import java.util.regex.Pattern;
 public interface Nina {
 	
 	/**
-	 * <em>Sıfır yada bir boşluk</em> karakteri için düzenli ifade
-	 *
-	 * @see Character#WHITE_SPACE
-	 */
-	String WHITE_SPACE_ZERO_OR_ONE  = Character.WHITE_SPACE + Quanta.ZERO_OR_ONE;
-	/**
-	 * <em>Bir yada daha fazla boşluk</em> karakteri için düzenli ifade
-	 *
-	 * @see Character#WHITE_SPACE
-	 */
-	String WHITE_SPACE_ONE_OR_MORE  = Character.WHITE_SPACE + Quanta.ONE_OR_MORE;
-	/**
-	 * <em>Sıfır yada daha fazla boşluk</em> karakteri için düzenli ifade
-	 *
-	 * @see Character#WHITE_SPACE
-	 */
-	String WHITE_SPACE_ZERO_OR_MORE = Character.WHITE_SPACE + Quanta.ZERO_OR_MORE;
-	/**
-	 * <em>Sıfır yada bir alfabe</em> karakteri için düzenli ifade.
-	 *
-	 * @see Character#LETTER
-	 */
-	String LETTER_ZERO_OR_ONE       = Character.LETTER + Quanta.ZERO_OR_ONE;
-	/**
-	 * <em>Sıfır yada daha fazla alfabe</em> karakteri için düzenli ifade
-	 *
-	 * @see Character#LETTER
-	 */
-	String LETTER_ZERO_OR_MORE      = Character.LETTER + Quanta.ZERO_OR_MORE;
-	/**
-	 * <em>Bir yada daha fazla alfabe</em> karakteri için düzenli ifade
-	 *
-	 * @see Character#LETTER
-	 */
-	String LETTER_ONE_OR_MORE       = Character.LETTER + Quanta.ONE_OR_MORE;
-	/**
-	 * <em>Sıfır yada bir rakam</em> karakteri için düzenli ifade.
-	 *
-	 * @see Character#DIGIT
-	 */
-	String DIGIT_ZERO_OR_ONE        = Character.DIGIT + Quanta.ZERO_OR_ONE;
-	/**
-	 * <em>Sıfır yada daha fazla rakam</em> karakteri için düzenli ifade.
-	 *
-	 * @see Character#DIGIT
-	 */
-	String DIGIT_ZERO_OR_MORE       = Character.DIGIT + Quanta.ZERO_OR_MORE;
-	/**
-	 * <em>Bir yada daha fazla rakam</em> karakteri için düzenli ifade.
-	 *
-	 * @see Character#DIGIT
-	 */
-	String DIGIT_ONE_OR_MORE        = Character.DIGIT + Quanta.ONE_OR_MORE;
-	/**
-	 * <em>Bir yada daha fazla noktalama</em> karakteri için düzenli ifade.
-	 *
-	 * @see Character#PUNC
-	 */
-	String PUNC_ONE_OR_MORE         = Character.PUNC + Quanta.ONE_OR_MORE;
-	/**
-	 * <em>Sıfır yada daha fazla noktalama</em> karakteri için düzenli ifade.
-	 *
-	 * @see Character#PUNC
-	 */
-	String PUNC_ZERO_OR_MORE        = Character.PUNC + Quanta.ZERO_OR_MORE;
-	/**
-	 * <em>Sıfır yada bir noktalama</em> karakteri için düzenli ifade.
-	 *
-	 * @see Character#PUNC
-	 */
-	String PUNC_ZERO_OR_ONE         = Character.PUNC + Quanta.ZERO_OR_ONE;
-	/**
 	 * Regular expression for digits.
 	 */
-	String NUMBER                   = "^\\p{N}+$";
+	String NUMBER = "^\\p{N}+$";
 	/**
 	 * Regular expression for alphabetics.
 	 */
-	String WORD                     = "^\\p{L}+$";
+	String WORD   = "^\\p{L}+$";
 	
 	/**
 	 * Verilen ifade, düzenli ifadenin başlangıcını tarif eder.<br>

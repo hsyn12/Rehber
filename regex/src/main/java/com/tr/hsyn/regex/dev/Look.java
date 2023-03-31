@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
  * Düzenli ifadelere ayrıca bir kontrol ifadesi eklemeyi sağlar.
  * Bu eklenen kontrol ifadeleri <em>Regex Engine</em> tarafından yakalanmaz,
  * sadece ifadenin doğruluğu veya yanlışlığını kontrol eder.<br>
- * Bu şekilde bir düzenli ifadenin önünde yada gerisinde arzu edilen kontrol yapılarak daha
+ * Bu şekilde bir düzenli ifadenin sağında yada solunda arzu edilen kontrol yapılarak daha
  * spesifik eşleşmeler bulunur.<br><br>
  *
  * <pre>
