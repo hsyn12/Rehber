@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_main_activity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_background"
+    android:fitsSystemWindows="true"
+    tools:context=".main.activity.city.MainActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/main_appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        android:translationZ="5dp"
+        app:elevation="1dp">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/main_toolbar"
+            style="@style/ToolbarBasex"
+            app:layout_scrollFlags="scroll|enterAlways|snap"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:subtitle=""
+            app:title="">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <com.tr.hsyn.htext.evaporate.EvaporateTextView
+                    android:id="@+id/main_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/rehber"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <com.tr.hsyn.htext.evaporate.EvaporateTextView
+                    android:id="@+id/main_sub_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:text="" />
+            </LinearLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/main_tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="snap"
+            app:tabIndicatorColor="@color/material_white"
+            app:tabIndicatorHeight="@dimen/tab_indicator_height">
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/main_tab_contacts"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:icon="@drawable/ic_people_24dp" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/main_tab_call_log"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:icon="@drawable/history_icon" />
+        </com.google.android.material.tabs.TabLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/main_pager_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/main_view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:ignore="SpeakableTextPresentCheck" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <!-- Action Button at right bottom corner -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/main_action_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/floating_button_end_margin"
+        android:layout_marginBottom="@dimen/dimen_16dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:backgroundTint="@color/colorPrimary"
+        app:layout_anchor="@+id/main_pager_root"
+        app:layout_anchorGravity="right|bottom"
+        app:rippleColor="@color/black75PercentColor"
+        app:srcCompat="@drawable/add_contact"
+        tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
+
+    <!--<com.tr.hsyn.grav.GravView
+            android:id="@+id/grav"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:visibility="invisible"
+            app:alpha_from="55"
+            app:alpha_max_duration="5000"
+            app:alpha_min_duration="1600"
+            app:alpha_to="255"
+            app:animationGenerators="@array/MixAnimations"
+            app:array_colors="@array/falcon"
+            app:ball_size="4dp"
+            app:ball_size_from_size="4dp"
+            app:ball_size_to_size="8dp"
+            app:colorGenerator="com.tr.hsyn.grav.generator.paint.ArrayColorGenerator"
+            app:gravGenerator="com.tr.hsyn.grav.generator.grav.BallGenerator"
+            app:path="@string/circle"
+            app:path_max_duration="6000"
+            app:path_min_duration="2000"
+            app:path_original_height="@integer/circle_original_height"
+            app:path_original_width="@integer/circle_original_width"
+            app:path_variance_from="-10dp"
+            app:path_variance_to="12dp"
+            app:pointGenerator="com.tr.hsyn.grav.generator.point.RegularPointGenerator"
+            app:regular_cell_size="80"
+            app:regular_variance="200"
+            app:shake_direction="horizontal"
+            app:shake_max_duration="5000"
+            app:shake_min_duration="1600"
+            app:shake_variance="64dp"
+            app:side_to_side_direction="downToUp"
+            app:side_to_side_max_duration="5000"
+            app:side_to_side_min_duration="1600" />-->
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

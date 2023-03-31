@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string name="title_backup_activity">Call Record Backups</string>
+	<string name="delete_backup">Delete backup</string>
+	<string name="no_backup">No Record</string>
+	<string name="no_backup_description">No call logs backed up</string>
+	<string name="backup_option_1">Show</string>
+	<string name="backup_option_2">Restore</string>
+	<string name="backup_option_3">Delete</string>
+	<string name="txt_completed">Completed</string>
+
+
+</resources>

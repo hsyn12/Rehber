@@ -1,0 +1,78 @@
+package com.tr.hsyn.telefonrehberi.main.activity.contact.detail.comment.dialog;
+
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.tr.hsyn.colors.Colors;
+import com.tr.hsyn.telefonrehberi.R;
+import com.tr.hsyn.textdrawable.TextDrawable;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+import java.util.Locale;
+
+
+public class MostCallDialogAdapter extends RecyclerView.Adapter<MostCallDialogAdapter.Holder> {
+	
+	private final List<MostCallItemViewData> mostCallItemViewDataList;
+	
+	public MostCallDialogAdapter(List<MostCallItemViewData> mostCallItemViewDataList) {
+		
+		this.mostCallItemViewDataList = mostCallItemViewDataList;
+	}
+	
+	@NonNull
+	@NotNull
+	@Override
+	public Holder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
+		
+		return new Holder(LayoutInflater.from(parent.getContext()).inflate(R.layout.most_calls_item_view, parent, false));
+	}
+	
+	@Override
+	public void onBindViewHolder(@NonNull @NotNull Holder holder, int position) {
+		
+		var item  = mostCallItemViewDataList.get(position);
+		int color = Colors.COLOR_GENERATOR.getRandomColor();
+		
+		holder.name.setText(item.getName());
+		holder.count.setImageDrawable(TextDrawable.builder().buildRound(String.valueOf(position + 1), color));
+		holder.txtType.setText(String.format(Locale.getDefault(), "%d %s", item.getCallSize(), holder.itemView.getContext().getString(R.string.call_record)));
+	}
+	
+	@Override
+	public int getItemCount() {
+		
+		return mostCallItemViewDataList.size();
+	}
+	
+	public static final class Holder extends RecyclerView.ViewHolder {
+		
+		TextView name;
+		TextView txtType;
+		
+		ImageView count;
+		
+		public Holder(@NonNull @NotNull View itemView) {
+			
+			super(itemView);
+			
+			txtType = itemView.findViewById(R.id.most_calls_item_text_type);
+			ImageView type = itemView.findViewById(R.id.most_calls_item_img_type);
+			name  = itemView.findViewById(R.id.most_calls_item_text_name);
+			count = itemView.findViewById(R.id.most_calls_item_img_order_number);
+			
+			type.setImageDrawable(AppCompatResources.getDrawable(name.getContext(), R.drawable.all_calls));
+			itemView.setBackgroundResource(Colors.getRipple());
+		}
+	}
+}

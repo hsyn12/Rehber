@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		xmlns:tools="http://schemas.android.com/tools"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="@color/light_background"
+		tools:context="com.tr.hsyn.telefonrehberi.main.pages.PageCallLog">
+
+	<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+			android:id="@+id/refresh"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+
+		<com.tr.hsyn.fastscroller.FastScrollRecyclerView
+				tools:listitem="@layout/call_item"
+				android:id="@+id/recycler_view"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				app:fastScrollAlwaysEnabled="true"
+				app:fastScrollPopupBackgroundColor="?attr/colorAccent"
+				app:fastScrollPopupTextColor="@android:color/white"
+				app:fastScrollTextSize="18dp"
+				app:fastScrollThumbActiveColor="?attr/colorAccent"
+				app:fastScrollThumbInactiveColor="?attr/colorAccent"
+				app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+		<!--<com.tr.hsyn.fastscroller.views.FastScrollRecyclerView
+			 android:id="@+id/recycler_view"
+			 android:layout_width="match_parent"
+			 android:layout_height="match_parent"
+			 app:fastScrollAutoHide="false"
+			 app:fastScrollEnableThumbInactiveColor="false"
+			 app:fastScrollPopupBackgroundSize="50dp"
+			 app:fastScrollPopupTextSize="16sp"
+			 app:fastScrollPopupPosition="center"
+			 app:fastScrollPopupTextColor="@color/white"
+			 app:fastScrollThumbEnabled="true"
+			 app:fastScrollTrackColor="@color/transparent"
+			 tools:listitem="@layout/call_item"
+			 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />-->
+
+	</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+	<include layout="@layout/empty_call_log" />
+
+	<!--<LinearLayout
+			android:id="@+id/empty"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:alpha=".1"
+			android:orientation="vertical">
+
+		<ImageView
+				android:layout_width="160dp"
+				android:layout_height="160dp"
+				android:layout_gravity="center"
+				app:srcCompat="@drawable/call_history_black" />
+
+		<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center"
+				android:fontFamily="@font/cabin"
+				android:text="@string/no_call"
+				android:textColor="@color/black"
+				android:textSize="22sp" />
+
+	</LinearLayout>-->
+
+	<ProgressBar
+			android:id="@+id/progress"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:indeterminate="true"
+			android:visibility="gone" />
+
+</FrameLayout>

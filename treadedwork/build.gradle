@@ -1,0 +1,16 @@
+plugins {
+	id 'java-library'
+}
+
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_11
+	targetCompatibility = JavaVersion.VERSION_11
+}
+
+dependencies {
+	implementation project(path: ':execution')
+	implementation project(path: ':executors')
+	compileOnly "org.jetbrains:annotations:${rootProject.annotations}"
+	implementation 'net.sourceforge.streamsupport:android-retrofuture:1.7.4'
+}

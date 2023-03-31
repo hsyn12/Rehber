@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto">
+
+	<item
+			android:id="@+id/main_menu_colors"
+			android:title="@string/renkler"
+			app:showAsAction="never" />
+
+	<!-- Arama Menüsü -->
+	<!--<item
+			android:id="@+id/menu_search"
+			android:icon="@drawable/search"
+			android:menuCategory="system"
+			android:orderInCategory="10"
+			android:title="@string/search"
+			app:showAsAction="always" />-->
+
+	<!-- Filtreme Menüsü -->
+	<!--<item
+			android:id="@+id/menu_filter"
+			android:icon="@drawable/ic_sort"
+			android:menuCategory="system"
+			android:orderInCategory="0"
+			android:title="@string/filters"
+			app:showAsAction="ifRoom" />-->
+
+	<!-- Arama Kayıtları ile ilgili menü elemanları-->
+	<!--<item
+			android:id="@+id/menu_call_backup"
+			android:title="@string/title_backup_activity"
+			app:showAsAction="never" />
+	<item
+			android:id="@+id/menu_random_calls_activity"
+			android:title="@string/generate_random_calls"
+			app:showAsAction="never" />-->
+	<!--<item
+			android:id="@+id/delete_all_calls"
+			android:title="@string/delete_all_calls"
+			app:showAsAction="never" />
+	
+	<item
+			android:id="@+id/call_log_menu_select_all"
+			android:checkable="false"
+			android:icon="@drawable/checkbox"
+			android:title="@string/select_all"
+			android:visible="false"
+			app:showAsAction="always" />
+
+	<item
+			android:id="@+id/call_log_menu_delete_all"
+			android:icon="@drawable/delete_white"
+			android:title="@string/delete_all"
+			android:visible="false"
+			app:showAsAction="always" />-->
+
+	<!-- Arama Kayıtları ile ilgili menü elemanları-->
+
+</menu>

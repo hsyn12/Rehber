@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.tr.hsyn.xrelativelayout.RelativeLayoutx
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		xmlns:tools="http://schemas.android.com/tools"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		app:maxHeightx="500dp">
+
+	<androidx.appcompat.widget.Toolbar
+			android:id="@+id/toolbar_show_calls"
+			style="@style/ToolbarBasex"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_alignParentTop="true"
+			android:elevation="5dp"
+			app:navigationIcon="@drawable/account"
+			app:title="@string/call_log"
+			app:titleTextAppearance="@style/ToolbarTitleAppearance" />
+
+	<com.tr.hsyn.fastscroller.FastScrollRecyclerView
+			android:id="@+id/list_show_calls"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/toolbar_show_calls"
+			app:fastScrollAlwaysEnabled="true"
+			app:fastScrollPopupBackgroundColor="?attr/colorAccent"
+			app:fastScrollPopupTextColor="@android:color/white"
+			app:fastScrollThumbActiveColor="?attr/colorAccent"
+			app:fastScrollThumbInactiveColor="?attr/colorAccent"
+			app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+			tools:listitem="@layout/call" />
+</com.tr.hsyn.xrelativelayout.RelativeLayoutx>

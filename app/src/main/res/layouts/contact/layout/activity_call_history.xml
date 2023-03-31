@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		xmlns:tools="http://schemas.android.com/tools"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		tools:context=".main.activity.contact.detail.history.ActivityCallList">
+
+	<androidx.appcompat.widget.Toolbar
+			android:id="@+id/toolbar_call_history"
+			style="@style/ToolbarBasex"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:elevation="5dp"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:navigationIcon="@drawable/left_arrow"
+			app:subtitle="66"
+			app:title="@string/call_log"
+			app:titleTextAppearance="@style/ToolbarTitleAppearance" />
+
+	<com.tr.hsyn.fastscroller.FastScrollRecyclerView
+			android:id="@+id/list_call_history"
+			android:layout_width="match_parent"
+			android:layout_height="0dp"
+			app:fastScrollAlwaysEnabled="true"
+			app:fastScrollPopupBackgroundColor="?attr/colorAccent"
+			app:fastScrollPopupTextColor="@android:color/white"
+			app:fastScrollThumbActiveColor="?attr/colorAccent"
+			app:fastScrollThumbInactiveColor="?attr/colorAccent"
+			app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/toolbar_call_history"
+			tools:listitem="@layout/call_show_calls" />
+
+	<LinearLayout
+			android:id="@+id/empty"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:alpha="0.1"
+			android:orientation="vertical"
+			android:visibility="gone"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			tools:ignore="UseCompoundDrawables">
+
+		<ImageView
+				android:layout_width="160dp"
+				android:layout_height="160dp"
+				android:layout_gravity="center"
+				app:srcCompat="@drawable/call_history_black"
+				tools:ignore="ContentDescription" />
+
+		<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center"
+				android:fontFamily="@font/cabin"
+				android:text="@string/no_call"
+				android:textColor="@color/black"
+				android:textSize="22sp" />
+
+	</LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
+
+	<string name="size_call">%d arama</string>
+	<string name="no_history">Kişiye ait bir arama kaydı yok</string>
+	<string name="history_size">Kişiye ait %1$d arama kaydı bulunuyor</string>
+	<string name="history_size_only">Kişiye ait sadece %1$d arama kaydı var</string>
+</resources>

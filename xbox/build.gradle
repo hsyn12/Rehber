@@ -1,0 +1,26 @@
+plugins {
+	id 'java-library'
+}
+
+dependencies {
+
+	implementation project(path: ':reflection')
+	implementation project(path: ':xlog')
+	implementation project(path: ':buildkeys')
+	implementation project(path: ':keep')
+	implementation project(path: ':atom')
+	implementation project(path: ':key')
+	implementation project(path: ':label')
+	implementation project(path: ':identity')
+	implementation project(path: ':entity')
+	implementation project(path: ':registery')
+	implementation project(path: ':execution')
+	implementation project(path: ':executors')
+	implementation project(path: ':time')
+	compileOnly "org.jetbrains:annotations:${rootProject.annotations}"
+}
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_11
+	targetCompatibility = JavaVersion.VERSION_11
+}

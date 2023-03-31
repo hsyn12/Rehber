@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<style name="HeaderText" parent="TextAppearance.AppCompat">
+		<item name="android:textSize">17sp</item>
+		<item name="android:fontFamily">@font/gsans_lt</item>
+		<item name="android:textColor">@color/black_50</item>
+	</style>
+
+	<style name="TextAbout" parent="TextAppearance.AppCompat">
+		<item name="android:padding">5dp</item>
+		<item name="android:textSize">18sp</item>
+		<item name="android:fontFamily">@font/geometric_light</item>
+		<item name="android:textColor">@color/black_50</item>
+	</style>
+
+	<style name="MonoFont">
+		<item name="android:fontFamily">@font/acari_italic</item>
+		<item name="android:textSize">18sp</item>
+		<item name="android:textColor">@color/amber_900</item>
+	</style>
+
+</resources>

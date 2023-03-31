@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		android:id="@+id/call_summary_body"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="@dimen/contact_detail_vertical_margin"
+		android:background="@color/light_background"
+		android:orientation="vertical"
+		android:padding="4dp"
+		android:translationZ="1dp">
+
+	<include layout="@layout/call_summary_header" />
+</LinearLayout>
+

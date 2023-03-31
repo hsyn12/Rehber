@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string name="title_random_calls_generator">Random Calls Generator</string>
+	<string name="call_types_title">Call Types</string>
+	<string name="generation_count_hint">Generation Count</string>
+	<string name="generation_default_count">10</string>
+	<string name="contacts">Contacts</string>
+	<string name="start">Start</string>
+	<string name="select_all">Select All</string>
+	<string name="service_activated">Service activated</string>
+	<string name="service_deactivated">Service deactivated</string>
+	<string name="information_is_being_collected">Information is being collected</string>
+	<string name="service_connection_established">Service connection established</string>
+	<string name="service_disconnected">Service disconnected</string>
+	<string name="invalid_generation_number">Invalid generation number</string>
+	<string name="warn_select_one_person">At least one person must be selected for generation</string>
+	<string name="info_collection_completed">Info collection completed</string>
+	<string name="generation_over_count">Generation will be made over %1$d people</string>
+	<string name="warn_select_one_call_type">A call type must be selected</string>
+	<string name="text_date_start">Date Start</string>
+	<string name="text_date_end">Date End</string>
+	<string name="text_track_free">Track Free</string>
+	<string name="warn_waiting_contact_selection">Waiting contact selection</string>
+	<string name="warn_no_any_contact">No any contact</string>
+	<string name="menu_dates_limits">Date Limit</string>
+	<string name="generating_random_calls">Generating Random Calls</string>
+	<string name="generated_calls_saved">Calls saved in the system</string>
+	<string name="saving">Saving</string>
+	<string name="call_types_selection_warn">* One call type must be selected at least. If all types are unselected, all types are used</string>
+	<string name="ready_for_generation">Generation ready to start</string>
+
+	<string name="idle_message_generation_count">Number of call records to be generated : %1$d</string>
+	<string name="idle_message_waiting_contact_selection">Waiting for people to be selected</string>
+	<string name="idle_message_record_will_saved">The generated call records are saved in the system. If the system record count limit is exceeded, the oldest records are automatically deleted. The number of records produced and the couple interval should be chosen with this in mind</string>
+
+
+</resources>

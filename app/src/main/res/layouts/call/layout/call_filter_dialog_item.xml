@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:tools="http://schemas.android.com/tools"
+		android:layout_width="match_parent"
+		android:layout_height="50dp"
+		android:layout_gravity="fill"
+		android:background="@drawable/ripple"
+		android:clickable="true"
+		android:focusable="true"
+		android:orientation="horizontal">
+
+	<LinearLayout
+			android:id="@+id/call_filter_inner_layout"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:orientation="horizontal"
+			android:paddingStart="16dp"
+			tools:ignore="UseCompoundDrawables">
+
+		<ImageView
+				android:id="@+id/type"
+				android:layout_width="24dp"
+				android:layout_height="24dp"
+				android:layout_gravity="center_vertical"
+				android:contentDescription="@string/description_call_type"
+				tools:src="@drawable/incomming_call" />
+
+		<TextView
+				android:id="@+id/text_filter"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center_vertical"
+				android:layout_marginStart="12dp"
+				android:fontFamily="@font/geometric_light"
+				android:gravity="center_vertical"
+				android:textSize="20sp"
+				tools:text="filter item" />
+	</LinearLayout>
+</LinearLayout>

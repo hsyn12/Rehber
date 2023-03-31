@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="confirm">Onayla</string>
+    <string name="reject">Reddet</string>
+    <string name="confirm_title">İşlem Onayı</string>
+    <string name="confirm_message">İşlemi onaylıyor musun?</string>
+</resources>

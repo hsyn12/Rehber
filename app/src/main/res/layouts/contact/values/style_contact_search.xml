@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<style name="ContactSearchText" parent="ContactText">
+
+		<item name="android:textSize">14sp</item>
+		<item name="android:textColor">@color/contact_search_number</item>
+	</style>
+
+	<color name="contact_search_number">#75212121</color>
+</resources>

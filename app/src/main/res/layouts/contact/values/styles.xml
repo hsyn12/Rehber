@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<style name="ActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">
+		<item name="colorPrimary">@color/colorPrimary</item>
+		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+		<item name="colorAccent">@color/colorPrimary</item>
+		<item name="android:windowActivityTransitions">true</item>
+		<item name="android:windowContentTransitions">true</item>
+		<item name="android:windowDrawsSystemBarBackgrounds">true</item>
+		<item name="android:statusBarColor">@android:color/transparent</item>
+
+		<item name="android:windowSharedElementEnterTransition">@transition/entry</item>
+		<item name="android:windowSharedElementExitTransition">@transition/entry</item>
+
+	</style>
+
+	<!-- Base application theme. -->
+	<style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+		<!-- Customize your theme here. -->
+		<item name="colorPrimary">@color/colorPrimary</item>
+		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+		<item name="colorAccent">@color/colorPrimary</item>
+		<item name="android:windowActivityTransitions">true</item>
+		<item name="android:windowContentTransitions">true</item>
+
+		<item name="android:windowDrawsSystemBarBackgrounds">true</item>
+		<item name="android:statusBarColor">@android:color/transparent</item>
+
+	</style>
+
+	<style name="AppDialogTheme" parent="Theme.AppCompat.Light.NoActionBar">
+		<item name="android:windowIsFloating">true</item>
+		<item name="android:windowCloseOnTouchOutside">true</item>
+		<item name="android:windowContentOverlay">@null</item>
+		<item name="android:windowFrame">@null</item>
+		<item name="android:windowFullscreen">false</item>
+		<item name="android:windowActivityTransitions">true</item>
+		<item name="android:windowAnimationStyle">@style/DialogAnimationBounce</item>
+	</style>
+
+	<style name="AppTheme.Button" parent="Widget.AppCompat.Button.Colored">
+		<item name="colorButtonNormal">@color/red_400</item>
+		<item name="android:textColor">@color/material_black</item>
+		<item name="android:backgroundTint">@color/whitePrimary</item>
+	</style>
+
+
+	<style name="ToolbarBase" parent="Base.V7.Widget.AppCompat.Toolbar">
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:minHeight">?attr/actionBarSize</item>
+		<item name="android:background">@color/colorPrimary</item>
+		<item name="android:layout_gravity">fill_horizontal</item>
+		<item name="popupTheme">@style/AppTheme.PopupOverlay</item>
+		<item name="android:theme">@style/AppTheme.AppBarOverlay</item>
+	</style>
+
+
+	<style name="DialogHeaderText">
+		<item name="android:textColor">@color/dialog_header_text_color</item>
+		<item name="android:textSize">@dimen/dialog_header_text_size</item>
+		<item name="fontFamily">@font/nunito_semibold</item>
+	</style>
+
+
+	<style name="ContactText" parent="BaseText">
+		<item name="android:textSize">18sp</item>
+		<item name="android:textColor">@color/contact_item_text_color</item>
+		<item name="android:layout_gravity">center_vertical</item>
+		<item name="android:layout_marginStart">@dimen/activity_horizontal_margin</item>
+		<item name="android:ellipsize">end</item>
+		<item name="android:fontFamily">@font/geometric_regular</item>
+		<item name="android:maxLength">22</item>
+		<item name="android:maxLines">1</item>
+	</style>
+
+
+	<style name="ChangeColorText" parent="@android:style/TextAppearance.Medium">
+		<item name="android:textSize">19sp</item>
+		<item name="android:textColor">@color/grey_800</item>
+		<item name="android:fontFamily">@font/z</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_marginStart">32dp</item>
+
+	</style>
+
+	<style name="BackupText" parent="@android:style/TextAppearance.Medium">
+		<item name="android:textSize">@dimen/backup_text_size</item>
+		<item name="android:fontFamily">@font/madelena</item>
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:paddingBottom">@dimen/backup_text_vertical_padding</item>
+		<item name="android:paddingTop">@dimen/backup_text_vertical_padding</item>
+		<item name="android:gravity">center</item>
+		<item name="android:textColor">@color/backup_text_color</item>
+	</style>
+
+	<style name="BackupTitleText" parent="BaseText">
+		<item name="android:layout_centerHorizontal">true</item>
+		<item name="android:fontFamily">@font/texb</item>
+		<item name="android:textSize">20sp</item>
+		<item name="android:textColor">@color/backup_title_text_color</item>
+	</style>
+
+	<style name="ContactDetailPopupAnimation">
+		<item name="android:windowEnterAnimation">@anim/bounce_in</item>
+		<item name="android:windowExitAnimation">@anim/bounce_out</item>
+	</style>
+
+	<style name="ContactDetailPopupItemText" parent="@android:style/TextAppearance.Medium">
+		<item name="android:paddingStart">@dimen/contact_detail_popup_item_padding_start</item>
+		<item name="android:textSize">@dimen/contact_detail_popup_item_text_size</item>
+		<item name="android:textColor">@color/second_text_color</item>
+		<item name="android:paddingBottom">@dimen/contact_detail_popup_item_vertical_padding</item>
+		<item name="android:paddingTop">@dimen/contact_detail_popup_item_vertical_padding</item>
+		<item name="android:fontFamily">@font/r</item>
+	</style>
+
+	<style name="ToolbarTitleStyle" parent="@android:style/TextAppearance.Medium">
+		<item name="android:fontFamily">@font/hind_rg</item>
+		<item name="android:textSize">19sp</item>
+	</style>
+
+	<style name="ToolbarTitleStyle2" parent="@android:style/TextAppearance.Medium">
+		<item name="android:fontFamily">@font/hk_mid</item>
+		<item name="android:textSize">19sp</item>
+		<!-- <item name="android:textStyle">bold</item>-->
+	</style>
+
+	<style name="ContactsMergeCheckboxStyle" parent="Base.Theme.AppCompat">
+		<item name="colorAccent">#5C7497</item>
+		<item name="android:textColorSecondary">#5C7497</item>
+	</style>
+
+	<style name="AppTheme.NoActionBar">
+		<item name="windowActionBar">false</item>
+		<item name="windowNoTitle">true</item>
+	</style>
+
+	<style name="BackgroundWorksActivityDialogContentMono" parent="TextAppearance.AppCompat.Small">
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:layout_width">wrap_content</item>
+		<item name="fontFamily">@font/droidsansmono</item>
+	</style>
+
+	<style name="BackgroundWorksActivityDialogContent">
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:layout_width">wrap_content</item>
+		<item name="fontFamily">@font/acari_mid</item>
+	</style>
+
+	<style name="stored_contacts_text">
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:fontFamily">@font/droidsansmono</item>
+		<item name="android:textSize">14sp</item>
+		<item name="android:textColor">@color/white_trans68</item>
+	</style>
+
+	<style name="stored_contacts_text2">
+		<item name="android:maxLines">1</item>
+		<item name="android:ellipsize">end</item>
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:textColor">@color/white_trans55</item>
+	</style>
+
+	<style name="OneText" parent="BaseText">
+
+		<item name="android:maxLines">1</item>
+		<item name="android:ellipsize">end</item>
+		<item name="android:textSize">16sp</item>
+		<item name="android:fontFamily">@font/acari_lt</item>
+		<item name="android:textColor">@color/black_66</item>
+	</style>
+
+	<style name="DescriptionText" parent="BaseText">
+		<item name="android:textSize">12sp</item>
+		<item name="android:fontFamily">@font/geometric_light</item>
+		<item name="android:textColor">@color/black_55</item>
+	</style>
+
+	<style name="DetailsActivityDetailsTextPrimary" parent="BaseText">
+		<item name="android:textSize">16sp</item>
+		<item name="android:fontFamily">@font/gsans_lt</item>
+		<item name="android:textColor">@color/black_45</item>
+	</style>
+
+	<style name="DetailsActivityDetailsTextSecondary" parent="BaseText">
+		<item name="android:textSize">12sp</item>
+		<item name="android:fontFamily">@font/gsans_lt_it</item>
+		<item name="android:textColor">@color/black_30</item>
+	</style>
+
+
+</resources>

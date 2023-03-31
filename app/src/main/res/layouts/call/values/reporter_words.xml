@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string-array name="words">
+		<item>Zor sınavlar güçlü insanlar yetiştirir.</item>
+		<item>Türk\'ün bildiğini tilki bilmez.</item>
+		<item>Tembele iş buyur ki sana akıl öğretsin.</item>
+		<item>Sarhoşa değme kendi düşer.</item>
+		<item>Her akılsıza hayran olacak başka bir akılsız bulunur.</item>
+		<item>Müzik değiştiğinde dans da değişir.</item>
+	</string-array>
+</resources>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		xmlns:tools="http://schemas.android.com/tools"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="@color/light_background"
+		tools:context="com.tr.hsyn.telefonrehberi.main.fragment.page.contact.PageContacts">
+
+	<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+			android:id="@+id/refresh"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+
+		<com.tr.hsyn.fastscroller.FastScrollRecyclerView
+				android:id="@+id/recycler_view"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				app:fastScrollAlwaysEnabled="true"
+				app:fastScrollThumbActiveColor="?attr/colorAccent"
+				app:fastScrollThumbInactiveColor="?attr/colorAccent"
+				app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+				tools:listitem="@layout/contact" />
+
+
+		<!--	<com.tr.hsyn.fastscroller.views.FastScrollRecyclerView
+		app:fastScrollPopupBackgroundColor="?attr/colorAccent"
+					app:fastScrollPopupTextColor="@android:color/white"
+					app:fastScrollThumbActiveColor="?attr/colorAccent"
+					app:fastScrollThumbInactiveColor="@color/transparent"
+					android:id="@+id/recycler_view"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					app:fastScrollAutoHide="false"
+					app:fastScrollEnableThumbInactiveColor="false"
+					app:fastScrollThumbColor="@color/colorPrimary"
+					app:fastScrollPopupTextColor="@color/white"
+					app:fastScrollThumbEnabled="true"
+					app:fastScrollPopupBgColor="@color/colorPrimary"
+					app:fastScrollTrackColor="@color/transparent"
+					app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+					tools:listitem="@layout/contact"
+					app:fastScrollPopupBackgroundSize="86dp"
+					app:fastScrollPopupTextSize="42sp"/>-->
+
+	</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+	<ProgressBar
+			android:id="@+id/progress"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:indeterminate="true"
+			android:visibility="gone" />
+
+	<RelativeLayout
+			android:id="@+id/empty"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:alpha="0.4">
+
+		<ImageView
+				android:id="@+id/no_contact"
+				android:layout_width="150dp"
+				android:layout_height="150dp"
+				android:layout_centerInParent="true"
+				app:srcCompat="@drawable/no_contact"
+				tools:ignore="ContentDescription" />
+
+		<TextView
+				android:id="@+id/empty_text"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_below="@id/no_contact"
+				android:layout_centerHorizontal="true"
+				android:layout_marginTop="8dp"
+				android:fontFamily="@font/text"
+				android:text="Kayıt Yok"
+				android:textColor="@color/grey_500"
+				android:textSize="16sp" />
+
+	</RelativeLayout>
+
+</FrameLayout>

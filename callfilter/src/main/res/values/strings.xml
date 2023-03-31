@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<!--Arama kayıtları için filtreler-->
+	<string name="filters">Filtreler</string>
+	<!--Varsayılan filtre. Tüm arama kayıtlarının gösterileceğini bildirir-->
+	<string name="all_calls">Tüm Aramalar</string>
+	<!--Sadece gelen arama kayıtlarının gösterileceğini bildirir-->
+	<string name="incomming_calls">Gelen Aramalar</string>
+	<!--Sadece giden arama kayıtlarının gösterileceğini bildirir-->
+	<string name="outgoing_calls">Giden Aramalar</string>
+	<!--Sadece cevapsız arama kayıtlarının gösterileceğini bildirir-->
+	<string name="missed_calls">Cevapsız Aramalar</string>
+	<!--Sadece reddedilenn arama kayıtlarının gösterileceğini bildirir-->
+	<string name="rejected_calls">Reddedilen Aramalar</string>
+	<!--Sadece reddedilenn arama kayıtlarının gösterileceğini bildirir-->
+	<string name="no_name_calls">İsimsiz Aramalar</string>
+	<!--Sadece reddedilenn arama kayıtlarının gösterileceğini bildirir-->
+	<string name="random_calls">Rastgele Aramalar</string>
+
+	<string name="most_outgoing_calls">En Çok Arananlar</string>
+	<string name="most_incomming_calls">En Çok Arayanlar</string>
+	<string name="most_missed_calls">En Çok Çağrı Atanlar</string>
+	<string name="most_rejected_calls">En Çok Reddedilenler</string>
+	<string name="most_duration_incomming_calls">En Çok Konuşanlar</string>
+	<string name="most_duration_outgoing_calls">En Çok Konuştukların</string>
+
+	<!--Arama kayıtları filtreleme öğeleri dizisi-->
+	<string-array name="call_filter_items">
+		<item>@string/all_calls</item>
+		<item>@string/incomming_calls</item>
+		<item>@string/outgoing_calls</item>
+		<item>@string/missed_calls</item>
+		<item>@string/rejected_calls</item>
+		<item>@string/no_name_calls</item>
+		<item>@string/random_calls</item>
+		<item>@string/most_incomming_calls</item>
+		<item>@string/most_outgoing_calls</item>
+		<item>@string/most_missed_calls</item>
+		<item>@string/most_rejected_calls</item>
+		<item>@string/most_duration_incomming_calls</item>
+		<item>@string/most_duration_outgoing_calls</item>
+
+	</string-array>
+
+
+	<string name="description_call_type">Arama türü</string>
+
+</resources>

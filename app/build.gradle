@@ -1,0 +1,216 @@
+plugins {
+	id 'com.android.application'
+	id 'kotlin-android'
+}
+
+android {
+	namespace 'com.tr.hsyn.telefonrehberi'
+	compileSdk rootProject.compileSdk
+
+	
+	def configKeyPath = "C:\\Rehber\\tr_hsyn.jks"
+
+	signingConfigs {
+		myconfig {
+			storeFile file(configKeyPath)
+			storePassword 'android'
+			keyAlias = 'android'
+			keyPassword 'android'
+		}
+		debug {
+			storeFile file(configKeyPath)
+			storePassword 'android'
+			keyAlias 'android'
+			keyPassword 'android'
+		}
+	}
+
+	defaultConfig {
+		applicationId "com.tr.hsyn.telefonrehberi"
+		minSdk rootProject.minSdk
+		targetSdk rootProject.targetSdk
+		versionCode 1
+		versionName "1.0"
+
+		testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+	}
+
+	buildTypes {
+		release {
+			minifyEnabled false
+			proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+		}
+	}
+
+	compileOptions {
+		sourceCompatibility JavaVersion.VERSION_11
+		targetCompatibility JavaVersion.VERSION_11
+	}
+
+	sourceSets {
+		main {
+			res.srcDirs =
+					[
+							'src/main/res/layouts/dialog',
+							'src/main/res/layouts/reporter',
+							'src/main/res/layouts/contact',
+							'src/main/res/layouts/call',
+							'src/main/res/layouts/search',
+							'src/main/res/layouts/colors',
+							'src/main/res/layouts/main',
+							'src/main/res/layouts/time',
+							'src/main/res/layouts/loader',
+							'src/main/res/layouts/dialog',
+							'src/main/res/layouts/io',
+							'src/main/res/layouts/settings',
+							'src/main/res/layouts/extra',
+							'src/main/res/layouts/contract',
+							'src/main/res/layouts/view',
+							'src/main/res/layouts',
+							'src/main/res/layout',
+							'src/main/res/values',
+							'src/main/res/'
+
+
+					]
+		}
+	}
+
+	packagingOptions {
+		jniLibs {
+			excludes += ['META-INF/*']
+		}
+		resources {
+			excludes += ['META-INF/gradle/incremental.annotation.processors', 'META-INF/proguard/androidx-annotations.pro', 'META-INF/services/javax.annotation.processing.Processor', 'META-INF/*', 'META-INF/DEPENDENCIES', 'META-INF/MANIFEST.MF', 'META-INF/LICENSE', 'META-INF/LICENSE.txt', 'META-INF/license.txt', 'META-INF/NOTICE', 'META-INF/NOTICE.txt', 'META-INF/notice.txt', 'META-INF/ASL2.0', 'META-INF/atomicfu.kotlin_module', 'META-INF/rxjava.properties', 'META-INF/groovy-release-info.properties', 'LICENSE.txt', 'META-INF/ECLIPSE_.SF', 'META-INF/ECLIPSE_.RSA', 'META-INF/*.kotlin_module']
+		}
+	}
+
+	kotlinOptions {
+		jvmTarget = "11"
+		freeCompilerArgs = ['-Xjvm-default=all']
+	}
+}
+
+dependencies {
+	implementation project(path: ':xlog')
+	implementation project(path: ':executors')
+	implementation project(path: ':execution')
+	implementation project(path: ':reflection')
+	implementation project(path: ':db')
+	implementation project(path: ':collection')
+	implementation project(path: ':warnerlabel')
+	implementation project(path: ':random')
+	implementation project(path: ':buildkeys')
+	implementation project(path: ':gate')
+	implementation project(path: ':time')
+	implementation project(path: ':life')
+	implementation project(path: ':watch')
+	implementation project(path: ':resanim')
+	implementation project(path: ':bungee')
+	implementation project(path: ':shower')
+	implementation project(path: ':counter')
+	implementation project(path: ':loader')
+	implementation project(path: ':label')
+	implementation project(path: ':xbox')
+	implementation project(path: ':holder')
+	implementation project(path: ':colors')
+	implementation project(path: ':rescolors')
+	implementation project(path: ':textdrawable')
+	implementation project(path: ':activity')
+	implementation project(path: ':resripple')
+	implementation project(path: ':fragment')
+	implementation project(path: ':recolor')
+	implementation project(path: ':permissions')
+	implementation project(path: ':xtoolbar')
+	implementation project(path: ':message')
+	implementation project(path: ':text')
+	implementation project(path: ':content')
+	implementation project(path: ':perfectsort')
+	implementation project(path: ':string')
+	implementation project(path: ':regex')
+	implementation project(path: ':phone-numbers')
+	implementation project(path: ':treadedwork')
+	implementation project(path: ':calldata')
+	implementation project(path: ':page')
+	implementation project(path: ':selection')
+	implementation project(path: ':show')
+	implementation project(path: ':fastscroller')
+	implementation project(path: ':daytimes')
+	implementation project(path: ':searchview')
+	implementation project(path: ':scaler')
+	implementation project(path: ':htext')
+	implementation project(path: ':resdrawcalltype')
+	implementation project(path: ':resfont')
+	implementation project(path: ':vanimator')
+	implementation project(path: ':bool')
+	implementation project(path: ':use')
+	implementation project(path: ':files')
+	implementation project(path: ':callfilter')
+	implementation project(path: ':resarrowdrawable')
+	implementation project(path: ':launcher')
+	implementation project(path: ':roomstorm')
+	implementation project(path: ':roomstormanno')
+	implementation project(path: ':betty')
+	implementation project(path: ':rutine')
+	implementation project(path: ':register')
+	implementation project(path: ':selector')
+	implementation project(path: ':metadata')
+	implementation project(path: ':xrelativelayout')
+	implementation project(path: ':rsectiondecorator')
+	implementation project(path: ':easing')
+	implementation project(path: ':nextension')
+	implementation project(path: ':keep')
+	implementation project(path: ':flipimageview')
+	implementation project(path: ':identity')
+	implementation project(path: ':entity')
+	implementation project(path: ':key')
+	implementation project(path: ':atom')
+	implementation project(path: ':historic')
+	implementation project(path: ':codefinder')
+	implementation project(path: ':registery')
+	implementation project(path: ':integer')
+	implementation project(path: ':long')
+	implementation project(path: ':datboxer')
+	implementation project(path: ':datakey')
+	implementation project(path: ':contactdata')
+	implementation project(path: ':tryme')
+	implementation project(path: ':objext')
+	annotationProcessor project(path: ':warnerbros')
+
+	implementation "androidx.appcompat:appcompat:${rootProject.appcompat}"
+	implementation 'com.google.android.material:material:1.8.0'
+	implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+	testImplementation 'junit:junit:4.13.2'
+	androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+	androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+
+	implementation 'io.github.pilgr:paperdb:2.7.2'
+
+	//------------------------- mail -------------------------------------------------------------
+	//def work_version = '1.0.1'
+	implementation 'com.google.android.gms:play-services-auth:20.4.1'
+	implementation('com.google.api-client:google-api-client-android:2.1.2') {
+		exclude group: 'org.apache.httpcomponents'
+	}
+	implementation('com.google.apis:google-api-services-gmail:v1-rev98-1.25.0') {
+		exclude group: 'org.apache.httpcomponents'
+	}
+	/*implementation("android.arch.work:work-runtime:$work_version") {
+		 exclude group: 'com.google.guava', module: 'listenablefuture'
+	}*/
+	//--------------------------------------------------------------------------------------
+
+
+	implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+	implementation "com.google.guava:guava:${rootProject.guava}"
+	implementation "com.google.code.gson:gson:${rootProject.gson}"
+
+
+	implementation 'net.sourceforge.streamsupport:android-retrofuture:1.7.4'
+	implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.24'
+	implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+	implementation 'com.github.nisrulz:packagehunter:1.1.5'
+
+}

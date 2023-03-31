@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<style name="BackupCallTextPrimary" parent="TextAppearance.AppCompat">
+		<item name="android:textColor">@color/selector_base</item>
+		<item name="android:fontFamily">@font/hk_rg</item>
+		<item name="android:textSize">17sp</item>
+	</style>
+
+	<style name="BackupCallTextSecondary" parent="TextAppearance.AppCompat">
+		<item name="android:textColor">@color/text_tree_d_light</item>
+		<item name="android:fontFamily">@font/hk_rg</item>
+		<item name="android:textSize">14sp</item>
+	</style>
+	
+</resources>

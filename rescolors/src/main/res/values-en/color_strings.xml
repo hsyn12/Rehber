@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string name="select_color">Select</string>
+	<string name="apply_color">Apply</string>
+
+	<string name="colors">Renkler</string>
+	<string name="change_color_default">Default</string>
+	<string name="change_color_purple">Purple</string>
+	<string name="change_color_blue">Light Sky</string>
+	<string name="change_color_orange">Orange</string>
+	<string name="change_color_green">Grass</string>
+	<string name="change_color_brown">Soil</string>
+	<string name="change_color_grey">Grey</string>
+	<string name="change_color_teal">Teal</string>
+	<string name="change_color_pink">Pink</string>
+	<string name="change_color_lime">Lime</string>
+	<string name="change_color_amber">Amber</string>
+	<string name="change_color_light_green">Apple</string>
+	<string name="change_color_çikolata">Chocolate</string>
+	<string name="change_color_sky">Dark Sky</string>
+	<string name="change_color_night">Night</string>
+	<string name="change_color_chesnut">Chesnut</string>
+	<string name="change_color_orkide">Orchid</string>
+	<string name="change_color_yonca">Clover</string>
+	<string name="change_color_alev">Fire</string>
+	<string name="change_color_havuc">Carrot</string>
+</resources>

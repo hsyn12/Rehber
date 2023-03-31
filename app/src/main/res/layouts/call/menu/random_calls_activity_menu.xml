@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto">
+
+	<item
+			android:id="@+id/menu_random_calls_contacts"
+			android:title="@string/contacts"
+			app:showAsAction="never" />
+	<item
+			android:id="@+id/menu_random_calls_call_types"
+			android:title="@string/call_types_title"/>
+	<item
+			android:id="@+id/menu_random_calls_dates_limits"
+			android:title="@string/menu_dates_limits">
+		<menu>
+			<item
+					android:id="@+id/menu_random_calls_date_start"
+					android:title="@string/text_date_start" />
+			<item
+					android:id="@+id/menu_random_calls_date_end"
+					android:title="@string/text_date_end" />
+		</menu>
+	</item>
+</menu>

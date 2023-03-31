@@ -1,0 +1,23 @@
+plugins {
+	id 'java-library'
+}
+
+dependencies {
+
+	implementation project(path: ':time')
+	implementation project(path: ':label')
+	implementation project(path: ':identity')
+	implementation project(path: ':datboxer')
+	implementation project(path: ':integer')
+	implementation project(path: ':datakey')
+	implementation project(path: ':xlog')
+	implementation project(path: ':contactdata')
+	compileOnly "org.jetbrains:annotations:${rootProject.annotations}"
+
+
+}
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_11
+	targetCompatibility = JavaVersion.VERSION_11
+}

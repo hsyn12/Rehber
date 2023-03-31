@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<!-- Uygulamanın Renkleri. Sıralama önemli-->
+	<integer-array name="color_array">
+		<item>@color/colorPrimary</item>
+		<item>@color/color_primary_purple</item>
+		<item>@color/color_primary_blue</item>
+		<item>@color/color_primary_orange</item>
+		<item>@color/color_primary_green</item>
+		<item>@color/color_primary_brown</item>
+		<item>@color/color_primary_grey</item>
+		<item>@color/color_primary_teal</item>
+		<item>@color/color_primary_pink</item>
+		<item>@color/color_primary_lime</item>
+		<item>@color/color_primary_amber</item>
+		<item>@color/color_primary_light_green</item>
+		<item>@color/color_primary_çikolata</item>
+		<item>@color/color_primary_sky</item>
+		<item>@color/color_primary_night</item>
+		<item>@color/color_primary_kestane</item>
+		<item>@color/color_primary_orkide</item>
+		<item>@color/color_primary_yonca</item>
+		<item>@color/color_primary_alev</item>
+		<item>@color/color_primary_havuc</item>
+	</integer-array>
+</resources>

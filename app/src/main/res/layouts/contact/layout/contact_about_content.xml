@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		xmlns:tools="http://schemas.android.com/tools"
+		android:id="@+id/contact_about_body"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="@dimen/contact_detail_vertical_margin"
+		android:background="@color/light_background"
+		android:orientation="vertical"
+		android:padding="4dp"
+		android:translationZ="1dp">
+
+	<include layout="@layout/contact_about_header" />
+
+	<TextView
+			android:paddingStart="@dimen/dimen_8dp"
+			tools:visibility="visible"
+			tools:text="hello"
+			android:id="@+id/text_about"
+			style="@style/TextAbout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:visibility="gone"
+			app:lineHeight="22dp"
+			tools:ignore="RtlSymmetry" />
+
+</LinearLayout>

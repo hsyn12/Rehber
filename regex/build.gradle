@@ -1,0 +1,14 @@
+plugins {
+	id 'java-library'
+}
+
+dependencies {
+
+	compileOnly "org.jetbrains:annotations:${rootProject.annotations}"
+	implementation project(path: ':xlog')
+}
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_11
+	targetCompatibility = JavaVersion.VERSION_11
+}
