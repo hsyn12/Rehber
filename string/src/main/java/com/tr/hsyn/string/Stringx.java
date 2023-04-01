@@ -6,7 +6,6 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.tr.hsyn.regex.Nina;
 import com.tr.hsyn.regex.cast.Modifier;
-import com.tr.hsyn.regex.dev.RegexChar;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -425,12 +424,12 @@ public final class Stringx {
 		
 		searchText = Nina.Edit.removeWhiteSpaces(searchText);
 		
-		var reg = RegexChar.WHITE_SPACE.zeroOrMore();
+		var reg = Nina.whiteSpace().zeroOrMore();
 		
 		if (ignoreCase) reg = reg.ignoreCase();
 		
 		for (int i = 0; i < searchText.length(); i++)
-		     reg = reg.with(RegexChar.WHITE_SPACE.zeroOrMore().with(searchText.charAt(i)));
+		     reg = reg.with(Nina.whiteSpace().zeroOrMore().with(searchText.charAt(i)));
 		
 		var indexes = reg.findAll(word);
 		

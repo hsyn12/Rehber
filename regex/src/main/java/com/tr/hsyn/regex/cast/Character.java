@@ -13,35 +13,34 @@ public interface Character {
 	 */
 	String LETTER               = "\\p{L}";
 	/**
+	 * A non-alphabetic character {@code [^a-zA-Z]}
+	 */
+	String NON_LETTER           = "\\P{L}";
+	/**
 	 * A digit 0-9 {@code [0-9]}
 	 */
 	String DIGIT                = "\\p{N}";
-	/**
-	 * A whitespace character, including line break. {@code [ \t\r\n\f\x0B]}
-	 */
-	String WHITE_SPACE          = "\\p{Z}";
-	/**
-	 * Punctuation characters {@code [!"#$%&'()*+,\-./:;<=>?@\[\\\]^_`{|}~]}
-	 */
-	String PUNC                 = "\\p{P}";
-	/**
-	 * Any character from {@link #LETTER}, {@link #DIGIT}, {@link #PUNC}, {@link #WHITE_SPACE}, {@code "_"}
-	 */
-	String ANY                  = String.format("[%s%s%s%s_]", LETTER, DIGIT, PUNC, WHITE_SPACE);
-	/**
-	 * A non-whitespace chacracter {@code [^\s]}
-	 */
-	String NON_WHITE_SPACE      = "\\P{Z}";
 	/**
 	 * A non-digit chacracter {@code [^0-9]}
 	 */
 	String NON_DIGIT            = "\\P{N}";
 	/**
-	 * Delimiters {@code '.$^{[()|*+?\'}
+	 * A whitespace character, including line break. {@code [ \t\r\n\f\x0B]}
 	 */
-	String DELIMITER_CHARACTERS = ".$^{[()|*+?\\";
-	String SPACE                = "\\s";
-	String NON_SPACE            = "\\S";
+	String WHITE_SPACE          = "\\p{Z}";
+	/**
+	 * A non-whitespace chacracter {@code [^\s]}
+	 */
+	String NON_WHITE_SPACE      = "\\P{Z}";
+	/**
+	 * Punctuation characters {@code [!"#$%&'()*+,\-./:;<=>?@\[\\\]^_`{|}~]}
+	 */
+	String PUNC                 = "\\p{P}";
+	String NON_PUNC             = "\\P{P}";
+	/**
+	 * Any character from {@link #LETTER}, {@link #DIGIT}, {@link #PUNC}, {@link #WHITE_SPACE}, {@code "_"}
+	 */
+	String ANY                  = String.format("[%s%s%s%s_]", LETTER, DIGIT, PUNC, WHITE_SPACE);
 	/**
 	 * A lowercase alphabetic character {@code [a-z]}
 	 */
@@ -53,28 +52,26 @@ public interface Character {
 	String LETTER_UPPER         = "\\p{Lu}";
 	String NON_LETTER_UPPER     = "\\P{Lu}";
 	/**
-	 * A non-alphabetic character {@code [^a-zA-Z]}
+	 * Delimiters {@code '.$^{[()|*+?\'}
 	 */
-	String NON_LETTER           = "\\P{L}";
+	String DELIMITER_CHARACTERS = ".$^{[()|*+?\\";
 	/**
 	 * A control character {@code [\p{Cntrl}]}
 	 */
 	String CONTROL              = "\\p{C}";
-	
-	String NON_PUNC    = "\\P{P}";
 	/**
 	 * A non-control character {@code [^\p{C}]}
 	 */
-	String NON_CONTROL = "\\P{C}";
-	String SYMBOL      = "\\p{S}";
-	String SLASH       = "\\";
+	String NON_CONTROL          = "\\P{C}";
+	String SYMBOL               = "\\p{S}";
+	String SLASH                = "\\";
 	
 	
 	/**
 	 * Bir karakterin ait olduğu karakter sınıfını döndürür.<br>
 	 *
 	 * <ul>
-	 *    <li>{@link #SPACE}  : boşluk sınıfı</li>
+	 *    <li>{@link #WHITE_SPACE}  : boşluk sınıfı</li>
 	 *    <li>{@link #DIGIT}  : sayı sınıfı</li>
 	 *    <li>{@link #LETTER} : harf sınıfı</li>
 	 *    <li>{@link #PUNC}   : noktalama sınıfı</li>
@@ -87,7 +84,7 @@ public interface Character {
 		
 		if (java.lang.Character.isLetter(c)) return LETTER;
 		if (java.lang.Character.isDigit(c)) return DIGIT;
-		if (java.lang.Character.isSpaceChar(c)) return SPACE;
+		if (java.lang.Character.isWhitespace(c)) return WHITE_SPACE;
 		
 		return PUNC;
 	}

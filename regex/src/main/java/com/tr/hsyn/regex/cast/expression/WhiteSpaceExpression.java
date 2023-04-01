@@ -59,6 +59,17 @@ public interface WhiteSpaceExpression extends RegularExpression {
 	}
 	
 	/**
+	 * Boşluk olmayan <em>bir yada daha fazla</em> karakter.
+	 *
+	 * @return This {@link RegexBuilder}
+	 * @see Character#NON_WHITE_SPACE
+	 */
+	default @NotNull RegexBuilder nonWhiteSpaces() {
+		
+		return nonWhiteSpace().oneOrMore();
+	}
+	
+	/**
 	 * Boşluk olmayan bir karakter.
 	 *
 	 * @param quanta Çokluk

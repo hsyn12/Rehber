@@ -4,7 +4,6 @@ package com.tr.hsyn.regex.dev;
 import com.tr.hsyn.regex.Nina;
 import com.tr.hsyn.regex.cast.Character;
 import com.tr.hsyn.regex.cast.Quanta;
-import com.tr.hsyn.regex.cast.RegexBuilder;
 import com.tr.hsyn.regex.cast.Text;
 
 import org.jetbrains.annotations.NotNull;
@@ -23,59 +22,71 @@ import org.jetbrains.annotations.NotNull;
  * </ol>
  *
  * <p>
- * Bu sınıf bu 4 karakter türünü bildirir.
+ * Bu sınıf bu 4 karakter türünü (ve zıtlarını) bildirir.
  * Karakter türleri, düzenli ifade karşılıkları ile tutulur, ki
  * bu sınıfın {@code RegexChar} olduğunu hatırlatırım,
  * {@link Text} arayüzünü uygular ve {@link Text#getText()} metodu karakterin düzenli ifade karşılığını döndürür.
- * Ssınıfın birkaç yardımcı metodu da bulunur çok basit işler için.
+ * Sınıfın birkaç yardımcı metodu da bulunur basit işler için.
  * Mesela {@link #oneOrMore()} metodu, çağrıldığı karakter türü için <em>bir yada daha fazla tekrar</em>
  * etme ifadesini döndürür.<br><br>
- *
- * <pre>
- * var regex = RegexChar.DIGIT.oneMore();// "\p{N}+"
- * </pre>
- *
- * <p>
- * Bu metotlar {@link RegexBuilder} nesnesi döndürürler.
- * Bu da pratik bir şekilde ifade kurmayı sağlar.<br><br>
- *
- * <pre>
- * var str    = "12 04 1981";
- * var digits = RegexChar.DIGIT.oneMore().boundary();
- * pl("Result : %s", Nina.Dev.getParts(str, digits.findAll(str)));
- * //Result : [12, 04, 1981]
- * </pre>
  */
 public enum RegexChar implements Text {
 	
 	/**
-	 * Harf<br>
-	 * {@code [a-zA-Z]}
+	 * Harf.
 	 *
 	 * @see com.tr.hsyn.regex.cast.Character#LETTER
 	 */
-	LETTER,
+	LETTER(Character.LETTER),
 	/**
-	 * Rakam<br>
-	 * {@code [0-9]}
+	 * Harf olmayan.
+	 *
+	 * @see com.tr.hsyn.regex.cast.Character#LETTER
+	 */
+	NON_LETTER(Character.NON_LETTER),
+	/**
+	 * Rakam.
 	 *
 	 * @see com.tr.hsyn.regex.cast.Character#DIGIT
 	 */
-	DIGIT,
+	DIGIT(Character.DIGIT),
 	/**
-	 * Boşluk<br>
-	 * {@code [ \t\r\n\f\x0B]}
+	 * Rakam olmayan.
+	 *
+	 * @see com.tr.hsyn.regex.cast.Character#DIGIT
+	 */
+	NON_DIGIT(Character.NON_DIGIT),
+	/**
+	 * Boşluk.
 	 *
 	 * @see com.tr.hsyn.regex.cast.Character#WHITE_SPACE
 	 */
-	WHITE_SPACE,
+	WHITE_SPACE(Character.WHITE_SPACE),
 	/**
-	 * Noktalama<br>
-	 * {@code [!"#$%&'()*+,\-./:;<=>?@\[\\\]^_`{|}~]}
+	 * Boşluk olmayan.
+	 *
+	 * @see com.tr.hsyn.regex.cast.Character#WHITE_SPACE
+	 */
+	NON_WHITE_SPACE(Character.NON_WHITE_SPACE),
+	/**
+	 * Noktalama.
 	 *
 	 * @see com.tr.hsyn.regex.cast.Character#PUNC
 	 */
-	PUNC;
+	PUNC(Character.PUNC),
+	/**
+	 * Noktalama olmayan.
+	 *
+	 * @see com.tr.hsyn.regex.cast.Character#PUNC
+	 */
+	NON_PUNC(Character.NON_PUNC);
+	
+	private final String regex;
+	
+	RegexChar(@NotNull String regex) {
+		
+		this.regex = regex;
+	}
 	
 	/**
 	 * @return Karakter türünü temsil eden düzenli ifade
@@ -83,48 +94,40 @@ public enum RegexChar implements Text {
 	@Override
 	public @NotNull String getText() {
 		
-		switch (this) {
-			
-			case LETTER: return Character.LETTER;
-			case DIGIT: return Character.DIGIT;
-			case WHITE_SPACE: return Character.WHITE_SPACE;
-			case PUNC: return Character.PUNC;
-		}
-		
-		throw new IllegalArgumentException("No Type");
+		return regex;
 	}
 	
 	/**
 	 * @return Karakter türünün bir yada daha fazla olması gerektiğini bildiren düzenli ifade
 	 */
 	@NotNull
-	public RegexBuilder oneOrMore() {
+	public String oneOrMore() {
 		
-		return Nina.like(getText() + Quanta.ONE_OR_MORE);
+		return Nina.like(regex + Quanta.ONE_OR_MORE).getText();
 	}
 	
 	/**
 	 * @return Karakter türünün sıfır yada bir tane olması gerektiğini bildiren düzenli ifade
 	 */
 	@NotNull
-	public RegexBuilder zeroOrOne() {
+	public String zeroOrOne() {
 		
-		return Nina.like(getText() + Quanta.ZERO_OR_ONE);
+		return Nina.like(regex + Quanta.ZERO_OR_ONE).getText();
 	}
 	
 	/**
 	 * @return Karakter türünün sıfır yada daha fazla olması gerektiğini bildiren düzenli ifade
 	 */
 	@NotNull
-	public RegexBuilder zeroOrMore() {
+	public String zeroOrMore() {
 		
-		return Nina.like(getText() + Quanta.ZERO_OR_MORE);
+		return Nina.like(regex + Quanta.ZERO_OR_MORE).getText();
 	}
 	
 	@NotNull
-	public RegexBuilder times(int min, int max) {
+	public String times(int min, int max) {
 		
-		return Nina.like(getText()).times(min, max);
+		return Nina.like(regex).times(min, max).getText();
 	}
 	
 	/**
@@ -140,7 +143,7 @@ public enum RegexChar implements Text {
 	 */
 	public boolean any(@NotNull String text) {
 		
-		return Nina.like(getText()).existIn(text);
+		return Nina.like(regex).existIn(text);
 	}
 	
 	/**
@@ -158,7 +161,7 @@ public enum RegexChar implements Text {
 	 */
 	public boolean all(@NotNull String text) {
 		
-		return oneOrMore().test(text);
+		return Nina.like(oneOrMore()).test(text);
 	}
 	
 	/**
@@ -173,7 +176,7 @@ public enum RegexChar implements Text {
 	 */
 	public String removeFrom(@NotNull String text) {
 		
-		return Nina.like(getText()).removeFrom(text);
+		return Nina.like(regex).removeFrom(text);
 	}
 	
 	/**
@@ -190,7 +193,7 @@ public enum RegexChar implements Text {
 	 */
 	public String replaceFrom(@NotNull String text, String replacement) {
 		
-		return Nina.like(getText()).replaceFrom(text, replacement);
+		return Nina.like(regex).replaceFrom(text, replacement);
 	}
 	
 	/**
@@ -209,7 +212,7 @@ public enum RegexChar implements Text {
 	 */
 	public String retainFrom(@NotNull String text) {
 		
-		return Nina.like(getText()).toRange().negate().toRegex().removeFrom(text);
+		return Nina.like(regex).toRange().negate().toRegex().removeFrom(text);
 	}
 	
 }

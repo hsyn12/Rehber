@@ -286,7 +286,7 @@ public interface CharacterSet {
 			case '\n':
 			case '\t':
 			case '\r':
-			case '\f': return Character.SPACE;//- hepsi için sadece bir boşluk
+			case '\f': return " ";//- hepsi için sadece bir boşluk
 
 			//- Alfabetik karakterler
 
@@ -402,7 +402,6 @@ public interface CharacterSet {
 		//@off
 		switch (characterSet) {
 			
-			case        Character.SPACE: 
 			case             WHITESPACE: return KEY_SPACE;
 			case           VOWELS_THICK: return KEY_VOWEL_THICK;
 			case     VOWELS_THICK_UPPER: return KEY_VOWEL_THICK_UPPER;

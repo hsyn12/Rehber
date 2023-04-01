@@ -269,6 +269,170 @@ public interface Nina {
 	String WORD   = "^\\p{L}+$";
 	
 	/**
+	 * Bir harf karakteri.
+	 *
+	 * @return New {@link RegexBuilder}
+	 */
+	static @NotNull RegexBuilder letter() {
+		
+		return like().letter();
+	}
+	
+	/**
+	 * <em>Bir yada daha fazla</em> harf karakteri.
+	 *
+	 * @return New {@link RegexBuilder}
+	 */
+	static @NotNull RegexBuilder letters() {
+		
+		return like().letters();
+	}
+	
+	/**
+	 * Harf olmayan bir karakter.
+	 *
+	 * @return New {@link RegexBuilder}
+	 */
+	static @NotNull RegexBuilder nonLetter() {
+		
+		return like().nonLetter();
+	}
+	
+	/**
+	 * <em>Bir yada daha fazla</em> harf olmayan karakter.
+	 *
+	 * @return New {@link RegexBuilder}
+	 */
+	static @NotNull RegexBuilder nonLetters() {
+		
+		return like().nonLetters();
+	}
+	
+	/**
+	 * Sayısal bir karakter.
+	 *
+	 * @return New {@link RegexBuilder}
+	 */
+	static @NotNull RegexBuilder digit() {
+		
+		return like().digit();
+	}
+	
+	/**
+	 * <em>Bir yada daha fazla</em> sayısal karakter.
+	 *
+	 * @return New {@link RegexBuilder}
+	 */
+	static @NotNull RegexBuilder digits() {
+		
+		return like().digit();
+	}
+	
+	/**
+	 * Sayısal olmayan bir karakter.
+	 *
+	 * @return New {@link RegexBuilder}
+	 */
+	static @NotNull RegexBuilder nonDigit() {
+		
+		return like().nonDigit();
+	}
+	
+	/**
+	 * Sayısal olmayan <em>bir yada daha fazla</em> karakter.
+	 *
+	 * @return New {@link RegexBuilder}
+	 */
+	static @NotNull RegexBuilder nonDigits() {
+		
+		return like().nonDigits();
+	}
+	
+	/**
+	 * Bir boşluk.
+	 *
+	 * @return New {@link RegexBuilder}
+	 * @see Character#WHITE_SPACE
+	 */
+	static @NotNull RegexBuilder whiteSpace() {
+		
+		return like().whiteSpace();
+	}
+	
+	/**
+	 * <em>Bir yada daha fazla</em> boşluk.
+	 *
+	 * @return New {@link RegexBuilder}
+	 * @see Character#WHITE_SPACE
+	 */
+	static @NotNull RegexBuilder whiteSpaces() {
+		
+		return like().whiteSpaces();
+	}
+	
+	/**
+	 * Boşluk olmayan bir karakter.
+	 *
+	 * @return New {@link RegexBuilder}
+	 * @see Character#NON_WHITE_SPACE
+	 */
+	static @NotNull RegexBuilder nonWhiteSpace() {
+		
+		return like().nonWhiteSpace();
+	}
+	
+	/**
+	 * Boşluk olmayan <em>bir yada daha fazla</em> karakter.
+	 *
+	 * @return New {@link RegexBuilder}
+	 * @see Character#NON_WHITE_SPACE
+	 */
+	static @NotNull RegexBuilder nonWhiteSpaces() {
+		
+		return like().nonWhiteSpaces();
+	}
+	
+	/**
+	 * Bir noktalama işareti.
+	 *
+	 * @return New {@link RegexBuilder}
+	 */
+	static @NotNull RegexBuilder punc() {
+		
+		return like().punc();
+	}
+	
+	/**
+	 * <em>Bir yada daha fazla</em> noktalama işareti.
+	 *
+	 * @return New {@link RegexBuilder}
+	 */
+	static @NotNull RegexBuilder puncs() {
+		
+		return like().puncs();
+	}
+	
+	/**
+	 * Noktalama işareti dışında bir karakter.
+	 *
+	 * @return New {@link RegexBuilder}
+	 */
+	static @NotNull RegexBuilder nonPunc() {
+		
+		return like().nonPunc();
+	}
+	
+	/**
+	 * <em>Bir yada daha fazla</em> noktalama harici karakter.
+	 *
+	 * @return New {@link RegexBuilder}
+	 */
+	static @NotNull RegexBuilder nonPuncs() {
+		
+		return like().nonPuncs();
+	}
+	
+	/**
 	 * Verilen ifade, düzenli ifadenin başlangıcını tarif eder.<br>
 	 * {@code ^(expression)}<br><br>
 	 *

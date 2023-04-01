@@ -54,4 +54,13 @@ public interface DigitExpression extends RegularExpression {
 		return with(Character.NON_DIGIT);
 	}
 	
+	/**
+	 * Sayısal olmayan <em>bir yada daha fazla</em> karakter.
+	 *
+	 * @return This {@link RegexBuilder}
+	 */
+	default @NotNull RegexBuilder nonDigits() {
+		
+		return nonDigit().oneOrMore();
+	}
 }

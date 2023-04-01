@@ -21,6 +21,16 @@ public interface PuncExpression extends RegularExpression {
 	}
 	
 	/**
+	 * Noktalama işareti dışında bir karakter.
+	 *
+	 * @return This {@link RegexBuilder}
+	 */
+	default @NotNull RegexBuilder nonPunc() {
+		
+		return with(Character.NON_PUNC);
+	}
+	
+	/**
 	 * <em>Bir yada daha fazla</em> noktalama işareti.
 	 *
 	 * @return This {@link RegexBuilder}
@@ -28,6 +38,16 @@ public interface PuncExpression extends RegularExpression {
 	default @NotNull RegexBuilder puncs() {
 		
 		return punc().oneOrMore();
+	}
+	
+	/**
+	 * <em>Bir yada daha fazla</em> noktalama harici karakter.
+	 *
+	 * @return This {@link RegexBuilder}
+	 */
+	default @NotNull RegexBuilder nonPuncs() {
+		
+		return nonPunc().oneOrMore();
 	}
 	
 	/**
