@@ -17,15 +17,12 @@ public interface Range extends Text {
 	/**
 	 * Charactes in the range a-z or A-Z
 	 */
-	String ALPHA               = "[" + Character.LETTER + "]";
+	String LETTER              = "[" + Character.LETTER + "]";
 	/**
 	 * Charactes in the range a-z or A-Z or 0-9
 	 */
-	String ALPHA_NUMERIC       = "[" + Character.LETTER + Character.DIGIT + "]";
-	/**
-	 * Character in the range A-Z
-	 */
-	String ALPHA_UPPER         = "[" + Character.LETTER_UPPER + "]";
+	String DIGIT               = "[" + Character.DIGIT + "]";
+	String WORD                = "[" + Character.LETTER + Character.DIGIT + "_]";
 	
 	
 	/**

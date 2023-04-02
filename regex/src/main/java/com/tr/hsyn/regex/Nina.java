@@ -255,7 +255,7 @@ import java.util.regex.Pattern;
  * <p>
  *    Yinede şunu itiraf etmeliyimki, düzenli ifadeleri anlamaya başladıktan sonra vazgeçemiyorsun.
  *
- * @author hsyn 14 Haziran 2022 Salı 11:18
+ * @author hsyn 14 Haziran 2022 Salı 11:18 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
  */
 public interface Nina {
 	
@@ -773,7 +773,7 @@ public interface Nina {
 		
 		var str = "123go567come789looküğwpeor3948934711&/%+?&^%)?=^+?";
 		
-		pl(Edit.retainNumerics(str));
+		pl(Edit.retainDigits(str));
 	}
 	
 	static void test14() {
@@ -1051,6 +1051,19 @@ public interface Nina {
 	interface Edit {
 		
 		/**
+		 * Yazının içinden, verilen karakter türüne ait karakterleri siler.
+		 *
+		 * @param sequence  Yazı
+		 * @param regexChar Karakter türü
+		 * @return Yeni bir string
+		 */
+		@NotNull
+		static @Unmodifiable CharSequence remove(@NotNull String sequence, @NotNull RegexChar regexChar) {
+			
+			return regexChar.removeFrom(sequence);
+		}
+		
+		/**
 		 * Remove all characters that match the given regular expression.
 		 *
 		 * @param sequence the string to remove characters from
@@ -1058,7 +1071,7 @@ public interface Nina {
 		 * @return New string with all matching characters removed
 		 */
 		@NotNull
-		static CharSequence remove(String sequence, String regex) {
+		static @Unmodifiable CharSequence remove(@NotNull String sequence, @NotNull String regex) {
 			
 			return replace(sequence, "", regex, 0);
 		}
@@ -1129,7 +1142,7 @@ public interface Nina {
 		 * @return New string without digit characters
 		 */
 		@NotNull
-		static String removeNumerics(String str) {
+		static String removeDigits(String str) {
 			
 			return replace(str, "", Character.DIGIT);
 		}
@@ -1147,7 +1160,7 @@ public interface Nina {
 		 * @return An object consisting only of numbers
 		 */
 		@NotNull
-		static String retainNumerics(String str) {
+		static String retainDigits(String str) {
 			
 			if (str != null) return str.replaceAll(Character.NON_DIGIT, "");
 			
@@ -1155,23 +1168,11 @@ public interface Nina {
 		}
 		
 		@NotNull
-		static String retainLeters(String str) {
+		static String retainLetters(String str) {
 			
 			if (str != null) return str.replaceAll(Character.NON_LETTER, "");
 			
 			return "";
-		}
-		
-		/**
-		 * Removes all alpha characters from the string.
-		 *
-		 * @param str the string to remove alpha characters from
-		 * @return New string without alpha characters
-		 */
-		@NotNull
-		static String removeAlpha(String str) {
-			
-			return replace(str, "", Range.ALPHA);
 		}
 		
 		/**
