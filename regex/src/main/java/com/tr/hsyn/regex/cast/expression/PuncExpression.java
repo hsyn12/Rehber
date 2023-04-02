@@ -8,6 +8,9 @@ import com.tr.hsyn.regex.cast.RegexBuilder;
 import org.jetbrains.annotations.NotNull;
 
 
+/**
+ * Noktalama işareti için düzenli ifadeler.<br>
+ */
 public interface PuncExpression extends RegularExpression {
 	
 	/**

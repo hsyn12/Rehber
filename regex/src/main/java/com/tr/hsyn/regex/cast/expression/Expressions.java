@@ -11,7 +11,10 @@ public interface Expressions extends
 		GroupExpression,
 		RangeExpression,
 		LogicalExpression,
-		AnchorExpression {
+		AnchorExpression,
+		AssertExpression,
+		CaseExpression,
+		ReferenceExpression {
 	
 	
 }

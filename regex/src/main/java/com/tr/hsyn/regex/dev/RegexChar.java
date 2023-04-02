@@ -3,7 +3,6 @@ package com.tr.hsyn.regex.dev;
 
 import com.tr.hsyn.regex.Nina;
 import com.tr.hsyn.regex.cast.Character;
-import com.tr.hsyn.regex.cast.Quanta;
 import com.tr.hsyn.regex.cast.Text;
 
 import org.jetbrains.annotations.NotNull;
@@ -25,10 +24,8 @@ import org.jetbrains.annotations.NotNull;
  * Bu sınıf bu 4 karakter türünü (ve zıtlarını) bildirir.
  * Karakter türleri, düzenli ifade karşılıkları ile tutulur, ki
  * bu sınıfın {@code RegexChar} olduğunu hatırlatırım,
- * {@link Text} arayüzünü uygular ve {@link Text#getText()} metodu karakterin düzenli ifade karşılığını döndürür.
- * Sınıfın birkaç yardımcı metodu da bulunur basit işler için.
- * Mesela {@link #oneOrMore()} metodu, çağrıldığı karakter türü için <em>bir yada daha fazla tekrar</em>
- * etme ifadesini döndürür.<br><br>
+ * {@link Text} arayüzünü uygular ve {@link Text#getText()} metodu türün düzenli ifade karşılığını döndürür.
+ * Tanımlanan türler üzerinde temel işlemler gerçekleştirecek metotlar da tanımlıdır.
  */
 public enum RegexChar implements Text {
 	
@@ -41,7 +38,7 @@ public enum RegexChar implements Text {
 	/**
 	 * Harf olmayan.
 	 *
-	 * @see com.tr.hsyn.regex.cast.Character#LETTER
+	 * @see com.tr.hsyn.regex.cast.Character#NON_LETTER
 	 */
 	NON_LETTER(Character.NON_LETTER),
 	/**
@@ -53,7 +50,7 @@ public enum RegexChar implements Text {
 	/**
 	 * Rakam olmayan.
 	 *
-	 * @see com.tr.hsyn.regex.cast.Character#DIGIT
+	 * @see com.tr.hsyn.regex.cast.Character#NON_DIGIT
 	 */
 	NON_DIGIT(Character.NON_DIGIT),
 	/**
@@ -65,7 +62,7 @@ public enum RegexChar implements Text {
 	/**
 	 * Boşluk olmayan.
 	 *
-	 * @see com.tr.hsyn.regex.cast.Character#WHITE_SPACE
+	 * @see com.tr.hsyn.regex.cast.Character#NON_WHITE_SPACE
 	 */
 	NON_WHITE_SPACE(Character.NON_WHITE_SPACE),
 	/**
@@ -77,7 +74,7 @@ public enum RegexChar implements Text {
 	/**
 	 * Noktalama olmayan.
 	 *
-	 * @see com.tr.hsyn.regex.cast.Character#PUNC
+	 * @see com.tr.hsyn.regex.cast.Character#NON_PUNC
 	 */
 	NON_PUNC(Character.NON_PUNC);
 	
@@ -95,39 +92,6 @@ public enum RegexChar implements Text {
 	public @NotNull String getText() {
 		
 		return regex;
-	}
-	
-	/**
-	 * @return Karakter türünün bir yada daha fazla olması gerektiğini bildiren düzenli ifade
-	 */
-	@NotNull
-	public String oneOrMore() {
-		
-		return Nina.like(regex + Quanta.ONE_OR_MORE).getText();
-	}
-	
-	/**
-	 * @return Karakter türünün sıfır yada bir tane olması gerektiğini bildiren düzenli ifade
-	 */
-	@NotNull
-	public String zeroOrOne() {
-		
-		return Nina.like(regex + Quanta.ZERO_OR_ONE).getText();
-	}
-	
-	/**
-	 * @return Karakter türünün sıfır yada daha fazla olması gerektiğini bildiren düzenli ifade
-	 */
-	@NotNull
-	public String zeroOrMore() {
-		
-		return Nina.like(regex + Quanta.ZERO_OR_MORE).getText();
-	}
-	
-	@NotNull
-	public String times(int min, int max) {
-		
-		return Nina.like(regex).times(min, max).getText();
 	}
 	
 	/**
@@ -161,7 +125,7 @@ public enum RegexChar implements Text {
 	 */
 	public boolean all(@NotNull String text) {
 		
-		return Nina.like(oneOrMore()).test(text);
+		return Nina.like(regex).oneOrMore().test(text);
 	}
 	
 	/**
