@@ -1,7 +1,6 @@
 package com.tr.hsyn.regex;
 
 
-import com.tr.hsyn.regex.act.Ranger;
 import com.tr.hsyn.regex.act.Teddy;
 import com.tr.hsyn.regex.cast.Character;
 import com.tr.hsyn.regex.cast.CharacterSet;
@@ -571,7 +570,7 @@ public interface Nina {
 	@NotNull
 	static Range range(@NotNull String expression) {
 		
-		return new Ranger(expression);
+		return Range.of(expression);
 	}
 	
 	/**
@@ -594,7 +593,7 @@ public interface Nina {
 	 */
 	static <T extends Text> @NotNull Range range(@NotNull T expression) {
 		
-		return new Ranger(expression);
+		return Range.of(expression);
 	}
 	
 	/**
@@ -602,7 +601,7 @@ public interface Nina {
 	 */
 	static @NotNull Range rangeNumbers() {
 		
-		return new Ranger("0-9");
+		return Range.digits();
 	}
 	
 	/**
@@ -610,7 +609,7 @@ public interface Nina {
 	 */
 	static @NotNull Range rangeLetters() {
 		
-		return new Ranger("[a-zA-Z");
+		return Range.letters();
 	}
 	
 	/**

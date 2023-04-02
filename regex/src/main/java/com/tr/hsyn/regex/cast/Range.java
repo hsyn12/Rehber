@@ -1,6 +1,9 @@
 package com.tr.hsyn.regex.cast;
 
 
+import com.tr.hsyn.regex.act.Ranger;
+import com.tr.hsyn.regex.dev.RegexChar;
+
 import org.jetbrains.annotations.NotNull;
 
 
@@ -11,19 +14,30 @@ public interface Range extends Text {
 	
 	//! [a-zA-Z0-9_] are called word characters. All other characters are considered non-word characters
 	
-	String TURKISH_CHARS       = "[" + CharacterSet.TURKISH_CHARS + "]";
-	String TURKISH_CHARS_LOWER = "[" + CharacterSet.TURKISH_CHARS_LOWER + "]";
-	String TURKISH_CHARS_UPPER = "[" + CharacterSet.TURKISH_CHARS_UPPER + "]";
-	/**
-	 * Charactes in the range a-z or A-Z
-	 */
-	String LETTER              = "[" + Character.LETTER + "]";
-	/**
-	 * Charactes in the range a-z or A-Z or 0-9
-	 */
-	String DIGIT               = "[" + Character.DIGIT + "]";
-	String WORD                = "[" + Character.LETTER + Character.DIGIT + "_]";
+	static @NotNull Range letters() {
+		
+		return new Ranger(Character.LETTER);
+	}
 	
+	static @NotNull Range digits() {
+		
+		return new Ranger(Character.DIGIT);
+	}
+	
+	static @NotNull Range of(@NotNull String expression) {
+		
+		return new Ranger(expression);
+	}
+	
+	static @NotNull Range of(@NotNull RegexChar regexChar) {
+		
+		return new Ranger(regexChar);
+	}
+	
+	static <T extends Text> @NotNull Range of(@NotNull T expression) {
+		
+		return new Ranger(expression);
+	}
 	
 	/**
 	 * Negates the range.<br><br>
@@ -100,7 +114,6 @@ public interface Range extends Text {
 	 * @return the range which is intersected with the given sequence
 	 */
 	@NotNull Range intersect(@NotNull String sequence);
-	
 	
 	@NotNull Regex toRegex();
 	

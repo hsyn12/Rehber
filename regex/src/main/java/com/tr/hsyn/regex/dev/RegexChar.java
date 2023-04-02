@@ -94,6 +94,12 @@ public enum RegexChar implements Text {
 		return regex;
 	}
 	
+	@Override
+	public String toString() {
+		
+		return regex;
+	}
+	
 	/**
 	 * Bir yazının herhangi bir yerinde karakter türüne ait bir karakter geçip geçmediğini test eder.<br><br>
 	 *
