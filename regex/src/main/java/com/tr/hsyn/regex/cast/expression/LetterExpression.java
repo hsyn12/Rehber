@@ -5,6 +5,7 @@ import com.tr.hsyn.regex.cast.Character;
 import com.tr.hsyn.regex.cast.Quanta;
 import com.tr.hsyn.regex.cast.RegexBuilder;
 
+import org.intellij.lang.annotations.Pattern;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -17,10 +18,21 @@ public interface LetterExpression extends RegularExpression {
 	 * Bir harf karakteri.
 	 *
 	 * @return This {@link RegexBuilder}
+	 * @see Character#LETTER
 	 */
 	default @NotNull RegexBuilder letter() {
 		
 		return with(Character.LETTER);
+	}
+	
+	/**
+	 * Belirtilen harfi düzenli ifadeye ekler.
+	 *
+	 * @return This {@link RegexBuilder}
+	 */
+	default @NotNull RegexBuilder letter(@Pattern("\\p{L}") @NotNull String letter) {
+		
+		return with(letter);
 	}
 	
 	/**
@@ -31,6 +43,16 @@ public interface LetterExpression extends RegularExpression {
 	default @NotNull RegexBuilder letters() {
 		
 		return letter().oneOrMore();
+	}
+	
+	/**
+	 * Belirtilen harfleri düzenli ifadeye ekler.
+	 *
+	 * @return This {@link RegexBuilder}
+	 */
+	default @NotNull RegexBuilder letters(@Pattern(Character.LETTER + "+") @NotNull String letters) {
+		
+		return with(letters);
 	}
 	
 	/**

@@ -11,6 +11,11 @@ import java.util.regex.Pattern;
 
 public interface RegexMatcher extends Text {
 	
+	static @NotNull Matcher createMatcher(@NotNull String regex, @NotNull String text) {
+		
+		return Pattern.compile(regex).matcher(text);
+	}
+	
 	/**
 	 * Returns matcher by specified text
 	 *

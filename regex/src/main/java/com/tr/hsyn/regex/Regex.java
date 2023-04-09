@@ -10,6 +10,7 @@ import com.tr.hsyn.regex.cast.Modifier;
 import com.tr.hsyn.regex.cast.Quanta;
 import com.tr.hsyn.regex.cast.Range;
 import com.tr.hsyn.regex.cast.RegexBuilder;
+import com.tr.hsyn.regex.cast.RegexMatcher;
 import com.tr.hsyn.regex.cast.Text;
 import com.tr.hsyn.regex.cast.WordGenerator;
 import com.tr.hsyn.regex.dev.CoupleFinder;
@@ -17,6 +18,7 @@ import com.tr.hsyn.regex.dev.HMT;
 import com.tr.hsyn.regex.dev.Look;
 import com.tr.hsyn.regex.dev.RegexChar;
 
+import org.intellij.lang.annotations.Pattern;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
@@ -26,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 /**
@@ -260,11 +261,48 @@ public interface Regex {
 	/**
 	 * Regular expression for digits.
 	 */
-	String NUMBER = "^\\p{N}+$";
+	String NUMBER           = "^\\p{N}+$";
 	/**
 	 * Regular expression for alphabetics.
 	 */
-	String WORD   = "^\\p{L}+$";
+	String WORD             = "^\\p{L}+$";
+	/**
+	 * <em>Bir yada daha fazla</em> harf karakteri.
+	 */
+	String LETTERS          = Character.LETTER + "+";
+	/**
+	 * <em>Bir yada daha fazla</em> sayısal karakteri.
+	 */
+	String DIGITS           = Character.DIGIT + "+";
+	/**
+	 * <em>Bir yada daha fazla</em> boşluk karakteri.
+	 */
+	String WHITE_SPACES     = Character.WHITE_SPACE + "+";
+	/**
+	 * <em>Bir yada daha fazla</em> noktalama karakteri.
+	 */
+	String PUNCS            = Character.PUNC + "+";
+	/**
+	 * <em>Bir yada daha fazla</em> harf olmayan karakter.
+	 */
+	String NON_LETTERS      = Character.NON_LETTER + "+";
+	/**
+	 * <em>Bir yada daha fazla</em> sayısal olmayan karakter.
+	 */
+	String NON_DIGITS       = Character.NON_DIGIT + "+";
+	/**
+	 * <em>Bir yada daha fazla</em> boşluk olmayan karakter.
+	 */
+	String NON_WHITE_SPACES = Character.NON_WHITE_SPACE + "+";
+	/**
+	 * <em>Bir yada daha fazla</em> noktalama olmayan karakter.
+	 */
+	String NON_PUNCS        = Character.NON_PUNC + "+";
+	
+	/**
+	 * <em>Bir yada daha fazla</em> harf karakteri.
+	 */
+	String NON_LETTERS_AND_DIGITS = Character.NON_LETTER + Character.DIGIT + "+";
 	
 	/**
 	 * Bir harf karakteri.
@@ -282,9 +320,9 @@ public interface Regex {
 	 * @param letter Harf
 	 * @return New {@link RegexBuilder}
 	 */
-	static @NotNull RegexBuilder letter(@NotNull @org.intellij.lang.annotations.Pattern("[a-zA-Z]") String letter) {
+	static @NotNull RegexBuilder letter(@NotNull @Pattern(Character.LETTER) String letter) {
 		
-		return like().letter();
+		return like(letter);
 	}
 	
 	/**
@@ -295,6 +333,17 @@ public interface Regex {
 	static @NotNull RegexBuilder letters() {
 		
 		return like().letters();
+	}
+	
+	/**
+	 * <em>Bir yada daha fazla</em> harf karakteri belirtir.
+	 *
+	 * @param letters Harfler
+	 * @return New {@link RegexBuilder}
+	 */
+	static @NotNull RegexBuilder letters(@NotNull @org.intellij.lang.annotations.Pattern("[a-zA-Z]+") String letters) {
+		
+		return like(letters);
 	}
 	
 	/**
@@ -1240,7 +1289,7 @@ public interface Regex {
 				regex.any(2).group("rp", gr.any().oneOrMore()).any(2).toRegex();
 			}
 			
-			Matcher m = Pattern.compile(regex.getText()).matcher(source);
+			Matcher m = RegexMatcher.createMatcher(regex.getText(), source);
 			
 			if (m.find())
 				return new StringBuilder(source).replace(m.start("rp"), m.end("rp"), replacement.repeat(m.group("rp").length())).toString();
@@ -1248,6 +1297,7 @@ public interface Regex {
 			return source;
 		}
 	}
+	
 	
 	/**
 	 * Düzenli ifadelerle ilgili bazı deneysel metotlar tanımlar.
