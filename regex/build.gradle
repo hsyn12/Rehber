@@ -6,6 +6,7 @@ dependencies {
 
 	compileOnly "org.jetbrains:annotations:${rootProject.annotations}"
 	implementation project(path: ':xlog')
+	testImplementation 'junit:junit:4.13.2'
 }
 
 java {

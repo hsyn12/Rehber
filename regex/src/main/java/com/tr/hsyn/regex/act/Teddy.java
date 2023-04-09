@@ -2,7 +2,6 @@ package com.tr.hsyn.regex.act;
 
 
 import com.tr.hsyn.regex.cast.Range;
-import com.tr.hsyn.regex.cast.Regex;
 import com.tr.hsyn.regex.cast.RegexBuilder;
 import com.tr.hsyn.regex.cast.Text;
 
@@ -10,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 
 @SuppressWarnings("DefaultLocale")
-public class Teddy implements Regex {
+public class Teddy implements RegexBuilder {
 	
 	protected final StringBuilder text = new StringBuilder();
 	
@@ -29,19 +28,19 @@ public class Teddy implements Regex {
 	}
 	
 	@NotNull
-	public static Regex regex() {
+	public static RegexBuilder regex() {
 		
 		return new Teddy();
 	}
 	
 	@NotNull
-	public static Regex regex(@NotNull String text) {
+	public static RegexBuilder regex(@NotNull String text) {
 		
 		return new Teddy(text);
 	}
 	
 	@NotNull
-	public static <T extends Text> Regex regex(@NotNull T text) {
+	public static <T extends Text> RegexBuilder regex(@NotNull T text) {
 		
 		return new Teddy(text);
 	}
@@ -60,21 +59,21 @@ public class Teddy implements Regex {
 	
 	@Override
 	@NotNull
-	public Regex with(@NotNull String regex) {
+	public RegexBuilder with(@NotNull String regex) {
 		
 		text.append(regex);
 		return this;
 	}
 	
 	@Override
-	public @NotNull Regex with(int i) {
+	public @NotNull RegexBuilder with(int i) {
 		
 		text.append(i);
 		return this;
 	}
 	
 	@Override
-	public @NotNull Regex with(char c) {
+	public @NotNull RegexBuilder with(char c) {
 		
 		text.append(c);
 		return this;
@@ -87,7 +86,7 @@ public class Teddy implements Regex {
 	}
 	
 	@Override
-	public @NotNull Regex toGroup() {
+	public @NotNull RegexBuilder toGroup() {
 		
 		return regex(String.format("(%s)", text));
 	}
@@ -105,48 +104,48 @@ public class Teddy implements Regex {
 	}
 	
 	@Override
-	public @NotNull Regex toGroup(@NotNull String groupName) {
+	public @NotNull RegexBuilder toGroup(@NotNull String groupName) {
 		
 		return regex(String.format("(?<%s>%s)", groupName, text));
 	}
 	
 	@Override
-	public @NotNull Regex toRegex() {
+	public @NotNull RegexBuilder toRegex() {
 		
 		return this;
 	}
 	
 	@Override
 	@NotNull
-	public <T extends Text> Regex with(@NotNull T text) {
+	public <T extends Text> RegexBuilder with(@NotNull T text) {
 		
 		this.text.append(text.getText());
 		return this;
 	}
 	
 	@Override
-	public @NotNull <T extends Text> Regex range(@NotNull T regularExpression) {
+	public @NotNull <T extends Text> RegexBuilder range(@NotNull T regularExpression) {
 		
 		text.append("[").append(regularExpression.getText()).append("]");
 		return this;
 	}
 	
 	@Override
-	public @NotNull Regex range(@NotNull String regularExpression) {
+	public @NotNull RegexBuilder range(@NotNull String regularExpression) {
 		
 		text.append("[").append(regularExpression).append("]");
 		return this;
 	}
 	
 	@Override
-	public @NotNull Regex rangeNumbers() {
+	public @NotNull RegexBuilder rangeNumbers() {
 		
 		text.append("[0-9]");
 		return this;
 	}
 	
 	@Override
-	public @NotNull Regex rangeLetters() {
+	public @NotNull RegexBuilder rangeLetters() {
 		
 		text.append("[a-zA-Z]");
 		return this;

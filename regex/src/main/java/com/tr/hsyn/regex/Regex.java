@@ -9,7 +9,6 @@ import com.tr.hsyn.regex.cast.Index;
 import com.tr.hsyn.regex.cast.Modifier;
 import com.tr.hsyn.regex.cast.Quanta;
 import com.tr.hsyn.regex.cast.Range;
-import com.tr.hsyn.regex.cast.Regex;
 import com.tr.hsyn.regex.cast.RegexBuilder;
 import com.tr.hsyn.regex.cast.Text;
 import com.tr.hsyn.regex.cast.WordGenerator;
@@ -184,7 +183,7 @@ import java.util.regex.Pattern;
  * <p>
  * <p>
  * <p>
- *    {@link Regex#test(String)} metodu, verilen string'in tamamının, oluşturulan düzenli ifadeye
+ *    {@link com.tr.hsyn.regex.cast.Regex#test(String)} metodu, verilen string'in tamamının, oluşturulan düzenli ifadeye
  *    uyup uymadığını test eder. Yani düzenli ifade ile modellediğimiz kelime her bir karakteri ile birlikte
  *    tam olarak tarif edildiği gibi bir bütün olarak test edilir. Bu bir uygunluk kontrolüdür.<br>
  *    Oluşturduğumuz modeli eğer daha büyük bir yazının içinde aramak istiyorsak,
@@ -202,8 +201,8 @@ import java.util.regex.Pattern;
  * <p>Bu düzenli ifade modeli, herhangi bir sayı (<strong>{@code \p{N}}</strong>) ve
  * herhangi bir harf (<strong>{@code \p{L}}</strong>).<br>
  * Yani bir sayı bir de harf olacak ve bitişik olacak (aynı sırada).<br>
- * {@link Regex#matchesOf(CharSequence)} metodu yazının içinde modelin eşleştiği parçaları döndürür.<br>
- * {@link Regex#findAll(CharSequence)} metodu ise eşleşmelerin yazı içindeki başlangıç ve bitiş index'lerini döndürür.<br><br>
+ * {@link com.tr.hsyn.regex.cast.Regex#matchesOf(CharSequence)} metodu yazının içinde modelin eşleştiği parçaları döndürür.<br>
+ * {@link com.tr.hsyn.regex.cast.Regex#findAll(CharSequence)} metodu ise eşleşmelerin yazı içindeki başlangıç ve bitiş index'lerini döndürür.<br><br>
  *
  * <p>
  *    Düzenli ifadeler, bir metin üzerinde değişiklik yapmak için de kullanılabilir.<br><br>
@@ -254,9 +253,9 @@ import java.util.regex.Pattern;
  * <p>
  *    Yinede şunu itiraf etmeliyimki, düzenli ifadeleri anlamaya başladıktan sonra vazgeçemiyorsun.
  *
- * @author hsyn 14 Haziran 2022 Salı 11:18 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
+ * @author hsyn 14 Haziran 2022 Salı 11:18 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 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
  */
-public interface Nina {
+public interface Regex {
 	
 	/**
 	 * Regular expression for digits.
@@ -441,7 +440,7 @@ public interface Nina {
 	@NotNull
 	static RegexBuilder startsWith(@NotNull String expression) {
 		
-		return Nina.like().anchorStart().group(expression);
+		return Regex.like().anchorStart().group(expression);
 	}
 	
 	/**
@@ -454,7 +453,7 @@ public interface Nina {
 	@NotNull
 	static RegexBuilder endsWith(@NotNull String expression) {
 		
-		return Nina.like().anchorEnd().group(expression);
+		return Regex.like().anchorEnd().group(expression);
 	}
 	
 	/**
@@ -541,10 +540,10 @@ public interface Nina {
 	/**
 	 * Yeni ve boş bir düzenli ifade nesnesi oluşturur.
 	 *
-	 * @return {@link Regex}
+	 * @return {@link com.tr.hsyn.regex.cast.Regex}
 	 */
 	@NotNull
-	static Regex regex() {
+	static RegexBuilder regex() {
 		
 		return Teddy.regex();
 	}
@@ -553,10 +552,10 @@ public interface Nina {
 	 * Yeni bir düzenli ifade nesnesi oluşturur.
 	 *
 	 * @param expression Düzenli ifade
-	 * @return Yeni bir {@link Regex} nesnesi
+	 * @return Yeni bir {@link com.tr.hsyn.regex.cast.Regex} nesnesi
 	 */
 	@NotNull
-	static Regex regex(@NotNull String expression) {
+	static RegexBuilder regex(@NotNull String expression) {
 		
 		return Teddy.regex(expression);
 	}
@@ -577,9 +576,9 @@ public interface Nina {
 	 * Yeni bir düzenli ifade nesnesi oluşturur.
 	 *
 	 * @param expression Düzenli ifade
-	 * @return Yeni bir {@link Regex} nesnesi
+	 * @return Yeni bir {@link com.tr.hsyn.regex.cast.Regex} nesnesi
 	 */
-	static <T extends Text> @NotNull Regex regex(@NotNull T expression) {
+	static <T extends Text> @NotNull RegexBuilder regex(@NotNull T expression) {
 		
 		return Teddy.regex(expression);
 	}
@@ -613,49 +612,49 @@ public interface Nina {
 	}
 	
 	/**
-	 * Verilen ifadeyi grup içine alarak yeni bir {@link Regex} nesnesi döndürür.
+	 * Verilen ifadeyi grup içine alarak yeni bir {@link com.tr.hsyn.regex.cast.Regex} nesnesi döndürür.
 	 *
 	 * @param expresion İfade
 	 * @param <T>       {@link Text} türünden bir tür
-	 * @return Yeni bir {@link Regex} nesnesi {@code (expresion)}
+	 * @return Yeni bir {@link com.tr.hsyn.regex.cast.Regex} nesnesi {@code (expresion)}
 	 */
-	static <T extends Text> @NotNull Regex group(@NotNull T expresion) {
+	static <T extends Text> @NotNull RegexBuilder group(@NotNull T expresion) {
 		
 		return regex().group(expresion.getText()).toRegex();
 	}
 	
 	/**
-	 * Verilen ifadeyi grup içine alarak yeni bir {@link Regex} nesnesi döndürür.
+	 * Verilen ifadeyi grup içine alarak yeni bir {@link com.tr.hsyn.regex.cast.Regex} nesnesi döndürür.
 	 *
 	 * @param expresion İfade
-	 * @return Yeni bir {@link Regex} nesnesi {@code (expresion)}
+	 * @return Yeni bir {@link com.tr.hsyn.regex.cast.Regex} nesnesi {@code (expresion)}
 	 */
-	static @NotNull Regex group(@NotNull String expresion) {
+	static @NotNull RegexBuilder group(@NotNull String expresion) {
 		
 		return regex().group(expresion).toRegex();
 	}
 	
 	/**
-	 * Verilen ifadeyi grup içine alarak yeni bir {@link Regex} nesnesi döndürür.
+	 * Verilen ifadeyi grup içine alarak yeni bir {@link com.tr.hsyn.regex.cast.Regex} nesnesi döndürür.
 	 *
 	 * @param groupName Grubun adı
 	 * @param expresion İfade
 	 * @param <T>       {@link Text} türünden bir tür
-	 * @return Yeni bir {@link Regex} nesnesi {@code (?<groupName>expresion)}
+	 * @return Yeni bir {@link com.tr.hsyn.regex.cast.Regex} nesnesi {@code (?<groupName>expresion)}
 	 */
-	static <T extends Text> @NotNull Regex group(@NotNull String groupName, @NotNull T expresion) {
+	static <T extends Text> @NotNull RegexBuilder group(@NotNull String groupName, @NotNull T expresion) {
 		
 		return regex().group(groupName, expresion.getText()).toRegex();
 	}
 	
 	/**
-	 * Verilen ifadeyi grup içine alarak yeni bir {@link Regex} nesnesi döndürür.
+	 * Verilen ifadeyi grup içine alarak yeni bir {@link com.tr.hsyn.regex.cast.Regex} nesnesi döndürür.
 	 *
 	 * @param groupName Grubun adı
 	 * @param expresion İfade
-	 * @return Yeni bir {@link Regex} nesnesi {@code (?<groupName>expresion)}
+	 * @return Yeni bir {@link com.tr.hsyn.regex.cast.Regex} nesnesi {@code (?<groupName>expresion)}
 	 */
-	static @NotNull Regex group(@NotNull String groupName, @NotNull String expresion) {
+	static @NotNull RegexBuilder group(@NotNull String groupName, @NotNull String expresion) {
 		
 		return regex().group(groupName, expresion).toRegex();
 	}
@@ -692,28 +691,45 @@ public interface Nina {
 	
 	static void main(String[] args) {
 		
-		test21();
+		test24();
+	}
+	
+	static void test(@org.intellij.lang.annotations.Pattern("[a-z]") String str) {}
+	
+	static void test24() {
+		
+		var str = "Seni bu köyde 5 kez 8 yerde aradım";
+		
+		var regex = Range.letters().with(Range.of(Character.WHITE_SPACE)).negate();
+		pl("Regex : %s", regex);
+		pl("Result : %s", Regex.Dev.getParts(str, regex.toRegex().findAll(str)));
+	}
+	
+	static void test23() {
+		
+		var str = "Seni bu bu köyde";
+		test("12 Nisan 1981 Çarşamba öğleden sonra 15:45 suları");
 	}
 	
 	static void test21() {
 		
 		var str     = "123456HelloTest";
-		var lazy    = Nina.like().digits().letters().lazy();
-		var notLazy = Nina.like().digits().letters();
+		var lazy    = Regex.like().digits().letters().lazy();
+		var notLazy = Regex.like().digits().letters();
 		
 		pl("Lazy Regex      : %s", lazy);
 		pl("Not Lazy Regex  : %s", notLazy);
-		pl("Lazy Result     : %s", Nina.Dev.getParts(str, lazy.findAll(str)));
-		pl("Not Lazy Result : %s", Nina.Dev.getParts(str, notLazy.findAll(str)));
+		pl("Lazy Result     : %s", Regex.Dev.getParts(str, lazy.findAll(str)));
+		pl("Not Lazy Result : %s", Regex.Dev.getParts(str, notLazy.findAll(str)));
 	}
 	
 	static void test22() {
 		
 		var str   = "12 Nisan 1981 Çarşamba öğleden sonra 15:45 suları";
-		var regex = Nina.like().digit(Quanta.ONE_OR_MORE).with(Look.ahead(":").negative());
+		var regex = Regex.like().digit(Quanta.ONE_OR_MORE).with(Look.ahead(":").negative());
 		
 		pl("Regex  : %s", regex);
-		pl("Result : %s", Nina.Dev.getParts(str, regex.findAll(str)));
+		pl("Result : %s", Regex.Dev.getParts(str, regex.findAll(str)));
 	}
 	
 	static void test20() {
@@ -725,9 +741,9 @@ public interface Nina {
 	static void test19() {
 		
 		var hmt = HMT.builder()
-				.head(Nina.like().boundary())
-				.middle(Nina.like().punc().whiteSpace().toRange().negate().toRegex().oneOrMore().lazy())
-				.tail(Nina.like().boundary())
+				.head(Regex.like().boundary())
+				.middle(Regex.like().punc().whiteSpace().toRange().negate().toRegex().oneOrMore().lazy())
+				.tail(Regex.like().boundary())
 				.build();
 		
 		var str    = "hello i am 42 years old. This is the 3point for me from 1981 in spring";
@@ -735,7 +751,7 @@ public interface Nina {
 		
 		pl("Regex : %s", hmt.getRegex());
 		pl("Index : %s", result);
-		pl("Result : %s", Nina.Dev.getParts(str, result));
+		pl("Result : %s", Regex.Dev.getParts(str, result));
 		
 	}
 	
@@ -744,7 +760,7 @@ public interface Nina {
 		
 		CoupleFinder _parser = new CoupleFinder(":", 3, 4);
 		var          str1    = "01:0dfd45546d54f121124:49df55:9dfiü";
-		CoupleFinder parser  = new CoupleFinder(Nina.like(":"), Nina.like("[0-9]").times(1, 2), Nina.like("[0-9]").times(1, 2));
+		CoupleFinder parser  = new CoupleFinder(Regex.like(":"), Regex.like("[0-9]").times(1, 2), Regex.like("[0-9]").times(1, 2));
 		
 		pl("Regex  : %s", parser.pattern.pattern());
 		pl("Result : %s", parser.parseAll(str1));
@@ -755,7 +771,7 @@ public interface Nina {
 	static void test17() {
 		
 		var str   = "123456789";
-		var regex = Nina.regex(Nina.rangeNumbers().except(Nina.range("3-5")));
+		var regex = Regex.regex(Regex.rangeNumbers().except(Regex.range("3-5")));
 		pl("Regex  : %s", regex);
 		pl("Result : %s", regex.matchesOf(str));
 	}
@@ -763,7 +779,7 @@ public interface Nina {
 	static void test16() {
 		
 		var str   = "123456789";
-		var regex = Nina.regex(Nina.range("345").intersect("0-9"));
+		var regex = Regex.regex(Regex.range("345").intersect("0-9"));
 		pl("Regex  : %s", regex);
 		pl("Result : %s", regex.matchesOf(str));
 	}
@@ -956,7 +972,7 @@ public interface Nina {
 	
 	
 	/**
-	 * Kendi içinde {@link Regex} sınıfını kullanarak bazı test metotları tanımlar.<br><br>
+	 * Kendi içinde {@link com.tr.hsyn.regex.cast.Regex} sınıfını kullanarak bazı test metotları tanımlar.<br><br>
 	 *
 	 * <pre>
 	 *    isNumber("542 5f7 842"); //false
@@ -1032,7 +1048,7 @@ public interface Nina {
 			
 			if (text == null || what == null) return false;
 			
-			Regex regex = regex();
+			RegexBuilder regex = regex();
 			
 			if (ignoreCase) regex.with(Modifier.modify().ignoreCase());
 			
@@ -1045,7 +1061,7 @@ public interface Nina {
 	}
 	
 	/**
-	 * Kendi içinde {@link Regex} sınıfını kullanarak bazı değiştirme metotları tanımlar.<br>
+	 * Kendi içinde {@link com.tr.hsyn.regex.cast.Regex} sınıfını kullanarak bazı değiştirme metotları tanımlar.<br>
 	 */
 	interface Edit {
 		
@@ -1200,8 +1216,8 @@ public interface Nina {
 			
 			if (replacement == null || source == null || source.isEmpty()) return "";
 			
-			Regex regex = regex();
-			Regex gr    = regex();
+			RegexBuilder regex = regex();
+			RegexBuilder gr    = regex();
 			
 			
 			if (source.length() <= 4) {
@@ -1226,6 +1242,42 @@ public interface Nina {
 	 * Düzenli ifadelerle ilgili bazı deneysel metotlar tanımlar.
 	 */
 	interface Dev {
+		
+		static @NotNull String afterLast(@NotNull String text, @NotNull String after) {
+			
+			var index = text.lastIndexOf(after);
+			
+			if (index != -1) return text.substring(index + 1);
+			
+			return "";
+		}
+		
+		static @NotNull String afterFirst(@NotNull String text, @NotNull String after) {
+			
+			var index = text.indexOf(after);
+			
+			if (index != -1) return text.substring(index + 1);
+			
+			return "";
+		}
+		
+		static @NotNull String beforeLast(@NotNull String text, @NotNull String after) {
+			
+			var index = text.lastIndexOf(after);
+			
+			if (index != -1) return text.substring(0, index);
+			
+			return "";
+		}
+		
+		static @NotNull String beforeFirst(@NotNull String text, @NotNull String after) {
+			
+			var index = text.indexOf(after);
+			
+			if (index != -1) return text.substring(0, index);
+			
+			return "";
+		}
 		
 		/**
 		 * Bir string içinde belirli index'lerdeki parçaları döndürür.
@@ -1252,7 +1304,7 @@ public interface Nina {
 		 * @param str Yazı
 		 * @return the regular expression
 		 */
-		static @NotNull Regex toRegex(String str) {
+		static @NotNull RegexBuilder toRegex(String str) {
 			
 			return toRegex(str, false);
 		}
@@ -1265,9 +1317,9 @@ public interface Nina {
 		 *                         Eğer {@code false} ise tam adet yerine birden fazla anlamına gelen {@code +} işareti kullanılarak düzenli ifade oluşturulur.
 		 * @return the regular expression
 		 */
-		static @NotNull Regex toRegex(String str, boolean exactQuantifiers) {
+		static @NotNull RegexBuilder toRegex(String str, boolean exactQuantifiers) {
 			
-			Regex regex = regex();
+			RegexBuilder regex = regex();
 			
 			if (str == null) return regex;
 			
@@ -1389,7 +1441,7 @@ public interface Nina {
 				
 				int code = CharacterSet.getCharacterCode(clazz);
 				
-				Nina.pl("Class : %66s - %-2c - %-2d", clazz, c, code);
+				Regex.pl("Class : %66s - %-2c - %-2d", clazz, c, code);
 				
 				codes.add(code);
 			}

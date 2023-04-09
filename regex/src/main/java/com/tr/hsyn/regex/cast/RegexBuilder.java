@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface RegexBuilder extends Expressions {
 	
-	@NotNull Regex toRegex();
+	@NotNull RegexBuilder toRegex();
 	
 	/**
 	 * Adds {@link Character#ANY}

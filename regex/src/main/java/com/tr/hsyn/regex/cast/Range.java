@@ -14,36 +14,122 @@ public interface Range extends Text {
 	
 	//! [a-zA-Z0-9_] are called word characters. All other characters are considered non-word characters
 	
+	/**
+	 * Returns a range for letters.<br><br>
+	 *
+	 * @return New <code>Range</code> with letters
+	 * @see Character#LETTER
+	 */
 	static @NotNull Range letters() {
 		
 		return new Ranger(Character.LETTER);
 	}
 	
+	/**
+	 * Returns a range for digits.<br><br>
+	 *
+	 * @return New <code>Range</code> with digits
+	 * @see Character#DIGIT
+	 */
 	static @NotNull Range digits() {
 		
 		return new Ranger(Character.DIGIT);
 	}
 	
+	/**
+	 * Returns a range for the given expression.<br><br>
+	 *
+	 * @param expression The expression to be converted
+	 * @return New <code>Range</code> with the given expression
+	 */
 	static @NotNull Range of(@NotNull String expression) {
 		
 		return new Ranger(expression);
 	}
 	
+	/**
+	 * Verilen ifadeyi olumsuz bir aralık olarak döndürür.<br><br>
+	 *
+	 * <pre>var range = Range.noneOf("123"); // [^123]</pre>
+	 *
+	 * @param expression İfade
+	 * @return Yeni bir <code>Range</code> nesnesi
+	 */
+	static @NotNull Range noneOf(@NotNull String expression) {
+		
+		return new Ranger(expression, true);
+	}
+	
+	/**
+	 * Returns a range for the given {@link RegexChar}.<br><br>
+	 *
+	 * @param regexChar The <code>RegexChar</code> for the range
+	 * @return New <code>Range</code> with the given expression
+	 */
 	static @NotNull Range of(@NotNull RegexChar regexChar) {
 		
 		return new Ranger(regexChar);
 	}
 	
+	/**
+	 * Returns a negated range for the given {@link RegexChar}.<br><br>
+	 *
+	 * <pre>var range = Range.noneOf(RegexChar.DIGIT);// [^0-9]</pre>
+	 *
+	 * @param regexChar The <code>RegexChar</code> for the range
+	 * @return New <code>Range</code> with the given expression
+	 */
+	static @NotNull Range noneOf(@NotNull RegexChar regexChar) {
+		
+		return new Ranger(regexChar, true);
+	}
+	
+	/**
+	 * Returns a range for the given {@link Text}.<br><br>
+	 *
+	 * @param expression The {@link Text} for the range
+	 * @param <T>        The type of the expression
+	 * @return New <code>Range</code> with the given expression
+	 */
 	static <T extends Text> @NotNull Range of(@NotNull T expression) {
 		
 		return new Ranger(expression);
 	}
 	
 	/**
+	 * Returns a negated range for the given {@link Text}.<br><br>
+	 *
+	 * @param expression The {@link Text} for the range
+	 * @param <T>        The type of the expression
+	 * @return New <code>Range</code> with the given expression
+	 */
+	static <T extends Text> @NotNull Range noneOf(@NotNull T expression) {
+		
+		return new Ranger(expression, true);
+	}
+	
+	/**
+	 * Returns a range for the given range.<br><br>
+	 *
+	 * @param range The range for the range
+	 * @return New <code>Range</code> with the given range
+	 */
+	@NotNull Range with(@NotNull Range range);
+	
+	/**
+	 * Returns the non brackets range as a string.<br><br>
+	 *
+	 * <pre>var range = Range.of("123456789").getRange(); // "123456789"</pre>
+	 *
+	 * @return New <code>String</code> with the range
+	 */
+	@NotNull String getRange();
+	
+	/**
 	 * Negates the range.<br><br>
 	 *
 	 * <pre>
-	 * var regex = Ranger.rangeOfNumbers();
+	 * var regex = {@link Range#digits()};
 	 * pl("Regex : %s", regex); // Regex : [0-9]
 	 * pl("Regex : %s", regex.negate()); // Regex : [^0-9]</pre><br>
 	 *
@@ -57,7 +143,7 @@ public interface Range extends Text {
 	 *
 	 * <pre>
 	 * var str   = "123456789";
-	 * var regex = Nina.regex(Nina.rangeOfNumbers().except(Nina.rangeOf("3-5")));
+	 * var regex = Nina.regex(Nina.rangeNumbers().except(Nina.range("3-5")));
 	 * pl("Regex  : %s", regex); // Regex  : [[0-9]&&[^3-5]]
 	 * pl("Result : %s", regex.matchesOf(str)); // Result : [1, 2, 6, 7, 8, 9]</pre><br>
 	 *
@@ -72,7 +158,7 @@ public interface Range extends Text {
 	 *
 	 * <pre>
 	 * var str   = "123456789";
-	 * var regex = Nina.regex(Nina.rangeOfNumbers().except("345"));
+	 * var regex = Nina.regex(Nina.rangeNumbers().except("345"));
 	 * pl("Regex  : %s", regex); // Regex  : [[0-9]&&[^345]]
 	 * pl("Result : %s", regex.matchesOf(str)); // Result : [1, 2, 6, 7, 8, 9]</pre><br>
 	 *
@@ -87,11 +173,11 @@ public interface Range extends Text {
 	 *
 	 * <pre>
 	 * var str   = "123456789";
-	 * var regex = Nina.regex(Nina.rangeOf("345").intersect(Nina.rangeOfNumbers()));
+	 * var regex = Nina.regex(Nina.range("345").intersect(Nina.rangeNumbers()));
 	 * pl("Regex  : %s", regex); // Regex  : [[345]&&[0-9]]
 	 * pl("Result : %s", regex.matchesOf(str)); // Result : [3, 4, 5]
-	 * //-----------------------------------------------------------------
-	 * regex = Nina.regex(Nina.rangeOf("345").<strong><u>negate</u></strong>().intersect(Nina.rangeOfNumbers()));
+	 * // -----------------------------------------------------------------
+	 * regex = Nina.regex(Nina.range("345").<strong><u>negate</u></strong>().intersect(Nina.rangeNumbers()));
 	 * pl("Regex  : %s", regex); // Regex  : [[^345]&&[0-9]]
 	 * pl("Result : %s", regex.matchesOf(str)); // Result : [1, 2, 6, 7, 8, 9]</pre><br>
 	 *
@@ -106,7 +192,7 @@ public interface Range extends Text {
 	 *
 	 * <pre>
 	 * var str   = "123456789";
-	 * var regex = Nina.regex(Nina.rangeOf("345").intersect("0-9")));
+	 * var regex = Nina.regex(Nina.range("345").intersect("0-9")));
 	 * pl("Regex  : %s", regex); // Regex  : [[345]&&[0-9]]
 	 * pl("Result : %s", regex.matchesOf(str)); // Result : [3, 4, 5]</pre><br>
 	 *
@@ -115,6 +201,11 @@ public interface Range extends Text {
 	 */
 	@NotNull Range intersect(@NotNull String sequence);
 	
-	@NotNull Regex toRegex();
+	/**
+	 * Returns a regex for this range.<br>
+	 *
+	 * @return The regex for this range
+	 */
+	@NotNull RegexBuilder toRegex();
 	
 }

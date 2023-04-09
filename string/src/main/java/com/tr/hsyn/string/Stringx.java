@@ -4,7 +4,7 @@ package com.tr.hsyn.string;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
-import com.tr.hsyn.regex.Nina;
+import com.tr.hsyn.regex.Regex;
 import com.tr.hsyn.regex.cast.Modifier;
 
 import org.jetbrains.annotations.NotNull;
@@ -220,13 +220,13 @@ public final class Stringx {
 	 */
 	public static boolean isMatch(String word, String searchText, boolean ignoreCase) {
 		
-		if (Nina.Test.isNoboe(word) || Nina.Test.isNoboe(searchText)) return false;
+		if (Regex.Test.isNoboe(word) || Regex.Test.isNoboe(searchText)) return false;
 		
 		if (word.length() < searchText.length()) return false;
 		
-		searchText = Nina.Edit.removeWhiteSpaces(searchText);
+		searchText = Regex.Edit.removeWhiteSpaces(searchText);
 		
-		var reg = Nina.regex().whiteSpace().zeroOrMore();
+		var reg = Regex.regex().whiteSpace().zeroOrMore();
 		
 		if (ignoreCase) reg = reg.with(Modifier.modify().ignoreCase());
 		
@@ -420,16 +420,16 @@ public final class Stringx {
 	 */
 	public static Integer @NotNull [] indexOfMatches(String word, String searchText, boolean ignoreCase) {
 		
-		if (Nina.Test.isNoboe(word) || Nina.Test.isNoboe(searchText)) return new Integer[0];
+		if (Regex.Test.isNoboe(word) || Regex.Test.isNoboe(searchText)) return new Integer[0];
 		
-		searchText = Nina.Edit.removeWhiteSpaces(searchText);
+		searchText = Regex.Edit.removeWhiteSpaces(searchText);
 		
-		var reg = Nina.whiteSpace().zeroOrMore();
+		var reg = Regex.whiteSpace().zeroOrMore();
 		
 		if (ignoreCase) reg = reg.ignoreCase();
 		
 		for (int i = 0; i < searchText.length(); i++)
-		     reg = reg.with(Nina.whiteSpace().zeroOrMore().with(searchText.charAt(i)));
+		     reg = reg.with(Regex.whiteSpace().zeroOrMore().with(searchText.charAt(i)));
 		
 		var indexes = reg.findAll(word);
 		

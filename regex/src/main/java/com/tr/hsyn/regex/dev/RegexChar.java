@@ -1,7 +1,7 @@
 package com.tr.hsyn.regex.dev;
 
 
-import com.tr.hsyn.regex.Nina;
+import com.tr.hsyn.regex.Regex;
 import com.tr.hsyn.regex.cast.Character;
 import com.tr.hsyn.regex.cast.Text;
 
@@ -113,7 +113,7 @@ public enum RegexChar implements Text {
 	 */
 	public boolean any(@NotNull String text) {
 		
-		return Nina.like(regex).existIn(text);
+		return Regex.like(regex).existIn(text);
 	}
 	
 	/**
@@ -131,7 +131,7 @@ public enum RegexChar implements Text {
 	 */
 	public boolean all(@NotNull String text) {
 		
-		return Nina.like(regex).oneOrMore().test(text);
+		return Regex.like(regex).oneOrMore().test(text);
 	}
 	
 	/**
@@ -146,7 +146,7 @@ public enum RegexChar implements Text {
 	 */
 	public String removeFrom(@NotNull String text) {
 		
-		return Nina.like(regex).removeFrom(text);
+		return Regex.like(regex).removeFrom(text);
 	}
 	
 	/**
@@ -163,7 +163,7 @@ public enum RegexChar implements Text {
 	 */
 	public String replaceFrom(@NotNull String text, String replacement) {
 		
-		return Nina.like(regex).replaceFrom(text, replacement);
+		return Regex.like(regex).replaceFrom(text, replacement);
 	}
 	
 	/**
@@ -182,7 +182,7 @@ public enum RegexChar implements Text {
 	 */
 	public String retainFrom(@NotNull String text) {
 		
-		return Nina.like(regex).toRange().negate().toRegex().removeFrom(text);
+		return Regex.like(regex).toRange().negate().toRegex().removeFrom(text);
 	}
 	
 }

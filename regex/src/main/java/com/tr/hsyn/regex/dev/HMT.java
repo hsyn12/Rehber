@@ -1,7 +1,7 @@
 package com.tr.hsyn.regex.dev;
 
 
-import com.tr.hsyn.regex.Nina;
+import com.tr.hsyn.regex.Regex;
 import com.tr.hsyn.regex.cast.Character;
 import com.tr.hsyn.regex.cast.Index;
 import com.tr.hsyn.regex.cast.RegexBuilder;
@@ -85,7 +85,7 @@ public class HMT {
 	@NotNull
 	private RegexBuilder createRegex() {
 		
-		return Nina.like()
+		return Regex.like()
 				.group(head)
 				.group(middle)
 				.group(tail);
@@ -190,7 +190,7 @@ public class HMT {
 	@NotNull
 	public List<Index> findAll(@NotNull String str) {
 		
-		return Nina.regex(getRegex()).findAll(str);
+		return Regex.regex(getRegex()).findAll(str);
 	}
 	
 	/**
@@ -212,7 +212,7 @@ public class HMT {
 		 */
 		public HMTBuilder head(String regex) {
 			
-			if (!Nina.Test.isNoboe(regex)) this.head = regex;
+			if (!Regex.Test.isNoboe(regex)) this.head = regex;
 			return this;
 		}
 		
@@ -224,7 +224,7 @@ public class HMT {
 		 */
 		public HMTBuilder middle(@NotNull Text regex) {
 			
-			if (!Nina.Test.isNoboe(regex.getText())) this.middle = regex.getText();
+			if (!Regex.Test.isNoboe(regex.getText())) this.middle = regex.getText();
 			return this;
 		}
 		
@@ -236,7 +236,7 @@ public class HMT {
 		 */
 		public HMTBuilder tail(@NotNull Text regex) {
 			
-			if (!Nina.Test.isNoboe(regex.getText())) this.tail = regex.getText();
+			if (!Regex.Test.isNoboe(regex.getText())) this.tail = regex.getText();
 			return this;
 		}
 		
@@ -248,7 +248,7 @@ public class HMT {
 		 */
 		public HMTBuilder head(@NotNull Text regex) {
 			
-			if (!Nina.Test.isNoboe(regex.getText())) this.head = regex.getText();
+			if (!Regex.Test.isNoboe(regex.getText())) this.head = regex.getText();
 			return this;
 		}
 		
@@ -260,7 +260,7 @@ public class HMT {
 		 */
 		public HMTBuilder middle(String regex) {
 			
-			if (!Nina.Test.isNoboe(regex)) this.middle = regex;
+			if (!Regex.Test.isNoboe(regex)) this.middle = regex;
 			return this;
 		}
 		
@@ -272,7 +272,7 @@ public class HMT {
 		 */
 		public HMTBuilder tail(String regex) {
 			
-			if (!Nina.Test.isNoboe(regex)) this.tail = regex;
+			if (!Regex.Test.isNoboe(regex)) this.tail = regex;
 			return this;
 		}
 		
