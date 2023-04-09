@@ -288,7 +288,7 @@ public interface Regex {
 	}
 	
 	/**
-	 * <em>Bir yada daha fazla</em> harf karakteri.
+	 * <em>Bir yada daha fazla</em> harf karakteri.a
 	 *
 	 * @return New {@link RegexBuilder}
 	 */
