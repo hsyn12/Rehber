@@ -73,7 +73,7 @@ public interface LetterExpression extends RegularExpression {
 	 */
 	default @NotNull RegexBuilder nonLetters() {
 		
-		return nonLetter().oneOrMore();
+		return with(Regex.NON_LETTERS);
 	}
 	
 	/**

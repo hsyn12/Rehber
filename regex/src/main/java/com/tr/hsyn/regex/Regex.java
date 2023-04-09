@@ -765,6 +765,8 @@ public interface Regex {
 	}
 	
 	/**
+	 * Yeni bir {@link RegexBuilder} nesnesi oluşturur.
+	 *
 	 * @return Yeni bir {@link RegexBuilder} nesnesi
 	 */
 	@NotNull
@@ -774,6 +776,8 @@ public interface Regex {
 	}
 	
 	/**
+	 * Yeni bir {@link RegexBuilder} nesnesi oluşturur.
+	 *
 	 * @param expression İfade
 	 * @return Yeni bir {@link RegexBuilder} nesnesi
 	 */
@@ -784,6 +788,8 @@ public interface Regex {
 	}
 	
 	/**
+	 * Yeni bir düzenli ifade oluşturur.
+	 *
 	 * @param expression İfade
 	 * @param <T>        {@link Text} türünden bir tür
 	 * @return Yeni bir {@link RegexBuilder} nesnesi
@@ -1185,7 +1191,6 @@ public interface Regex {
 			return regex.existIn(text);
 		}
 	}
-	
 	
 	/**
 	 * Kendi içinde {@link RegexBuilder} sınıfını kullanarak bazı değiştirme metotları tanımlar.<br>
