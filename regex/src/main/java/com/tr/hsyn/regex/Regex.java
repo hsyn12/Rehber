@@ -253,7 +253,7 @@ import java.util.regex.Pattern;
  * <p>
  *    Yinede şunu itiraf etmeliyimki, düzenli ifadeleri anlamaya başladıktan sonra vazgeçemiyorsun.
  *
- * @author hsyn 14 Haziran 2022 Salı 11:18 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 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
+ * @author hsyn 14 Haziran 2022 Salı 11:18 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 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
  */
 public interface Regex {
 	
