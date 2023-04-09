@@ -1,6 +1,10 @@
 package com.tr.hsyn.regex.cast;
 
 
+import static com.tr.hsyn.regex.Regex.DIGIT;
+import static com.tr.hsyn.regex.Regex.LETTER;
+
+import com.tr.hsyn.regex.Regex;
 import com.tr.hsyn.regex.act.Ranger;
 import com.tr.hsyn.regex.dev.RegexChar;
 
@@ -18,22 +22,22 @@ public interface Range extends Text {
 	 * Returns a range for letters.<br><br>
 	 *
 	 * @return New <code>Range</code> with letters
-	 * @see Character#LETTER
+	 * @see Regex#LETTER
 	 */
 	static @NotNull Range letters() {
 		
-		return new Ranger(Character.LETTER);
+		return new Ranger(LETTER);
 	}
 	
 	/**
 	 * Returns a range for digits.<br><br>
 	 *
 	 * @return New <code>Range</code> with digits
-	 * @see Character#DIGIT
+	 * @see Regex#DIGIT
 	 */
 	static @NotNull Range digits() {
 		
-		return new Ranger(Character.DIGIT);
+		return new Ranger(DIGIT);
 	}
 	
 	/**

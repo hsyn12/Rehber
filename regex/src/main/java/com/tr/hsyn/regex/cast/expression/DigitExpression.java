@@ -1,7 +1,7 @@
 package com.tr.hsyn.regex.cast.expression;
 
 
-import com.tr.hsyn.regex.cast.Character;
+import com.tr.hsyn.regex.Regex;
 import com.tr.hsyn.regex.cast.Quanta;
 import com.tr.hsyn.regex.cast.RegexBuilder;
 
@@ -20,7 +20,7 @@ public interface DigitExpression extends RegularExpression {
 	 */
 	default @NotNull RegexBuilder digit() {
 		
-		return with(Character.DIGIT);
+		return with(Regex.DIGIT);
 	}
 	
 	/**
@@ -41,7 +41,7 @@ public interface DigitExpression extends RegularExpression {
 	 */
 	default @NotNull RegexBuilder digit(@NotNull Quanta quanta) {
 		
-		return with(Character.DIGIT + quanta);
+		return with(Regex.DIGIT + quanta);
 	}
 	
 	/**
@@ -51,7 +51,7 @@ public interface DigitExpression extends RegularExpression {
 	 */
 	default @NotNull RegexBuilder nonDigit() {
 		
-		return with(Character.NON_DIGIT);
+		return with(Regex.NON_DIGIT);
 	}
 	
 	/**

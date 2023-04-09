@@ -1,7 +1,7 @@
 package com.tr.hsyn.regex.cast.expression;
 
 
-import com.tr.hsyn.regex.cast.Character;
+import com.tr.hsyn.regex.Regex;
 import com.tr.hsyn.regex.cast.Quanta;
 import com.tr.hsyn.regex.cast.RegexBuilder;
 
@@ -18,21 +18,21 @@ public interface LetterExpression extends RegularExpression {
 	 * Bir harf karakteri.
 	 *
 	 * @return This {@link RegexBuilder}
-	 * @see Character#LETTER
+	 * @see Regex#LETTER
 	 */
 	default @NotNull RegexBuilder letter() {
 		
-		return with(Character.LETTER);
+		return with(Regex.LETTER);
 	}
 	
 	/**
-	 * Belirtilen harfi düzenli ifadeye ekler.
+	 * Verilen harfleri düzenli ifadeye ekler.
 	 *
 	 * @return This {@link RegexBuilder}
 	 */
-	default @NotNull RegexBuilder letter(@Pattern("\\p{L}") @NotNull String letter) {
+	default @NotNull RegexBuilder letter(@Pattern(Regex.LETTERS) @NotNull String letters) {
 		
-		return with(letter);
+		return with(letters);
 	}
 	
 	/**
@@ -46,16 +46,6 @@ public interface LetterExpression extends RegularExpression {
 	}
 	
 	/**
-	 * Belirtilen harfleri düzenli ifadeye ekler.
-	 *
-	 * @return This {@link RegexBuilder}
-	 */
-	default @NotNull RegexBuilder letters(@Pattern(Character.LETTER + "+") @NotNull String letters) {
-		
-		return with(letters);
-	}
-	
-	/**
 	 * Bir harf karakteri.
 	 *
 	 * @param quanta Çokluk
@@ -63,7 +53,7 @@ public interface LetterExpression extends RegularExpression {
 	 */
 	default @NotNull RegexBuilder letter(@NotNull Quanta quanta) {
 		
-		return with(Character.LETTER + quanta);
+		return with(Regex.LETTER + quanta);
 	}
 	
 	/**
@@ -73,7 +63,7 @@ public interface LetterExpression extends RegularExpression {
 	 */
 	default @NotNull RegexBuilder nonLetter() {
 		
-		return with(Character.NON_LETTER);
+		return with(Regex.NON_LETTER);
 	}
 	
 	/**
@@ -94,7 +84,7 @@ public interface LetterExpression extends RegularExpression {
 	 */
 	default @NotNull RegexBuilder nonLetter(@NotNull Quanta quanta) {
 		
-		return with(Character.NON_LETTER + quanta);
+		return with(Regex.NON_LETTER + quanta);
 	}
 	
 	/**
@@ -104,7 +94,7 @@ public interface LetterExpression extends RegularExpression {
 	 */
 	default @NotNull RegexBuilder letterLow() {
 		
-		return with(Character.LETTER_LOWER);
+		return with(Regex.LETTER_LOWER);
 	}
 	
 	/**
@@ -125,7 +115,7 @@ public interface LetterExpression extends RegularExpression {
 	 */
 	default @NotNull RegexBuilder letterLow(@NotNull Quanta quanta) {
 		
-		return with(Character.LETTER_LOWER + quanta);
+		return with(Regex.LETTER_LOWER + quanta);
 	}
 	
 	/**
@@ -135,7 +125,7 @@ public interface LetterExpression extends RegularExpression {
 	 */
 	default @NotNull RegexBuilder letterUp() {
 		
-		return with(Character.LETTER_UPPER);
+		return with(Regex.LETTER_UPPER);
 	}
 	
 	/**
@@ -156,7 +146,7 @@ public interface LetterExpression extends RegularExpression {
 	 */
 	default @NotNull RegexBuilder letterUp(@NotNull Quanta quanta) {
 		
-		return with(Character.LETTER_UPPER + quanta);
+		return with(Regex.LETTER_UPPER + quanta);
 	}
 	
 	

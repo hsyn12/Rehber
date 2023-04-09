@@ -2,7 +2,6 @@ package com.tr.hsyn.regex;
 
 
 import com.tr.hsyn.regex.act.Teddy;
-import com.tr.hsyn.regex.cast.Character;
 import com.tr.hsyn.regex.cast.CharacterSet;
 import com.tr.hsyn.regex.cast.DateGenerator;
 import com.tr.hsyn.regex.cast.Index;
@@ -184,7 +183,7 @@ import java.util.regex.Matcher;
  * <p>
  * <p>
  * <p>
- *    {@link com.tr.hsyn.regex.cast.Regex#test(String)} metodu, verilen string'in tamamının, oluşturulan düzenli ifadeye
+ *    {@link RegexBuilder#test(String)} metodu, verilen string'in tamamının, oluşturulan düzenli ifadeye
  *    uyup uymadığını test eder. Yani düzenli ifade ile modellediğimiz kelime her bir karakteri ile birlikte
  *    tam olarak tarif edildiği gibi bir bütün olarak test edilir. Bu bir uygunluk kontrolüdür.<br>
  *    Oluşturduğumuz modeli eğer daha büyük bir yazının içinde aramak istiyorsak,
@@ -202,8 +201,8 @@ import java.util.regex.Matcher;
  * <p>Bu düzenli ifade modeli, herhangi bir sayı (<strong>{@code \p{N}}</strong>) ve
  * herhangi bir harf (<strong>{@code \p{L}}</strong>).<br>
  * Yani bir sayı bir de harf olacak ve bitişik olacak (aynı sırada).<br>
- * {@link com.tr.hsyn.regex.cast.Regex#matchesOf(CharSequence)} metodu yazının içinde modelin eşleştiği parçaları döndürür.<br>
- * {@link com.tr.hsyn.regex.cast.Regex#findAll(CharSequence)} metodu ise eşleşmelerin yazı içindeki başlangıç ve bitiş index'lerini döndürür.<br><br>
+ * {@link RegexBuilder#matchesOf(CharSequence)} metodu yazının içinde modelin eşleştiği parçaları döndürür.<br>
+ * {@link RegexBuilder#findAll(CharSequence)} metodu ise eşleşmelerin yazı içindeki başlangıç ve bitiş index'lerini döndürür.<br><br>
  *
  * <p>
  *    Düzenli ifadeler, bir metin üzerinde değişiklik yapmak için de kullanılabilir.<br><br>
@@ -261,48 +260,100 @@ public interface Regex {
 	/**
 	 * Regular expression for digits.
 	 */
-	String NUMBER           = "^\\p{N}+$";
+	String NUMBER               = "^\\p{N}+$";
 	/**
 	 * Regular expression for alphabetics.
 	 */
-	String WORD             = "^\\p{L}+$";
+	String WORD                 = "^\\p{L}+$";
+	/**
+	 * An alphabetic character {@code [a-zA-Z]}
+	 */
+	String LETTER               = "\\p{L}";
+	/**
+	 * A non-alphabetic character {@code [^a-zA-Z]}
+	 */
+	String NON_LETTER           = "\\P{L}";
+	/**
+	 * A digit 0-9 {@code [0-9]}
+	 */
+	String DIGIT                = "\\p{N}";
+	/**
+	 * A non-digit chacracter {@code [^0-9]}
+	 */
+	String NON_DIGIT            = "\\P{N}";
+	/**
+	 * A whitespace character, including line break. {@code [ \t\r\n\f\x0B]}
+	 */
+	String WHITE_SPACE          = "\\p{Z}";
+	/**
+	 * A non-whitespace chacracter {@code [^\s]}
+	 */
+	String NON_WHITE_SPACE      = "\\P{Z}";
+	/**
+	 * Punctuation characters {@code [!"#$%&'()*+,\-./:;<=>?@\[\\\]^_`{|}~]}
+	 */
+	String PUNC                 = "\\p{P}";
+	String NON_PUNC             = "\\P{P}";
+	/**
+	 * Any character from {@link #LETTER}, {@link #DIGIT}, {@link #PUNC}, {@link #WHITE_SPACE}, {@code "_"}
+	 */
+	String ANY                  = String.format("[%s%s%s%s_]", LETTER, DIGIT, PUNC, WHITE_SPACE);
+	/**
+	 * A lowercase alphabetic character {@code [a-z]}
+	 */
+	String LETTER_LOWER         = "\\p{Ll}";
+	String NON_LETTER_LOWER     = "\\P{Ll}";
+	/**
+	 * An uppercase alphabetic character {@code [A-Z]}
+	 */
+	String LETTER_UPPER         = "\\p{Lu}";
+	String NON_LETTER_UPPER     = "\\P{Lu}";
+	/**
+	 * Delimiters {@code '.$^{[()|*+?\'}
+	 */
+	String DELIMITER_CHARACTERS = ".$^{[()|*+?\\";
+	/**
+	 * A control character {@code [\p{Cntrl}]}
+	 */
+	String CONTROL              = "\\p{C}";
+	/**
+	 * A non-control character {@code [^\p{C}]}
+	 */
+	String NON_CONTROL          = "\\P{C}";
+	String SYMBOL               = "\\p{S}";
+	String SLASH                = "\\";
 	/**
 	 * <em>Bir yada daha fazla</em> harf karakteri.
 	 */
-	String LETTERS          = Character.LETTER + "+";
+	String LETTERS              = LETTER + "+";
 	/**
 	 * <em>Bir yada daha fazla</em> sayısal karakteri.
 	 */
-	String DIGITS           = Character.DIGIT + "+";
+	String DIGITS               = DIGIT + "+";
 	/**
 	 * <em>Bir yada daha fazla</em> boşluk karakteri.
 	 */
-	String WHITE_SPACES     = Character.WHITE_SPACE + "+";
+	String WHITE_SPACES         = WHITE_SPACE + "+";
 	/**
 	 * <em>Bir yada daha fazla</em> noktalama karakteri.
 	 */
-	String PUNCS            = Character.PUNC + "+";
+	String PUNCS                = PUNC + "+";
 	/**
 	 * <em>Bir yada daha fazla</em> harf olmayan karakter.
 	 */
-	String NON_LETTERS      = Character.NON_LETTER + "+";
+	String NON_LETTERS          = NON_LETTER + "+";
 	/**
 	 * <em>Bir yada daha fazla</em> sayısal olmayan karakter.
 	 */
-	String NON_DIGITS       = Character.NON_DIGIT + "+";
+	String NON_DIGITS           = NON_DIGIT + "+";
 	/**
 	 * <em>Bir yada daha fazla</em> boşluk olmayan karakter.
 	 */
-	String NON_WHITE_SPACES = Character.NON_WHITE_SPACE + "+";
+	String NON_WHITE_SPACES     = NON_WHITE_SPACE + "+";
 	/**
 	 * <em>Bir yada daha fazla</em> noktalama olmayan karakter.
 	 */
-	String NON_PUNCS        = Character.NON_PUNC + "+";
-	
-	/**
-	 * <em>Bir yada daha fazla</em> harf karakteri.
-	 */
-	String NON_LETTERS_AND_DIGITS = Character.NON_LETTER + Character.DIGIT + "+";
+	String NON_PUNCS            = NON_PUNC + "+";
 	
 	/**
 	 * Bir harf karakteri.
@@ -311,16 +362,16 @@ public interface Regex {
 	 */
 	static @NotNull RegexBuilder letter() {
 		
-		return like().letter();
+		return like(LETTER);
 	}
 	
 	/**
-	 * Bir harf karakteri belirtir.
+	 * Verilen harflerle yeni bir düzenli ifade oluşturur.
 	 *
-	 * @param letter Harf
+	 * @param letter Harfler
 	 * @return New {@link RegexBuilder}
 	 */
-	static @NotNull RegexBuilder letter(@NotNull @Pattern(Character.LETTER) String letter) {
+	static @NotNull RegexBuilder letter(@NotNull @Pattern(LETTERS) String letter) {
 		
 		return like(letter);
 	}
@@ -329,21 +380,11 @@ public interface Regex {
 	 * <em>Bir yada daha fazla</em> harf karakteri.
 	 *
 	 * @return New {@link RegexBuilder}
+	 * @see #LETTERS
 	 */
 	static @NotNull RegexBuilder letters() {
 		
-		return like().letters();
-	}
-	
-	/**
-	 * <em>Bir yada daha fazla</em> harf karakteri belirtir.
-	 *
-	 * @param letters Harfler
-	 * @return New {@link RegexBuilder}
-	 */
-	static @NotNull RegexBuilder letters(@NotNull @org.intellij.lang.annotations.Pattern("[a-zA-Z]+") String letters) {
-		
-		return like(letters);
+		return like(LETTERS);
 	}
 	
 	/**
@@ -353,7 +394,7 @@ public interface Regex {
 	 */
 	static @NotNull RegexBuilder nonLetter() {
 		
-		return like().nonLetter();
+		return like(NON_LETTER);
 	}
 	
 	/**
@@ -363,7 +404,7 @@ public interface Regex {
 	 */
 	static @NotNull RegexBuilder nonLetters() {
 		
-		return like().nonLetters();
+		return like(NON_LETTERS);
 	}
 	
 	/**
@@ -373,7 +414,7 @@ public interface Regex {
 	 */
 	static @NotNull RegexBuilder digit() {
 		
-		return like().digit();
+		return like(DIGIT);
 	}
 	
 	/**
@@ -383,7 +424,7 @@ public interface Regex {
 	 */
 	static @NotNull RegexBuilder digits() {
 		
-		return like().digit();
+		return like(DIGITS);
 	}
 	
 	/**
@@ -393,7 +434,7 @@ public interface Regex {
 	 */
 	static @NotNull RegexBuilder nonDigit() {
 		
-		return like().nonDigit();
+		return like(NON_DIGIT);
 	}
 	
 	/**
@@ -403,91 +444,95 @@ public interface Regex {
 	 */
 	static @NotNull RegexBuilder nonDigits() {
 		
-		return like().nonDigits();
+		return like(NON_DIGITS);
 	}
 	
 	/**
 	 * Bir boşluk.
 	 *
 	 * @return New {@link RegexBuilder}
-	 * @see Character#WHITE_SPACE
+	 * @see #WHITE_SPACE
 	 */
 	static @NotNull RegexBuilder whiteSpace() {
 		
-		return like().whiteSpace();
+		return like(WHITE_SPACE);
 	}
 	
 	/**
 	 * <em>Bir yada daha fazla</em> boşluk.
 	 *
 	 * @return New {@link RegexBuilder}
-	 * @see Character#WHITE_SPACE
+	 * @see #WHITE_SPACES
 	 */
 	static @NotNull RegexBuilder whiteSpaces() {
 		
-		return like().whiteSpaces();
+		return like(WHITE_SPACES);
 	}
 	
 	/**
 	 * Boşluk olmayan bir karakter.
 	 *
 	 * @return New {@link RegexBuilder}
-	 * @see Character#NON_WHITE_SPACE
+	 * @see #NON_WHITE_SPACE
 	 */
 	static @NotNull RegexBuilder nonWhiteSpace() {
 		
-		return like().nonWhiteSpace();
+		return like(NON_WHITE_SPACE);
 	}
 	
 	/**
 	 * Boşluk olmayan <em>bir yada daha fazla</em> karakter.
 	 *
 	 * @return New {@link RegexBuilder}
-	 * @see Character#NON_WHITE_SPACE
+	 * @see #NON_WHITE_SPACES
 	 */
 	static @NotNull RegexBuilder nonWhiteSpaces() {
 		
-		return like().nonWhiteSpaces();
+		return like(NON_WHITE_SPACES);
 	}
 	
 	/**
 	 * Bir noktalama işareti.
 	 *
 	 * @return New {@link RegexBuilder}
+	 * @see #NON_PUNC
 	 */
 	static @NotNull RegexBuilder punc() {
 		
-		return like().punc();
+		return like(PUNC);
 	}
 	
 	/**
 	 * <em>Bir yada daha fazla</em> noktalama işareti.
 	 *
 	 * @return New {@link RegexBuilder}
+	 * @see #PUNCS
 	 */
 	static @NotNull RegexBuilder puncs() {
 		
-		return like().puncs();
+		return like(PUNCS);
 	}
 	
 	/**
 	 * Noktalama işareti dışında bir karakter.
 	 *
 	 * @return New {@link RegexBuilder}
+	 * @see #NON_PUNC
 	 */
 	static @NotNull RegexBuilder nonPunc() {
 		
-		return like().nonPunc();
+		return like(NON_PUNC);
 	}
 	
 	/**
 	 * <em>Bir yada daha fazla</em> noktalama harici karakter.
 	 *
 	 * @return New {@link RegexBuilder}
+	 * @see #NON_PUNCS
 	 */
 	static @NotNull RegexBuilder nonPuncs() {
 		
-		return like().nonPuncs();
+		return like(NON_PUNCS);
 	}
 	
 	/**
@@ -600,7 +645,7 @@ public interface Regex {
 	/**
 	 * Yeni ve boş bir düzenli ifade nesnesi oluşturur.
 	 *
-	 * @return {@link com.tr.hsyn.regex.cast.Regex}
+	 * @return {@link RegexBuilder}
 	 */
 	@NotNull
 	static RegexBuilder regex() {
@@ -612,7 +657,7 @@ public interface Regex {
 	 * Yeni bir düzenli ifade nesnesi oluşturur.
 	 *
 	 * @param expression Düzenli ifade
-	 * @return Yeni bir {@link com.tr.hsyn.regex.cast.Regex} nesnesi
+	 * @return Yeni bir {@link RegexBuilder} nesnesi
 	 */
 	@NotNull
 	static RegexBuilder regex(@NotNull String expression) {
@@ -636,7 +681,7 @@ public interface Regex {
 	 * Yeni bir düzenli ifade nesnesi oluşturur.
 	 *
 	 * @param expression Düzenli ifade
-	 * @return Yeni bir {@link com.tr.hsyn.regex.cast.Regex} nesnesi
+	 * @return Yeni bir {@link RegexBuilder} nesnesi
 	 */
 	static <T extends Text> @NotNull RegexBuilder regex(@NotNull T expression) {
 		
@@ -672,11 +717,11 @@ public interface Regex {
 	}
 	
 	/**
-	 * Verilen ifadeyi grup içine alarak yeni bir {@link com.tr.hsyn.regex.cast.Regex} nesnesi döndürür.
+	 * Verilen ifadeyi grup içine alarak yeni bir {@link RegexBuilder} nesnesi döndürür.
 	 *
 	 * @param expresion İfade
 	 * @param <T>       {@link Text} türünden bir tür
-	 * @return Yeni bir {@link com.tr.hsyn.regex.cast.Regex} nesnesi {@code (expresion)}
+	 * @return Yeni bir {@link RegexBuilder} nesnesi {@code (expresion)}
 	 */
 	static <T extends Text> @NotNull RegexBuilder group(@NotNull T expresion) {
 		
@@ -684,10 +729,10 @@ public interface Regex {
 	}
 	
 	/**
-	 * Verilen ifadeyi grup içine alarak yeni bir {@link com.tr.hsyn.regex.cast.Regex} nesnesi döndürür.
+	 * Verilen ifadeyi grup içine alarak yeni bir {@link RegexBuilder} nesnesi döndürür.
 	 *
 	 * @param expresion İfade
-	 * @return Yeni bir {@link com.tr.hsyn.regex.cast.Regex} nesnesi {@code (expresion)}
+	 * @return Yeni bir {@link RegexBuilder} nesnesi {@code (expresion)}
 	 */
 	static @NotNull RegexBuilder group(@NotNull String expresion) {
 		
@@ -695,12 +740,12 @@ public interface Regex {
 	}
 	
 	/**
-	 * Verilen ifadeyi grup içine alarak yeni bir {@link com.tr.hsyn.regex.cast.Regex} nesnesi döndürür.
+	 * Verilen ifadeyi grup içine alarak yeni bir {@link RegexBuilder} nesnesi döndürür.
 	 *
 	 * @param groupName Grubun adı
 	 * @param expresion İfade
 	 * @param <T>       {@link Text} türünden bir tür
-	 * @return Yeni bir {@link com.tr.hsyn.regex.cast.Regex} nesnesi {@code (?<groupName>expresion)}
+	 * @return Yeni bir {@link RegexBuilder} nesnesi {@code (?<groupName>expresion)}
 	 */
 	static <T extends Text> @NotNull RegexBuilder group(@NotNull String groupName, @NotNull T expresion) {
 		
@@ -708,11 +753,11 @@ public interface Regex {
 	}
 	
 	/**
-	 * Verilen ifadeyi grup içine alarak yeni bir {@link com.tr.hsyn.regex.cast.Regex} nesnesi döndürür.
+	 * Verilen ifadeyi grup içine alarak yeni bir {@link RegexBuilder} nesnesi döndürür.
 	 *
 	 * @param groupName Grubun adı
 	 * @param expresion İfade
-	 * @return Yeni bir {@link com.tr.hsyn.regex.cast.Regex} nesnesi {@code (?<groupName>expresion)}
+	 * @return Yeni bir {@link RegexBuilder} nesnesi {@code (?<groupName>expresion)}
 	 */
 	static @NotNull RegexBuilder group(@NotNull String groupName, @NotNull String expresion) {
 		
@@ -760,7 +805,7 @@ public interface Regex {
 		
 		var str = "Seni bu köyde 5 kez 8 yerde aradım";
 		
-		var regex = Range.letters().with(Range.of(Character.WHITE_SPACE)).negate();
+		var regex = Range.letters().with(Range.of(WHITE_SPACE)).negate();
 		pl("Regex : %s", regex);
 		pl("Result : %s", Regex.Dev.getParts(str, regex.toRegex().findAll(str)));
 	}
@@ -1030,9 +1075,30 @@ public interface Regex {
 		System.out.printf((message != null ? message.toString() : "null") + "%n", args);
 	}
 	
+	/**
+	 * Bir karakterin ait olduğu karakter sınıfını döndürür.<br>
+	 *
+	 * <ul>
+	 *    <li>{@link com.tr.hsyn.regex.Regex#WHITE_SPACE}  : boşluk sınıfı</li>
+	 *    <li>{@link com.tr.hsyn.regex.Regex#DIGIT}  : sayı sınıfı</li>
+	 *    <li>{@link com.tr.hsyn.regex.Regex#LETTER} : harf sınıfı</li>
+	 *    <li>{@link com.tr.hsyn.regex.Regex#PUNC}   : noktalama sınıfı</li>
+	 * </ul>
+	 *
+	 * @param c Test edilecek karakter
+	 * @return Karakter grubu
+	 */
+	static String getCharacterClass(char c) {
+		
+		if (java.lang.Character.isLetter(c)) return Regex.LETTER;
+		if (java.lang.Character.isDigit(c)) return Regex.DIGIT;
+		if (java.lang.Character.isWhitespace(c)) return Regex.WHITE_SPACE;
+		
+		return Regex.PUNC;
+	}
 	
 	/**
-	 * Kendi içinde {@link com.tr.hsyn.regex.cast.Regex} sınıfını kullanarak bazı test metotları tanımlar.<br><br>
+	 * Kendi içinde {@link RegexBuilder} sınıfını kullanarak bazı test metotları tanımlar.<br><br>
 	 *
 	 * <pre>
 	 *    isNumber("542 5f7 842"); //false
@@ -1120,8 +1186,9 @@ public interface Regex {
 		}
 	}
 	
+	
 	/**
-	 * Kendi içinde {@link com.tr.hsyn.regex.cast.Regex} sınıfını kullanarak bazı değiştirme metotları tanımlar.<br>
+	 * Kendi içinde {@link RegexBuilder} sınıfını kullanarak bazı değiştirme metotları tanımlar.<br>
 	 */
 	interface Edit {
 		
@@ -1207,7 +1274,7 @@ public interface Regex {
 		@NotNull
 		static String removeWhiteSpaces(String str) {
 			
-			return replace(str, "", Character.WHITE_SPACE);
+			return replace(str, "", WHITE_SPACE);
 		}
 		
 		/**
@@ -1219,13 +1286,13 @@ public interface Regex {
 		@NotNull
 		static String removeDigits(String str) {
 			
-			return replace(str, "", Character.DIGIT);
+			return replace(str, "", DIGIT);
 		}
 		
 		@NotNull
 		static String removeLetters(String str) {
 			
-			return replace(str, "", Character.LETTER);
+			return replace(str, "", LETTER);
 		}
 		
 		/**
@@ -1237,7 +1304,7 @@ public interface Regex {
 		@NotNull
 		static String retainDigits(String str) {
 			
-			if (str != null) return str.replaceAll(Character.NON_DIGIT, "");
+			if (str != null) return str.replaceAll(NON_DIGIT, "");
 			
 			return "";
 		}
@@ -1245,7 +1312,7 @@ public interface Regex {
 		@NotNull
 		static String retainLetters(String str) {
 			
-			if (str != null) return str.replaceAll(Character.NON_LETTER, "");
+			if (str != null) return str.replaceAll(NON_LETTER, "");
 			
 			return "";
 		}
@@ -1297,7 +1364,6 @@ public interface Regex {
 			return source;
 		}
 	}
-	
 	
 	/**
 	 * Düzenli ifadelerle ilgili bazı deneysel metotlar tanımlar.
@@ -1393,7 +1459,7 @@ public interface Regex {
 				char c = chars[i];
 				
 				//- Karakterin sınıfı
-				var clazz = Character.getCharacterClass(c);
+				var clazz = getCharacterClass(c);
 				
 				//- İlk döngü burayı daima atlayacak çünkü lastCharacterClass boş
 				if (lastCharacterClass.equals(clazz)) {
@@ -1510,6 +1576,5 @@ public interface Regex {
 			return codes.toArray(new Integer[0]);
 		}
 	}
-	
 	
 }

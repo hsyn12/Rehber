@@ -1,6 +1,9 @@
 package com.tr.hsyn.regex.cast;
 
 
+import static com.tr.hsyn.regex.Regex.SLASH;
+
+import com.tr.hsyn.regex.Regex;
 import com.tr.hsyn.regex.cast.expression.Expressions;
 
 import org.jetbrains.annotations.NotNull;
@@ -14,13 +17,13 @@ public interface RegexBuilder extends Expressions {
 	@NotNull RegexBuilder toRegex();
 	
 	/**
-	 * Adds {@link Character#ANY}
+	 * Adds {@link Regex#ANY}
 	 *
 	 * @return This {@code RegexBuilder}
 	 */
 	default @NotNull RegexBuilder any() {
 		
-		return with(Character.ANY);
+		return with(Regex.ANY);
 	}
 	
 	/**
@@ -28,16 +31,16 @@ public interface RegexBuilder extends Expressions {
 	 *
 	 * @param times Quantifier for digit
 	 * @return This {@code RegexBuilder}
-	 * @see Character#ANY
+	 * @see Regex#ANY
 	 */
 	default @NotNull RegexBuilder any(int times) {
 		
-		return with(Character.ANY + Quanta.exactly(times));
+		return with(Regex.ANY + Quanta.exactly(times));
 	}
 	
 	default @NotNull RegexBuilder any(@NotNull Quanta quanta) {
 		
-		return with(Character.ANY + quanta);
+		return with(Regex.ANY + quanta);
 	}
 	
 	/**
@@ -73,7 +76,7 @@ public interface RegexBuilder extends Expressions {
 	 */
 	default @NotNull RegexBuilder escapeSlash() {
 		
-		return with(Character.SLASH);
+		return with(SLASH);
 	}
 	
 }

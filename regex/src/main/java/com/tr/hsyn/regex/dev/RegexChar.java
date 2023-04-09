@@ -2,7 +2,6 @@ package com.tr.hsyn.regex.dev;
 
 
 import com.tr.hsyn.regex.Regex;
-import com.tr.hsyn.regex.cast.Character;
 import com.tr.hsyn.regex.cast.Text;
 
 import org.jetbrains.annotations.NotNull;
@@ -32,51 +31,51 @@ public enum RegexChar implements Text {
 	/**
 	 * Harf.
 	 *
-	 * @see com.tr.hsyn.regex.cast.Character#LETTER
+	 * @see Regex#LETTER
 	 */
-	LETTER(Character.LETTER),
+	LETTER(Regex.LETTER),
 	/**
 	 * Harf olmayan.
 	 *
-	 * @see com.tr.hsyn.regex.cast.Character#NON_LETTER
+	 * @see Regex#NON_LETTER
 	 */
-	NON_LETTER(Character.NON_LETTER),
+	NON_LETTER(Regex.NON_LETTER),
 	/**
 	 * Rakam.
 	 *
-	 * @see com.tr.hsyn.regex.cast.Character#DIGIT
+	 * @see Regex#DIGIT
 	 */
-	DIGIT(Character.DIGIT),
+	DIGIT(Regex.DIGIT),
 	/**
 	 * Rakam olmayan.
 	 *
-	 * @see com.tr.hsyn.regex.cast.Character#NON_DIGIT
+	 * @see Regex#NON_DIGIT
 	 */
-	NON_DIGIT(Character.NON_DIGIT),
+	NON_DIGIT(Regex.NON_DIGIT),
 	/**
 	 * Boşluk.
 	 *
-	 * @see com.tr.hsyn.regex.cast.Character#WHITE_SPACE
+	 * @see Regex#WHITE_SPACE
 	 */
-	WHITE_SPACE(Character.WHITE_SPACE),
+	WHITE_SPACE(Regex.WHITE_SPACE),
 	/**
 	 * Boşluk olmayan.
 	 *
-	 * @see com.tr.hsyn.regex.cast.Character#NON_WHITE_SPACE
+	 * @see Regex#NON_WHITE_SPACE
 	 */
-	NON_WHITE_SPACE(Character.NON_WHITE_SPACE),
+	NON_WHITE_SPACE(Regex.NON_WHITE_SPACE),
 	/**
 	 * Noktalama.
 	 *
-	 * @see com.tr.hsyn.regex.cast.Character#PUNC
+	 * @see Regex#PUNC
 	 */
-	PUNC(Character.PUNC),
+	PUNC(Regex.PUNC),
 	/**
 	 * Noktalama olmayan.
 	 *
-	 * @see com.tr.hsyn.regex.cast.Character#NON_PUNC
+	 * @see Regex#NON_PUNC
 	 */
-	NON_PUNC(Character.NON_PUNC);
+	NON_PUNC(Regex.NON_PUNC);
 	
 	private final String regex;
 	

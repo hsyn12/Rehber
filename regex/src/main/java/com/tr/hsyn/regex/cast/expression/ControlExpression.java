@@ -1,7 +1,7 @@
 package com.tr.hsyn.regex.cast.expression;
 
 
-import com.tr.hsyn.regex.cast.Character;
+import com.tr.hsyn.regex.Regex;
 import com.tr.hsyn.regex.cast.Quanta;
 import com.tr.hsyn.regex.cast.RegexBuilder;
 
@@ -18,7 +18,7 @@ public interface ControlExpression extends RegularExpression {
 	 */
 	default @NotNull RegexBuilder control() {
 		
-		return with(Character.CONTROL);
+		return with(Regex.CONTROL);
 	}
 	
 	/**
@@ -30,7 +30,7 @@ public interface ControlExpression extends RegularExpression {
 	 */
 	default @NotNull RegexBuilder control(@NotNull Quanta quanta) {
 		
-		return with(Character.CONTROL + quanta);
+		return with(Regex.CONTROL + quanta);
 	}
 	
 	/**
@@ -41,7 +41,7 @@ public interface ControlExpression extends RegularExpression {
 	 */
 	default @NotNull RegexBuilder nonControl() {
 		
-		return with(Character.NON_CONTROL);
+		return with(Regex.NON_CONTROL);
 	}
 	
 	/**
@@ -53,6 +53,6 @@ public interface ControlExpression extends RegularExpression {
 	 */
 	default @NotNull RegexBuilder nonControl(@NotNull Quanta quanta) {
 		
-		return with(Character.NON_CONTROL + quanta);
+		return with(Regex.NON_CONTROL + quanta);
 	}
 }
