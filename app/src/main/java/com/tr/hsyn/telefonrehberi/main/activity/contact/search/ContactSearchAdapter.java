@@ -19,7 +19,7 @@ import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.execution.Runny;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
-import com.tr.hsyn.regex.dev.RegexChar;
+import com.tr.hsyn.regex.dev.regex.Regex;
 import com.tr.hsyn.selection.ItemIndexListener;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
@@ -133,7 +133,7 @@ public class ContactSearchAdapter extends RecyclerView.Adapter<ContactSearchAdap
 		
 		if (l.isEmpty()) return "?";
 		
-		if (Character.isAlphabetic(l.charAt(0))) return l.toUpperCase(Locale.ROOT);
+		if (Regex.LETTER.all(String.valueOf(l.charAt(0)))) return l.toUpperCase(Locale.ROOT);
 		
 		return "?";
 	}
@@ -161,7 +161,7 @@ public class ContactSearchAdapter extends RecyclerView.Adapter<ContactSearchAdap
 			}
 			else {
 				
-				if (Stringx.test(searchText).isNot(RegexChar.DIGIT)) {
+				if (Stringx.test(searchText).isNot(Regex.DIGIT)) {
 					
 					isNumber         = false;
 					filteredContacts = searchByName(searchText.toLowerCase());

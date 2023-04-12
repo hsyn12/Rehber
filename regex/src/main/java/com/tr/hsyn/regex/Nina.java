@@ -15,7 +15,8 @@ import com.tr.hsyn.regex.cast.WordGenerator;
 import com.tr.hsyn.regex.dev.CoupleFinder;
 import com.tr.hsyn.regex.dev.HMT;
 import com.tr.hsyn.regex.dev.Look;
-import com.tr.hsyn.regex.dev.RegexChar;
+import com.tr.hsyn.regex.dev.regex.Regex;
+import com.tr.hsyn.regex.dev.regex.character.Character;
 
 import org.intellij.lang.annotations.Pattern;
 import org.jetbrains.annotations.NotNull;
@@ -255,105 +256,16 @@ import java.util.regex.Matcher;
  *
  * @author hsyn 14 Haziran 2022 Salı 11:18
  */
-public interface Regex {
+public interface Nina {
 	
 	/**
 	 * Regular expression for digits.
 	 */
-	String NUMBER               = "^\\p{N}+$";
+	String NUMBER = "^\\p{N}+$";
 	/**
 	 * Regular expression for alphabetics.
 	 */
-	String WORD                 = "^\\p{L}+$";
-	/**
-	 * An alphabetic character {@code [a-zA-Z]}
-	 */
-	String LETTER               = "\\p{L}";
-	/**
-	 * A non-alphabetic character {@code [^a-zA-Z]}
-	 */
-	String NON_LETTER           = "\\P{L}";
-	/**
-	 * A digit 0-9 {@code [0-9]}
-	 */
-	String DIGIT                = "\\p{N}";
-	/**
-	 * A non-digit chacracter {@code [^0-9]}
-	 */
-	String NON_DIGIT            = "\\P{N}";
-	/**
-	 * A whitespace character, including line break. {@code [ \t\r\n\f\x0B]}
-	 */
-	String WHITE_SPACE          = "\\p{Z}";
-	/**
-	 * A non-whitespace chacracter {@code [^\s]}
-	 */
-	String NON_WHITE_SPACE      = "\\P{Z}";
-	/**
-	 * Punctuation characters {@code [!"#$%&'()*+,\-./:;<=>?@\[\\\]^_`{|}~]}
-	 */
-	String PUNC                 = "\\p{P}";
-	String NON_PUNC             = "\\P{P}";
-	/**
-	 * Any character from {@link #LETTER}, {@link #DIGIT}, {@link #PUNC}, {@link #WHITE_SPACE}, {@code "_"}
-	 */
-	String ANY                  = String.format("[%s%s%s%s_]", LETTER, DIGIT, PUNC, WHITE_SPACE);
-	/**
-	 * A lowercase alphabetic character {@code [a-z]}
-	 */
-	String LETTER_LOWER         = "\\p{Ll}";
-	String NON_LETTER_LOWER     = "\\P{Ll}";
-	/**
-	 * An uppercase alphabetic character {@code [A-Z]}
-	 */
-	String LETTER_UPPER         = "\\p{Lu}";
-	String NON_LETTER_UPPER     = "\\P{Lu}";
-	/**
-	 * Delimiters {@code '.$^{[()|*+?\'}
-	 */
-	String DELIMITER_CHARACTERS = ".$^{[()|*+?\\";
-	/**
-	 * A control character {@code [\p{Cntrl}]}
-	 */
-	String CONTROL              = "\\p{C}";
-	/**
-	 * A non-control character {@code [^\p{C}]}
-	 */
-	String NON_CONTROL          = "\\P{C}";
-	String SYMBOL               = "\\p{S}";
-	String SLASH                = "\\";
-	/**
-	 * <em>Bir yada daha fazla</em> harf karakteri.
-	 */
-	String LETTERS              = LETTER + "+";
-	/**
-	 * <em>Bir yada daha fazla</em> sayısal karakteri.
-	 */
-	String DIGITS               = DIGIT + "+";
-	/**
-	 * <em>Bir yada daha fazla</em> boşluk karakteri.
-	 */
-	String WHITE_SPACES         = WHITE_SPACE + "+";
-	/**
-	 * <em>Bir yada daha fazla</em> noktalama karakteri.
-	 */
-	String PUNCS                = PUNC + "+";
-	/**
-	 * <em>Bir yada daha fazla</em> harf olmayan karakter.
-	 */
-	String NON_LETTERS          = NON_LETTER + "+";
-	/**
-	 * <em>Bir yada daha fazla</em> sayısal olmayan karakter.
-	 */
-	String NON_DIGITS           = NON_DIGIT + "+";
-	/**
-	 * <em>Bir yada daha fazla</em> boşluk olmayan karakter.
-	 */
-	String NON_WHITE_SPACES     = NON_WHITE_SPACE + "+";
-	/**
-	 * <em>Bir yada daha fazla</em> noktalama olmayan karakter.
-	 */
-	String NON_PUNCS            = NON_PUNC + "+";
+	String WORD   = "^\\p{L}+$";
 	
 	/**
 	 * Bir harf karakteri.
@@ -362,7 +274,7 @@ public interface Regex {
 	 */
 	static @NotNull RegexBuilder letter() {
 		
-		return like(LETTER);
+		return like(Character.LETTER);
 	}
 	
 	/**
@@ -371,7 +283,7 @@ public interface Regex {
 	 * @param letter Harfler
 	 * @return New {@link RegexBuilder}
 	 */
-	static @NotNull RegexBuilder letter(@NotNull @Pattern(LETTERS) String letter) {
+	static @NotNull RegexBuilder letter(@NotNull @Pattern("\\p{L}+") String letter) {
 		
 		return like(letter);
 	}
@@ -380,11 +292,10 @@ public interface Regex {
 	 * <em>Bir yada daha fazla</em> harf karakteri.
 	 *
 	 * @return New {@link RegexBuilder}
-	 * @see #LETTERS
 	 */
 	static @NotNull RegexBuilder letters() {
 		
-		return like(LETTERS);
+		return letter().oneOrMore();
 	}
 	
 	/**
@@ -394,7 +305,7 @@ public interface Regex {
 	 */
 	static @NotNull RegexBuilder nonLetter() {
 		
-		return like(NON_LETTER);
+		return like(Regex.NON_LETTER);
 	}
 	
 	/**
@@ -404,7 +315,7 @@ public interface Regex {
 	 */
 	static @NotNull RegexBuilder nonLetters() {
 		
-		return like(NON_LETTERS);
+		return nonLetter().oneOrMore();
 	}
 	
 	/**
@@ -414,7 +325,7 @@ public interface Regex {
 	 */
 	static @NotNull RegexBuilder digit() {
 		
-		return like(DIGIT);
+		return like(Character.DIGIT);
 	}
 	
 	/**
@@ -424,7 +335,7 @@ public interface Regex {
 	 */
 	static @NotNull RegexBuilder digits() {
 		
-		return like(DIGITS);
+		return digit().oneOrMore();
 	}
 	
 	/**
@@ -434,7 +345,7 @@ public interface Regex {
 	 */
 	static @NotNull RegexBuilder nonDigit() {
 		
-		return like(NON_DIGIT);
+		return like(Regex.NON_DIGIT);
 	}
 	
 	/**
@@ -444,95 +355,87 @@ public interface Regex {
 	 */
 	static @NotNull RegexBuilder nonDigits() {
 		
-		return like(NON_DIGITS);
+		return nonDigit().oneOrMore();
 	}
 	
 	/**
 	 * Bir boşluk.
 	 *
 	 * @return New {@link RegexBuilder}
-	 * @see #WHITE_SPACE
 	 */
 	static @NotNull RegexBuilder whiteSpace() {
 		
-		return like(WHITE_SPACE);
+		return like(Character.WHITE_SPACE);
 	}
 	
 	/**
 	 * <em>Bir yada daha fazla</em> boşluk.
 	 *
 	 * @return New {@link RegexBuilder}
-	 * @see #WHITE_SPACES
 	 */
 	static @NotNull RegexBuilder whiteSpaces() {
 		
-		return like(WHITE_SPACES);
+		return whiteSpace().oneOrMore();
 	}
 	
 	/**
 	 * Boşluk olmayan bir karakter.
 	 *
 	 * @return New {@link RegexBuilder}
-	 * @see #NON_WHITE_SPACE
 	 */
 	static @NotNull RegexBuilder nonWhiteSpace() {
 		
-		return like(NON_WHITE_SPACE);
+		return like(Regex.NON_WHITE_SPACE);
 	}
 	
 	/**
 	 * Boşluk olmayan <em>bir yada daha fazla</em> karakter.
 	 *
 	 * @return New {@link RegexBuilder}
-	 * @see #NON_WHITE_SPACES
 	 */
 	static @NotNull RegexBuilder nonWhiteSpaces() {
 		
-		return like(NON_WHITE_SPACES);
+		return nonWhiteSpace().oneOrMore();
 	}
 	
 	/**
 	 * Bir noktalama işareti.
 	 *
 	 * @return New {@link RegexBuilder}
-	 * @see #NON_PUNC
 	 */
 	static @NotNull RegexBuilder punc() {
 		
-		return like(PUNC);
+		return like(Character.PUNCTUATION);
 	}
 	
 	/**
 	 * <em>Bir yada daha fazla</em> noktalama işareti.
 	 *
 	 * @return New {@link RegexBuilder}
-	 * @see #PUNCS
 	 */
 	static @NotNull RegexBuilder puncs() {
 		
-		return like(PUNCS);
+		return punc().oneOrMore();
 	}
 	
 	/**
 	 * Noktalama işareti dışında bir karakter.
 	 *
 	 * @return New {@link RegexBuilder}
-	 * @see #NON_PUNC
 	 */
 	static @NotNull RegexBuilder nonPunc() {
 		
-		return like(NON_PUNC);
+		return like(Regex.NON_PUNCTUATION);
 	}
 	
 	/**
 	 * <em>Bir yada daha fazla</em> noktalama harici karakter.
 	 *
 	 * @return New {@link RegexBuilder}
-	 * @see #NON_PUNCS
 	 */
 	static @NotNull RegexBuilder nonPuncs() {
 		
-		return like(NON_PUNCS);
+		return nonPunc().oneOrMore();
 	}
 	
 	/**
@@ -545,7 +448,7 @@ public interface Regex {
 	@NotNull
 	static RegexBuilder startsWith(@NotNull String expression) {
 		
-		return Regex.like().anchorStart().group(expression);
+		return Nina.like().anchorStart().group(expression);
 	}
 	
 	/**
@@ -558,7 +461,7 @@ public interface Regex {
 	@NotNull
 	static RegexBuilder endsWith(@NotNull String expression) {
 		
-		return Regex.like().anchorEnd().group(expression);
+		return Nina.like().anchorEnd().group(expression);
 	}
 	
 	/**
@@ -811,11 +714,12 @@ public interface Regex {
 		
 		var str = "Seni bu köyde 5 kez 8 yerde aradım";
 		
-		var regex = Range.letters().with(Range.of(WHITE_SPACE)).negate();
+		var regex = Range.letters().with(Range.of(Character.WHITE_SPACE)).negate();
 		pl("Regex : %s", regex);
-		pl("Result : %s", Regex.Dev.getParts(str, regex.toRegex().findAll(str)));
+		pl("Result : %s", Nina.Dev.getParts(str, regex.toRegex().findAll(str)));
 	}
 	
+	//region Tests
 	static void test23() {
 		
 		var str = "Seni bu bu köyde";
@@ -825,36 +729,36 @@ public interface Regex {
 	static void test21() {
 		
 		var str     = "123456HelloTest";
-		var lazy    = Regex.like().digits().letters().lazy();
-		var notLazy = Regex.like().digits().letters();
+		var lazy    = Nina.like().digits().letters().lazy();
+		var notLazy = Nina.like().digits().letters();
 		
 		pl("Lazy Regex      : %s", lazy);
 		pl("Not Lazy Regex  : %s", notLazy);
-		pl("Lazy Result     : %s", Regex.Dev.getParts(str, lazy.findAll(str)));
-		pl("Not Lazy Result : %s", Regex.Dev.getParts(str, notLazy.findAll(str)));
+		pl("Lazy Result     : %s", Nina.Dev.getParts(str, lazy.findAll(str)));
+		pl("Not Lazy Result : %s", Nina.Dev.getParts(str, notLazy.findAll(str)));
 	}
 	
 	static void test22() {
 		
 		var str   = "12 Nisan 1981 Çarşamba öğleden sonra 15:45 suları";
-		var regex = Regex.like().digit(Quanta.ONE_OR_MORE).with(Look.ahead(":").negative());
+		var regex = Nina.like().digit(Quanta.ONE_OR_MORE).with(Look.ahead(":").negative());
 		
 		pl("Regex  : %s", regex);
-		pl("Result : %s", Regex.Dev.getParts(str, regex.findAll(str)));
+		pl("Result : %s", Nina.Dev.getParts(str, regex.findAll(str)));
 	}
 	
 	static void test20() {
 		
 		var str = "12 Nisan 1981";
-		pl("Result : %s", RegexChar.DIGIT.retainFrom(str));
+		pl("Result : %s", Regex.DIGIT.retainFrom(str));
 	}
 	
 	static void test19() {
 		
 		var hmt = HMT.builder()
-				.head(Regex.like().boundary())
-				.middle(Regex.like().punc().whiteSpace().toRange().negate().toRegex().oneOrMore().lazy())
-				.tail(Regex.like().boundary())
+				.head(Nina.like().boundary())
+				.middle(Nina.like().punc().whiteSpace().toRange().negate().toRegex().oneOrMore().lazy())
+				.tail(Nina.like().boundary())
 				.build();
 		
 		var str    = "hello i am 42 years old. This is the 3point for me from 1981 in spring";
@@ -862,7 +766,7 @@ public interface Regex {
 		
 		pl("Regex : %s", hmt.getRegex());
 		pl("Index : %s", result);
-		pl("Result : %s", Regex.Dev.getParts(str, result));
+		pl("Result : %s", Nina.Dev.getParts(str, result));
 		
 	}
 	
@@ -871,7 +775,7 @@ public interface Regex {
 		
 		CoupleFinder _parser = new CoupleFinder(":", 3, 4);
 		var          str1    = "01:0dfd45546d54f121124:49df55:9dfiü";
-		CoupleFinder parser  = new CoupleFinder(Regex.like(":"), Regex.like("[0-9]").times(1, 2), Regex.like("[0-9]").times(1, 2));
+		CoupleFinder parser  = new CoupleFinder(Nina.like(":"), Nina.like("[0-9]").times(1, 2), Nina.like("[0-9]").times(1, 2));
 		
 		pl("Regex  : %s", parser.pattern.pattern());
 		pl("Result : %s", parser.parseAll(str1));
@@ -882,7 +786,7 @@ public interface Regex {
 	static void test17() {
 		
 		var str   = "123456789";
-		var regex = Regex.regex(Regex.rangeNumbers().except(Regex.range("3-5")));
+		var regex = Nina.regex(Nina.rangeNumbers().except(Nina.range("3-5")));
 		pl("Regex  : %s", regex);
 		pl("Result : %s", regex.matchesOf(str));
 	}
@@ -890,7 +794,7 @@ public interface Regex {
 	static void test16() {
 		
 		var str   = "123456789";
-		var regex = Regex.regex(Regex.range("345").intersect("0-9"));
+		var regex = Nina.regex(Nina.range("345").intersect("0-9"));
 		pl("Regex  : %s", regex);
 		pl("Result : %s", regex.matchesOf(str));
 	}
@@ -913,7 +817,7 @@ public interface Regex {
 	static void test13() {
 		
 		var str   = "123goGo";
-		var regex = Teddy.regex().with("[0-9]").oneOrMore();
+		var regex = Teddy.regex().with(Range.digits()).oneOrMore();
 		pl("Regex : %s", regex);
 		var result = regex.group("repeat", "go").oneOrMore().ignoreCase().toGroup("all").test(str);
 		pl("Result : %s", result);
@@ -1080,15 +984,16 @@ public interface Regex {
 		
 		System.out.printf((message != null ? message.toString() : "null") + "%n", args);
 	}
+	//endregion
 	
 	/**
 	 * Bir karakterin ait olduğu karakter sınıfını döndürür.<br>
 	 *
 	 * <ul>
-	 *    <li>{@link com.tr.hsyn.regex.Regex#WHITE_SPACE}  : boşluk sınıfı</li>
-	 *    <li>{@link com.tr.hsyn.regex.Regex#DIGIT}  : sayı sınıfı</li>
-	 *    <li>{@link com.tr.hsyn.regex.Regex#LETTER} : harf sınıfı</li>
-	 *    <li>{@link com.tr.hsyn.regex.Regex#PUNC}   : noktalama sınıfı</li>
+	 *    <li>{@link Character#WHITE_SPACE}  : boşluk sınıfı</li>
+	 *    <li>{@link Character#DIGIT}  : sayı sınıfı</li>
+	 *    <li>{@link Character#LETTER} : harf sınıfı</li>
+	 *    <li>{@link Character#PUNCTUATION}   : noktalama sınıfı</li>
 	 * </ul>
 	 *
 	 * @param c Test edilecek karakter
@@ -1096,11 +1001,11 @@ public interface Regex {
 	 */
 	static String getCharacterClass(char c) {
 		
-		if (java.lang.Character.isLetter(c)) return Regex.LETTER;
-		if (java.lang.Character.isDigit(c)) return Regex.DIGIT;
-		if (java.lang.Character.isWhitespace(c)) return Regex.WHITE_SPACE;
+		if (java.lang.Character.isLetter(c)) return Character.LETTER;
+		if (java.lang.Character.isDigit(c)) return Character.DIGIT;
+		if (java.lang.Character.isWhitespace(c)) return Character.WHITE_SPACE;
 		
-		return Regex.PUNC;
+		return Character.PUNCTUATION;
 	}
 	
 	/**
@@ -1205,7 +1110,7 @@ public interface Regex {
 		 * @return Yeni bir string
 		 */
 		@NotNull
-		static @Unmodifiable CharSequence remove(@NotNull String sequence, @NotNull RegexChar regexChar) {
+		static @Unmodifiable CharSequence remove(@NotNull String sequence, @NotNull Character regexChar) {
 			
 			return regexChar.removeFrom(sequence);
 		}
@@ -1279,7 +1184,7 @@ public interface Regex {
 		@NotNull
 		static String removeWhiteSpaces(String str) {
 			
-			return replace(str, "", WHITE_SPACE);
+			return replace(str, "", Character.WHITE_SPACE);
 		}
 		
 		/**
@@ -1291,13 +1196,13 @@ public interface Regex {
 		@NotNull
 		static String removeDigits(String str) {
 			
-			return replace(str, "", DIGIT);
+			return replace(str, "", Character.DIGIT);
 		}
 		
 		@NotNull
 		static String removeLetters(String str) {
 			
-			return replace(str, "", LETTER);
+			return replace(str, "", Character.LETTER);
 		}
 		
 		/**
@@ -1309,7 +1214,7 @@ public interface Regex {
 		@NotNull
 		static String retainDigits(String str) {
 			
-			if (str != null) return str.replaceAll(NON_DIGIT, "");
+			if (str != null) return str.replaceAll(Character.NON_DIGIT, "");
 			
 			return "";
 		}
@@ -1317,7 +1222,7 @@ public interface Regex {
 		@NotNull
 		static String retainLetters(String str) {
 			
-			if (str != null) return str.replaceAll(NON_LETTER, "");
+			if (str != null) return str.replaceAll(Character.NON_LETTER, "");
 			
 			return "";
 		}
@@ -1573,12 +1478,41 @@ public interface Regex {
 				
 				int code = CharacterSet.getCharacterCode(clazz);
 				
-				Regex.pl("Class : %66s - %-2c - %-2d", clazz, c, code);
+				Nina.pl("Class : %66s - %-2c - %-2d", clazz, c, code);
 				
 				codes.add(code);
 			}
 			
 			return codes.toArray(new Integer[0]);
+		}
+	}
+	
+	interface Lib {
+		
+		/**
+		 * Yazının içinde, düzenli ifadenin geçtiği yerleri döndürür.
+		 *
+		 * @param text  Yazı
+		 * @param regex Düzenli ifade
+		 * @return Düzenli ifadenin geçtiği yerlerin listesi
+		 */
+		@NotNull
+		static List<Index> findAll(@NotNull String text, @NotNull String regex) {
+			
+			return findAll(text, regex, 0);
+		}
+		
+		/**
+		 * Yazının içinde, düzenli ifadenin geçtiği yerleri döndürür.
+		 *
+		 * @param text  Yazı
+		 * @param regex Düzenli ifade
+		 * @param index Aramanın başlayacağı index
+		 * @return Düzenli ifadenin geçtiği yerlerin listesi
+		 */
+		static @NotNull List<Index> findAll(@NotNull String text, @NotNull String regex, int index) {
+			
+			return Nina.like(regex).findAll(text, index);
 		}
 	}
 	

@@ -125,7 +125,8 @@ public interface Modifier extends Text {
 	/**
 	 * @return only modifier string (iux vs.)
 	 */
-	@NotNull CharSequence getModifier();
+	@NotNull
+	CharSequence getModifier();
 	
 	
 }

@@ -1,7 +1,7 @@
 package com.tr.hsyn.regex.dev;
 
 
-import com.tr.hsyn.regex.Regex;
+import com.tr.hsyn.regex.Nina;
 import com.tr.hsyn.regex.cast.Index;
 import com.tr.hsyn.regex.cast.RegexBuilder;
 import com.tr.hsyn.regex.cast.Text;
@@ -239,7 +239,7 @@ public class CoupleFinder {
 		String rightDistance = String.format("{1,%d}+", distanceRight);
 		
 		RegexBuilder regex =
-				Regex.like()
+				Nina.like()
 						.group(LEFT, String.format("%s%s", LEFT_REGEX, leftDistance))
 						.with(link)
 						.group(RIGHT, String.format("%s%s", RIGHT_REGEX, rightDistance));
@@ -252,7 +252,7 @@ public class CoupleFinder {
 	private Pattern createPattern(@NotNull Text linkRegex, @NotNull Text leftRegex, @NotNull Text rightRegex) {
 		
 		RegexBuilder regex =
-				Regex.like()
+				Nina.like()
 						.group(LEFT, leftRegex)
 						.with(linkRegex)
 						.group(RIGHT, rightRegex);

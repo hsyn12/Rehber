@@ -18,13 +18,17 @@ public interface RangeExpression extends RegularExpression {
 	 *
 	 * @return Yeni bir {@link Range} nesnesi
 	 */
-	@NotNull Range toRange();
+	@NotNull
+	Range toRange();
 	
 	<T extends Text> @NotNull RegexBuilder range(@NotNull T regularExpression);
 	
-	@NotNull RegexBuilder range(@NotNull String regularExpression);
+	@NotNull
+	RegexBuilder range(@NotNull String regularExpression);
 	
-	@NotNull RegexBuilder rangeNumbers();
+	@NotNull
+	RegexBuilder rangeNumbers();
 	
-	@NotNull RegexBuilder rangeLetters();
+	@NotNull
+	RegexBuilder rangeLetters();
 }

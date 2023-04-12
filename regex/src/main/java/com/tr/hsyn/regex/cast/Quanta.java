@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
  * </pre><br>
  */
 @SuppressWarnings("DefaultLocale")
-public enum Quanta {
+public enum Quanta implements Text {
 	
 	/**
 	 * Means optional match.
@@ -133,8 +133,12 @@ public enum Quanta {
 	@Override
 	public String toString() {
 		
-		return getRegex();
+		return regex;
 	}
 	
-	
+	@Override
+	public @NotNull String getText() {
+		
+		return regex;
+	}
 }

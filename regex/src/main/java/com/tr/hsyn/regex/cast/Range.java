@@ -1,12 +1,8 @@
 package com.tr.hsyn.regex.cast;
 
 
-import static com.tr.hsyn.regex.Regex.DIGIT;
-import static com.tr.hsyn.regex.Regex.LETTER;
-
-import com.tr.hsyn.regex.Regex;
 import com.tr.hsyn.regex.act.Ranger;
-import com.tr.hsyn.regex.dev.RegexChar;
+import com.tr.hsyn.regex.dev.regex.character.Character;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -22,22 +18,22 @@ public interface Range extends Text {
 	 * Returns a range for letters.<br><br>
 	 *
 	 * @return New <code>Range</code> with letters
-	 * @see Regex#LETTER
+	 * @see Character#LETTER
 	 */
 	static @NotNull Range letters() {
 		
-		return new Ranger(LETTER);
+		return new Ranger(Character.LETTER);
 	}
 	
 	/**
 	 * Returns a range for digits.<br><br>
 	 *
 	 * @return New <code>Range</code> with digits
-	 * @see Regex#DIGIT
+	 * @see Character#DIGIT
 	 */
 	static @NotNull Range digits() {
 		
-		return new Ranger(DIGIT);
+		return new Ranger(Character.DIGIT);
 	}
 	
 	/**
@@ -65,25 +61,25 @@ public interface Range extends Text {
 	}
 	
 	/**
-	 * Returns a range for the given {@link RegexChar}.<br><br>
+	 * Returns a range for the given {@link com.tr.hsyn.regex.dev.regex.character.Character}.<br><br>
 	 *
-	 * @param regexChar The <code>RegexChar</code> for the range
+	 * @param regexChar The <code>com.tr.hsyn.regex.dev.regex.character.Character</code> for the range
 	 * @return New <code>Range</code> with the given expression
 	 */
-	static @NotNull Range of(@NotNull RegexChar regexChar) {
+	static @NotNull Range of(@NotNull Character regexChar) {
 		
 		return new Ranger(regexChar);
 	}
 	
 	/**
-	 * Returns a negated range for the given {@link RegexChar}.<br><br>
+	 * Returns a negated range for the given {@link Character}.<br><br>
 	 *
-	 * <pre>var range = Range.noneOf(RegexChar.DIGIT);// [^0-9]</pre>
+	 * <pre>var range = Range.noneOf(Character.DIGIT);// [^0-9]</pre>
 	 *
-	 * @param regexChar The <code>RegexChar</code> for the range
+	 * @param regexChar The <code>Character</code> for the range
 	 * @return New <code>Range</code> with the given expression
 	 */
-	static @NotNull Range noneOf(@NotNull RegexChar regexChar) {
+	static @NotNull Range noneOf(@NotNull Character regexChar) {
 		
 		return new Ranger(regexChar, true);
 	}
@@ -118,7 +114,8 @@ public interface Range extends Text {
 	 * @param range The range for the range
 	 * @return New <code>Range</code> with the given range
 	 */
-	@NotNull Range with(@NotNull Range range);
+	@NotNull
+	Range with(@NotNull Range range);
 	
 	/**
 	 * Returns the non brackets range as a string.<br><br>
@@ -127,7 +124,8 @@ public interface Range extends Text {
 	 *
 	 * @return New <code>String</code> with the range
 	 */
-	@NotNull String getRange();
+	@NotNull
+	String getRange();
 	
 	/**
 	 * Negates the range.<br><br>
@@ -139,7 +137,8 @@ public interface Range extends Text {
 	 *
 	 * @return New {@link Range} with negated {@code [^regex]}
 	 */
-	@NotNull Range negate();
+	@NotNull
+	Range negate();
 	
 	/**
 	 * Convert the range which is subtracted from the given range.<br>
@@ -154,7 +153,8 @@ public interface Range extends Text {
 	 * @param range the range to subtract from this range
 	 * @return the regex for this range which is subtracted from the given range
 	 */
-	@NotNull Range except(@NotNull Range range);
+	@NotNull
+	Range except(@NotNull Range range);
 	
 	/**
 	 * Convert the range which is subtracted from the given sequence.<br>
@@ -169,7 +169,8 @@ public interface Range extends Text {
 	 * @param sequence the sequence to subtract from this range
 	 * @return the range which is subtracted from the given sequence
 	 */
-	@NotNull Range except(@NotNull String sequence);
+	@NotNull
+	Range except(@NotNull String sequence);
 	
 	/**
 	 * Returns a regex as a range for this range which is intersected with the given range.<br>
@@ -188,7 +189,8 @@ public interface Range extends Text {
 	 * @param range the range to intersect with this range
 	 * @return the regex for this range which is intersected with the given range
 	 */
-	@NotNull Range intersect(@NotNull Range range);
+	@NotNull
+	Range intersect(@NotNull Range range);
 	
 	/**
 	 * Convert the range which is intersected with the given sequence.<br>
@@ -203,13 +205,15 @@ public interface Range extends Text {
 	 * @param sequence the sequence to intersect with this range
 	 * @return the range which is intersected with the given sequence
 	 */
-	@NotNull Range intersect(@NotNull String sequence);
+	@NotNull
+	Range intersect(@NotNull String sequence);
 	
 	/**
 	 * Returns a regex for this range.<br>
 	 *
 	 * @return The regex for this range
 	 */
-	@NotNull RegexBuilder toRegex();
+	@NotNull
+	RegexBuilder toRegex();
 	
 }

@@ -12,13 +12,19 @@ import org.jetbrains.annotations.NotNull;
 public interface Text {
 	
 	@NotNull
-	static Text of(@NotNull String text) {
+	static Text of(@NotNull String expression) {
 		
-		return new SimpleText(text);
+		return new SimpleText(expression);
 	}
 	
 	/**
 	 * @return Text
 	 */
-	@NotNull String getText();
+	@NotNull
+	String getText();
+	
+	default <T extends Text> @NotNull Text with(@NotNull T expression) {
+		
+		return of(getText() + expression.getText());
+	}
 }

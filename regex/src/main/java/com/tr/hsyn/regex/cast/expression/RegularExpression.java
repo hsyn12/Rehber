@@ -26,7 +26,8 @@ public interface RegularExpression extends RegexEditor {
 	 * @param expression Eklenecek düzenli ifade
 	 * @return Kurulan {@code RegexBuilder} nesnesi
 	 */
-	@NotNull RegexBuilder with(@NotNull String expression);
+	@NotNull
+	RegexBuilder with(@NotNull String expression);
 	
 	/**
 	 * Düzenli ifadenin sonuna ekleme yapar.<br><br>
@@ -45,6 +46,7 @@ public interface RegularExpression extends RegexEditor {
 	 * @param <T>               {@link Text} sınıfınından herhangi bir tür
 	 * @return Kurulan {@code RegexBuilder} nesnesi
 	 */
+	@Override
 	<T extends Text> @NotNull RegexBuilder with(@NotNull T regularExpression);
 	
 	/**
@@ -63,7 +65,8 @@ public interface RegularExpression extends RegexEditor {
 	 * @param i int
 	 * @return Kurulan {@code RegexBuilder} nesnesi
 	 */
-	@NotNull RegexBuilder with(int i);
+	@NotNull
+	RegexBuilder with(int i);
 	
 	/**
 	 * Düzenli ifadenin sonuna ekleme yapar.<br><br>
@@ -81,5 +84,6 @@ public interface RegularExpression extends RegexEditor {
 	 * @param c char
 	 * @return Kurulan {@code RegexBuilder} nesnesi
 	 */
-	@NotNull RegexBuilder with(char c);
+	@NotNull
+	RegexBuilder with(char c);
 }

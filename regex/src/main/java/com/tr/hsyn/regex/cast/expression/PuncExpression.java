@@ -1,9 +1,9 @@
 package com.tr.hsyn.regex.cast.expression;
 
 
-import com.tr.hsyn.regex.Regex;
 import com.tr.hsyn.regex.cast.Quanta;
 import com.tr.hsyn.regex.cast.RegexBuilder;
+import com.tr.hsyn.regex.dev.regex.character.Character;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -17,44 +17,40 @@ public interface PuncExpression extends RegularExpression {
 	 * Bir noktalama işareti.
 	 *
 	 * @return This {@link RegexBuilder}
-	 * @see Regex#PUNC
 	 */
 	default @NotNull RegexBuilder punc() {
 		
-		return with(Regex.PUNC);
+		return with(Character.PUNCTUATION);
 	}
 	
 	/**
 	 * Noktalama işareti dışında bir karakter.
 	 *
 	 * @return This {@link RegexBuilder}
-	 * @see Regex#NON_PUNC
 	 */
 	default @NotNull RegexBuilder nonPunc() {
 		
-		return with(Regex.NON_PUNC);
+		return with(Character.NON_PUNCTUATION);
 	}
 	
 	/**
 	 * <em>Bir yada daha fazla</em> noktalama işareti.
 	 *
 	 * @return This {@link RegexBuilder}
-	 * @see Regex#PUNCS
 	 */
 	default @NotNull RegexBuilder puncs() {
 		
-		return with(Regex.PUNCS);
+		return punc().oneOrMore();
 	}
 	
 	/**
 	 * <em>Bir yada daha fazla</em> noktalama harici karakter.
 	 *
 	 * @return This {@link RegexBuilder}
-	 * @see Regex#NON_PUNCS
 	 */
 	default @NotNull RegexBuilder nonPuncs() {
 		
-		return with(Regex.NON_PUNCS);
+		return nonPunc().oneOrMore();
 	}
 	
 	/**
@@ -62,11 +58,10 @@ public interface PuncExpression extends RegularExpression {
 	 *
 	 * @param quanta Çokluk
 	 * @return This {@link RegexBuilder}
-	 * @see Regex#PUNC
 	 */
 	default @NotNull RegexBuilder punc(@NotNull Quanta quanta) {
 		
-		return with(Regex.PUNC + quanta);
+		return with(Character.PUNCTUATION + quanta);
 	}
 	
 }

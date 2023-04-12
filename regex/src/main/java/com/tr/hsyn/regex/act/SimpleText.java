@@ -8,16 +8,28 @@ import org.jetbrains.annotations.NotNull;
 
 public class SimpleText implements Text {
 	
-	private final String text;
+	private final String expression;
 	
-	public SimpleText(@NotNull String text) {
+	public SimpleText(@NotNull String expression) {
 		
-		this.text = text;
+		this.expression = expression;
+	}
+	
+	public <T extends Text> SimpleText(@NotNull T expression) {
+		
+		this.expression = expression.getText();
 	}
 	
 	@Override
 	public @NotNull String getText() {
 		
-		return text;
+		return expression;
+	}
+	
+	@NotNull
+	@Override
+	public String toString() {
+		
+		return getText();
 	}
 }

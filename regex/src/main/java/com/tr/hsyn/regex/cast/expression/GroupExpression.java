@@ -106,11 +106,14 @@ public interface GroupExpression extends RegularExpression {
 	 *
 	 * @return Kurulan {@link RegexBuilder} nesnesi
 	 */
-	@NotNull RegexBuilder toGroup();
+	@NotNull
+	RegexBuilder toGroup();
 	
-	@NotNull RegexBuilder toGroupAtomic();
+	@NotNull
+	RegexBuilder toGroupAtomic();
 	
-	@NotNull RegexBuilder toGroupNonCaptured();
+	@NotNull
+	RegexBuilder toGroupNonCaptured();
 	
 	/**
 	 * Düzenli ifadenin tamamını grup olarak döndürür.<br><br>
@@ -124,5 +127,6 @@ public interface GroupExpression extends RegularExpression {
 	 * @param groupName Grubun adı
 	 * @return Kurulan {@link RegexBuilder} nesnesi
 	 */
-	@NotNull RegexBuilder toGroup(@NotNull String groupName);
+	@NotNull
+	RegexBuilder toGroup(@NotNull String groupName);
 }

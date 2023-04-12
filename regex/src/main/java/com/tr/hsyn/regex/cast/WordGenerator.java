@@ -1,7 +1,7 @@
 package com.tr.hsyn.regex.cast;
 
 
-import com.tr.hsyn.regex.Regex;
+import com.tr.hsyn.regex.Nina;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,7 +31,7 @@ public class WordGenerator {
 	 */
 	public WordGenerator(@Nullable String like, int length, @Nullable String excludedChars) {
 		
-		regexCodes  = Regex.Dev.toRegexCodes(like != null ? like : "laleli", true, false);
+		regexCodes  = Nina.Dev.toRegexCodes(like != null ? like : "laleli", true, false);
 		this.length = (length > 0) ? length : (like != null) ? like.length() : 6;
 		
 		if (excludedChars != null && excludedChars.length() > 0)

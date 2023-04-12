@@ -125,7 +125,8 @@ public interface Look extends Text {
 	 *
 	 * @return Yeni bir {@link Look} nesnesi
 	 */
-	@NotNull Look positive();
+	@NotNull
+	Look positive();
 	
 	/**
 	 * Kontrol ifadesini negatif (olumsuz) yapar.
@@ -144,5 +145,6 @@ public interface Look extends Text {
 	 *
 	 * @return Yeni bir {@link Look} nesnesi
 	 */
-	@NotNull Look negative();
+	@NotNull
+	Look negative();
 }
