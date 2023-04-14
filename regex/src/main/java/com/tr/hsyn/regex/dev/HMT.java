@@ -6,7 +6,6 @@ import com.tr.hsyn.regex.cast.Index;
 import com.tr.hsyn.regex.cast.RegexBuilder;
 import com.tr.hsyn.regex.cast.Text;
 import com.tr.hsyn.regex.dev.regex.Regex;
-import com.tr.hsyn.regex.dev.regex.character.Character;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -25,7 +24,7 @@ import java.util.List;
  *
  *    <li>
  *       Sınıfı kurarken belirtilen bölümler olduğu gibi kabul edilir,
- *       belirtilmeyen bölümler için {@link Character#ANY} düzenli ifadesi kullanılır.
+ *       belirtilmeyen bölümler için {@link Regex#ANY} düzenli ifadesi kullanılır.
  *       Bu düzenli ifadenin herhangi bir harf, sayı, noktalama, boşluk veya {@code _} alt tire karakterlerinden
  *       kabul ettiğine ve bu karakterlerden herhangi birinden en az bir tane olması gerektiğine dikkat edilmeli.
  *       Yani bir bölüm belirtilmese bile o bölümde herhangi bir karakter geçmek zorunda.
@@ -199,9 +198,9 @@ public class HMT {
 	 */
 	public static final class HMTBuilder {
 		
-		private String head   = Character.ANY + "+?";
-		private String middle = Character.ANY + "+?";
-		private String tail   = Character.ANY + "+?";
+		private String head   = Regex.ANY + "+?";
+		private String middle = Regex.ANY + "+?";
+		private String tail   = Regex.ANY + "+?";
 		
 		private HMTBuilder() {}
 		

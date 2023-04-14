@@ -35,7 +35,7 @@ public interface Character extends Text {
 	 */
 	default String removeFrom(@NotNull String text) {
 		
-		return replaceFrom(text, "");
+		return text.replaceAll(getText(), "");
 	}
 	
 	/**
@@ -78,10 +78,10 @@ public interface Character extends Text {
 	 * Bir yazının tamamının aynı tür karakterden olup olmadığını test eder.<br><br>
 	 *
 	 * <pre>
-	 * Regex.LETTER.all("seni sensiz yaşamak en kötü kader olsa gerek");//false
-	 * Regex.LETTER.all("senisensizyaşamakenkötükaderolsagerek");//true
-	 * Regex.DIGIT.all("12041981");//true
-	 * Regex.DIGIT.all("12.04.1981");//false
+	 * Character.LETTER.all("seni sensiz yaşamak en kötü kader olsa gerek");//false
+	 * Character.LETTER.all("senisensizyaşamakenkötükaderolsagerek");//true
+	 * Character.DIGIT.all("12041981");//true
+	 * Character.DIGIT.all("12.04.1981");//false
 	 * </pre>
 	 *
 	 * @param text Test edilecek yazı
@@ -92,5 +92,11 @@ public interface Character extends Text {
 		return text.matches(getText() + Quanta.ONE_OR_MORE);
 	}
 	
+	/**
+	 * Karakter türünün tümleyenini döndürür. <br>
+	 * <code>LETTER --> NON_LETTER</code> gibi.
+	 *
+	 * @return Karakter türünün tümleyenini döndürür.
+	 */
 	@NotNull Character non();
 }

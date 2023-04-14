@@ -106,14 +106,14 @@ public interface Regex {
 	/**
 	 * Yazının içinden, verilen karakter türüne ait karakterleri siler.
 	 *
-	 * @param sequence  Yazı
+	 * @param text      Yazı
 	 * @param regexChar Karakter türü
 	 * @return Yeni bir string
 	 */
 	@NotNull
-	static @Unmodifiable CharSequence removeAll(@NotNull String sequence, @NotNull Character regexChar) {
+	static @Unmodifiable String removeAll(@NotNull String text, @NotNull Character regexChar) {
 		
-		return regexChar.removeFrom(sequence);
+		return regexChar.removeFrom(text);
 	}
 	
 	/**
@@ -124,7 +124,7 @@ public interface Regex {
 	 * @return New string with all matching characters removed
 	 */
 	@NotNull
-	static @Unmodifiable CharSequence removeAll(@NotNull String sequence, @NotNull String regex) {
+	static @Unmodifiable String removeAll(@NotNull String sequence, @NotNull String regex) {
 		
 		return sequence.replaceAll(regex, "");
 	}
@@ -185,7 +185,7 @@ public interface Regex {
 	@NotNull
 	static String removeWhiteSpaces(@NotNull String str) {
 		
-		return str.replaceAll(WHITE_SPACE, "");
+		return Character.WHITE_SPACE.removeFrom(str);
 	}
 	
 	/**
@@ -197,13 +197,13 @@ public interface Regex {
 	@NotNull
 	static String removeDigits(@NotNull String str) {
 		
-		return str.replaceAll(DIGIT, "");
+		return Character.DIGIT.removeFrom(str);
 	}
 	
 	@NotNull
 	static String removeLetters(@NotNull String str) {
 		
-		return str.replaceAll(LETTER, "");
+		return Character.LETTER.removeFrom(str);
 	}
 	
 	/**
@@ -215,7 +215,7 @@ public interface Regex {
 	@NotNull
 	static String retainDigits(String str) {
 		
-		if (str != null) return str.replaceAll(NON_DIGIT, "");
+		if (str != null) return Character.NON_DIGIT.removeFrom(str);
 		
 		return "";
 	}
@@ -223,7 +223,7 @@ public interface Regex {
 	@NotNull
 	static String retainLetters(String str) {
 		
-		if (str != null) return str.replaceAll(NON_LETTER, "");
+		if (str != null) return Character.NON_LETTER.removeFrom(str);
 		
 		return "";
 	}
@@ -296,17 +296,6 @@ public interface Regex {
 	static boolean test(@NotNull String str, @NotNull String regex) {
 		
 		return str.matches(regex);
-	}
-	
-	/**
-	 * Test if the given string is consists of only digits.
-	 *
-	 * @param str the string to test
-	 * @return true if the string is consists of only digits, false otherwise
-	 */
-	static boolean isNumber(@NotNull String str) {
-		
-		return str.matches(NUMBER);
 	}
 	
 	/**
@@ -589,5 +578,16 @@ public interface Regex {
 	static boolean isLetter(@NotNull String str) {
 		
 		return str.matches(WORD);
+	}
+	
+	/**
+	 * Test if the given string is consists of only digits.
+	 *
+	 * @param str the string to test
+	 * @return true if the string is consists of only digits, false otherwise
+	 */
+	static boolean isNumber(@NotNull String str) {
+		
+		return str.matches(NUMBER);
 	}
 }
