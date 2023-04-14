@@ -6,6 +6,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.tr.hsyn.regex.Nina;
 import com.tr.hsyn.regex.cast.Modifier;
+import com.tr.hsyn.regex.dev.regex.Regex;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -220,11 +221,11 @@ public final class Stringx {
 	 */
 	public static boolean isMatch(String word, String searchText, boolean ignoreCase) {
 		
-		if (Nina.Test.isNoboe(word) || Nina.Test.isNoboe(searchText)) return false;
+		if (Regex.isNoboe(word) || Regex.isNoboe(searchText)) return false;
 		
 		if (word.length() < searchText.length()) return false;
 		
-		searchText = Nina.Edit.removeWhiteSpaces(searchText);
+		searchText = Regex.removeWhiteSpaces(searchText);
 		
 		var reg = Nina.regex().whiteSpace().zeroOrMore();
 		
@@ -240,6 +241,11 @@ public final class Stringx {
 		return reg.existIn(word);
 		
 		//return indexOfMatches(word, searchText, ignoreCase).length != 0;
+	}
+	
+	public static boolean isNoboe(String str) {
+		
+		return str == null || str.replaceAll("\\p{Z}", "").isEmpty();
 	}
 	
 	@NotNull
@@ -420,9 +426,9 @@ public final class Stringx {
 	 */
 	public static Integer @NotNull [] indexOfMatches(String word, String searchText, boolean ignoreCase) {
 		
-		if (Nina.Test.isNoboe(word) || Nina.Test.isNoboe(searchText)) return new Integer[0];
+		if (Regex.isNoboe(word) || Regex.isNoboe(searchText)) return new Integer[0];
 		
-		searchText = Nina.Edit.removeWhiteSpaces(searchText);
+		searchText = Regex.removeWhiteSpaces(searchText);
 		
 		var reg = Nina.whiteSpace().zeroOrMore();
 		

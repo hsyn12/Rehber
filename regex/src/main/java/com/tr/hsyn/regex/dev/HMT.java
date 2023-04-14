@@ -5,6 +5,7 @@ import com.tr.hsyn.regex.Nina;
 import com.tr.hsyn.regex.cast.Index;
 import com.tr.hsyn.regex.cast.RegexBuilder;
 import com.tr.hsyn.regex.cast.Text;
+import com.tr.hsyn.regex.dev.regex.Regex;
 import com.tr.hsyn.regex.dev.regex.character.Character;
 
 import org.jetbrains.annotations.NotNull;
@@ -14,7 +15,7 @@ import java.util.List;
 
 /**
  * <strong>H</strong>ead - <strong>M</strong>iddle - <strong>T</strong>ail.<br>
- * Düzenli bir ifade modelinin başını ortasını ve sonunu tarif etmek için kullanılır.<br>
+ * Bir ifadenin başını ortasını ve sonunu tarif etmek için kullanılır.<br>
  * <p>
  * Sınıfı kullanmadan önce bilinmesi gereken hususlar şunlardır :
  *
@@ -24,7 +25,7 @@ import java.util.List;
  *
  *    <li>
  *       Sınıfı kurarken belirtilen bölümler olduğu gibi kabul edilir,
- *       belirtilmeyen bölümler için {@link Character#ANY} {@code + "+"} düzenli ifadesi kullanılır.
+ *       belirtilmeyen bölümler için {@link Character#ANY} düzenli ifadesi kullanılır.
  *       Bu düzenli ifadenin herhangi bir harf, sayı, noktalama, boşluk veya {@code _} alt tire karakterlerinden
  *       kabul ettiğine ve bu karakterlerden herhangi birinden en az bir tane olması gerektiğine dikkat edilmeli.
  *       Yani bir bölüm belirtilmese bile o bölümde herhangi bir karakter geçmek zorunda.
@@ -212,7 +213,7 @@ public class HMT {
 		 */
 		public HMTBuilder head(String regex) {
 			
-			if (!Nina.Test.isNoboe(regex)) this.head = regex;
+			if (!Regex.isNoboe(regex)) this.head = regex;
 			return this;
 		}
 		
@@ -224,7 +225,7 @@ public class HMT {
 		 */
 		public HMTBuilder middle(@NotNull Text regex) {
 			
-			if (!Nina.Test.isNoboe(regex.getText())) this.middle = regex.getText();
+			if (!Regex.isNoboe(regex.getText())) this.middle = regex.getText();
 			return this;
 		}
 		
@@ -236,7 +237,7 @@ public class HMT {
 		 */
 		public HMTBuilder tail(@NotNull Text regex) {
 			
-			if (!Nina.Test.isNoboe(regex.getText())) this.tail = regex.getText();
+			if (!Regex.isNoboe(regex.getText())) this.tail = regex.getText();
 			return this;
 		}
 		
@@ -248,7 +249,7 @@ public class HMT {
 		 */
 		public HMTBuilder head(@NotNull Text regex) {
 			
-			if (!Nina.Test.isNoboe(regex.getText())) this.head = regex.getText();
+			if (!Regex.isNoboe(regex.getText())) this.head = regex.getText();
 			return this;
 		}
 		
@@ -260,7 +261,7 @@ public class HMT {
 		 */
 		public HMTBuilder middle(String regex) {
 			
-			if (!Nina.Test.isNoboe(regex)) this.middle = regex;
+			if (!Regex.isNoboe(regex)) this.middle = regex;
 			return this;
 		}
 		
@@ -272,7 +273,7 @@ public class HMT {
 		 */
 		public HMTBuilder tail(String regex) {
 			
-			if (!Nina.Test.isNoboe(regex)) this.tail = regex;
+			if (!Regex.isNoboe(regex)) this.tail = regex;
 			return this;
 		}
 		

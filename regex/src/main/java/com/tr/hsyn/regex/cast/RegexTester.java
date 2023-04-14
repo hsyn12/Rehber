@@ -77,9 +77,9 @@ public interface RegexTester extends RegexMatcher {
 	 * @param text the text to test
 	 * @return true if the text contains the regex
 	 */
-	default boolean existIn(@NotNull CharSequence text) {
+	default boolean existIn(@NotNull String text) {
 		
-		return createMatcher(text.toString()).find();
+		return createMatcher(text).find();
 	}
 	
 	
