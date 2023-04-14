@@ -2,6 +2,11 @@ package com.tr.hsyn.regex.dev.regex.character;
 
 
 import com.tr.hsyn.regex.cast.Text;
+import com.tr.hsyn.regex.dev.regex.Regex;
+import com.tr.hsyn.regex.dev.regex.character.cast.RegexDigit;
+import com.tr.hsyn.regex.dev.regex.character.cast.RegexLetter;
+import com.tr.hsyn.regex.dev.regex.character.cast.RegexPunctuation;
+import com.tr.hsyn.regex.dev.regex.character.cast.RegexWhiteSpace;
 import com.tr.hsyn.regex.dev.regex.quantity.Quanta;
 
 import org.jetbrains.annotations.NotNull;
@@ -9,78 +14,14 @@ import org.jetbrains.annotations.NotNull;
 
 public interface Character extends Text {
 	
-	/**
-	 * An alphabetic character {@code [a-zA-Z]}
-	 */
-	String LETTER          = "\\p{L}";
-	/**
-	 * Any character except letter. {@code [^\p{L}]}
-	 */
-	String NON_LETTER      = "\\P{L}";
-	/**
-	 * A digit 0-9 {@code [0-9]}
-	 */
-	String DIGIT           = "\\p{N}";
-	/**
-	 * Any character except digit. {@code [^\d]}
-	 */
-	String NON_DIGIT       = "\\P{N}";
-	/**
-	 * A whitespace character, including line break. {@code [ \t\r\n\f\x0B]}
-	 */
-	String WHITE_SPACE     = "\\p{Z}";
-	/**
-	 * Any character except white space. {@code [^\s]}
-	 */
-	String NON_WHITE_SPACE = "\\P{Z}";
-	/**
-	 * Punctuation characters {@code [!"#$%&'()*+,\-./:;<=>?@\[\\\]^_`{|}~]}
-	 */
-	String PUNCTUATION     = "\\p{P}";
-	/**
-	 * Any character except punctuation. {@code [^\p{P}]}
-	 */
-	String NON_PUNCTUATION = "\\P{P}";
-	/**
-	 * Any character from {@link #LETTER}, {@link #DIGIT}, {@link #PUNCTUATION}, {@link #WHITE_SPACE}
-	 */
-	@NotNull String ANY              = String.format("[%s%s%s%s]", Letter.LETTER, Digit.DIGIT, Punctuation.PUNCTUATION, WhiteSpace.WHITE_SPACE);
-	/**
-	 * A lowercase alphabetic character {@code [a-z]}
-	 */
-	@NotNull String LETTER_LOWER     = "\\p{Ll}";
-	/**
-	 * Any character except lowercase alphabetic. {@code [^\p{Ll}]}
-	 */
-	@NotNull String NON_LETTER_LOWER = "\\P{Ll}";
-	/**
-	 * An uppercase alphabetic character {@code [A-Z]}
-	 */
-	@NotNull String LETTER_UPPER     = "\\p{Lu}";
-	/**
-	 * Any character except uppercase alphabetic. {@code [^\p{Lu}]}
-	 */
-	@NotNull String NON_LETTER_UPPER = "\\P{Lu}";
-	/**
-	 * Delimiters {@code '.$^{[()|*+?\'}
-	 */
-	String DELIMITER_CHARACTERS = ".$^{[()|*+?\\";
-	/**
-	 * A control character {@code [\p{Cntrl}]}
-	 */
-	@NotNull String CONTROL     = "\\p{C}";
-	/**
-	 * A non-control character {@code [^\p{C}]}
-	 */
-	@NotNull String NON_CONTROL = "\\P{C}";
-	/**
-	 * A symbol character {@code [\p{S}]}
-	 */
-	@NotNull String SYMBOL      = "\\p{S}";
-	/**
-	 * A slash character {@code [\]}
-	 */
-	@NotNull String SLASH       = "\\";
+	RegexLetter LETTER          = new RegexLetter(Regex.LETTER);
+	RegexLetter NON_LETTER      = new RegexLetter(Regex.NON_LETTER);
+	Digit       DIGIT           = new RegexDigit(Regex.DIGIT);
+	Digit       NON_DIGIT       = new RegexDigit(Regex.NON_DIGIT);
+	WhiteSpace  WHITE_SPACE     = new RegexWhiteSpace(Regex.WHITE_SPACE);
+	WhiteSpace  NON_WHITE_SPACE = new RegexWhiteSpace(Regex.NON_WHITE_SPACE);
+	Punctuation PUNCTUATION     = new RegexPunctuation(Regex.PUNCTUATION);
+	Punctuation NON_PUNCTUATION = new RegexPunctuation(Regex.NON_PUNCTUATION);
 	
 	/**
 	 * Yazı içindeki belirli bir karakter türüne ait tüm karakterleri siler.<br><br>

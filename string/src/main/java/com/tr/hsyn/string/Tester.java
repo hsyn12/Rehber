@@ -1,8 +1,6 @@
 package com.tr.hsyn.string;
 
 
-import com.tr.hsyn.regex.dev.regex.character.Character;
-
 import org.jetbrains.annotations.NotNull;
 
 
@@ -15,12 +13,12 @@ public class Tester {
 		this.text = text;
 	}
 	
-	public boolean is(@NotNull Character c) {
+	public boolean is(@NotNull String regex) {
 		
-		return c.all(text);
+		return text.matches(regex);
 	}
 	
-	public boolean isNot(@NotNull Character c) {
+	public boolean isNot(@NotNull String c) {
 		
 		return !is(c);
 	}

@@ -259,7 +259,7 @@ public interface Nina {
 	 */
 	static @NotNull RegexBuilder letter() {
 		
-		return like(Character.LETTER);
+		return like(Regex.LETTER);
 	}
 	
 	/**
@@ -310,7 +310,7 @@ public interface Nina {
 	 */
 	static @NotNull RegexBuilder digit() {
 		
-		return like(Character.DIGIT);
+		return like(Regex.DIGIT);
 	}
 	
 	/**
@@ -350,7 +350,7 @@ public interface Nina {
 	 */
 	static @NotNull RegexBuilder whiteSpace() {
 		
-		return like(Character.WHITE_SPACE);
+		return like(Regex.WHITE_SPACE);
 	}
 	
 	/**
@@ -390,7 +390,7 @@ public interface Nina {
 	 */
 	static @NotNull RegexBuilder punc() {
 		
-		return like(Character.PUNCTUATION);
+		return like(Regex.PUNCTUATION);
 	}
 	
 	/**
@@ -690,16 +690,24 @@ public interface Nina {
 	
 	static void main(String[] args) {
 		
-		test24();
+		test26();
 	}
 	
 	static void test(@org.intellij.lang.annotations.Pattern("[a-z]") String str) {}
+	
+	static void test26() {
+		
+		var str = "_";
+		
+		pl("Result : %s", str.matches(Regex.PUNCTUATION));
+		
+	}
 	
 	static void test24() {
 		
 		var str = "Seni bu köyde 5 kez 8 yerde aradım";
 		
-		var regex = Range.letters().with(Range.of(Character.WHITE_SPACE)).negate();
+		var regex = Range.letters().with(Range.of(Regex.WHITE_SPACE)).negate();
 		pl("Regex : %s", regex);
 		pl("Result : %s", Regex.getStringParts(str, regex.toRegex().findAll(str)));
 	}
@@ -735,7 +743,7 @@ public interface Nina {
 	static void test20() {
 		
 		var str = "12 Nisan 1981";
-		pl("Result : %s", Regex.DIGIT.retainFrom(str));
+		pl("Result : %s", Character.DIGIT.retainFrom(str));
 	}
 	
 	static void test19() {

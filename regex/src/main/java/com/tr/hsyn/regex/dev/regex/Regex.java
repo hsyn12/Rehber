@@ -11,14 +11,6 @@ import com.tr.hsyn.regex.cast.RegexBuilder;
 import com.tr.hsyn.regex.cast.RegexMatcher;
 import com.tr.hsyn.regex.cast.Text;
 import com.tr.hsyn.regex.dev.regex.character.Character;
-import com.tr.hsyn.regex.dev.regex.character.Digit;
-import com.tr.hsyn.regex.dev.regex.character.Letter;
-import com.tr.hsyn.regex.dev.regex.character.Punctuation;
-import com.tr.hsyn.regex.dev.regex.character.WhiteSpace;
-import com.tr.hsyn.regex.dev.regex.character.cast.RegexDigit;
-import com.tr.hsyn.regex.dev.regex.character.cast.RegexLetter;
-import com.tr.hsyn.regex.dev.regex.character.cast.RegexPunctuation;
-import com.tr.hsyn.regex.dev.regex.character.cast.RegexWhiteSpace;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -33,20 +25,83 @@ public interface Regex {
 	/**
 	 * Regular expression for digits.
 	 */
-	String      NUMBER          = "^\\p{N}+$";
+	String NUMBER          = "^\\p{N}+$";
 	/**
 	 * Regular expression for alphabetics.
 	 */
-	String      WORD            = "^\\p{L}+$";
-	Letter      LETTER          = new RegexLetter(Character.LETTER);
-	Letter      NON_LETTER      = new RegexLetter(Character.NON_LETTER);
-	Digit       DIGIT           = new RegexDigit(Character.DIGIT);
-	Digit       NON_DIGIT       = new RegexDigit(Character.NON_DIGIT);
-	WhiteSpace  WHITE_SPACE     = new RegexWhiteSpace(Character.WHITE_SPACE);
-	WhiteSpace  NON_WHITE_SPACE = new RegexWhiteSpace(Character.NON_WHITE_SPACE);
-	Punctuation PUNCTUATION     = new RegexPunctuation(Character.PUNCTUATION);
-	Punctuation NON_PUNCTUATION = new RegexPunctuation(Character.NON_PUNCTUATION);
-	
+	String WORD            = "^\\p{L}+$";
+	/**
+	 * An alphabetic character. {@code \p{L}}
+	 */
+	String LETTER          = "\\p{L}";
+	/**
+	 * Any character except letter. {@code \P{L}}
+	 */
+	String NON_LETTER      = "\\P{L}";
+	/**
+	 * A digit.  {@code \p{N}}
+	 */
+	String DIGIT           = "\\p{N}";
+	/**
+	 * Any character except digit. {@code \P{N}}
+	 */
+	String NON_DIGIT       = "\\P{N}";
+	/**
+	 * A whitespace character, including line break. {@code [ \t\r\n\f\x0B]}
+	 */
+	String WHITE_SPACE     = "\\p{Z}";
+	/**
+	 * Any character except white space.
+	 */
+	String NON_WHITE_SPACE = "\\P{Z}";
+	/**
+	 * Punctuation character {@code [!"#$%&'()*+,\-./:;<=>?@\[\\\]^_`{|}~]}
+	 */
+	String PUNCTUATION     = "\\p{P}";
+	/**
+	 * Any character except punctuation.
+	 */
+	String NON_PUNCTUATION = "\\P{P}";
+	/**
+	 * Any character from {@link #LETTER}, {@link #DIGIT}, {@link #PUNCTUATION}, {@link #WHITE_SPACE}
+	 */
+	@NotNull String ANY              = String.format("[%s%s%s%s]", LETTER, DIGIT, PUNCTUATION, WHITE_SPACE);
+	/**
+	 * A lowercase alphabetic character {@code [a-z]}
+	 */
+	@NotNull String LETTER_LOWER     = "\\p{Ll}";
+	/**
+	 * Any character except lowercase alphabetic. {@code [^\p{Ll}]}
+	 */
+	@NotNull String NON_LETTER_LOWER = "\\P{Ll}";
+	/**
+	 * An uppercase alphabetic character {@code [A-Z]}
+	 */
+	@NotNull String LETTER_UPPER     = "\\p{Lu}";
+	/**
+	 * Any character except uppercase alphabetic. {@code [^\p{Lu}]}
+	 */
+	@NotNull String NON_LETTER_UPPER = "\\P{Lu}";
+	/**
+	 * Delimiters {@code '.$^{[()|*+?\'}
+	 */
+	String DELIMITER_CHARACTERS = ".$^{[()|*+?\\";
+	/**
+	 * A control character {@code [\p{Cntrl}]}
+	 */
+	@NotNull String CONTROL     = "\\p{C}";
+	/**
+	 * A non-control character {@code [^\p{C}]}
+	 */
+	@NotNull String NON_CONTROL = "\\P{C}";
+	/**
+	 * A symbol character {@code [\p{S}]}
+	 */
+	@NotNull String SYMBOL      = "\\p{S}";
+	/**
+	 * A slash character {@code [\]}
+	 */
+	@NotNull String SLASH       = "\\";
 	
 	/**
 	 * Yazının içinden, verilen karakter türüne ait karakterleri siler.
@@ -104,17 +159,7 @@ public interface Regex {
 		if (regex == null) return str;
 		if (replacement == null) return str;
 		
-		return builder(text(regex)).replaceFrom(str, replacement, limit);
-	}
-	
-	static @NotNull Text text() {
-		
-		return Text.of("");
-	}
-	
-	static @NotNull Text text(String text) {
-		
-		return Text.of(text != null ? text : "");
+		return builder(Text.of(regex)).replaceFrom(str, replacement, limit);
 	}
 	
 	/**
@@ -140,7 +185,7 @@ public interface Regex {
 	@NotNull
 	static String removeWhiteSpaces(@NotNull String str) {
 		
-		return str.replaceAll(Character.WHITE_SPACE, "");
+		return str.replaceAll(WHITE_SPACE, "");
 	}
 	
 	/**
@@ -152,13 +197,13 @@ public interface Regex {
 	@NotNull
 	static String removeDigits(@NotNull String str) {
 		
-		return str.replaceAll(Character.DIGIT, "");
+		return str.replaceAll(DIGIT, "");
 	}
 	
 	@NotNull
 	static String removeLetters(@NotNull String str) {
 		
-		return str.replaceAll(Character.LETTER, "");
+		return str.replaceAll(LETTER, "");
 	}
 	
 	/**
@@ -170,7 +215,7 @@ public interface Regex {
 	@NotNull
 	static String retainDigits(String str) {
 		
-		if (str != null) return str.replaceAll(Character.NON_DIGIT, "");
+		if (str != null) return str.replaceAll(NON_DIGIT, "");
 		
 		return "";
 	}
@@ -178,7 +223,7 @@ public interface Regex {
 	@NotNull
 	static String retainLetters(String str) {
 		
-		if (str != null) return str.replaceAll(Character.NON_LETTER, "");
+		if (str != null) return str.replaceAll(NON_LETTER, "");
 		
 		return "";
 	}
@@ -454,10 +499,10 @@ public interface Regex {
 	 * Bir karakterin ait olduğu karakter sınıfını döndürür.<br>
 	 *
 	 * <ul>
-	 *    <li>{@link Character#WHITE_SPACE}  : boşluk sınıfı</li>
-	 *    <li>{@link Character#DIGIT}  : sayı sınıfı</li>
-	 *    <li>{@link Character#LETTER} : harf sınıfı</li>
-	 *    <li>{@link Character#PUNCTUATION}   : noktalama sınıfı</li>
+	 *    <li>{@link #WHITE_SPACE}  : boşluk sınıfı</li>
+	 *    <li>{@link #DIGIT}  : sayı sınıfı</li>
+	 *    <li>{@link #LETTER} : harf sınıfı</li>
+	 *    <li>{@link #PUNCTUATION}   : noktalama sınıfı</li>
 	 * </ul>
 	 *
 	 * @param c Test edilecek karakter
@@ -465,11 +510,11 @@ public interface Regex {
 	 */
 	static String getCharacterClass(char c) {
 		
-		if (java.lang.Character.isLetter(c)) return Character.LETTER;
-		if (java.lang.Character.isDigit(c)) return Character.DIGIT;
-		if (java.lang.Character.isWhitespace(c)) return Character.WHITE_SPACE;
+		if (java.lang.Character.isLetter(c)) return LETTER;
+		if (java.lang.Character.isDigit(c)) return DIGIT;
+		if (java.lang.Character.isWhitespace(c)) return WHITE_SPACE;
 		
-		return Character.PUNCTUATION;
+		return PUNCTUATION;
 	}
 	
 	/**
@@ -530,5 +575,19 @@ public interface Regex {
 		}
 		
 		return codes.toArray(new Integer[0]);
+	}
+	
+	/**
+	 * Bir yazının tamamının harf karakterlerinden oluşup oluşmadığını test eder.
+	 *
+	 * @param str Yazı
+	 * @return {@code true} ise, tüm yazı harf karakterlerinden oluşuyor,
+	 *      {@code false} ise yazının içinde harf karakteri dışında bir karakter var yada
+	 * 		yazı boş demektir.
+	 * @see Regex#LETTER
+	 */
+	static boolean isLetter(@NotNull String str) {
+		
+		return str.matches(WORD);
 	}
 }

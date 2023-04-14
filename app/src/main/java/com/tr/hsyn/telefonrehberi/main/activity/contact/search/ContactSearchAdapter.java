@@ -133,7 +133,7 @@ public class ContactSearchAdapter extends RecyclerView.Adapter<ContactSearchAdap
 		
 		if (l.isEmpty()) return "?";
 		
-		if (Regex.LETTER.all(String.valueOf(l.charAt(0)))) return l.toUpperCase(Locale.ROOT);
+		if (Regex.isLetter(String.valueOf(l.charAt(0)))) return l.toUpperCase(Locale.ROOT);
 		
 		return "?";
 	}

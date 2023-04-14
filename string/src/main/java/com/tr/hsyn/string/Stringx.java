@@ -243,6 +243,13 @@ public final class Stringx {
 		//return indexOfMatches(word, searchText, ignoreCase).length != 0;
 	}
 	
+	/**
+	 * Bir yazının varlığını test eder.
+	 *
+	 * @param str Yazı
+	 * @return Eğer yazı <code>null</code> veya boşluk veya boş ise <code>true</code>
+	 * 		(<strong>N</strong>ull <strong>O</strong>r <strong>B</strong>lank <strong>O</strong>r <strong>E</strong>mpty)
+	 */
 	public static boolean isNoboe(String str) {
 		
 		return str == null || str.replaceAll("\\p{Z}", "").isEmpty();

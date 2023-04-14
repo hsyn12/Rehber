@@ -3,7 +3,7 @@ package com.tr.hsyn.regex.cast.expression;
 
 import com.tr.hsyn.regex.cast.Quanta;
 import com.tr.hsyn.regex.cast.RegexBuilder;
-import com.tr.hsyn.regex.dev.regex.character.Character;
+import com.tr.hsyn.regex.dev.regex.Regex;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -17,11 +17,11 @@ public interface WhiteSpaceExpression extends RegularExpression {
 	 * Bir boşluk.
 	 *
 	 * @return This {@link RegexBuilder}
-	 * @see Character#WHITE_SPACE
+	 * @see Regex#WHITE_SPACE
 	 */
 	default @NotNull RegexBuilder whiteSpace() {
 		
-		return with(Character.WHITE_SPACE);
+		return with(Regex.WHITE_SPACE);
 	}
 	
 	/**
@@ -29,18 +29,18 @@ public interface WhiteSpaceExpression extends RegularExpression {
 	 *
 	 * @param quanta Çokluk
 	 * @return This {@link RegexBuilder}
-	 * @see Character#WHITE_SPACE
+	 * @see Regex#WHITE_SPACE
 	 */
 	default @NotNull RegexBuilder whiteSpace(@NotNull Quanta quanta) {
 		
-		return with(Character.WHITE_SPACE + quanta);
+		return with(Regex.WHITE_SPACE + quanta);
 	}
 	
 	/**
 	 * <em>Bir yada daha fazla</em> boşluk.
 	 *
 	 * @return This {@link RegexBuilder}
-	 * @see Character#WHITE_SPACE
+	 * @see Regex#WHITE_SPACE
 	 */
 	default @NotNull RegexBuilder whiteSpaces() {
 		
@@ -51,18 +51,18 @@ public interface WhiteSpaceExpression extends RegularExpression {
 	 * Boşluk olmayan bir karakter.
 	 *
 	 * @return This {@link RegexBuilder}
-	 * @see Character#NON_WHITE_SPACE
+	 * @see Regex#NON_WHITE_SPACE
 	 */
 	default @NotNull RegexBuilder nonWhiteSpace() {
 		
-		return with(Character.NON_WHITE_SPACE);
+		return with(Regex.NON_WHITE_SPACE);
 	}
 	
 	/**
 	 * Boşluk olmayan <em>bir yada daha fazla</em> karakter.
 	 *
 	 * @return This {@link RegexBuilder}
-	 * @see Character#NON_WHITE_SPACE
+	 * @see Regex#NON_WHITE_SPACE
 	 */
 	default @NotNull RegexBuilder nonWhiteSpaces() {
 		
@@ -74,11 +74,11 @@ public interface WhiteSpaceExpression extends RegularExpression {
 	 *
 	 * @param quanta Çokluk
 	 * @return This {@link RegexBuilder}
-	 * @see Character#NON_WHITE_SPACE
+	 * @see Regex#NON_WHITE_SPACE
 	 */
 	default @NotNull RegexBuilder nonWhiteSpace(@NotNull Quanta quanta) {
 		
-		return with(Character.NON_WHITE_SPACE + quanta);
+		return with(Regex.NON_WHITE_SPACE + quanta);
 	}
 	
 	/**

@@ -1,7 +1,7 @@
 package com.tr.hsyn.regex.dev.regex.character.cast;
 
 
-import com.tr.hsyn.regex.dev.regex.Regex;
+import com.tr.hsyn.regex.dev.regex.character.Character;
 import com.tr.hsyn.regex.dev.regex.character.Digit;
 
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +16,7 @@ public class RegexDigit implements Digit {
 	@Override
 	public @NotNull Digit non() {
 		
-		return Regex.NON_DIGIT;
+		return Character.NON_DIGIT;
 	}
 	
 	@Override

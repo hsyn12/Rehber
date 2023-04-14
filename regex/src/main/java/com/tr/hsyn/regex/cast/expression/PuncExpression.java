@@ -3,7 +3,7 @@ package com.tr.hsyn.regex.cast.expression;
 
 import com.tr.hsyn.regex.cast.Quanta;
 import com.tr.hsyn.regex.cast.RegexBuilder;
-import com.tr.hsyn.regex.dev.regex.character.Character;
+import com.tr.hsyn.regex.dev.regex.Regex;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -20,7 +20,7 @@ public interface PuncExpression extends RegularExpression {
 	 */
 	default @NotNull RegexBuilder punc() {
 		
-		return with(Character.PUNCTUATION);
+		return with(Regex.PUNCTUATION);
 	}
 	
 	/**
@@ -30,7 +30,7 @@ public interface PuncExpression extends RegularExpression {
 	 */
 	default @NotNull RegexBuilder nonPunc() {
 		
-		return with(Character.NON_PUNCTUATION);
+		return with(Regex.NON_PUNCTUATION);
 	}
 	
 	/**
@@ -61,7 +61,7 @@ public interface PuncExpression extends RegularExpression {
 	 */
 	default @NotNull RegexBuilder punc(@NotNull Quanta quanta) {
 		
-		return with(Character.PUNCTUATION + quanta);
+		return with(Regex.PUNCTUATION + quanta);
 	}
 	
 }

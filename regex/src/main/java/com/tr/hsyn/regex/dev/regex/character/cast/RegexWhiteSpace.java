@@ -1,7 +1,6 @@
 package com.tr.hsyn.regex.dev.regex.character.cast;
 
 
-import com.tr.hsyn.regex.dev.regex.Regex;
 import com.tr.hsyn.regex.dev.regex.character.Character;
 import com.tr.hsyn.regex.dev.regex.character.WhiteSpace;
 
@@ -23,6 +22,6 @@ public class RegexWhiteSpace implements WhiteSpace {
 	@Override
 	public @NotNull Character non() {
 		
-		return Regex.NON_WHITE_SPACE;
+		return Character.NON_WHITE_SPACE;
 	}
 }

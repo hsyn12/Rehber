@@ -133,7 +133,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> im
 			}
 			else {
 				
-				if (Stringx.test(searchText).isNot(Regex.DIGIT)) {
+				if (Stringx.test(searchText).isNot(Regex.NUMBER)) {
 					
 					isNumber = false;
 					filteredCalls.clear();
@@ -261,7 +261,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> im
 		
 		if (l.isEmpty()) return "?";
 		
-		if (Regex.LETTER.all(String.valueOf(l.charAt(0)))) return l.toUpperCase(Locale.ROOT);
+		if (String.valueOf(l.charAt(0)).matches(Regex.LETTER)) return l.toUpperCase(Locale.ROOT);
 		
 		return "?";
 	}
