@@ -15,7 +15,6 @@ import com.tr.hsyn.regex.dev.Look;
 import com.tr.hsyn.regex.dev.regex.Regex;
 import com.tr.hsyn.regex.dev.regex.character.Character;
 
-import org.intellij.lang.annotations.Pattern;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
@@ -260,17 +259,6 @@ public interface Nina {
 	static @NotNull RegexBuilder letter() {
 		
 		return like(Regex.LETTER);
-	}
-	
-	/**
-	 * Verilen harflerle yeni bir düzenli ifade oluşturur.
-	 *
-	 * @param letter Harfler
-	 * @return New {@link RegexBuilder}
-	 */
-	static @NotNull RegexBuilder letter(@NotNull @Pattern("\\p{L}+") String letter) {
-		
-		return like(letter);
 	}
 	
 	/**
@@ -697,9 +685,11 @@ public interface Nina {
 	
 	static void test26() {
 		
-		var str = "_";
+		var nonLetter = Character.LETTER.non();
+		var nonDigit  = Character.DIGIT.non();
 		
-		pl("Result : %s", str.matches(Regex.PUNCTUATION));
+		pl("Letter : %s", nonLetter.getText());
+		pl("Digit  : %s", nonDigit.getText());
 		
 	}
 	

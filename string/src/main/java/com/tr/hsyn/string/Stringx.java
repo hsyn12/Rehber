@@ -221,7 +221,7 @@ public final class Stringx {
 	 */
 	public static boolean isMatch(String word, String searchText, boolean ignoreCase) {
 		
-		if (Regex.isNoboe(word) || Regex.isNoboe(searchText)) return false;
+		if (isNoboe(word) || isNoboe(searchText)) return false;
 		
 		if (word.length() < searchText.length()) return false;
 		

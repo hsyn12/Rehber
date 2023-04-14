@@ -7,7 +7,6 @@ import com.tr.hsyn.regex.dev.regex.character.cast.RegexDigit;
 import com.tr.hsyn.regex.dev.regex.character.cast.RegexLetter;
 import com.tr.hsyn.regex.dev.regex.character.cast.RegexPunctuation;
 import com.tr.hsyn.regex.dev.regex.character.cast.RegexWhiteSpace;
-import com.tr.hsyn.regex.dev.regex.quantity.Quanta;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -94,7 +93,14 @@ public interface Character extends Text {
 	
 	/**
 	 * Karakter türünün tümleyenini döndürür. <br>
-	 * <code>LETTER --> NON_LETTER</code> gibi.
+	 *
+	 * <pre>
+	 * var nonLetter = Character.LETTER.non();
+	 * var nonDigit  = Character.DIGIT.non();
+	 *
+	 * pl("Letter : %s", nonLetter.getText()); //Letter : \P{L}
+	 * pl("Digit  : %s", nonDigit.getText()); // Digit  : \P{N}
+	 * </pre>
 	 *
 	 * @return Karakter türünün tümleyenini döndürür.
 	 */
