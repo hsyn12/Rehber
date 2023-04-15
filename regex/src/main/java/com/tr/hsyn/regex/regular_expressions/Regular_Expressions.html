@@ -1,0 +1,55 @@
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+	      name="viewport">
+	<title>Düzenli ifadeler</title>
+	<link href="./css/main.css" rel="stylesheet">
+</head>
+
+<body>
+<h1 class="main-title">Düzenli İfadeler</h1>
+<p>
+	<em>İfade</em>, bir konu hakkında bir bilginin dışa vurumudur.
+	Bunu, konuşurken seslerle, yazarken kelimelerle, susarken bakışlarla yaparız.
+	Yani hem gördüklerimiz hem duyduklarımız hem okuduklarımız bize bir
+	konu hakkında bilgi verir.
+</p>
+<p>
+	<em>Düzenli ifadeler</em> okuduklarımızla ilgilidir.
+	Bir ifadenin düzenli olması demek, o ifadeyi diğerlerinden
+	ayıran belirgin özelliklerinin olması demektir.
+	Mesela saat bilgisi, iki nokta üstüste <code>:</code> işareti ile
+	ayrılmış iki sayıdan oluşur. İşte bu, bir <em>düzenli ifade</em>dir.
+	Belirli bir düzeni vardır. Ve aslında bu düzeni tarif etmek için kullanılan
+	ifadelere <em>düzenli ifade</em> denir.
+</p>
+
+<pre>
+var regex = "\\d\\d:\\d\\d";
+</pre>
+
+<p>
+	Bu, bir saat bilgisini tarif eden düzenli bir ifadedir.
+	Bu ifadede geçen <code>\\d</code> işareti herhangi bir sayıyı
+	temsil eder. Bu ve bu gibi simgelere <em>meta karakter</em>
+	denir.
+
+	Ancak iki nokta üstüste <code>:</code> işareti
+	ile birleştirilmiş her sayı saat bilgisi olmayabilir.
+
+</p>
+<p>
+	Bir yazı kabaca 4 tür karakterden meydana gelir.
+</p>
+
+<ol>
+	<li>Sayısal Karakter : <code>\\d</code></li>
+	<li>Harf Karakteri : <code>\\w</code></li>
+	<li>Boşluk Karakteri : <code>\\s</code></li>
+</ol>
+
+</body>
+
+</html>

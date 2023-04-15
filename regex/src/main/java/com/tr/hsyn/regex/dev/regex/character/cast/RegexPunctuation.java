@@ -7,11 +7,17 @@ import com.tr.hsyn.regex.dev.regex.character.Punctuation;
 import org.jetbrains.annotations.NotNull;
 
 
-public class RegexPunctuation implements Punctuation {
+public class RegexPunctuation extends Expression implements Punctuation {
 	
-	private final String regex;
+	public RegexPunctuation(String regex) {
+		
+		super(regex, false);
+	}
 	
-	public RegexPunctuation(String regex) {this.regex = regex;}
+	public RegexPunctuation(String regex, boolean isNon) {
+		
+		super(regex, isNon);
+	}
 	
 	@Override
 	public @NotNull String getText() {
@@ -22,6 +28,6 @@ public class RegexPunctuation implements Punctuation {
 	@Override
 	public @NotNull Character non() {
 		
-		return Character.NON_PUNCTUATION;
+		return non ? Character.PUNCTUATION : Character.NON_PUNCTUATION;
 	}
 }

@@ -7,21 +7,27 @@ import com.tr.hsyn.regex.dev.regex.character.Letter;
 import org.jetbrains.annotations.NotNull;
 
 
-public class RegexLetter implements Letter {
+public class RegexLetter extends Expression implements Letter {
 	
-	private final String regex;
-	
-	public RegexLetter(String regex) {this.regex = regex;}
-	
-	@Override
-	public @NotNull String getText() {
+	public RegexLetter(String regex) {
 		
-		return regex;
+		super(regex, false);
+	}
+	
+	public RegexLetter(String regex, boolean isNon) {
+		
+		super(regex, isNon);
 	}
 	
 	@Override
 	public @NotNull Character non() {
 		
-		return Character.NON_LETTER;
+		return non ? Character.LETTER : Character.NON_LETTER;
+	}
+	
+	@Override
+	public @NotNull String getText() {
+		
+		return regex;
 	}
 }

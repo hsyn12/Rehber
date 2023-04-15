@@ -250,7 +250,6 @@ import java.util.Arrays;
  */
 public interface Nina {
 	
-	
 	/**
 	 * Bir harf karakteri.
 	 *

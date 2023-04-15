@@ -1,0 +1,15 @@
+body {
+	background-color: #252525;
+	font-family: "Segoe UI", sans-serif;
+	font-size: 26px;
+	line-height: 1.42857143;
+	color: #ccc;
+	font-weight: 100;
+	padding: 1%;
+}
+
+.main-title {
+	font-weight: 900;
+	text-align: center;
+	margin: 0 auto;
+}

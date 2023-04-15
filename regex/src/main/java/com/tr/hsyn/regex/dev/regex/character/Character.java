@@ -1,8 +1,10 @@
 package com.tr.hsyn.regex.dev.regex.character;
 
 
+import com.tr.hsyn.regex.cast.Quanta;
 import com.tr.hsyn.regex.cast.Text;
 import com.tr.hsyn.regex.dev.regex.Regex;
+import com.tr.hsyn.regex.dev.regex.character.cast.Expression;
 import com.tr.hsyn.regex.dev.regex.character.cast.RegexDigit;
 import com.tr.hsyn.regex.dev.regex.character.cast.RegexLetter;
 import com.tr.hsyn.regex.dev.regex.character.cast.RegexPunctuation;
@@ -13,14 +15,20 @@ import org.jetbrains.annotations.NotNull;
 
 public interface Character extends Text {
 	
-	RegexLetter LETTER          = new RegexLetter(Regex.LETTER);
-	RegexLetter NON_LETTER      = new RegexLetter(Regex.NON_LETTER);
+	Letter      LETTER          = new RegexLetter(Regex.LETTER);
+	Letter      NON_LETTER      = new RegexLetter(Regex.NON_LETTER, true);
 	Digit       DIGIT           = new RegexDigit(Regex.DIGIT);
 	Digit       NON_DIGIT       = new RegexDigit(Regex.NON_DIGIT);
 	WhiteSpace  WHITE_SPACE     = new RegexWhiteSpace(Regex.WHITE_SPACE);
 	WhiteSpace  NON_WHITE_SPACE = new RegexWhiteSpace(Regex.NON_WHITE_SPACE);
-	Punctuation PUNCTUATION     = new RegexPunctuation(Regex.PUNCTUATION);
+	Punctuation PUNCTUATION     = new RegexPunctuation(Regex.PUNCTUATION, true);
 	Punctuation NON_PUNCTUATION = new RegexPunctuation(Regex.NON_PUNCTUATION);
+	
+	@NotNull
+	static Character of(@NotNull String text) {
+		
+		return new Expression(text);
+	}
 	
 	/**
 	 * Yazı içindeki belirli bir karakter türüne ait tüm karakterleri siler.<br><br>

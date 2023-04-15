@@ -7,11 +7,17 @@ import com.tr.hsyn.regex.dev.regex.character.WhiteSpace;
 import org.jetbrains.annotations.NotNull;
 
 
-public class RegexWhiteSpace implements WhiteSpace {
+public class RegexWhiteSpace extends Expression implements WhiteSpace {
 	
-	private final String regex;
+	public RegexWhiteSpace(@NotNull String regex) {
+		
+		super(regex);
+	}
 	
-	public RegexWhiteSpace(String regex) {this.regex = regex;}
+	public RegexWhiteSpace(@NotNull String regex, boolean isNon) {
+		
+		super(regex, isNon);
+	}
 	
 	@Override
 	public @NotNull String getText() {
@@ -22,6 +28,6 @@ public class RegexWhiteSpace implements WhiteSpace {
 	@Override
 	public @NotNull Character non() {
 		
-		return Character.NON_WHITE_SPACE;
+		return non ? Character.WHITE_SPACE : Character.NON_WHITE_SPACE;
 	}
 }

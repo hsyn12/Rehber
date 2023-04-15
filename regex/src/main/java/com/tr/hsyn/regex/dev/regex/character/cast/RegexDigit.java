@@ -7,16 +7,22 @@ import com.tr.hsyn.regex.dev.regex.character.Digit;
 import org.jetbrains.annotations.NotNull;
 
 
-public class RegexDigit implements Digit {
+public class RegexDigit extends Expression implements Digit {
 	
-	private final String regex;
+	public RegexDigit(@NotNull String regex) {
+		
+		super(regex);
+	}
 	
-	public RegexDigit(String regex) {this.regex = regex;}
+	public RegexDigit(@NotNull String regex, boolean isNon) {
+		
+		super(regex, isNon);
+	}
 	
 	@Override
-	public @NotNull Digit non() {
+	public @NotNull Character non() {
 		
-		return Character.NON_DIGIT;
+		return non ? Character.DIGIT : Character.NON_DIGIT;
 	}
 	
 	@Override
@@ -24,4 +30,5 @@ public class RegexDigit implements Digit {
 		
 		return regex;
 	}
+	
 }

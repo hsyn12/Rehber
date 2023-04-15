@@ -200,6 +200,13 @@ public interface Regex {
 		return Character.DIGIT.removeFrom(str);
 	}
 	
+	/**
+	 * This method removes all the letters from the given string and returns the resulting string.
+	 *
+	 * @param str the input string from which letters are to be removed
+	 * @return the resulting string after removing all the letters
+	 * @throws NullPointerException if the input string is null
+	 */
 	@NotNull
 	static String removeLetters(@NotNull String str) {
 		
@@ -220,6 +227,13 @@ public interface Regex {
 		return "";
 	}
 	
+	/**
+	 * This method takes a string as input and returns a new string that contains only the letters from the original string.
+	 * If the input string is null, an empty string is returned.
+	 *
+	 * @param str the input string to be processed
+	 * @return a new string that contains only the letters from the original string, or an empty string if the input is null
+	 */
 	@NotNull
 	static String retainLetters(String str) {
 		
@@ -228,16 +242,27 @@ public interface Regex {
 		return "";
 	}
 	
+	/**
+	 * Returns a new instance of RegexBuilder.
+	 *
+	 * @return a new instance of RegexBuilder
+	 */
 	static @NotNull RegexBuilder builder() {
 		
 		return new Teddy();
 	}
 	
+	/**
+	 * Creates a regular expression builder.
+	 *
+	 * @param expression Expression
+	 * @param <T>        Type of the expression
+	 * @return Regular expression builder {@link RegexBuilder}
+	 */
 	static <T extends Text> @NotNull RegexBuilder builder(@NotNull T expression) {
 		
 		return new Teddy(expression);
 	}
-	
 	
 	/**
 	 * Overwrite the given string with the given character, except first and last two characters of the source.<br>
@@ -338,6 +363,14 @@ public interface Regex {
 		return regex.existIn(text);
 	}
 	
+	/**
+	 * Returns the string found after the last occurance of 'after' inside 'text'.
+	 * If no string is found, returns an empty string.
+	 *
+	 * @param text  the text in which to search for the string
+	 * @param after the string to search for in 'text'
+	 * @return the string found after the last occurance of 'after' inside 'text'
+	 */
 	static @NotNull String stringAfterLast(@NotNull String text, @NotNull String after) {
 		
 		var index = text.lastIndexOf(after);
@@ -347,6 +380,13 @@ public interface Regex {
 		return "";
 	}
 	
+	/**
+	 * Returns the string after the first occurrence of a given substring.
+	 *
+	 * @param text  Specify the text that will be searched for the after parameter
+	 * @param after Specify the string that is being searched for
+	 * @return The text after the first occurrence of the parameter &quot;after&quot; in the parameter &quot;text&quot;
+	 */
 	static @NotNull String stringAfterFirst(@NotNull String text, @NotNull String after) {
 		
 		var index = text.indexOf(after);
@@ -356,6 +396,13 @@ public interface Regex {
 		return "";
 	}
 	
+	/**
+	 * The stringBeforeLast function returns the text before the last occurrence of a given substring.
+	 *
+	 * @param text   Specify the text that will be searched
+	 * @param before Specify the substring that will be used to find the last occurrence of
+	 * @return The text before the last occurrence of a substring
+	 */
 	static @NotNull String stringBeforeLast(@NotNull String text, @NotNull String before) {
 		
 		var index = text.lastIndexOf(before);
@@ -365,6 +412,13 @@ public interface Regex {
 		return "";
 	}
 	
+	/**
+	 * Returns the part of a string before the first occurrence of another string.
+	 *
+	 * @param text   Specify the text that will be searched
+	 * @param before Specify the string to be searched for in the text parameter
+	 * @return The string before the first occurrence of a given substring
+	 */
 	static @NotNull String stringBeforeFirst(@NotNull String text, @NotNull String before) {
 		
 		var index = text.indexOf(before);
