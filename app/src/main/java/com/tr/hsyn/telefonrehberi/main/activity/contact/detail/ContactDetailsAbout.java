@@ -53,13 +53,11 @@ public class ContactDetailsAbout extends ContactDetailsMenu {
 		}
 	}
 	
-	
 	private void setStatistics() {
 		
 		var callGroups = CallOver.groupByNumber();
 		
 	}
-	
 	
 	private void comment() {
 		

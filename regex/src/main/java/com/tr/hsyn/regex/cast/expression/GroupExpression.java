@@ -3,6 +3,7 @@ package com.tr.hsyn.regex.cast.expression;
 
 import com.tr.hsyn.regex.cast.RegexBuilder;
 import com.tr.hsyn.regex.cast.Text;
+import com.tr.hsyn.regex.dev.Group;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -24,12 +25,18 @@ public interface GroupExpression extends RegularExpression {
 	 */
 	default @NotNull RegexBuilder group(@NotNull String expression) {
 		
-		return with(String.format("(%s)", expression));
+		return with(Group.group(expression));
 	}
 	
+	/**
+	 * Adds as a non-capturing group the given expression.
+	 *
+	 * @param expression the regular expression pattern to be added as a non-capturing group
+	 * @return a new RegexBuilder object with the non-capturing group added to the regular expression pattern
+	 */
 	default @NotNull RegexBuilder groupNonCaptured(@NotNull String expression) {
 		
-		return with(String.format("(?:%s)", expression));
+		return with(Group.nonCaptured(expression));
 	}
 	
 	/**
@@ -48,32 +55,30 @@ public interface GroupExpression extends RegularExpression {
 	 */
 	default <T extends Text> @NotNull RegexBuilder group(@NotNull T expression) {
 		
-		return with(String.format("(%s)", expression.getText()));
-	}
-	
-	default <T extends Text> @NotNull RegexBuilder groupNonCaptured(@NotNull T expression) {
-		
-		return with(String.format("(?:%s)", expression.getText()));
+		return group(expression.getText());
 	}
 	
 	/**
-	 * Bir ifadeyi grup içine alarak düzenli ifadenin sonuna ekler.<br><br>
+	 * Returns a RegexBuilder object with a non-capturing group that matches the specified text.
 	 *
-	 * <pre>
-	 * var regex = Nina.regex("[0-9]").oneOrMore();
-	 * pl("Regex : %s", regex);//Regex : [0-9]+
+	 * @param expression the Text object containing the text to match
+	 * @return a RegexBuilder object with a non-capturing group that matches the specified text
+	 */
+	default <T extends Text> @NotNull RegexBuilder groupNonCaptured(@NotNull T expression) {
+		
+		return groupNonCaptured(expression.getText());
+	}
+	
+	/**
+	 * This method allows the creation of a named capturing group in a regular expression pattern.
 	 *
-	 * regex = regex.withGroup("dp", Nina.regex().digit().or().withPunc()).oneOrMore();
-	 * pl("Regex : %s", regex);/Regex : [0-9]+(?&lt;dp>\p{N}|\p{P})+</pre>
-	 *
-	 * @param groupName  Grup ismi
-	 * @param expression İfade
-	 * @param <T>        {@link Text} sınıfından bir tür
-	 * @return Kurulan {@link RegexBuilder} nesnesi
+	 * @param groupName  - a String representing the name of the capturing group
+	 * @param expression - a Text object representing the regular expression pattern for the capturing group
+	 * @return a RegexBuilder object with the named capturing group added to the regular expression pattern
 	 */
 	default <T extends Text> @NotNull RegexBuilder group(@NotNull String groupName, @NotNull T expression) {
 		
-		return with(String.format("(?<%s>%s)", groupName, expression.getText()));
+		return group(groupName, expression.getText());
 	}
 	
 	/**
@@ -92,7 +97,7 @@ public interface GroupExpression extends RegularExpression {
 	 */
 	default @NotNull RegexBuilder group(@NotNull String groupName, @NotNull String expression) {
 		
-		return with(String.format("(?<%s>%s)", groupName, expression));
+		return with(Group.builder().name(groupName).group(expression).build());
 	}
 	
 	/**
@@ -104,29 +109,53 @@ public interface GroupExpression extends RegularExpression {
 	 * regex = regex.withGroup("repeat", "go").oneOrMore().toGroup();
 	 * pl("Regex : %s", regex);//Regex : ([0-9]+(?&lt;repeat>go)+)</pre>
 	 *
-	 * @return Kurulan {@link RegexBuilder} nesnesi
+	 * @return Yeni bir {@link RegexBuilder} nesnesi
 	 */
 	@NotNull
-	RegexBuilder toGroup();
-	
-	@NotNull
-	RegexBuilder toGroupAtomic();
-	
-	@NotNull
-	RegexBuilder toGroupNonCaptured();
+	default RegexBuilder toGroup() {
+		
+		return Group.group(getText()).toRegex();
+	}
 	
 	/**
-	 * Düzenli ifadenin tamamını grup olarak döndürür.<br><br>
+	 * Returns a RegexBuilder object that creates an atomic group in the regular expression pattern.
+	 * An atomic group is a non-capturing group that,
+	 * once the regex engine enters it, it will not backtrack out of it.
+	 * This method returns a <code>RegexBuilder</code> object that creates an atomic group
+	 * with the text of the current <code>RegexBuilder</code> object.
 	 *
-	 * <pre>
-	 * var regex = Nina.regex("[0-9]").oneOrMore();
-	 * pl("Regex : %s", regex);//Regex : [0-9]+
-	 * regex = regex.withGroup("repeat", "go").oneOrMore().toGroup("all");
-	 * pl("Regex : %s", regex);//Regex : (?&lt;all>[0-9]+(?&lt;repeat>go)+)</pre>
-	 *
-	 * @param groupName Grubun adı
-	 * @return Kurulan {@link RegexBuilder} nesnesi
+	 * @return New <code>RegexBuilder</code> object that creates an atomic group in the regular expression pattern
 	 */
 	@NotNull
-	RegexBuilder toGroup(@NotNull String groupName);
+	default RegexBuilder toGroupAtomic() {
+		
+		return Group.atomic(getText()).toRegex();
+	}
+	
+	/**
+	 * Returns a RegexBuilder object that creates a non-capturing group regex pattern.
+	 * This method is annotated with @NotNull to indicate that it will never return null.
+	 * <p>
+	 * This method calls the {@link Group#nonCaptured(String, Object...)} method of the {@link Group} class
+	 * to create a non-capturing group regex pattern.
+	 *
+	 * @return a RegexBuilder object that creates a non-capturing group regex pattern.
+	 */
+	@NotNull
+	default RegexBuilder toGroupNonCaptured() {
+		
+		return Group.nonCaptured(getText()).toRegex();
+	}
+	
+	/**
+	 * Returns a new <code>RegexBuilder</code> with a named group added to the current text.
+	 *
+	 * @param groupName the name of the group to be added
+	 * @return a new RegexBuilder with the named group added
+	 */
+	@NotNull
+	default RegexBuilder toGroup(@NotNull String groupName) {
+		
+		return Group.builder().name(groupName).group(getText()).build().toRegex();
+	}
 }

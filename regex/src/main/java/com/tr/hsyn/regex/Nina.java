@@ -10,11 +10,14 @@ import com.tr.hsyn.regex.cast.RegexBuilder;
 import com.tr.hsyn.regex.cast.Text;
 import com.tr.hsyn.regex.cast.WordGenerator;
 import com.tr.hsyn.regex.dev.CoupleFinder;
+import com.tr.hsyn.regex.dev.Group;
 import com.tr.hsyn.regex.dev.HMT;
 import com.tr.hsyn.regex.dev.Look;
 import com.tr.hsyn.regex.dev.regex.Regex;
 import com.tr.hsyn.regex.dev.regex.character.Character;
 
+import org.intellij.lang.annotations.Pattern;
+import org.intellij.lang.annotations.RegExp;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
@@ -251,9 +254,8 @@ import java.util.Arrays;
 public interface Nina {
 	
 	/**
-	 * Bir harf karakteri.
-	 *
-	 * @return New {@link RegexBuilder}
+	 * @return New {@link RegexBuilder} object that matches <em><strong>any one letter</strong></em> character.
+	 * @see Regex#LETTER
 	 */
 	static @NotNull RegexBuilder letter() {
 		
@@ -261,9 +263,8 @@ public interface Nina {
 	}
 	
 	/**
-	 * <em>Bir yada daha fazla</em> harf karakteri.
-	 *
-	 * @return New {@link RegexBuilder}
+	 * @return New {@link RegexBuilder} object that matches <em><strong>one or more letters</strong></em>.
+	 * @see Regex#LETTER
 	 */
 	static @NotNull RegexBuilder letters() {
 		
@@ -271,9 +272,8 @@ public interface Nina {
 	}
 	
 	/**
-	 * Harf olmayan bir karakter.
-	 *
-	 * @return New {@link RegexBuilder}
+	 * @return New {@link RegexBuilder} object that matches <em><strong>any non-letter</strong></em> character.
+	 * @see Regex#NON_LETTER
 	 */
 	static @NotNull RegexBuilder nonLetter() {
 		
@@ -281,9 +281,8 @@ public interface Nina {
 	}
 	
 	/**
-	 * <em>Bir yada daha fazla</em> harf olmayan karakter.
-	 *
-	 * @return New {@link RegexBuilder}
+	 * @return New {@link RegexBuilder} object that matches <em><strong>one or more non-letters</strong></em> character.
+	 * @see Regex#NON_LETTER
 	 */
 	static @NotNull RegexBuilder nonLetters() {
 		
@@ -291,9 +290,8 @@ public interface Nina {
 	}
 	
 	/**
-	 * Sayısal bir karakter.
-	 *
-	 * @return New {@link RegexBuilder}
+	 * @return New {@link RegexBuilder} object that matches <em><strong>any one digit</strong></em> character.
+	 * @see Regex#DIGIT
 	 */
 	static @NotNull RegexBuilder digit() {
 		
@@ -301,9 +299,8 @@ public interface Nina {
 	}
 	
 	/**
-	 * <em>Bir yada daha fazla</em> sayısal karakter.
-	 *
-	 * @return New {@link RegexBuilder}
+	 * @return New {@link RegexBuilder} object that matches <em><strong>one or more digits</strong></em> character.
+	 * @see Regex#DIGIT
 	 */
 	static @NotNull RegexBuilder digits() {
 		
@@ -311,9 +308,8 @@ public interface Nina {
 	}
 	
 	/**
-	 * Sayısal olmayan bir karakter.
-	 *
-	 * @return New {@link RegexBuilder}
+	 * @return New {@link RegexBuilder} object that matches <em><strong>any one non-digit</strong></em> character.
+	 * @see Regex#NON_DIGIT
 	 */
 	static @NotNull RegexBuilder nonDigit() {
 		
@@ -321,9 +317,8 @@ public interface Nina {
 	}
 	
 	/**
-	 * Sayısal olmayan <em>bir yada daha fazla</em> karakter.
-	 *
-	 * @return New {@link RegexBuilder}
+	 * @return New {@link RegexBuilder} object that matches <em><strong>one or more non-digits</strong></em> character.
+	 * @see Regex#NON_DIGIT
 	 */
 	static @NotNull RegexBuilder nonDigits() {
 		
@@ -331,9 +326,8 @@ public interface Nina {
 	}
 	
 	/**
-	 * Bir boşluk.
-	 *
-	 * @return New {@link RegexBuilder}
+	 * @return New {@link RegexBuilder} object that matches <em><strong>any one white space</strong></em> character.
+	 * @see Regex#WHITE_SPACE
 	 */
 	static @NotNull RegexBuilder whiteSpace() {
 		
@@ -341,9 +335,8 @@ public interface Nina {
 	}
 	
 	/**
-	 * <em>Bir yada daha fazla</em> boşluk.
-	 *
-	 * @return New {@link RegexBuilder}
+	 * @return New {@link RegexBuilder} object that matches <em><strong>one or more white spaces</strong></em> character.
+	 * @see Regex#WHITE_SPACE
 	 */
 	static @NotNull RegexBuilder whiteSpaces() {
 		
@@ -351,9 +344,8 @@ public interface Nina {
 	}
 	
 	/**
-	 * Boşluk olmayan bir karakter.
-	 *
-	 * @return New {@link RegexBuilder}
+	 * @return New {@link RegexBuilder} object that matches <em><strong>any one non-white spaces</strong></em> character.
+	 * @see Regex#NON_WHITE_SPACE
 	 */
 	static @NotNull RegexBuilder nonWhiteSpace() {
 		
@@ -361,9 +353,8 @@ public interface Nina {
 	}
 	
 	/**
-	 * Boşluk olmayan <em>bir yada daha fazla</em> karakter.
-	 *
-	 * @return New {@link RegexBuilder}
+	 * @return New {@link RegexBuilder} object that matches <em><strong>one or more non-white spaces</strong></em> character.
+	 * @see Regex#NON_WHITE_SPACE
 	 */
 	static @NotNull RegexBuilder nonWhiteSpaces() {
 		
@@ -600,18 +591,7 @@ public interface Nina {
 	 */
 	static <T extends Text> @NotNull RegexBuilder group(@NotNull T expresion) {
 		
-		return regex().group(expresion.getText()).toRegex();
-	}
-	
-	/**
-	 * Verilen ifadeyi grup içine alarak yeni bir {@link RegexBuilder} nesnesi döndürür.
-	 *
-	 * @param expresion İfade
-	 * @return Yeni bir {@link RegexBuilder} nesnesi {@code (expresion)}
-	 */
-	static @NotNull RegexBuilder group(@NotNull String expresion) {
-		
-		return regex().group(expresion).toRegex();
+		return group(expresion.getText()).toRegex();
 	}
 	
 	/**
@@ -624,19 +604,26 @@ public interface Nina {
 	 */
 	static <T extends Text> @NotNull RegexBuilder group(@NotNull String groupName, @NotNull T expresion) {
 		
-		return regex().group(groupName, expresion.getText()).toRegex();
+		return Group.builder()
+				.name(groupName)
+				.group(expresion.getText())
+				.build()
+				.toRegex();
 	}
 	
 	/**
-	 * Verilen ifadeyi grup içine alarak yeni bir {@link RegexBuilder} nesnesi döndürür.
+	 * Returns a new {@link RegexBuilder} object that represents
+	 * a group of characters in a regular expression pattern.
+	 * The group is created by formatting the given <code>groupStr</code> string with
+	 * the given arguments.
 	 *
-	 * @param groupName Grubun adı
-	 * @param expresion İfade
-	 * @return Yeni bir {@link RegexBuilder} nesnesi {@code (?<groupName>expresion)}
+	 * @param groupStr the string to be formatted and used as the regular expression pattern for the group
+	 * @param args     the arguments to be used in the formatting of the groupStr string
+	 * @return New RegexBuilder object that represents a group of characters in a regular expression pattern
 	 */
-	static @NotNull RegexBuilder group(@NotNull String groupName, @NotNull String expresion) {
+	static @NotNull Group group(@NotNull String groupStr, Object... args) {
 		
-		return regex().group(groupName, expresion).toRegex();
+		return Group.group(groupStr, args);
 	}
 	
 	/**
@@ -651,15 +638,56 @@ public interface Nina {
 	}
 	
 	/**
+	 * Creates a new {@link RegexBuilder} object with the {@link Regex#ANY} pattern.
+	 *
+	 * @return New {@link RegexBuilder} object that matches any character.
+	 */
+	@NotNull
+	static RegexBuilder any() {
+		
+		return new Teddy(Regex.ANY);
+	}
+	
+	/**
+	 * Creates a new {@link RegexBuilder} object with the {@link Regex#ANY} pattern with <em>one or more</em> quantity.
+	 * This means that <em><strong>any one or more character</strong></em> will match.
+	 *
+	 * @return New {@link RegexBuilder} object that matches <em>any one or more</em> character.
+	 */
+	@NotNull
+	static RegexBuilder anymany() {
+		
+		return new Teddy(Regex.ANY).oneOrMore();
+	}
+	
+	/**
+	 * Creates a new {@link RegexBuilder} object with the {@link Regex#ANY} pattern with <em>zero or more</em> quantity.
+	 * This means that <em><strong>any zero or more character</strong></em> will match.
+	 *
+	 * @return New {@link RegexBuilder} object that matches <em>any zero or more</em> character.
+	 */
+	@NotNull
+	static RegexBuilder anythings() {
+		
+		return new Teddy(Regex.ANY).zeroOrMore();
+	}
+	
+	/**
 	 * Yeni bir {@link RegexBuilder} nesnesi oluşturur.
 	 *
 	 * @param expression İfade
 	 * @return Yeni bir {@link RegexBuilder} nesnesi
 	 */
 	@NotNull
-	static RegexBuilder like(@NotNull String expression) {
+	static RegexBuilder like(@RegExp @NotNull String expression) {
 		
 		return new Teddy(expression);
+	}
+	
+	@NotNull
+	static RegexBuilder like(@RegExp @NotNull String expression, Object... args) {
+		
+		return new Teddy(String.format(expression, args));
 	}
 	
 	/**
@@ -680,7 +708,7 @@ public interface Nina {
 		test26();
 	}
 	
-	static void test(@org.intellij.lang.annotations.Pattern("[a-z]") String str) {}
+	static void test(@Pattern("[a-z]") String str) {}
 	
 	static void test26() {
 		

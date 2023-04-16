@@ -227,15 +227,16 @@ public final class Stringx {
 		
 		searchText = Regex.removeWhiteSpaces(searchText);
 		
-		var reg = Nina.regex().whiteSpace().zeroOrMore();
+		var reg = Nina.regex().whiteSpace().zeroOrMore().lazy();
 		
-		if (ignoreCase) reg = reg.with(Modifier.modify().ignoreCase());
+		if (ignoreCase) reg.with(Modifier.modify().ignoreCase());
 		
 		for (int i = 0; i < searchText.length(); i++) {
 			
-			reg = reg.with(searchText.charAt(i))
+			reg.with(searchText.charAt(i))
 					.whiteSpace()
-					.zeroOrMore();
+					.zeroOrMore()
+					.lazy();
 		}
 		
 		return reg.existIn(word);

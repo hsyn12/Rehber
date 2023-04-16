@@ -12,9 +12,6 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface RegexBuilder extends Expressions {
 	
-	@NotNull
-	RegexBuilder toRegex();
-	
 	/**
 	 * Adds {@link Regex#ANY}
 	 *
@@ -66,16 +63,6 @@ public interface RegexBuilder extends Expressions {
 	default @NotNull RegexBuilder lazy() {
 		
 		return zeroOrOne();
-	}
-	
-	/**
-	 * Adds a double slash {@code "\\"}
-	 *
-	 * @return This {@code RegexBuilder}
-	 */
-	default @NotNull RegexBuilder escapeSlash() {
-		
-		return with(Regex.SLASH);
 	}
 	
 }

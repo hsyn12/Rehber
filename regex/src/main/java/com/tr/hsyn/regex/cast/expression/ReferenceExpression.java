@@ -30,6 +30,6 @@ public interface ReferenceExpression extends RegularExpression {
 	@SuppressWarnings("DefaultLocale")
 	default @NotNull RegexBuilder refereTo(int groupOrder) {
 		
-		return with(String.format("\\k<%d>", groupOrder));
+		return with(String.format("\\%d", groupOrder));
 	}
 }

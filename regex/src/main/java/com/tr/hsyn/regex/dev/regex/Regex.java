@@ -12,6 +12,7 @@ import com.tr.hsyn.regex.cast.RegexMatcher;
 import com.tr.hsyn.regex.cast.Text;
 import com.tr.hsyn.regex.dev.regex.character.Character;
 
+import org.intellij.lang.annotations.RegExp;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
@@ -20,68 +21,73 @@ import java.util.List;
 import java.util.regex.Matcher;
 
 
+/**
+ * This interface provides a set of static methods for working with regular expressions in Java 8.
+ * Regular expressions are patterns used to match character combinations in strings.
+ */
 public interface Regex {
 	
 	/**
 	 * Regular expression for digits.
 	 */
-	String NUMBER          = "^\\p{N}+$";
+	@RegExp          String NUMBER           = "^\\p{N}+$";
 	/**
 	 * Regular expression for alphabetics.
 	 */
-	String WORD            = "^\\p{L}+$";
+	@RegExp          String WORD             = "^\\p{L}+$";
 	/**
 	 * An alphabetic character. {@code \p{L}}
 	 */
-	String LETTER          = "\\p{L}";
+	@RegExp          String LETTER           = "\\p{L}";
 	/**
 	 * Any character except letter. {@code \P{L}}
 	 */
-	String NON_LETTER      = "\\P{L}";
+	@RegExp          String NON_LETTER       = "\\P{L}";
 	/**
 	 * A digit.  {@code \p{N}}
 	 */
-	String DIGIT           = "\\p{N}";
+	@RegExp          String DIGIT            = "\\p{N}";
 	/**
 	 * Any character except digit. {@code \P{N}}
 	 */
-	String NON_DIGIT       = "\\P{N}";
+	@RegExp          String NON_DIGIT        = "\\P{N}";
 	/**
 	 * A whitespace character, including line break. {@code [ \t\r\n\f\x0B]}
 	 */
-	String WHITE_SPACE     = "\\p{Z}";
+	@RegExp          String WHITE_SPACE      = "\\p{Z}";
 	/**
 	 * Any character except white space.
 	 */
-	String NON_WHITE_SPACE = "\\P{Z}";
+	@RegExp          String NON_WHITE_SPACE  = "\\P{Z}";
 	/**
 	 * Punctuation character {@code [!"#$%&'()*+,\-./:;<=>?@\[\\\]^_`{|}~]}
 	 */
-	String PUNCTUATION     = "\\p{P}";
+	@RegExp          String PUNCTUATION      = "\\p{P}";
 	/**
 	 * Any character except punctuation.
 	 */
-	String NON_PUNCTUATION = "\\P{P}";
+	@RegExp          String NON_PUNCTUATION  = "\\P{P}";
 	/**
 	 * Any character from {@link #LETTER}, {@link #DIGIT}, {@link #PUNCTUATION}, {@link #WHITE_SPACE}
 	 */
-	@NotNull String ANY              = String.format("[%s%s%s%s]", LETTER, DIGIT, PUNCTUATION, WHITE_SPACE);
+	@RegExp
+	@NotNull         String ANY              = String.format("[%s%s%s%s]", LETTER, DIGIT, PUNCTUATION, WHITE_SPACE);
 	/**
 	 * A lowercase alphabetic character {@code [a-z]}
 	 */
-	@NotNull String LETTER_LOWER     = "\\p{Ll}";
+	@RegExp @NotNull String LETTER_LOWER     = "\\p{Ll}";
 	/**
 	 * Any character except lowercase alphabetic. {@code [^\p{Ll}]}
 	 */
-	@NotNull String NON_LETTER_LOWER = "\\P{Ll}";
+	@RegExp @NotNull String NON_LETTER_LOWER = "\\P{Ll}";
 	/**
 	 * An uppercase alphabetic character {@code [A-Z]}
 	 */
-	@NotNull String LETTER_UPPER     = "\\p{Lu}";
+	@RegExp @NotNull String LETTER_UPPER     = "\\p{Lu}";
 	/**
 	 * Any character except uppercase alphabetic. {@code [^\p{Lu}]}
 	 */
-	@NotNull String NON_LETTER_UPPER = "\\P{Lu}";
+	@RegExp @NotNull String NON_LETTER_UPPER = "\\P{Lu}";
 	/**
 	 * Delimiters {@code '.$^{[()|*+?\'}
 	 */
@@ -89,19 +95,19 @@ public interface Regex {
 	/**
 	 * A control character {@code [\p{Cntrl}]}
 	 */
-	@NotNull String CONTROL     = "\\p{C}";
+	@RegExp @NotNull String CONTROL     = "\\p{C}";
 	/**
 	 * A non-control character {@code [^\p{C}]}
 	 */
-	@NotNull String NON_CONTROL = "\\P{C}";
+	@RegExp @NotNull String NON_CONTROL = "\\P{C}";
 	/**
 	 * A symbol character {@code [\p{S}]}
 	 */
-	@NotNull String SYMBOL      = "\\p{S}";
+	@RegExp @NotNull String SYMBOL      = "\\p{S}";
 	/**
-	 * A slash character {@code [\]}
+	 * A backslash character {@code [\\]}
 	 */
-	@NotNull String SLASH       = "\\";
+	@NotNull         String BACK_SLASH  = "\\\\";
 	
 	/**
 	 * Yazının içinden, verilen karakter türüne ait karakterleri siler.
@@ -296,11 +302,11 @@ public interface Regex {
 		
 		if (source.length() <= 4) {
 			
-			regex.any(1).group("rp", gr.any().oneOrMore()).any(1).toRegex();
+			regex.any(1).group("rp", gr.any().oneOrMore()).any(1);
 			//regex.any().times(1).with(group("rp").any().oneOrMore()).any().times(1);
 		}
 		else {
-			regex.any(2).group("rp", gr.any().oneOrMore()).any(2).toRegex();
+			regex.any(2).group("rp", gr.any().oneOrMore()).any(2);
 		}
 		
 		Matcher m = RegexMatcher.createMatcher(regex.getText(), source);
@@ -498,7 +504,7 @@ public interface Regex {
 					
 					//- Sona kalan dona kalmasın
 					if (i == chars.length - 1) {
-						regex.with(clazz).times(lastCharacterCount).toRegex();
+						regex.with(clazz).times(lastCharacterCount);
 					}
 					
 					continue;
@@ -506,7 +512,7 @@ public interface Regex {
 				
 				var r = regex.getText();
 				
-				if (!Quanta.isQuantifier(r.charAt(r.length() - 1))) regex.oneOrMore().toRegex();
+				if (!Quanta.isQuantifier(r.charAt(r.length() - 1))) regex.oneOrMore();
 			}
 			else {
 				
@@ -521,14 +527,14 @@ public interface Regex {
 						//- ilk döngü değil.
 						//- Gerekli bilgileri ekliyoruz.
 						
-						regex.with(lastCharacterClass).times(lastCharacterCount).toRegex();
+						regex.with(lastCharacterClass).times(lastCharacterCount);
 						
 						lastCharacterCount = 1;
 					}
 				}
 				else {
 					//- Kesin sayı istenmiyor, direk ekleyebiliriz
-					regex.with(clazz).toRegex();
+					regex.with(clazz);
 				}
 			}
 			

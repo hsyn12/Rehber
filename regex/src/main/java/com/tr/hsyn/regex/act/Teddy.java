@@ -86,36 +86,6 @@ public class Teddy implements RegexBuilder {
 	}
 	
 	@Override
-	public @NotNull RegexBuilder toGroup() {
-		
-		return regex(String.format("(%s)", text));
-	}
-	
-	@Override
-	public @NotNull RegexBuilder toGroupAtomic() {
-		
-		return regex(String.format("(?>%s)", text));
-	}
-	
-	@Override
-	public @NotNull RegexBuilder toGroupNonCaptured() {
-		
-		return regex(String.format("(?:%s)", text));
-	}
-	
-	@Override
-	public @NotNull RegexBuilder toGroup(@NotNull String groupName) {
-		
-		return regex(String.format("(?<%s>%s)", groupName, text));
-	}
-	
-	@Override
-	public @NotNull RegexBuilder toRegex() {
-		
-		return this;
-	}
-	
-	@Override
 	@NotNull
 	public <T extends Text> RegexBuilder with(@NotNull T text) {
 		

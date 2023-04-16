@@ -20,6 +20,14 @@ public interface RegexFinder extends RegexTester {
 		return findAll(text, 0);
 	}
 	
+	/**
+	 * This method finds the first occurrence of a pattern in the given text and returns its start and end indices.
+	 * If no match is found, it returns {@link Index#INVALID_INDEX}.
+	 *
+	 * @param text the text to search for the pattern
+	 * @return an Index object representing the start and end indices of the first match, or an invalid index if no match is found
+	 * @throws NullPointerException if the text parameter is null
+	 */
 	default Index find(@NotNull CharSequence text) {
 		
 		var matcher = createMatcher(text);
@@ -84,6 +92,14 @@ public interface RegexFinder extends RegexTester {
 		return list;
 	}
 	
+	/**
+	 * This method finds all occurrences of a specified group in a given text
+	 * and returns a list of Index objects representing the start and end positions of each match.
+	 *
+	 * @param text       The text to search for matches.
+	 * @param groupOrder The index of the group to search for matches within.
+	 * @return A list of Index objects representing the start and end positions of each match.
+	 */
 	default List<Index> findGroup(@NotNull CharSequence text, int groupOrder) {
 		
 		var         matcher = createMatcher(text);
