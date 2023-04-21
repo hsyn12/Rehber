@@ -17,6 +17,12 @@ public interface Text {
 		return new SimpleText(expression);
 	}
 	
+	@NotNull
+	static <T extends Text> Text of(@NotNull T expression) {
+		
+		return new SimpleText(expression);
+	}
+	
 	/**
 	 * Returns the text associated with this object.
 	 *

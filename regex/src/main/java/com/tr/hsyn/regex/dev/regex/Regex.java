@@ -7,14 +7,17 @@ import com.tr.hsyn.regex.cast.CharacterSet;
 import com.tr.hsyn.regex.cast.Index;
 import com.tr.hsyn.regex.cast.Modifier;
 import com.tr.hsyn.regex.cast.Quanta;
+import com.tr.hsyn.regex.cast.Range;
 import com.tr.hsyn.regex.cast.RegexBuilder;
 import com.tr.hsyn.regex.cast.RegexMatcher;
 import com.tr.hsyn.regex.cast.Text;
+import com.tr.hsyn.regex.dev.regex.character.Any;
 import com.tr.hsyn.regex.dev.regex.character.Character;
 import com.tr.hsyn.regex.dev.regex.character.Digit;
 import com.tr.hsyn.regex.dev.regex.character.Letter;
 import com.tr.hsyn.regex.dev.regex.character.Punctuation;
 import com.tr.hsyn.regex.dev.regex.character.WhiteSpace;
+import com.tr.hsyn.regex.dev.regex.character.cast.RegexAny;
 import com.tr.hsyn.regex.dev.regex.character.cast.RegexDigit;
 import com.tr.hsyn.regex.dev.regex.character.cast.RegexLetter;
 import com.tr.hsyn.regex.dev.regex.character.cast.RegexPunctuation;
@@ -91,6 +94,14 @@ public interface Regex {
 	 * @see Character#NON_PUNCTUATION
 	 */
 	Punctuation NON_PUNCTUATION = new RegexPunctuation(Character.NON_PUNCTUATION);
+	/**
+	 * Used to represent the dot character in regular expressions
+	 */
+	Any         ANY             = new RegexAny(Character.ANY);
+	/**
+	 * Matches any character except for the special character ANY. (Weird)
+	 */
+	Any         NON_ANY         = new RegexAny(Range.noneOf(Character.ANY).getText());
 	
 	/**
 	 * This method removes all occurrences of a given regex character from a given string.
@@ -635,8 +646,53 @@ public interface Regex {
 		return str.matches(NUMBER);
 	}
 	
-	interface Tool {
+	/**
+	 * Returns a new {@link Text} object that represents any sequence of characters, including an empty sequence.
+	 * This method uses the {@link Character#zeroOrMore()} method to match zero or more occurrences of any character.
+	 *
+	 * @return a new {@link Text} object that represents any sequence of characters, including an empty sequence.
+	 * @see Quanta#ZERO_OR_MORE
+	 */
+	@NotNull
+	static Text anythings() {
 		
+		return Text.of(ANY.zeroOrMore());
+	}
+	
+	/**
+	 * Returns a {@link Text} object containing any characters except those specified in the input string.
+	 *
+	 * @param except a non-null string containing characters to exclude
+	 * @return a {@link Text} object containing any characters except those specified in the input string
+	 */
+	@NotNull
+	static Text anythingsBut(@NotNull String except) {
 		
+		return Text.of(Range.noneOf(except)).with(Quanta.ZERO_OR_MORE);
+	}
+	
+	/**
+	 * This method returns a {@link Text} object that represents one or more any characters.
+	 *
+	 * @return a {@link Text} object representing one or more any characters
+	 */
+	@NotNull
+	static Text somethings() {
+		
+		return Text.of(ANY.oneOrMore());
+	}
+	
+	/**
+	 * Returns a {@link Text} object that matches a sequence of characters
+	 * that are not present in the input string.
+	 * The returned {@link Text} object will have a quantifier of <em>one or more</em>.
+	 *
+	 * @param except a non-null String object representing the characters to exclude
+	 * @return a {@link Text} object matches a sequence of characters that are not present in the input string
+	 */
+	@NotNull
+	static Text somethingsBut(@NotNull String except) {
+		
+		return Text.of(Range.noneOf(except)).with(Quanta.ONE_OR_MORE);
 	}
 }
