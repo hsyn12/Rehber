@@ -30,7 +30,7 @@ import java.util.regex.Matcher;
 
 
 /**
- * This interface provides a set of static methods for working with regular expressions in Java 8.
+ * This interface provides a set of static methods and constants for working with regular expressions.
  * Regular expressions are patterns used to match character combinations in strings.
  */
 public interface Regex {

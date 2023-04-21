@@ -7,12 +7,29 @@ import com.tr.hsyn.regex.cast.Index;
 public class HtmlTag {
 	
 	private final String tag;
-	private final Index  index;
+	private final Index  indexContent;
+	private final Index  indexTag;
 	
-	public HtmlTag(String tag, Index index) {
+	public HtmlTag(String tag, Index indexContent, Index indexTag) {
 		
-		this.tag   = tag;
-		this.index = index;
+		this.tag          = tag;
+		this.indexContent = indexContent;
+		this.indexTag     = indexTag;
+	}
+	
+	@Override
+	public String toString() {
+		
+		return "HtmlTag{" +
+		       "tag='" + tag + '\'' +
+		       ", indexContent=" + indexContent +
+		       ", indexTag=" + indexTag +
+		       '}';
+	}
+	
+	public Index getIndexTag() {
+		
+		return indexTag;
 	}
 	
 	public String getTag() {
@@ -20,8 +37,8 @@ public class HtmlTag {
 		return tag;
 	}
 	
-	public Index getIndex() {
+	public Index getIndexContent() {
 		
-		return index;
+		return indexContent;
 	}
 }

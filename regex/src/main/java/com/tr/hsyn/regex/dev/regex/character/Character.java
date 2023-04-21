@@ -9,6 +9,10 @@ import org.intellij.lang.annotations.RegExp;
 import org.jetbrains.annotations.NotNull;
 
 
+/**
+ * This interface provides a set of static methods and constants for working with regular expressions.
+ * Regular expressions are patterns used to match character combinations in strings.
+ */
 public interface Character extends Text {
 	
 	/**
@@ -85,36 +89,60 @@ public interface Character extends Text {
 	 */
 	@NotNull         String BACK_SLASH  = "\\\\";
 	
+	/**
+	 * Returns a <code>Character</code> object representing the specified text.
+	 *
+	 * @param text the string to be converted to a Character object
+	 * @return a Character object representing the specified text
+	 */
 	@NotNull
 	static Character of(@NotNull String text) {
 		
 		return new Expression(text);
 	}
 	
+	/**
+	 * Returns a new {@link Text} object that represents the current text concatenated
+	 * with the {@link Quanta#ZERO_OR_ONE} constant.
+	 * The returned {@link Text} object is guaranteed to be not null.
+	 *
+	 * @return a new {@link Text} object that represents the current text concatenated with the {@link Quanta#ZERO_OR_ONE} constant.
+	 */
 	default @NotNull Text zeroOrOne() {
 		
 		return Text.of(getText() + Quanta.ZERO_OR_ONE);
 	}
 	
+	/**
+	 * Returns a new {@link Text} object that represents the current text concatenated
+	 * with the {@link Quanta#ZERO_OR_MORE} constant.
+	 * The returned {@link Text} object is guaranteed to be not null.
+	 *
+	 * @return a new {@link Text} object that represents the current text concatenated with the {@link Quanta#ZERO_OR_MORE} constant.
+	 */
 	default @NotNull Text zeroOrMore() {
 		
 		return Text.of(getText() + Quanta.ZERO_OR_MORE);
 	}
 	
+	/**
+	 * Returns a new {@link Text} object that represents the current text concatenated
+	 * with the {@link Quanta#ONE_OR_MORE} constant.
+	 * The returned {@link Text} object is guaranteed to be not null.
+	 *
+	 * @return a new {@link Text} object that represents the current text concatenated with the {@link Quanta#ONE_OR_MORE} constant.
+	 */
 	default @NotNull Text oneOrMore() {
 		
 		return Text.of(getText() + Quanta.ONE_OR_MORE);
 	}
 	
 	/**
-	 * Yazı içindeki belirli bir karakter türüne ait tüm karakterleri siler.<br><br>
+	 * This method removes all occurrences of a specific character from a given string.
 	 *
-	 * <pre>
-	 * // 12041981
-	 * Regex.WHITE_SPACE.removeFrom("12 04 1981");</pre>
-	 *
-	 * @param text Yazı
-	 * @return Metodun çağrıldığı karakter türüne ait tüm karakterler silinmiş yeni bir string
+	 * @param text the input string from which the text needs to be removed
+	 * @return a new string with all occurrences of the specified text removed
+	 * @throws NullPointerException if the input string is null
 	 */
 	default String removeFrom(@NotNull String text) {
 		
@@ -122,16 +150,11 @@ public interface Character extends Text {
 	}
 	
 	/**
-	 * Yazı içindeki belirli bir türe ait tüm karakterleri başka bir sring ile değişrir.<br><br>
+	 * Replaces all occurrences of the text in the input string with the specified replacement string.
 	 *
-	 * <pre>
-	 * RegexChar.WHITE_SPACE.replaceFrom("12 Nisan 1981", ".");
-	 * // 12.Nisan.1981
-	 * </pre>
-	 *
-	 * @param text        Yazı
-	 * @param replacement Karakterin yerine geçecek string
-	 * @return Metodun çağrıldığı karakter türüne ait tüm karakterleri değiştirilmiş yeni bir string
+	 * @param text        the input string to be processed
+	 * @param replacement the replacement string to be used
+	 * @return the resulting string after all occurrences of the text have been replaced with the replacement string
 	 */
 	default String replaceFrom(@NotNull String text, String replacement) {
 		
@@ -139,18 +162,13 @@ public interface Character extends Text {
 	}
 	
 	/**
-	 * Bir yazıdan, karakter türüne ait olmayan karakterleri siler.
-	 * Başka bir değişle, yazıda sadece kendi türüne ait karakterleri bırakır.<br><br>
+	 * Returns a new string that retains only the characters from
+	 * the input string that match the pattern specified by the non-null {@link #non()} object.
 	 *
-	 * <pre>
-	 * var str = "12 Nisan 1981";
-	 * RegexChar.LETTER.retainFrom(str);// Nisan
-	 * RegexChar.DIGIT.retainFrom(str);// 121981
-	 * </pre>
-	 *
-	 * @param text Yazı
-	 * @return Çağrının yapıldığı türe ait olmayan tüm karakterler silinmiş yeni bir string.
-	 * 		Sadece çağrının yapıldığı türe ait karakterlerden oluşan yeni bir string.
+	 * @param text the input string to be filtered
+	 * @return a new string that retains only the characters from the input string that match the pattern specified by the non-null non() object
+	 * @implNote This method uses the replaceAll() method of the String class to remove all characters that do not match the pattern specified by the non() object.
+	 * @implSpec This method is a default method of the interface and can be overridden by implementing classes.
 	 */
 	default String retainFrom(@NotNull String text) {
 		
@@ -158,17 +176,10 @@ public interface Character extends Text {
 	}
 	
 	/**
-	 * Bir yazının tamamının aynı tür karakterden olup olmadığını test eder.<br><br>
+	 * Checks if the given text matches the current text concatenated with one or more Quanta.
 	 *
-	 * <pre>
-	 * Character.LETTER.all("seni sensiz yaşamak en kötü kader olsa gerek");//false
-	 * Character.LETTER.all("senisensizyaşamakenkötükaderolsagerek");//true
-	 * Character.DIGIT.all("12041981");//true
-	 * Character.DIGIT.all("12.04.1981");//false
-	 * </pre>
-	 *
-	 * @param text Test edilecek yazı
-	 * @return Yazının tüm karakterleri, çağrının yapıldığı karakter türünden oluşuyorsa {@code true}
+	 * @param text the text to be checked for a match
+	 * @return true if the given text matches the current text concatenated with one or more Quanta, false otherwise
 	 */
 	default boolean all(@NotNull String text) {
 		
@@ -176,17 +187,15 @@ public interface Character extends Text {
 	}
 	
 	/**
-	 * Karakter türünün tümleyenini döndürür. <br>
+	 * Returns a non-null character that is guaranteed to be different from any other character.
+	 * This method is useful for initializing variables that need to have a default value.
 	 *
-	 * <pre>
-	 * var nonLetter = Character.LETTER.non();
-	 * var nonDigit  = Character.DIGIT.non();
-	 *
-	 * pl("Letter : %s", nonLetter.getText()); //Letter : \P{L}
-	 * pl("Digit  : %s", nonDigit.getText()); // Digit  : \P{N}
-	 * </pre>
-	 *
-	 * @return Karakter türünün tümleyenini döndürür.
+	 * @return a non-null character that is guaranteed to be different from any other character
 	 */
 	@NotNull Character non();
+	
+	default @NotNull Text anything(){
+		
+		Text.of()
+	}
 }
