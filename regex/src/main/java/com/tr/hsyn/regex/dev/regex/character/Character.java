@@ -3,31 +3,107 @@ package com.tr.hsyn.regex.dev.regex.character;
 
 import com.tr.hsyn.regex.cast.Quanta;
 import com.tr.hsyn.regex.cast.Text;
-import com.tr.hsyn.regex.dev.regex.Regex;
 import com.tr.hsyn.regex.dev.regex.character.cast.Expression;
-import com.tr.hsyn.regex.dev.regex.character.cast.RegexDigit;
-import com.tr.hsyn.regex.dev.regex.character.cast.RegexLetter;
-import com.tr.hsyn.regex.dev.regex.character.cast.RegexPunctuation;
-import com.tr.hsyn.regex.dev.regex.character.cast.RegexWhiteSpace;
 
+import org.intellij.lang.annotations.RegExp;
 import org.jetbrains.annotations.NotNull;
 
 
 public interface Character extends Text {
 	
-	Letter      LETTER          = new RegexLetter(Regex.LETTER);
-	Letter      NON_LETTER      = new RegexLetter(Regex.NON_LETTER, true);
-	Digit       DIGIT           = new RegexDigit(Regex.DIGIT);
-	Digit       NON_DIGIT       = new RegexDigit(Regex.NON_DIGIT);
-	WhiteSpace  WHITE_SPACE     = new RegexWhiteSpace(Regex.WHITE_SPACE);
-	WhiteSpace  NON_WHITE_SPACE = new RegexWhiteSpace(Regex.NON_WHITE_SPACE);
-	Punctuation PUNCTUATION     = new RegexPunctuation(Regex.PUNCTUATION, true);
-	Punctuation NON_PUNCTUATION = new RegexPunctuation(Regex.NON_PUNCTUATION);
+	/**
+	 * An alphabetic character. {@code \p{L}}
+	 */
+	@RegExp          String LETTER           = "\\p{L}";
+	/**
+	 * Any character except letter. {@code \P{L}}
+	 */
+	@RegExp          String NON_LETTER       = "\\P{L}";
+	/**
+	 * A digit.  {@code \p{N}}
+	 */
+	@RegExp          String DIGIT            = "\\p{N}";
+	/**
+	 * Any character except digit. {@code \P{N}}
+	 */
+	@RegExp          String NON_DIGIT        = "\\P{N}";
+	/**
+	 * A whitespace character, including line break. {@code [ \t\r\n\f\x0B]}
+	 */
+	@RegExp          String WHITE_SPACE      = "\\p{Z}";
+	/**
+	 * Any character except white space.
+	 */
+	@RegExp          String NON_WHITE_SPACE  = "\\P{Z}";
+	/**
+	 * Punctuation character {@code [!"#$%&'()*+,\-./:;<=>?@\[\\\]^_`{|}~]}
+	 */
+	@RegExp          String PUNCTUATION      = "\\p{P}";
+	/**
+	 * Any character except punctuation.
+	 */
+	@RegExp          String NON_PUNCTUATION  = "\\P{P}";
+	/**
+	 * Any character from {@link #LETTER}, {@link #DIGIT}, {@link #PUNCTUATION}, {@link #WHITE_SPACE}
+	 */
+	@RegExp
+	@NotNull         String ANY              = String.format("[%s%s%s%s]", LETTER, DIGIT, PUNCTUATION, WHITE_SPACE);
+	/**
+	 * A lowercase alphabetic character {@code [a-z]}
+	 */
+	@RegExp @NotNull String LETTER_LOWER     = "\\p{Ll}";
+	/**
+	 * Any character except lowercase alphabetic. {@code [^\p{Ll}]}
+	 */
+	@RegExp @NotNull String NON_LETTER_LOWER = "\\P{Ll}";
+	/**
+	 * An uppercase alphabetic character {@code [A-Z]}
+	 */
+	@RegExp @NotNull String LETTER_UPPER     = "\\p{Lu}";
+	/**
+	 * Any character except uppercase alphabetic. {@code [^\p{Lu}]}
+	 */
+	@RegExp @NotNull String NON_LETTER_UPPER = "\\P{Lu}";
+	/**
+	 * Delimiters {@code '.$^{[()|*+?\'}
+	 */
+	String DELIMITER_CHARACTERS = ".$^{[()|*+?\\";
+	/**
+	 * A control character {@code [\p{Cntrl}]}
+	 */
+	@RegExp @NotNull String CONTROL     = "\\p{C}";
+	/**
+	 * A non-control character {@code [^\p{C}]}
+	 */
+	@RegExp @NotNull String NON_CONTROL = "\\P{C}";
+	/**
+	 * A symbol character {@code [\p{S}]}
+	 */
+	@RegExp @NotNull String SYMBOL      = "\\p{S}";
+	/**
+	 * A backslash character {@code [\\]}
+	 */
+	@NotNull         String BACK_SLASH  = "\\\\";
 	
 	@NotNull
 	static Character of(@NotNull String text) {
 		
 		return new Expression(text);
+	}
+	
+	default @NotNull Text zeroOrOne() {
+		
+		return Text.of(getText() + Quanta.ZERO_OR_ONE);
+	}
+	
+	default @NotNull Text zeroOrMore() {
+		
+		return Text.of(getText() + Quanta.ZERO_OR_MORE);
+	}
+	
+	default @NotNull Text oneOrMore() {
+		
+		return Text.of(getText() + Quanta.ONE_OR_MORE);
 	}
 	
 	/**

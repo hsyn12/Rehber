@@ -4,6 +4,7 @@ package com.tr.hsyn.regex.cast.expression;
 import com.tr.hsyn.regex.cast.Quanta;
 import com.tr.hsyn.regex.cast.RegexBuilder;
 import com.tr.hsyn.regex.dev.regex.Regex;
+import com.tr.hsyn.regex.dev.regex.character.Character;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -33,7 +34,7 @@ public interface WhiteSpaceExpression extends RegularExpression {
 	 */
 	default @NotNull RegexBuilder whiteSpace(@NotNull Quanta quanta) {
 		
-		return with(Regex.WHITE_SPACE + quanta);
+		return with(Character.WHITE_SPACE + quanta);
 	}
 	
 	/**
@@ -78,7 +79,7 @@ public interface WhiteSpaceExpression extends RegularExpression {
 	 */
 	default @NotNull RegexBuilder nonWhiteSpace(@NotNull Quanta quanta) {
 		
-		return with(Regex.NON_WHITE_SPACE + quanta);
+		return with(Character.NON_WHITE_SPACE + quanta);
 	}
 	
 	/**

@@ -38,6 +38,41 @@ public interface RegexFinder extends RegexTester {
 	}
 	
 	/**
+	 * This method finds the first occurrence of a pattern in the given text starting from the specified index.
+	 * It returns an Index object representing the start and end indices of the match if found, otherwise it returns an invalid Index object.
+	 *
+	 * @param text       the text to search for the pattern
+	 * @param startIndex the index to start searching from
+	 * @return an Index object representing the start and end indices of the match if found, otherwise an invalid Index object
+	 */
+	default Index find(@NotNull CharSequence text, int startIndex) {
+		
+		var matcher = createMatcher(text);
+		
+		if (matcher.find(startIndex)) return new Index(matcher.start(), matcher.end());
+		
+		return Index.ofInvalid();
+	}
+	
+	/**
+	 * This method finds the index of the specified groupOrder in the given text using a regular expression matcher.
+	 * If the groupOrder is found, it returns an Index object containing the start and end indices of the match.
+	 * If the groupOrder is not found, it returns {@link Index#INVALID_INDEX}.
+	 *
+	 * @param text       The text to search for the groupOrder.
+	 * @param groupOrder The order of the group to find in the regular expression.
+	 * @return An Index object containing the start and end indices of the match, or an Index object with invalid indices if the groupOrder is not found.
+	 */
+	default Index find(@NotNull String text, int groupOrder) {
+		
+		var matcher = createMatcher(text);
+		
+		if (matcher.find()) return new Index(matcher.start(groupOrder), matcher.end(groupOrder));
+		
+		return Index.INVALID_INDEX;
+	}
+	
+	/**
 	 * Returns all matches of the regex in the text.
 	 *
 	 * @param text       the text to test
@@ -77,7 +112,7 @@ public interface RegexFinder extends RegexTester {
 	 * @param groupName the name of the group
 	 * @return list of matches indexes
 	 */
-	default List<Index> findGroup(@NotNull CharSequence text, @NotNull String groupName) {
+	default List<Index> findGroup(@NotNull String text, @NotNull String groupName) {
 		
 		var         matcher = createMatcher(text);
 		List<Index> list    = new ArrayList<>();
@@ -90,6 +125,16 @@ public interface RegexFinder extends RegexTester {
 		}
 		
 		return list;
+	}
+	
+	default Index find(@NotNull String text, @NotNull String groupName) {
+		
+		var matcher = createMatcher(text);
+		
+		if (matcher.find())
+			return Index.of(matcher.start(groupName), matcher.end(groupName));
+		
+		return Index.INVALID_INDEX;
 	}
 	
 	/**

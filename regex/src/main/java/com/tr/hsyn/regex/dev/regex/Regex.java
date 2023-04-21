@@ -11,6 +11,14 @@ import com.tr.hsyn.regex.cast.RegexBuilder;
 import com.tr.hsyn.regex.cast.RegexMatcher;
 import com.tr.hsyn.regex.cast.Text;
 import com.tr.hsyn.regex.dev.regex.character.Character;
+import com.tr.hsyn.regex.dev.regex.character.Digit;
+import com.tr.hsyn.regex.dev.regex.character.Letter;
+import com.tr.hsyn.regex.dev.regex.character.Punctuation;
+import com.tr.hsyn.regex.dev.regex.character.WhiteSpace;
+import com.tr.hsyn.regex.dev.regex.character.cast.RegexDigit;
+import com.tr.hsyn.regex.dev.regex.character.cast.RegexLetter;
+import com.tr.hsyn.regex.dev.regex.character.cast.RegexPunctuation;
+import com.tr.hsyn.regex.dev.regex.character.cast.RegexWhiteSpace;
 
 import org.intellij.lang.annotations.RegExp;
 import org.jetbrains.annotations.NotNull;
@@ -30,91 +38,67 @@ public interface Regex {
 	/**
 	 * Regular expression for digits.
 	 */
-	@RegExp          String NUMBER           = "^\\p{N}+$";
+	@RegExp String NUMBER = "^\\p{N}+$";
 	/**
 	 * Regular expression for alphabetics.
 	 */
-	@RegExp          String WORD             = "^\\p{L}+$";
+	@RegExp String WORD   = "^\\p{L}+$";
 	/**
-	 * An alphabetic character. {@code \p{L}}
+	 * A specific type of character for letter in a regular expression {@link Character#LETTER}
+	 *
+	 * @see Character#LETTER
 	 */
-	@RegExp          String LETTER           = "\\p{L}";
+	Letter      LETTER          = new RegexLetter(Character.LETTER);
 	/**
-	 * Any character except letter. {@code \P{L}}
+	 * A specific type of character for non-letter in a regular expression {@link Character#NON_LETTER}
+	 *
+	 * @see Character#NON_LETTER
 	 */
-	@RegExp          String NON_LETTER       = "\\P{L}";
+	Letter      NON_LETTER      = new RegexLetter(Character.NON_LETTER, true);
 	/**
-	 * A digit.  {@code \p{N}}
+	 * A specific type of character for digit in a regular expression {@link Character#DIGIT}
+	 *
+	 * @see Character#DIGIT
 	 */
-	@RegExp          String DIGIT            = "\\p{N}";
+	Digit       DIGIT           = new RegexDigit(Character.DIGIT);
 	/**
-	 * Any character except digit. {@code \P{N}}
+	 * A specific type of character for non-digit in a regular expression {@link Character#NON_DIGIT}
+	 *
+	 * @see Character#NON_DIGIT
 	 */
-	@RegExp          String NON_DIGIT        = "\\P{N}";
+	Digit       NON_DIGIT       = new RegexDigit(Character.NON_DIGIT);
 	/**
-	 * A whitespace character, including line break. {@code [ \t\r\n\f\x0B]}
+	 * A specific type of character for white space in a regular expression {@link Character#WHITE_SPACE}
+	 *
+	 * @see Character#WHITE_SPACE
 	 */
-	@RegExp          String WHITE_SPACE      = "\\p{Z}";
+	WhiteSpace  WHITE_SPACE     = new RegexWhiteSpace(Character.WHITE_SPACE);
 	/**
-	 * Any character except white space.
+	 * A specific type of character for non-white space in a regular expression {@link Character#NON_WHITE_SPACE}
+	 *
+	 * @see Character#NON_WHITE_SPACE
 	 */
-	@RegExp          String NON_WHITE_SPACE  = "\\P{Z}";
+	WhiteSpace  NON_WHITE_SPACE = new RegexWhiteSpace(Character.NON_WHITE_SPACE);
 	/**
-	 * Punctuation character {@code [!"#$%&'()*+,\-./:;<=>?@\[\\\]^_`{|}~]}
+	 * A specific type of character for punctuation in a regular expression {@link Character#PUNCTUATION}
+	 *
+	 * @see Character#PUNCTUATION
 	 */
-	@RegExp          String PUNCTUATION      = "\\p{P}";
+	Punctuation PUNCTUATION     = new RegexPunctuation(Character.PUNCTUATION, true);
 	/**
-	 * Any character except punctuation.
+	 * A specific type of character for non-punctuation in a regular expression {@link Character#NON_PUNCTUATION}
+	 *
+	 * @see Character#NON_PUNCTUATION
 	 */
-	@RegExp          String NON_PUNCTUATION  = "\\P{P}";
-	/**
-	 * Any character from {@link #LETTER}, {@link #DIGIT}, {@link #PUNCTUATION}, {@link #WHITE_SPACE}
-	 */
-	@RegExp
-	@NotNull         String ANY              = String.format("[%s%s%s%s]", LETTER, DIGIT, PUNCTUATION, WHITE_SPACE);
-	/**
-	 * A lowercase alphabetic character {@code [a-z]}
-	 */
-	@RegExp @NotNull String LETTER_LOWER     = "\\p{Ll}";
-	/**
-	 * Any character except lowercase alphabetic. {@code [^\p{Ll}]}
-	 */
-	@RegExp @NotNull String NON_LETTER_LOWER = "\\P{Ll}";
-	/**
-	 * An uppercase alphabetic character {@code [A-Z]}
-	 */
-	@RegExp @NotNull String LETTER_UPPER     = "\\p{Lu}";
-	/**
-	 * Any character except uppercase alphabetic. {@code [^\p{Lu}]}
-	 */
-	@RegExp @NotNull String NON_LETTER_UPPER = "\\P{Lu}";
-	/**
-	 * Delimiters {@code '.$^{[()|*+?\'}
-	 */
-	String DELIMITER_CHARACTERS = ".$^{[()|*+?\\";
-	/**
-	 * A control character {@code [\p{Cntrl}]}
-	 */
-	@RegExp @NotNull String CONTROL     = "\\p{C}";
-	/**
-	 * A non-control character {@code [^\p{C}]}
-	 */
-	@RegExp @NotNull String NON_CONTROL = "\\P{C}";
-	/**
-	 * A symbol character {@code [\p{S}]}
-	 */
-	@RegExp @NotNull String SYMBOL      = "\\p{S}";
-	/**
-	 * A backslash character {@code [\\]}
-	 */
-	@NotNull         String BACK_SLASH  = "\\\\";
+	Punctuation NON_PUNCTUATION = new RegexPunctuation(Character.NON_PUNCTUATION);
 	
 	/**
-	 * Yazının içinden, verilen karakter türüne ait karakterleri siler.
+	 * This method removes all occurrences of a given regex character from a given string.
+	 * The input string and the character to be removed must not be null.
 	 *
-	 * @param text      Yazı
-	 * @param regexChar Karakter türü
-	 * @return Yeni bir string
+	 * @param text      the input string from which the character is to be removed
+	 * @param regexChar the regex character to be removed from the input string
+	 * @return an unmodifiable string with all occurrences of the given character removed
 	 */
 	@NotNull
 	static @Unmodifiable String removeAll(@NotNull String text, @NotNull Character regexChar) {
@@ -191,7 +175,7 @@ public interface Regex {
 	@NotNull
 	static String removeWhiteSpaces(@NotNull String str) {
 		
-		return Character.WHITE_SPACE.removeFrom(str);
+		return Regex.WHITE_SPACE.removeFrom(str);
 	}
 	
 	/**
@@ -203,7 +187,7 @@ public interface Regex {
 	@NotNull
 	static String removeDigits(@NotNull String str) {
 		
-		return Character.DIGIT.removeFrom(str);
+		return Regex.DIGIT.removeFrom(str);
 	}
 	
 	/**
@@ -216,7 +200,7 @@ public interface Regex {
 	@NotNull
 	static String removeLetters(@NotNull String str) {
 		
-		return Character.LETTER.removeFrom(str);
+		return Regex.LETTER.removeFrom(str);
 	}
 	
 	/**
@@ -228,7 +212,7 @@ public interface Regex {
 	@NotNull
 	static String retainDigits(String str) {
 		
-		if (str != null) return Character.NON_DIGIT.removeFrom(str);
+		if (str != null) return Regex.NON_DIGIT.removeFrom(str);
 		
 		return "";
 	}
@@ -243,7 +227,7 @@ public interface Regex {
 	@NotNull
 	static String retainLetters(String str) {
 		
-		if (str != null) return Character.NON_LETTER.removeFrom(str);
+		if (str != null) return Regex.NON_LETTER.removeFrom(str);
 		
 		return "";
 	}
@@ -435,11 +419,11 @@ public interface Regex {
 	}
 	
 	/**
-	 * Bir string içinde belirli index'lerdeki parçaları döndürür.
+	 * Returns a list of substrings of the input string based on the provided indices.
 	 *
-	 * @param str     String
-	 * @param indices Parçaların yerleri
-	 * @return Parçaların listesi
+	 * @param str     the input string to extract substrings from
+	 * @param indices a list of Index objects representing the start and end indices of the desired substrings
+	 * @return a list of substrings extracted from the input string based on the provided indices
 	 */
 	@NotNull
 	static List<String> getStringParts(String str, @NotNull List<Index> indices) {
@@ -559,11 +543,11 @@ public interface Regex {
 	 */
 	static String getCharacterClass(char c) {
 		
-		if (java.lang.Character.isLetter(c)) return LETTER;
-		if (java.lang.Character.isDigit(c)) return DIGIT;
-		if (java.lang.Character.isWhitespace(c)) return WHITE_SPACE;
+		if (java.lang.Character.isLetter(c)) return Character.LETTER;
+		if (java.lang.Character.isDigit(c)) return Character.DIGIT;
+		if (java.lang.Character.isWhitespace(c)) return Character.WHITE_SPACE;
 		
-		return PUNCTUATION;
+		return Character.PUNCTUATION;
 	}
 	
 	/**
@@ -649,5 +633,10 @@ public interface Regex {
 	static boolean isNumber(@NotNull String str) {
 		
 		return str.matches(NUMBER);
+	}
+	
+	interface Tool {
+		
+		
 	}
 }

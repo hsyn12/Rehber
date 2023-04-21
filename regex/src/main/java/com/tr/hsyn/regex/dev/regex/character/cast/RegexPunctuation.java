@@ -1,6 +1,7 @@
 package com.tr.hsyn.regex.dev.regex.character.cast;
 
 
+import com.tr.hsyn.regex.dev.regex.Regex;
 import com.tr.hsyn.regex.dev.regex.character.Character;
 import com.tr.hsyn.regex.dev.regex.character.Punctuation;
 
@@ -28,6 +29,6 @@ public class RegexPunctuation extends Expression implements Punctuation {
 	@Override
 	public @NotNull Character non() {
 		
-		return non ? Character.PUNCTUATION : Character.NON_PUNCTUATION;
+		return non ? Regex.PUNCTUATION : Regex.NON_PUNCTUATION;
 	}
 }

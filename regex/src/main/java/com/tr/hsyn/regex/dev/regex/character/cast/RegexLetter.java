@@ -1,6 +1,7 @@
 package com.tr.hsyn.regex.dev.regex.character.cast;
 
 
+import com.tr.hsyn.regex.dev.regex.Regex;
 import com.tr.hsyn.regex.dev.regex.character.Character;
 import com.tr.hsyn.regex.dev.regex.character.Letter;
 
@@ -22,7 +23,7 @@ public class RegexLetter extends Expression implements Letter {
 	@Override
 	public @NotNull Character non() {
 		
-		return non ? Character.LETTER : Character.NON_LETTER;
+		return non ? Regex.LETTER : Regex.NON_LETTER;
 	}
 	
 	@Override

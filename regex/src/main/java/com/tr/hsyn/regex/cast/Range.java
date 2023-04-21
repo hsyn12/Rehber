@@ -42,9 +42,9 @@ public interface Range extends Text {
 	 * @param expression The expression to be converted
 	 * @return New <code>Range</code> with the given expression
 	 */
-	static @NotNull Range of(@NotNull String expression) {
+	static @NotNull Range of(@NotNull String expression, Object... args) {
 		
-		return new Ranger(expression);
+		return new Ranger(String.format(expression, args));
 	}
 	
 	/**
@@ -55,10 +55,11 @@ public interface Range extends Text {
 	 * @param expression İfade
 	 * @return Yeni bir <code>Range</code> nesnesi
 	 */
-	static @NotNull Range noneOf(@NotNull String expression) {
+	static @NotNull Range noneOf(@NotNull String expression, Object... args) {
 		
-		return new Ranger(expression, true);
+		return new Ranger(String.format(expression, args), true);
 	}
+	
 	
 	/**
 	 * Returns a range for the given {@link com.tr.hsyn.regex.dev.regex.character.Character}.<br><br>

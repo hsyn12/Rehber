@@ -17,7 +17,6 @@ import com.tr.hsyn.regex.dev.regex.Regex;
 import com.tr.hsyn.regex.dev.regex.character.Character;
 
 import org.intellij.lang.annotations.Pattern;
-import org.intellij.lang.annotations.RegExp;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
@@ -638,18 +637,18 @@ public interface Nina {
 	}
 	
 	/**
-	 * Creates a new {@link RegexBuilder} object with the {@link Regex#ANY} pattern.
+	 * Creates a new {@link RegexBuilder} object with the {@link Character#ANY} pattern.
 	 *
 	 * @return New {@link RegexBuilder} object that matches any character.
 	 */
 	@NotNull
 	static RegexBuilder any() {
 		
-		return new Teddy(Regex.ANY);
+		return new Teddy(Character.ANY);
 	}
 	
 	/**
-	 * Creates a new {@link RegexBuilder} object with the {@link Regex#ANY} pattern with <em>one or more</em> quantity.
+	 * Creates a new {@link RegexBuilder} object with the {@link Character#ANY} pattern with <em>one or more</em> quantity.
 	 * This means that <em><strong>any one or more character</strong></em> will match.
 	 *
 	 * @return New {@link RegexBuilder} object that matches <em>any one or more</em> character.
@@ -657,11 +656,11 @@ public interface Nina {
 	@NotNull
 	static RegexBuilder anymany() {
 		
-		return new Teddy(Regex.ANY).oneOrMore();
+		return new Teddy(Character.ANY).oneOrMore();
 	}
 	
 	/**
-	 * Creates a new {@link RegexBuilder} object with the {@link Regex#ANY} pattern with <em>zero or more</em> quantity.
+	 * Creates a new {@link RegexBuilder} object with the {@link Character#ANY} pattern with <em>zero or more</em> quantity.
 	 * This means that <em><strong>any zero or more character</strong></em> will match.
 	 *
 	 * @return New {@link RegexBuilder} object that matches <em>any zero or more</em> character.
@@ -669,7 +668,33 @@ public interface Nina {
 	@NotNull
 	static RegexBuilder anythings() {
 		
-		return new Teddy(Regex.ANY).zeroOrMore();
+		return new Teddy(Character.ANY).zeroOrMore();
+	}
+	
+	/**
+	 * Returns a new {@link RegexBuilder} object that matches (<em>zero or more</em>) any character
+	 * except those specified in the input pattern.
+	 *
+	 * @param except a String representing the characters to be excluded from the match
+	 * @return a RegexBuilder object that matches any character except those specified in the input pattern
+	 */
+	@NotNull
+	static RegexBuilder anythingsBut(@NotNull String except) {
+		
+		return Range.noneOf(except).toRegex().zeroOrMore();
+	}
+	
+	/**
+	 * Returns a new {@link RegexBuilder} object that matches (<em>one or more</em>) any character
+	 * except those specified in the input pattern.
+	 *
+	 * @param except a String representing the characters to be excluded from the match
+	 * @return New {@link RegexBuilder} object that matches any character except those specified in the input pattern
+	 */
+	@NotNull
+	static RegexBuilder manythingsBut(@NotNull String except) {
+		
+		return Range.noneOf(except).toRegex().oneOrMore();
 	}
 	
 	/**
@@ -679,13 +704,13 @@ public interface Nina {
 	 * @return Yeni bir {@link RegexBuilder} nesnesi
 	 */
 	@NotNull
-	static RegexBuilder like(@RegExp @NotNull String expression) {
+	static RegexBuilder like(@NotNull String expression) {
 		
 		return new Teddy(expression);
 	}
 	
 	@NotNull
-	static RegexBuilder like(@RegExp @NotNull String expression, Object... args) {
+	static RegexBuilder like(@NotNull String expression, Object... args) {
 		
 		return new Teddy(String.format(expression, args));
 	}
@@ -703,6 +728,12 @@ public interface Nina {
 		return new Teddy(expression);
 	}
 	
+	static @NotNull RegexBuilder refereTo(String groupName) {
+		
+		return like(String.format("\\k<%s>", groupName));
+	}
+	
+	
 	static void main(String[] args) {
 		
 		test26();
@@ -712,8 +743,8 @@ public interface Nina {
 	
 	static void test26() {
 		
-		var nonLetter = Character.LETTER.non();
-		var nonDigit  = Character.DIGIT.non();
+		var nonLetter = Regex.LETTER.non();
+		var nonDigit  = Regex.DIGIT.non();
 		
 		pl("Letter : %s", nonLetter.getText());
 		pl("Digit  : %s", nonDigit.getText());
@@ -760,7 +791,7 @@ public interface Nina {
 	static void test20() {
 		
 		var str = "12 Nisan 1981";
-		pl("Result : %s", Character.DIGIT.retainFrom(str));
+		pl("Result : %s", Regex.DIGIT.retainFrom(str));
 	}
 	
 	static void test19() {

@@ -1,6 +1,7 @@
 package com.tr.hsyn.regex.dev.regex.character.cast;
 
 
+import com.tr.hsyn.regex.dev.regex.Regex;
 import com.tr.hsyn.regex.dev.regex.character.Character;
 import com.tr.hsyn.regex.dev.regex.character.Digit;
 
@@ -22,7 +23,7 @@ public class RegexDigit extends Expression implements Digit {
 	@Override
 	public @NotNull Character non() {
 		
-		return non ? Character.DIGIT : Character.NON_DIGIT;
+		return non ? Regex.DIGIT : Regex.NON_DIGIT;
 	}
 	
 	@Override

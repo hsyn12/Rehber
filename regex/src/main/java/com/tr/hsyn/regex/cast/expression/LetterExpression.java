@@ -4,6 +4,7 @@ package com.tr.hsyn.regex.cast.expression;
 import com.tr.hsyn.regex.cast.Quanta;
 import com.tr.hsyn.regex.cast.RegexBuilder;
 import com.tr.hsyn.regex.dev.regex.Regex;
+import com.tr.hsyn.regex.dev.regex.character.Character;
 
 import org.intellij.lang.annotations.Pattern;
 import org.jetbrains.annotations.NotNull;
@@ -53,7 +54,7 @@ public interface LetterExpression extends RegularExpression {
 	 */
 	default @NotNull RegexBuilder letter(@NotNull Quanta quanta) {
 		
-		return with(Regex.LETTER + quanta);
+		return with(Character.LETTER + quanta);
 	}
 	
 	/**
@@ -84,7 +85,7 @@ public interface LetterExpression extends RegularExpression {
 	 */
 	default @NotNull RegexBuilder nonLetter(@NotNull Quanta quanta) {
 		
-		return with(Regex.NON_LETTER + quanta);
+		return with(Character.NON_LETTER + quanta);
 	}
 	
 	/**
@@ -94,7 +95,7 @@ public interface LetterExpression extends RegularExpression {
 	 */
 	default @NotNull RegexBuilder letterLow() {
 		
-		return with(Regex.LETTER_LOWER);
+		return with(Character.LETTER_LOWER);
 	}
 	
 	/**
@@ -115,7 +116,7 @@ public interface LetterExpression extends RegularExpression {
 	 */
 	default @NotNull RegexBuilder letterLow(@NotNull Quanta quanta) {
 		
-		return with(Regex.LETTER_LOWER + quanta);
+		return with(Character.LETTER_LOWER + quanta);
 	}
 	
 	/**
@@ -125,7 +126,7 @@ public interface LetterExpression extends RegularExpression {
 	 */
 	default @NotNull RegexBuilder letterUp() {
 		
-		return with(Regex.LETTER_UPPER);
+		return with(Character.LETTER_UPPER);
 	}
 	
 	/**
@@ -146,7 +147,7 @@ public interface LetterExpression extends RegularExpression {
 	 */
 	default @NotNull RegexBuilder letterUp(@NotNull Quanta quanta) {
 		
-		return with(Regex.LETTER_UPPER + quanta);
+		return with(Character.LETTER_UPPER + quanta);
 	}
 	
 	

@@ -21,6 +21,7 @@ import com.tr.hsyn.execution.Runny;
 import com.tr.hsyn.files.Files;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.regex.dev.regex.Regex;
+import com.tr.hsyn.regex.dev.regex.character.Character;
 import com.tr.hsyn.selection.ItemIndexListener;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
@@ -261,7 +262,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> im
 		
 		if (l.isEmpty()) return "?";
 		
-		if (String.valueOf(l.charAt(0)).matches(Regex.LETTER)) return l.toUpperCase(Locale.ROOT);
+		if (String.valueOf(l.charAt(0)).matches(Character.LETTER))
+			return l.toUpperCase(Locale.ROOT);
 		
 		return "?";
 	}

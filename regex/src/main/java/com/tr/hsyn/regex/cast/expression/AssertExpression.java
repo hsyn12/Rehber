@@ -17,12 +17,34 @@ public interface AssertExpression extends RegularExpression {
 	 * Positive lookahead. (assertion after the match)
 	 *
 	 * @param expression Düzenli ifade
+	 * @return This {@code RegexBuilder} with added the expression {@code regex(?=expression)}
+	 */
+	default @NotNull RegexBuilder lookAhead(@NotNull String expression) {
+		
+		return with(Look.ahead(expression));
+	}
+	
+	/**
+	 * Positive lookahead. (assertion after the match)
+	 *
+	 * @param expression Düzenli ifade
 	 * @param <T>        Düzenli ifade sınıflarından bir tür
 	 * @return This {@code RegexBuilder} with added the expression {@code regex(?=expression)}
 	 */
 	default <T extends Text> @NotNull RegexBuilder lookAhead(@NotNull T expression) {
 		
 		return with(Look.ahead(expression));
+	}
+	
+	/**
+	 * Positive lookbehind. (assertion before the match)
+	 *
+	 * @param expression Düzenli ifade
+	 * @return This {@code RegexBuilder} <code>regex(?&lt;=expression)</code>
+	 */
+	default @NotNull RegexBuilder lookBehind(@NotNull String expression) {
+		
+		return with(Look.behind(expression));
 	}
 	
 	/**

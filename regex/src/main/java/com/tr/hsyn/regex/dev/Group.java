@@ -27,6 +27,14 @@ public interface Group extends Text {
 				.build();
 	}
 	
+	static <T extends Text> @NotNull Group nonCaptured(@NotNull T group, Object... args) {
+		
+		return builder()
+				.group(String.format(group.getText(), args))
+				.captured(false)
+				.build();
+	}
+	
 	static @NotNull Group atomic(@NotNull String group, Object... args) {
 		
 		return builder()

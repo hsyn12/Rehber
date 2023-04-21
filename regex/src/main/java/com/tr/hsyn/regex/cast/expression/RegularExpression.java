@@ -11,78 +11,37 @@ import org.jetbrains.annotations.NotNull;
 public interface RegularExpression extends RegexEditor {
 	
 	/**
-	 * Düzenli ifadenin sonuna ekleme yapar.<br><br>
+	 * Appends the given regular expression to the current regex builder.
 	 *
-	 * <pre>
-	 * var regex = Nina.regex(".+").with('[').with(0).with("-9]").build();
-	 * pl("Regex : %s", regex);//Regex : .+[0-9]
-	 *
-	 * regex.withPunc();
-	 * pl("Regex : %s", regex);//Regex : .+[0-9]
-	 *
-	 * regex = regex.withPunc().build();
-	 * pl("Regex : %s", regex);//Regex : .+[0-9]\p{P}</pre>
-	 *
-	 * @param expression Eklenecek düzenli ifade
-	 * @return Kurulan {@code RegexBuilder} nesnesi
+	 * @param expression the regular expression to be appended to the current regex builder. Must not be null.
+	 * @return the current regex builder with the given regular expression appended to it.
 	 */
 	@NotNull
 	RegexBuilder with(@NotNull String expression);
 	
 	/**
-	 * Düzenli ifadenin sonuna ekleme yapar.<br><br>
+	 * Appends the given regular expression to the current regex builder.
 	 *
-	 * <pre>
-	 * var regex = Nina.regex(".+").with('[').with(0).with("-9]").build();
-	 * pl("Regex : %s", regex);//Regex : .+[0-9]
-	 *
-	 * regex.withPunc();
-	 * pl("Regex : %s", regex);//Regex : .+[0-9]
-	 *
-	 * regex = regex.withPunc().build();
-	 * pl("Regex : %s", regex);//Regex : .+[0-9]\p{P}</pre>
-	 *
-	 * @param regularExpression Eklenecek düzenli ifade
-	 * @param <T>               {@link Text} sınıfınından herhangi bir tür
-	 * @return Kurulan {@code RegexBuilder} nesnesi
+	 * @param expression the regular expression to be appended to the current regex builder. Must not be null.
+	 * @return the current regex builder with the given regular expression appended to it.
 	 */
 	@Override
-	<T extends Text> @NotNull RegexBuilder with(@NotNull T regularExpression);
+	<T extends Text> @NotNull RegexBuilder with(@NotNull T expression);
 	
 	/**
-	 * Düzenli ifadenin sonuna ekleme yapar.<br><br>
+	 * Appends the given integer to the current regex builder.
 	 *
-	 * <pre>
-	 * var regex = Nina.regex(".+").with('[').with(0).with("-9]").build();
-	 * pl("Regex : %s", regex);//Regex : .+[0-9]
-	 *
-	 * regex.withPunc();
-	 * pl("Regex : %s", regex);//Regex : .+[0-9]
-	 *
-	 * regex = regex.withPunc().build();
-	 * pl("Regex : %s", regex);//Regex : .+[0-9]\p{P}</pre>
-	 *
-	 * @param i int
-	 * @return Kurulan {@code RegexBuilder} nesnesi
+	 * @param i the integer to be appended to the current regex builder.
+	 * @return the current regex builder with the given integer appended to it.
 	 */
 	@NotNull
 	RegexBuilder with(int i);
 	
 	/**
-	 * Düzenli ifadenin sonuna ekleme yapar.<br><br>
+	 * Appends the given character to the current regex builder.
 	 *
-	 * <pre>
-	 * var regex = Nina.regex(".+").with('[').with(0).with("-9]").build();
-	 * pl("Regex : %s", regex);//Regex : .+[0-9]
-	 *
-	 * regex.withPunc();
-	 * pl("Regex : %s", regex);//Regex : .+[0-9]
-	 *
-	 * regex = regex.withPunc().build();
-	 * pl("Regex : %s", regex);//Regex : .+[0-9]\p{P}</pre>
-	 *
-	 * @param c char
-	 * @return Kurulan {@code RegexBuilder} nesnesi
+	 * @param c the character to be appended to the current regex builder.
+	 * @return the current regex builder with the given character appended to it.
 	 */
 	@NotNull
 	RegexBuilder with(char c);

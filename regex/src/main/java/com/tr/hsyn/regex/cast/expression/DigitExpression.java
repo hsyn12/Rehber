@@ -42,7 +42,7 @@ public interface DigitExpression extends RegularExpression {
 	 */
 	default @NotNull RegexBuilder digit(@NotNull Quanta quanta) {
 		
-		return with(Regex.DIGIT + quanta);
+		return with(Character.DIGIT + quanta);
 	}
 	
 	/**

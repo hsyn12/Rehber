@@ -20,6 +20,7 @@ import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.execution.Runny;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.regex.dev.regex.Regex;
+import com.tr.hsyn.regex.dev.regex.character.Character;
 import com.tr.hsyn.selection.ItemIndexListener;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
@@ -161,7 +162,7 @@ public class ContactSearchAdapter extends RecyclerView.Adapter<ContactSearchAdap
 			}
 			else {
 				
-				if (Stringx.test(searchText).isNot(Regex.DIGIT)) {
+				if (Stringx.test(searchText).isNot(Character.DIGIT)) {
 					
 					isNumber         = false;
 					filteredContacts = searchByName(searchText.toLowerCase());

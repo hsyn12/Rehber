@@ -59,9 +59,53 @@ public class Index {
 	 * @param str String
 	 * @return İndex'lerin bildirdiği yerdeki string
 	 */
-	public String substringOf(@NotNull String str) {
+	public String stringOf(@NotNull String str) {
 		
 		return str.substring(start, end);
+	}
+	
+	/**
+	 * Returns a substring of the input string starting from the specified index.
+	 *
+	 * @param str the input string to extract the substring from
+	 * @return the substring of the input string starting from the specified index
+	 */
+	public String stringAfterStart(@NotNull String str) {
+		
+		return str.substring(start);
+	}
+	
+	/**
+	 * Returns a substring of the input string after the specified end index.
+	 *
+	 * @param str the input string to extract the substring from
+	 * @return the substring of the input string after the specified end index
+	 */
+	public String stringAfterEnd(@NotNull String str) {
+		
+		return str.substring(end);
+	}
+	
+	/**
+	 * Returns a boolean value indicating whether the start and end indices of a string are valid.
+	 * The method checks if either the start or end index is not equal to -1, which indicates that the indices are valid.
+	 *
+	 * @return true if the start and end indices are valid, false otherwise.
+	 */
+	public boolean isValid() {
+		
+		return start != -1 || end != -1;
+	}
+	
+	/**
+	 * Returns a boolean value indicating whether the start and end values are both -1.
+	 * If both values are -1, it means that the object is invalid.
+	 *
+	 * @return true if the start and end values are both -1, false otherwise.
+	 */
+	public boolean isInvalid() {
+		
+		return start == -1 && end == -1;
 	}
 	
 	/**

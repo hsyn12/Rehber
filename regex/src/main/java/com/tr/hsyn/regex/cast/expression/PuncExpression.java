@@ -4,6 +4,7 @@ package com.tr.hsyn.regex.cast.expression;
 import com.tr.hsyn.regex.cast.Quanta;
 import com.tr.hsyn.regex.cast.RegexBuilder;
 import com.tr.hsyn.regex.dev.regex.Regex;
+import com.tr.hsyn.regex.dev.regex.character.Character;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -61,7 +62,7 @@ public interface PuncExpression extends RegularExpression {
 	 */
 	default @NotNull RegexBuilder punc(@NotNull Quanta quanta) {
 		
-		return with(Regex.PUNCTUATION + quanta);
+		return with(Character.PUNCTUATION + quanta);
 	}
 	
 }

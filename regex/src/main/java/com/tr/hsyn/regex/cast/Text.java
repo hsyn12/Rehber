@@ -18,11 +18,19 @@ public interface Text {
 	}
 	
 	/**
-	 * @return Text
+	 * Returns the text associated with this object.
+	 *
+	 * @return a non-null String representing the text associated with this object.
 	 */
 	@NotNull
 	String getText();
 	
+	/**
+	 * Concatenates the text of the current object with the text of the provided expression object.
+	 *
+	 * @param expression the expression object whose text will be concatenated with the current object's text
+	 * @return a new <code>Text</code> object with the concatenated text
+	 */
 	default <T extends Text> @NotNull Text with(@NotNull T expression) {
 		
 		return of(getText() + expression.getText());
