@@ -194,8 +194,8 @@ public interface Character extends Text {
 	 */
 	@NotNull Character non();
 	
-	default @NotNull Text anything(){
+	default @NotNull Text anything() {
 		
-		Text.of()
+		Text.of("");
 	}
 }
