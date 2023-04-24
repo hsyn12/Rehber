@@ -42,11 +42,12 @@ public class Alice implements Writer {
 	/**
 	 * Kayıt işlemlerini gerçekleştirecek veri tabanı
 	 */
-	protected final Database<Visitor> register;
+	protected final                                    Database<Visitor> register;
+	@SuppressWarnings("FieldCanBeLocal") private final int               DEBUG_DEGREE = 0;
 	/**
 	 * Anahtarların anlık olarak durumlarını tutar
 	 */
-	private final   Map<Key, Visitor> keyMap = new HashMap<>();
+	private final                                      Map<Key, Visitor> keyMap       = new HashMap<>();
 	
 	public Alice(Database<Visitor> database) {
 		
@@ -77,10 +78,10 @@ public class Alice implements Writer {
 			
 			sb.append(Time.ToString()).append("\n")
 					.append(String.format("%s\n", "-".repeat(ruleSize)))
-					.append(String.format("Kayıt sayısı : %d\n", visitors.size()))
-					.append(String.format("Satır sayısı : %d\n", rawCount))
-					.append(String.format("Byte sayısı  : %d [%.2fMB]\n", bytes, bytes / (float) (1024 * 1024)))
-					.append(String.format("Byte limiti  : %d [%.2fMB]\n", sizeLimit, sizeLimit / (float) (1024 * 1024)));
+					.append(String.format("Kayıt sayısı              : %d\n", visitors.size()))
+					.append(String.format("Satır sayısı              : %d\n", rawCount))
+					.append(String.format("Byte sayısı               : %d [%.2fMB]\n", bytes, bytes / (float) (1024 * 1024)))
+					.append(String.format("Byte limiti               : %d [%.2fMB]\n", sizeLimit, sizeLimit / (float) (1024 * 1024)));
 			
 			
 			long interval = bytes - sizeLimit;
@@ -174,22 +175,26 @@ public class Alice implements Writer {
 		}
 	}
 	
+	@SuppressWarnings("ConstantValue")
 	@Override
 	public void interact(@NotNull Key key) {
 		
 		var data = keyMap.get(key);
 		data.interact();
-		xlog.i("The data has interacted : [%s]", key.getName());
+		
+		if (DEBUG_DEGREE > 1)
+			xlog.i("The data has interacted : [%s]", key.getName());
 		
 		if (register != null) {
 			
 			if (register.update(data)) {
 				
-				xlog.i("Data interaction is registered : [%s]", key.getName());
+				if (DEBUG_DEGREE > 1)
+					xlog.i("Data interaction is registered : [%s]", key.getName());
 			}
 			else {
-				
-				xlog.i("Data interaction could not registered : [%s]", key.getName());
+				if (DEBUG_DEGREE > 0)
+					xlog.i("Data interaction could not registered : [%s]", key.getName());
 			}
 		}
 		else {
@@ -200,6 +205,7 @@ public class Alice implements Writer {
 		
 	}
 	
+	@SuppressWarnings("ConstantValue")
 	@Override
 	public void add(@NotNull Key key) {
 		
@@ -214,12 +220,12 @@ public class Alice implements Writer {
 		if (register != null) {
 			
 			if (register.add(data)) {
-				
-				xlog.i("Key is registered [%s]", key.getName());
+				if (DEBUG_DEGREE > 1)
+					xlog.i("Key is registered [%s]", key.getName());
 			}
 			else {
-				
-				xlog.i("Key registering is failed [%s]", key.getName());
+				if (DEBUG_DEGREE > 0)
+					xlog.i("Key registering is failed [%s]", key.getName());
 			}
 		}
 		else {

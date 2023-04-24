@@ -1,0 +1,16 @@
+plugins {
+	id 'java-library'
+}
+
+dependencies {
+	implementation 'junit:junit:4.13.2'
+	testImplementation 'junit:junit:4.13.2'
+	compileOnly "org.jetbrains:annotations:${rootProject.annotations}"
+	implementation group: 'com.googlecode.libphonenumber', name: 'libphonenumber', version: '8.13.10'
+}
+
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_17
+	targetCompatibility = JavaVersion.VERSION_17
+}

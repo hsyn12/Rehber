@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-		xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 		xmlns:app="http://schemas.android.com/apk/res-auto"
 		android:id="@+id/root"
-		android:layout_marginStart="5dp"
-		android:layout_marginEnd="5dp"
 		android:layout_width="match_parent"
 		android:layout_height="70dp"
+		android:layout_marginStart="5dp"
+		android:layout_marginEnd="5dp"
 		android:clickable="true"
 		android:focusable="true"
 		android:minHeight="70dp">
@@ -27,6 +26,7 @@
 			android:layout_toEndOf="@id/icon"
 			android:fontFamily="@font/cabin"
 			android:text="@string/contact_details_add_phone_number"
+			android:textColor="@color/black_60"
 			android:textSize="18sp" />
 
 </RelativeLayout>

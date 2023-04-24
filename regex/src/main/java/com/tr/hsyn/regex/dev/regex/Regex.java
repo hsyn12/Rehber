@@ -672,7 +672,7 @@ public interface Regex {
 	}
 	
 	/**
-	 * This method returns a {@link Text} object that represents one or more any characters.
+	 * This method returns a {@link Text} object that matches one or more any characters.
 	 *
 	 * @return a {@link Text} object representing one or more any characters
 	 */
@@ -683,7 +683,7 @@ public interface Regex {
 	}
 	
 	/**
-	 * Returns a {@link Text} object that matches a sequence of characters
+	 * Returns a {@link Text} object that matches the characters
 	 * that are not present in the input string.
 	 * The returned {@link Text} object will have a quantifier of <em>one or more</em>.
 	 *
@@ -693,6 +693,10 @@ public interface Regex {
 	@NotNull
 	static Text somethingsBut(@NotNull String except) {
 		
-		return Text.of(Range.noneOf(except)).with(Quanta.ONE_OR_MORE);
+		// Create a range of characters not included in the 'except' string
+		Range range = Range.noneOf(except);
+		// Return a Text object with the created range and one or more quanta
+		return Text.of(range).with(Quanta.ONE_OR_MORE);
+		
 	}
 }

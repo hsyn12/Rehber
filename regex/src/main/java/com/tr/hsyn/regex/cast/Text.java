@@ -12,9 +12,9 @@ import org.jetbrains.annotations.NotNull;
 public interface Text {
 	
 	@NotNull
-	static Text of(@NotNull String expression) {
+	static Text of(@NotNull String expression, Object... args) {
 		
-		return new SimpleText(expression);
+		return new SimpleText(String.format(expression, args));
 	}
 	
 	@NotNull

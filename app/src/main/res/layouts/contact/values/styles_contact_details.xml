@@ -4,7 +4,7 @@
 	<style name="HeaderText" parent="TextAppearance.AppCompat">
 		<item name="android:textSize">17sp</item>
 		<item name="android:fontFamily">@font/gsans_lt</item>
-		<item name="android:textColor">@color/black_50</item>
+		<item name="android:textColor">@color/black_60</item>
 	</style>
 
 	<style name="TextAbout" parent="TextAppearance.AppCompat">

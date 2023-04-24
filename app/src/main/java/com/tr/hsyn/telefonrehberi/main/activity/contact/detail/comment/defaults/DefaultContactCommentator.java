@@ -6,6 +6,7 @@ import android.view.View;
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.colors.Colors;
+import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.counter.Counter;
 import com.tr.hsyn.daytimes.DayTime;
 import com.tr.hsyn.execution.Runny;
@@ -33,22 +34,110 @@ import com.tr.hsyn.time.Time;
 import com.tr.hsyn.time.Unit;
 import com.tr.hsyn.xlog.xlog;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 
 /**
- * Varsayılan kişi yorumcusu<br>
- * Kişi ile ilgili en genel konuları yorumlar.
+ * This class implements the ContactCommentator interface and provides default behavior for commenting on a contact.
+ * It retrieves the call history of the contact and generates comments based on that history.
  */
-public class DefaultContactCommentator extends ContactCommentator {
+public class DefaultContactCommentator implements ContactCommentator {
 	
+	protected final Spanner             comment = new Spanner();
+	protected       ContactCommentStore commentStore;
+	protected       List<Call>          history;
+	protected       List<Call>          calls;
+	protected       Contact             contact;
 	//protected final String  DEFAULT_DATE_FORMAT = "d.M.yyyy";
 	
+	/**
+	 * Constructs a new DefaultContactCommentator object with the given comment store.
+	 *
+	 * @param commentStore the comment store to be used by this commentator
+	 */
 	public DefaultContactCommentator(ContactCommentStore commentStore) {
 		
-		super(commentStore);
+		this.commentStore = commentStore;
+		history           = getHistory();
+		calls             = getCalls();
 	}
 	
+	/**
+	 * Returns the current contact being commented on.
+	 *
+	 * @return the current contact
+	 */
+	@Override
+	public Contact getContact() {
+		
+		return contact;
+	}
+	
+	/**
+	 * Returns the comment store being used by this commentator.
+	 *
+	 * @return the comment store
+	 */
+	@Override
+	public ContactCommentStore getCommentStore() {
+		
+		return commentStore;
+	}
+	
+	/**
+	 * Generates a comment on the specified contact.
+	 *
+	 * @param contact the contact to comment on
+	 * @return the generated comment as a CharSequence
+	 */
+	@Override
+	public @NotNull CharSequence commentOn(@NotNull Contact contact) {
+		
+		this.contact = contact;
+		commentOnContact();
+		
+		return comment;
+	}
+	
+	/**
+	 * Generates comments based on the call history of the current contact.
+	 * Invokes private methods to generate individual comments.
+	 * This is the first method called by the commentator in {@link #commentOn(Contact)} method.
+	 */
+	private void commentOnContact() {
+		
+		xlog.d("History : %d", history.size());
+		
+		boolean noHistory = history.isEmpty();
+		
+		if (noHistory) {
+			
+			xlog.d("Kişiye ait bir arama kaydı yok");
+			
+			noHistoryComment();
+		}
+		
+		if (!noHistory) {
+			
+			xlog.d("There are some history : %d", history.size());
+			
+			Runny.run(() -> {
+				
+				historyQuantityComment();
+				
+				//mostCallComments();
+			});
+			
+		}
+		
+	}
+	
+	/**
+	 * Generates a comment about the quantity of call history for the contact.
+	 * Appends the generated comment to the Comment object managed by this commentator.
+	 */
 	private void historyQuantityComment() {
 		//- 10'a 3 ölçek
 		//- orta değer (10, 10 * 3] aralığı
@@ -64,23 +153,23 @@ public class DefaultContactCommentator extends ContactCommentator {
 		
 		comment.append(name);
 		
-		ShowCallsDialog showCallsDialog = new ShowCallsDialog(store.getActivity(), history);
+		ShowCallsDialog showCallsDialog = new ShowCallsDialog(commentStore.getActivity(), history);
 		
 		View.OnClickListener listener = View -> showCallsDialog.show();
 		
 		if (scaler.isMin(scale))
 			comment.append("sadece ");
 		
-		comment.append(Stringx.format("%s", store.sizeCall(history.size())), Spans.click(listener, clickColor), Spans.underline())
+		comment.append(Stringx.format("%s", commentStore.sizeCall(history.size())), Spans.click(listener, clickColor), Spans.underline())
 				.append(" kaydı var. ");
 		
 		
 		if (history.size() == 1) {
 			
 			Call                 call       = history.get(0);
-			String               callType   = store.getActivity().getString(R.string.incomming_call);
+			String               callType   = commentStore.getActivity().getString(R.string.incomming_call);
 			Duration             timeBefore = Time.howLongBefore(call.getTime());
-			ShowCall             showCall   = new ShowCall(store.getActivity(), call);
+			ShowCall             showCall   = new ShowCall(commentStore.getActivity(), call);
 			View.OnClickListener listener1  = View -> showCall.show();
 			
 			comment.append("Bu arama", Spans.click(listener1, clickColor))
@@ -91,9 +180,9 @@ public class DefaultContactCommentator extends ContactCommentator {
 			
 			Call     lastCall   = history.get(0);
 			Call     firstCall  = history.get(history.size() - 1);
-			String   callType   = Res.getCallType(store.getActivity(), lastCall.getType());
+			String   callType   = Res.getCallType(commentStore.getActivity(), lastCall.getType());
 			Duration timeBefore = Time.howLongBefore(lastCall.getTime());
-			ShowCall showCall   = new ShowCall(store.getActivity(), lastCall);
+			ShowCall showCall   = new ShowCall(commentStore.getActivity(), lastCall);
 			
 			View.OnClickListener listener1 = View -> showCall.show();
 			
@@ -104,6 +193,10 @@ public class DefaultContactCommentator extends ContactCommentator {
 		
 	}
 	
+	/**
+	 * Generates a comment about the contact's most frequent contacts based on their call history.
+	 * Appends the generated comment to the Comment object managed by this commentator.
+	 */
 	private void mostCallComments() {
 		
 		if (calls != null) {
@@ -151,28 +244,28 @@ public class DefaultContactCommentator extends ContactCommentator {
 					
 					return new MostCallItemViewData(name, e.size());
 				});
-				View.OnClickListener clickListener = v -> new MostCallDialog(store.getActivity(), viewData);
+				View.OnClickListener clickListener = v -> new MostCallDialog(commentStore.getActivity(), viewData);
 				
 				int color = getColor(com.tr.hsyn.rescolors.R.color.orange_500);
 				
 				if (count == 1) {
 					
-					comment.append(store.thisContact())
+					comment.append(commentStore.thisContact())
 							.append(" ")
-							.append(store.theMostCallLog(), Spans.click(clickListener, color))
+							.append(commentStore.theMostCallLog(), Spans.click(clickListener, color))
 							.append(" ")
-							.append(store.contactHas())
+							.append(commentStore.contactHas())
 							.append(". ");
 					
 					xlog.d("Bu kişi en fazla arama kaydına sahip kişi : %s", groups);
 				}
 				else {
 					
-					comment.append(store.thisContact())
+					comment.append(commentStore.thisContact())
 							.append(" ")
-							.append(store.theMostCallLog(), Spans.click(clickListener, color))
+							.append(commentStore.theMostCallLog(), Spans.click(clickListener, color))
 							.append(" ")
-							.append(store.hasOneOfThem((int) count))
+							.append(commentStore.hasOneOfThem((int) count))
 							.append(". ");
 					
 					xlog.d("Bu kişi en fazla arama kaydına sahip %d kişiden biri : %s", count, groups);
@@ -188,6 +281,10 @@ public class DefaultContactCommentator extends ContactCommentator {
 		xlog.i("Most comments completed");
 	}
 	
+	/**
+	 * Generates a comment about the first and last call made to the contact.
+	 * Appends the generated comment to the Comment object managed by this commentator.
+	 */
 	private void addFirstLastCallComment() {
 		
 		if (history.size() > 1) {
@@ -211,7 +308,7 @@ public class DefaultContactCommentator extends ContactCommentator {
 					.append(Stringx.format("%s. ", Time.toString(lastCall.getTime())), textSpans);
 			
 			comment.append("Bu iki tarih arasında geçen zaman tam olarak ")
-					.append(Stringx.format("%s. ", DayTime.toString(store.getActivity(), duration, durationUnits)), textSpans);
+					.append(Stringx.format("%s. ", DayTime.toString(commentStore.getActivity(), duration, durationUnits)), textSpans);
 			
 			xlog.d("Kişiye ait ilk arama kaydının tarihi : %s [%d]", Time.toString(firstCall.getTime()), firstCall.getTime());
 			
@@ -219,30 +316,11 @@ public class DefaultContactCommentator extends ContactCommentator {
 		}
 	}
 	
-	@Override
-	public void commentContact() {
-		
-		boolean noHistory = history.isEmpty();
-		
-		if (noHistory) {
-			
-			xlog.d("Kişiye ait bir arama kaydı yok");
-			
-			noHistoryComment();
-		}
-		
-		if (!noHistory) {
-			
-			Runny.run(() -> {
-				
-				historyQuantityComment();
-				
-				//mostCallComments();
-			});
-			
-		}
-	}
 	
+	/**
+	 * Generates a comment when there is no call history for the contact.
+	 * Appends the generated comment to the Comment object managed by this commentator.
+	 */
 	private void noHistoryComment() {
 		
 		comment.append("Bu kişi ile hiçbir iletişimin yok. ");

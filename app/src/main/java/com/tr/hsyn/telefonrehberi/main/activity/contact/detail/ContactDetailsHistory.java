@@ -107,7 +107,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	 */
 	protected void onHistoryUpdate() {
 		
-		xlog.d("Arama geçmişi güncellendi");
+		xlog.dx("Arama geçmişi güncellendi");
 	}
 	
 	/**
@@ -117,7 +117,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	 */
 	protected final void setHistory() {
 		
-		showProgress();
+		Runny.run(this::showProgress);
 		Work.on(this::getHistory)
 				.onSuccess(this::addContactHistoryView)
 				.onLast(this::hideProgress)
@@ -243,7 +243,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 		
 		if (gateShowHistory.enter()) {
 			
-			xlog.d("Show call history for : %s", contact.getName());
+			xlog.dx("Show call history for : %s", contact.getName());
 			
 			//- Geçmişi kaydet
 			Blue.box(Key.CALL_HISTORY, history);
@@ -316,13 +316,14 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	 */
 	private void refreshHistory() {
 		
-		showProgress();
+		Runny.run(this::showProgress);
 		
 		Work.on(this::getHistory)
 				.onSuccess(h -> {
 					
 					history      = h;
 					isNewHistory = true;
+					
 					onClickShowHistory(null);
 					onHistoryUpdate();
 				})
@@ -333,6 +334,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	private void addContactHistoryView(@NonNull List<Call> history) {
 		
 		this.history = history;
+		Blue.box(Key.CALL_HISTORY, history);
 		
 		//- Kişinin geçmişine yönlendirecek olan görünüm sadece bir kez eklenmeli
 		

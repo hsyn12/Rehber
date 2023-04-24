@@ -654,7 +654,7 @@ public interface Nina {
 	 * @return New {@link RegexBuilder} object that matches <em>any one or more</em> character.
 	 */
 	@NotNull
-	static RegexBuilder anymany() {
+	static RegexBuilder somethings() {
 		
 		return new Teddy(Character.ANY).oneOrMore();
 	}
@@ -692,7 +692,7 @@ public interface Nina {
 	 * @return New {@link RegexBuilder} object that matches any character except those specified in the input pattern
 	 */
 	@NotNull
-	static RegexBuilder manythingsBut(@NotNull String except) {
+	static RegexBuilder somethingsBut(@NotNull String except) {
 		
 		return Range.noneOf(except).toRegex().oneOrMore();
 	}
@@ -732,7 +732,6 @@ public interface Nina {
 		
 		return like(String.format("\\k<%s>", groupName));
 	}
-	
 	
 	static void main(String[] args) {
 		
@@ -1026,6 +1025,5 @@ public interface Nina {
 		System.out.printf((message != null ? message.toString() : "null") + "%n", args);
 	}
 	//endregion
-	
 	
 }

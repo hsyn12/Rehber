@@ -2,6 +2,7 @@ package com.tr.hsyn.telefonrehberi.main.activity.contact.detail;
 
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +16,15 @@ import com.tr.hsyn.gate.Gate;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.code.call.CallOver;
 import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.comment.ContactCommentator;
+import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.comment.defaults.DefaultContactCommentator;
+import com.tr.hsyn.telefonrehberi.main.code.comment.ContactCommentStore;
+import com.tr.hsyn.telefonrehberi.main.code.comment.Moody;
 import com.tr.hsyn.telefonrehberi.main.code.contact.act.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
 import com.tr.hsyn.vanimator.ViewAnimator;
 import com.tr.hsyn.xlog.xlog;
+
+import org.jetbrains.annotations.NotNull;
 
 
 public class ContactDetailsAbout extends ContactDetailsMenu {
@@ -31,6 +37,33 @@ public class ContactDetailsAbout extends ContactDetailsMenu {
 	private       ViewGroup view_about_content;
 	private       TextView  text_about;
 	private       boolean   reComment = true;
+	
+	/**
+	 * Creates a new instance of a {@link ContactCommentator} based on the current mood of the application.
+	 *
+	 * @param activity the activity object
+	 * @return a new instance of a {@link ContactCommentator}
+	 */
+	private static @NotNull ContactCommentator createCommentator(@NotNull Activity activity) {
+		
+		Moody moody = Moody.getMood();
+		
+		var store = ContactCommentStore.createCommentStore(activity, moody);
+		
+		switch (moody) {
+			
+			case DEFAULT:
+				
+				var commentator = new DefaultContactCommentator(store);
+				xlog.d("Default Commentator");
+				return commentator;
+			case HAPPY:
+				xlog.d("not yet happy");
+		}
+		
+		xlog.d("Wrong moody : %d", moody.ordinal());
+		return new DefaultContactCommentator(store);
+	}
 	
 	/**
 	 * Activity'nin başlangıç kodları
@@ -67,9 +100,9 @@ public class ContactDetailsAbout extends ContactDetailsMenu {
 			
 			Runny.run(() -> {
 				
-				ContactCommentator commentator = ContactCommentator.createCommentator(this);
+				ContactCommentator commentator = createCommentator(this);
 				
-				var comment = commentator.commentate(contact);
+				var comment = commentator.commentOn(contact);
 				
 				Runny.run(() -> onCommentReady(comment), true);
 			}, false);

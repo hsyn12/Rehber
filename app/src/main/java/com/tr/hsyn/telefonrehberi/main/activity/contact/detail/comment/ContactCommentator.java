@@ -1,19 +1,13 @@
 package com.tr.hsyn.telefonrehberi.main.activity.contact.detail.comment;
 
 
-import android.app.Activity;
-
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.key.Key;
-import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.comment.defaults.DefaultContactCommentator;
 import com.tr.hsyn.telefonrehberi.main.code.comment.Commentator;
 import com.tr.hsyn.telefonrehberi.main.code.comment.ContactCommentStore;
-import com.tr.hsyn.telefonrehberi.main.code.comment.Moody;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
-import com.tr.hsyn.text.Spanner;
 import com.tr.hsyn.xbox.Blue;
-import com.tr.hsyn.xlog.xlog;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -21,65 +15,82 @@ import java.util.List;
 
 
 /**
- * Kişi yorumlayıcısı.<br>
+ * The ContactCommentator interface defines the contract for commenting on a phone contact.
+ * <p>
+ * Implementations of this interface should provide specific functionality for commenting on different contacts.
+ * <p>
+ * This interface extends the Commentator<Contact> interface,
+ * which defines the {@link Commentator#commentOn(Object)} method
+ * for generating a comment on a contact.
  */
-public abstract class ContactCommentator implements Commentator<Contact> {
+public interface ContactCommentator extends Commentator<Contact> {
 	
-	protected final List<Call>          calls;
-	protected final ContactCommentStore store;
-	protected       Contact             contact;
-	protected       List<Call>          history;
-	protected       List<Contact>       contacts;
-	protected       Spanner             comment = new Spanner();
-	protected       ContactName         contactName;
-	
-	public ContactCommentator(ContactCommentStore store) {
+	/**
+	 * Returns a list of all contacts.
+	 *
+	 * @return a list of all contacts
+	 */
+	default List<Contact> getContacts() {
 		
-		this.store = store;
-		calls      = Over.CallLog.Calls.getCalls();
-		contacts   = Over.Contacts.getContacts();
+		return Over.Contacts.getContacts();
 	}
 	
-	public static @NotNull
-	ContactCommentator createCommentator(@NotNull Activity activity) {
+	/**
+	 * Returns a list of all calls.
+	 *
+	 * @return a list of all calls
+	 */
+	default List<Call> getCalls() {
 		
-		Moody moody = Moody.getMood();
-		
-		var store = ContactCommentStore.createCommentStore(activity, moody);
-		
-		switch (moody) {
-			
-			case DEFAULT:
-				
-				var commentator = new DefaultContactCommentator(store);
-				xlog.d("Default Commentator");
-				return commentator;
-			case HAPPY:
-				xlog.d("not yet happy");
-		}
-		
-		xlog.d("Wrong moody : %d", moody.ordinal());
-		return new DefaultContactCommentator(store);
+		return Over.CallLog.Calls.getCalls();
 	}
 	
-	protected final int getColor(int id) {
+	/**
+	 * Returns a list of all calls for the selected contact.
+	 *
+	 * @return a list of all calls the selected contact
+	 */
+	default List<Call> getHistory() {
 		
-		return store.getActivity().getColor(id);
+		return Blue.getObject(Key.CALL_HISTORY);
 	}
 	
-	abstract protected void commentContact();
+	/**
+	 * Returns the contact for which the comment is being generated.
+	 *
+	 * @return current selected contact
+	 */
+	Contact getContact();
 	
+	/**
+	 * Returns the {@link ContactCommentStore} instance associated with this {@link ContactCommentator}.
+	 *
+	 * @return the {@link ContactCommentStore} instance associated with this {@link ContactCommentator}
+	 */
+	ContactCommentStore getCommentStore();
+	
+	/**
+	 * Returns the color associated with the given resource ID.
+	 *
+	 * @param id the resource ID of the color
+	 * @return the color associated with the given resource ID
+	 */
+	default int getColor(int id) {
+		
+		return getCommentStore().getActivity().getColor(id);
+	}
+	
+	/**
+	 * This method is responsible for commenting on a contact.
+	 * <p>
+	 * Implementations of this method should provide specific functionality
+	 * for commenting on different contacts.
+	 *
+	 * @param contact the contact to be commented on
+	 * @return a CharSequence representing the comment on the contact
+	 */
 	@Override
-	public final @NotNull
-	CharSequence commentate(@NotNull Contact subject) {
-		
-		contact      = subject;
-		contactName  = new ContactName(contact.getName());
-		this.history = Blue.getObject(Key.CALL_HISTORY);
-		
-		commentContact();
-		return comment;
-	}
+	@NotNull CharSequence commentOn(@NotNull Contact contact);
 	
-	
+	//write java documentation for this method : 
 }

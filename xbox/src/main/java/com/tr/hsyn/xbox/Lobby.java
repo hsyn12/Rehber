@@ -14,7 +14,7 @@ public class Lobby {
 	
 	public final  Map<com.tr.hsyn.key.Key, List<Consumer<Object>>> WAITING_ROOM = new HashMap<>();
 	@SuppressWarnings("FieldCanBeLocal")
-	private final int                                              DEBUG_DEGREE = 3;
+	private final int                                              DEBUG_DEGREE = 0;
 	
 	@SuppressWarnings("ConstantConditions")
 	public <T> boolean lookFor(com.tr.hsyn.key.Key key, T object) {

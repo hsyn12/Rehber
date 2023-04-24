@@ -61,6 +61,7 @@ public class Index {
 	 */
 	public String stringOf(@NotNull String str) {
 		
+		if (isInvalid()) return "";
 		return str.substring(start, end);
 	}
 	
@@ -94,7 +95,17 @@ public class Index {
 	 */
 	public boolean isValid() {
 		
-		return start != -1 || end != -1;
+		return start != -1 && end != -1;
+	}
+	
+	public boolean isValidStart() {
+		
+		return start != -1;
+	}
+	
+	public boolean isValidEnd() {
+		
+		return end != -1;
 	}
 	
 	/**
