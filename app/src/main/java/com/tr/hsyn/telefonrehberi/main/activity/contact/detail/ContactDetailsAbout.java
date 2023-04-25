@@ -14,7 +14,6 @@ import com.tr.hsyn.execution.Runny;
 import com.tr.hsyn.gate.AutoGate;
 import com.tr.hsyn.gate.Gate;
 import com.tr.hsyn.telefonrehberi.R;
-import com.tr.hsyn.telefonrehberi.code.call.CallOver;
 import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.comment.ContactCommentator;
 import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.comment.defaults.DefaultContactCommentator;
 import com.tr.hsyn.telefonrehberi.main.code.comment.ContactCommentStore;
@@ -27,10 +26,10 @@ import com.tr.hsyn.xlog.xlog;
 import org.jetbrains.annotations.NotNull;
 
 
+/**
+ * This class interested contact information based on the call history.
+ */
 public class ContactDetailsAbout extends ContactDetailsMenu {
-	
-	//- Burada kişi hakkında bazı kayda değer bilgileri
-	//- kompozisyon halinde sunmak istiyoruz.
 	
 	private final Gate      gateAbout = AutoGate.newGate(2000L);
 	private       boolean   isOpenAboutView;
@@ -66,17 +65,19 @@ public class ContactDetailsAbout extends ContactDetailsMenu {
 	}
 	
 	/**
-	 * Activity'nin başlangıç kodları
+	 * Activity codes must be start from here after <code>super</code> call.<br>
+	 * Because the call history of the contact must be updated before any actions are performed.<br>
+	 * İf no call history means no comment is generated.<br>
+	 * İf no any phone number belongs to the contact means no comment is generated
+	 * and no 'about' view is displayed.
 	 */
 	@Override
 	protected void onHistoryUpdate() {
-		
+		// This must be the first call in the onHistoryUpdate method
+		// because the call history must be updated before all
 		super.onHistoryUpdate();
 		
-		//! Kişi hakkında bilgi sağlayabilmek için
-		//! arama kayıtları gerekli.
-		//! Ayrıca kişiye ait bir telefon numarası.
-		//! Bunlar yoksa 'Hakkında' bölümü olmayacak
+		// The contact must have one phone number at least
 		if (contact.exist(ContactKey.NUMBERS) && Over.CallLog.exist()) {
 			
 			Runny.run(this::setStatistics, false);
@@ -88,7 +89,7 @@ public class ContactDetailsAbout extends ContactDetailsMenu {
 	
 	private void setStatistics() {
 		
-		var callGroups = CallOver.groupByNumber();
+		//var callGroups = CallOver.groupByNumber();
 		
 	}
 	
@@ -119,6 +120,10 @@ public class ContactDetailsAbout extends ContactDetailsMenu {
 		animateAboutView();
 	}
 	
+	/**
+	 * Set up the comment views.
+	 * This method calls
+	 */
 	@SuppressLint("InflateParams")
 	private void setupCommentViews() {
 		
@@ -141,7 +146,7 @@ public class ContactDetailsAbout extends ContactDetailsMenu {
 		
 		if (history == null) {
 			
-			xlog.i("Kişinin geçmişi henüz alınmadı");
+			xlog.i("No call history yet");
 			return;
 		}
 		

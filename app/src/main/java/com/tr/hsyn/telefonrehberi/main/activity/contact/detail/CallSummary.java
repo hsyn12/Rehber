@@ -8,7 +8,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.tr.hsyn.bool.Bool;
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.execution.Work;
@@ -17,7 +16,6 @@ import com.tr.hsyn.gate.Gate;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.data.CallHistory;
 import com.tr.hsyn.telefonrehberi.main.code.contact.act.ContactKey;
-import com.tr.hsyn.telefonrehberi.main.dev.Over;
 import com.tr.hsyn.time.Time;
 import com.tr.hsyn.vanimator.ViewAnimator;
 import com.tr.hsyn.xlog.xlog;
@@ -123,13 +121,6 @@ public abstract class CallSummary extends ContactDetailsHistory {
 		//- Esas olay kullanıcının talebi ile başlar
 	}
 	
-	/**
-	 * Üst sınıf, kişinin arama geçmişini her açılışta yüklemektedir ve
-	 * arama geçmişi her güncellendiğinde
-	 * bu metodu çağırır. Bu metot her çağrıldığında
-	 * kişinin arama geçmişi kalıcı olarak değişmiş ve
-	 * yeni bilgilerle güncellenmiş demektir.
-	 */
 	@Override
 	protected void onHistoryUpdate() {
 		
@@ -188,25 +179,6 @@ public abstract class CallSummary extends ContactDetailsHistory {
 	protected void onCallPermissionsDenied() {
 		
 		needShowSummary = false;
-	}
-	
-	@Override
-	protected void onResume() {
-		
-		super.onResume();
-		
-		//- Arama kayıtlarında bir güncelleme varsa bilgilerin tekrar düzenlenmesi gerek
-		
-		if (Over.CallLog.Calls.isUpdated(Bool.NONE).bool()) {
-			
-			xlog.d("Arama kayıtlarında güncelleme var");
-			
-			//- Arama özeti olayı arama geçmişine bağlı olduğu için
-			//- önce üst sınıfı uyarıyoruz.
-			//- Üst sınıf arama geçmişini yenilediğinde onHistoryUpdate() metodunu çağırır
-			//- ve tüm bilgiler yeniden düzenlenerek arama özeti görsel elemanları da güncellenir
-			setHistory();
-		}
 	}
 	
 	/**
