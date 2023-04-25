@@ -31,8 +31,16 @@ import com.tr.hsyn.xlog.xlog;
 import java.util.List;
 
 
+/**
+ * This abstract class is a head way for contact details.
+ * It prepares details for the selected contact by the user,
+ * and then calls {@link #prepare()} method.
+ * All subclasses of this class need to work after {@link #prepare()},
+ * please attention to the order.
+ */
 public abstract class ContactDetailsHeadWay extends ContactDetailsView implements ThreadedWork {
 	
+	/** The selected contact */
 	protected Contact contact;
 	
 	@Override
@@ -47,39 +55,13 @@ public abstract class ContactDetailsHeadWay extends ContactDetailsView implement
 			Show.tost(this, getString(R.string.contact_details_contact_not_found));
 			onBackPressed();
 		}
-		else checkDetails();
+		else setDetails();
 	}
 	
 	/**
-	 * Verilen numara için mesajları aç.
-	 *
-	 * @param number Numara
+	 * Sets the details of the contact and calls {@link #prepare()} method.
 	 */
-	protected void openMessages(String number) {
-		
-		try {
-			
-			startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse("sms:" + Uri.encode(number))));
-			Toast.makeText(getApplicationContext(), number, Toast.LENGTH_SHORT).show();
-		}
-		catch (ActivityNotFoundException e) {
-			
-			Show.tost(this, "İşlemi gerçekleştirecek bir uygulama yok");
-		}
-	}
-	
-	/**
-	 * Kişi detayları alındıktan sonra çağrılır.
-	 * Bu çağrıdan önce kişi ile ilgili yapılacak işlemler boşa çıkar.
-	 */
-	@CallSuper
-	protected void prepare() {
-		
-		setImage();
-		setNumbers();
-	}
-	
-	private void checkDetails() {
+	private void setDetails() {
 		
 		boolean detailsApplied = contact.getBool(ContactKey.DETAILS_APPLIED);
 		
@@ -103,6 +85,23 @@ public abstract class ContactDetailsHeadWay extends ContactDetailsView implement
 		else prepare();
 	}
 	
+	/**
+	 * Writes base information about the contact,
+	 * phone numbers and image, for example.
+	 * Subclasses of this class need to override this method,
+	 * call super first,
+	 * and start their work from there.
+	 */
+	@CallSuper
+	protected void prepare() {
+		
+		setImage();
+		setNumbers();
+	}
+	
+	/**
+	 * Sets the image of the contact into the image view
+	 */
 	private void setImage() {
 		
 		var font  = ResourcesCompat.getFont(this, com.tr.hsyn.resfont.R.font.nunito_regular);
@@ -123,17 +122,15 @@ public abstract class ContactDetailsHeadWay extends ContactDetailsView implement
 			
 			final int fontSize = 256;
 			
-			var drawable = TextDrawable.builder()
-					.beginConfig()
-					.useFont(font)
-					.fontSize(fontSize)
-					.endConfig()
-					.buildRect(Stringx.toUpper(Stringx.getFirstChar(contact.getName())), color);
+			var drawable = TextDrawable.builder().beginConfig().useFont(font).fontSize(fontSize).endConfig().buildRect(Stringx.toUpper(Stringx.getFirstChar(contact.getName())), color);
 			
 			image.setImageDrawable(drawable);
 		}
 	}
 	
+	/**
+	 * Sets the numbers of the contact into the text view
+	 */
 	private void setNumbers() {
 		
 		List<String> numbers = contact.getData(ContactKey.NUMBERS);
@@ -179,6 +176,11 @@ public abstract class ContactDetailsHeadWay extends ContactDetailsView implement
 		}
 	}
 	
+	/**
+	 * Listener for the no number view click event.
+	 *
+	 * @param view no number view
+	 */
 	private void onClickNoNumber(@NonNull View view) {
 		
 		xlog.d("Telefon numarası ekle");
@@ -186,12 +188,40 @@ public abstract class ContactDetailsHeadWay extends ContactDetailsView implement
 		onClickEdit(view);
 	}
 	
+	/**
+	 * Listener for the 'sent message' view click event.
+	 *
+	 * @param view sent message view
+	 */
 	private void onClickMessage(@NonNull View view) {
 		
 		xlog.d("Message to : %s", view.getTag());
 		openMessages((String) view.getTag());
 	}
 	
+	/**
+	 * Opens the messages for sending a message to the contact
+	 *
+	 * @param number the phone number to send a message
+	 */
+	protected void openMessages(String number) {
+		
+		try {
+			
+			startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse("sms:" + Uri.encode(number))));
+			Toast.makeText(getApplicationContext(), number, Toast.LENGTH_SHORT).show();
+		}
+		catch (ActivityNotFoundException e) {
+			
+			Show.tost(this, "İşlemi gerçekleştirecek bir uygulama yok");
+		}
+	}
+	
+	/**
+	 * Listener for the call view click event.
+	 *
+	 * @param view call view
+	 */
 	private void onClickCall(@NonNull View view) {
 		
 		xlog.d("Call to : %s", view.getTag());
@@ -199,6 +229,11 @@ public abstract class ContactDetailsHeadWay extends ContactDetailsView implement
 		Phone.makeCall(this, (String) view.getTag());
 	}
 	
+	/**
+	 * Listener for the email view click event.
+	 *
+	 * @param view email view
+	 */
 	private void onClickEmail(@NonNull View view) {
 		
 		String email = (String) view.getTag();
@@ -208,6 +243,11 @@ public abstract class ContactDetailsHeadWay extends ContactDetailsView implement
 		sendEmailIntent(email);
 	}
 	
+	/**
+	 * Sends an email to the given email address
+	 *
+	 * @param email the email address
+	 */
 	private void sendEmailIntent(String email) {
 		
 		var    uri = Uri.parse("mailto:" + email).buildUpon().build();

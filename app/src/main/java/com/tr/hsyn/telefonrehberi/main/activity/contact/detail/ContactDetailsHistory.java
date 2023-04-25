@@ -1,6 +1,7 @@
 package com.tr.hsyn.telefonrehberi.main.activity.contact.detail;
 
 
+import android.Manifest;
 import android.content.Intent;
 import android.view.View;
 import android.widget.ImageView;
@@ -35,8 +36,11 @@ import java.util.stream.Collectors;
 
 
 /**
- * This class's duty is to show the call history of the selected contact by dialog.
- * It can request the permission to access the call log if needed.
+ * This class's duty is to take the call log
+ * and show the call history of the selected contact by dialog.
+ * So, it needs to have {@link Manifest.permission#READ_CALL_LOG} permission.
+ * It can request the permission to access the call log if needed
+ * (the permission if not has been taken it requests {@link PermissionHolder#CALL_LOG_PERMISSIONS}).
  * Permission results are sent to the subclasses which interested ones.
  */
 public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implements PermissionHolder {
@@ -76,12 +80,27 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	}
 	
 	/**
-	 * Requests call log permissions from the user.
+	 * Start to load the call history for the contact associated with this activity.
+	 * This method is called when the activity is first created,
+	 * and when the user touched the show history view (if a need be).
+	 */
+	private void setHistory() {
+		
+		Runny.run(this::showProgress);
+		Work.on(this::getCallHistory)
+				.onSuccess(this::addContactHistoryView)
+				.onLast(this::hideProgress)
+				.execute();
+	}
+	
+	/**
+	 * Requests call log permissions {@link PermissionHolder#CALL_LOG_PERMISSIONS} from the user.
 	 * Overrides the method from {@link PermissionHolder}.
 	 *
 	 * @see #RC_CALL_LOG
 	 * @see #onPermissionsResult(int, Map)
 	 * @see #onCallPermissionsGrant()
+	 * @see PermissionHolder#CALL_LOG_PERMISSIONS
 	 */
 	@CallSuper
 	protected void requestCallPermissions() {
@@ -121,19 +140,6 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 		xlog.dx("Call history updated");
 	}
 	
-	/**
-	 * Start to load the call history for the contact associated with this activity.
-	 * This method is called when the activity is first created,
-	 * and when the user touched the show history view (if a need be).
-	 */
-	private void setHistory() {
-		
-		Runny.run(this::showProgress);
-		Work.on(this::getCallHistory)
-				.onSuccess(this::addContactHistoryView)
-				.onLast(this::hideProgress)
-				.execute();
-	}
 	
 	/**
 	 * Loads the call history for the contact associated with this activity.
@@ -182,9 +188,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 		
 		//- Kişiye ait arama kayıtlarını döndür
 		
-		return calls.stream()
-				.filter(c -> PhoneNumbers.containsNumber(contact.getData(ContactKey.NUMBERS), c.getNumber()))
-				.collect(Collectors.toList());
+		return calls.stream().filter(c -> PhoneNumbers.containsNumber(contact.getData(ContactKey.NUMBERS), c.getNumber())).collect(Collectors.toList());
 	}
 	
 	/**
@@ -245,8 +249,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 						needShowHistory = true;
 						requestCallPermissions();
 					}
-					else
-						xlog.d("No call history");
+					else xlog.d("No call history");
 				}
 			}
 		}
@@ -290,14 +293,6 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 		progressBar.setVisibility(View.GONE);
 	}
 	
-	@Override
-	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-		
-		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-		
-		onPermissionResult(requestCode, permissions, grantResults);
-	}
-	
 	/**
 	 * Callback method called when a permission request is made.
 	 * Overrides the method from {@link PermissionHolder}.
@@ -318,8 +313,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 			if (grant) {
 				
 				//- Gerekli izni aldık, geçmişi yenileyelim
-				if (needShowHistory)
-					refreshHistory();
+				if (needShowHistory) refreshHistory();
 				else setHistory();
 				
 				//- Yukarıdakileri de uyarmayı unutmayalım
@@ -343,17 +337,14 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 		
 		Runny.run(this::showProgress);
 		
-		Work.on(this::getCallHistory)
-				.onSuccess(h -> {
-					
-					history      = h;
-					isNewHistory = true;
-					
-					onClickShowHistory(null);
-					onHistoryUpdate();
-				})
-				.onLast(this::hideProgress)
-				.execute();
+		Work.on(this::getCallHistory).onSuccess(h -> {
+			
+			history      = h;
+			isNewHistory = true;
+			
+			onClickShowHistory(null);
+			onHistoryUpdate();
+		}).onLast(this::hideProgress).execute();
 	}
 	
 	/**
@@ -369,8 +360,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 		//- Kişinin geçmişine yönlendirecek olan görünüm sadece bir kez eklenmeli
 		if (!historyViewAdded) {
 			
-			View historyView = getLayoutInflater()
-					.inflate(R.layout.show_contact_history, mainContainer, false);
+			View historyView = getLayoutInflater().inflate(R.layout.show_contact_history, mainContainer, false);
 			
 			mainContainer.addView(historyView);
 			
@@ -420,6 +410,14 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 			xlog.d("There is an update of call log");
 			setHistory();
 		}
+	}
+	
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+		
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		
+		onPermissionResult(requestCode, permissions, grantResults);
 	}
 	
 }
