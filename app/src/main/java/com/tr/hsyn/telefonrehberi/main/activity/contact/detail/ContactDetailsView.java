@@ -21,30 +21,28 @@ import org.jetbrains.annotations.NotNull;
 
 
 /**
- * Kişinin detayları için görsel öğeleri hazırlar.
+ * This class sets up main views of the contact details.
  */
 public abstract class ContactDetailsView extends ActivityView {
 	
-	/**
-	 * Kişinin resmi
-	 */
+	/** Contact image */
 	protected ImageView               image;
 	/**
-	 * Kişinin çeşitli bilgilerini gösterecek olan görsel öğelerin kapsayıcısı.
-	 * Kişi detayı için hazırlanan tüm görsel elemanlar bu kapsayıcının içine eklenir.
+	 * All views of the contact details will be added to this container
 	 */
 	protected ViewGroup               mainContainer;
 	/**
-	 * Kişinin telefon numaraları
+	 * Phone numbers layout
 	 */
 	protected ViewGroup               numbersLayout;
-	protected CollapsingToolbarLayout collapsingToolbarLayout;
-	protected ProgressBar             progressBar;
-	
 	/**
-	 * Kişi için düzenleme sayfasını aç
+	 * Collapsing toolbar
 	 */
-	protected abstract void editContact();
+	protected CollapsingToolbarLayout collapsingToolbarLayout;
+	/**
+	 * Progress bar
+	 */
+	protected ProgressBar             progressBar;
 	
 	@Override
 	protected int getLayoutId() {return R.layout.activity_contact_details;}
@@ -75,31 +73,9 @@ public abstract class ContactDetailsView extends ActivityView {
 		Runny.run(this::showActionButton, 700L);
 	}
 	
-	protected void onClickEdit(View view) {
-		
-		editContact();
-	}
-	
 	/**
-	 * Kişi detaylarından görsel eleman çıkarır.
-	 *
-	 * @param view Görünümden çıkarılacak görsel eleman
+	 * Show the action button
 	 */
-	protected void removeDetailView(View view) {
-		
-		mainContainer.removeView(view);
-	}
-	
-	/**
-	 * Kişi detaylarına görsel eleman ekler.
-	 *
-	 * @param view Eklenecek görsel eleman
-	 */
-	protected void addDetailView(@NotNull View view) {
-		
-		mainContainer.addView(view);
-	}
-	
 	private void showActionButton() {
 		
 		FloatingActionButton actionButton = findView(R.id.contact_details_action_button);
@@ -115,6 +91,41 @@ public abstract class ContactDetailsView extends ActivityView {
 				.duration(600L)
 				.start();
 		
+	}
+	
+	/**
+	 * This method is called when the action button is clicked
+	 *
+	 * @param view the view
+	 */
+	protected void onClickEdit(View view) {
+		
+		editContact();
+	}
+	
+	/**
+	 * This method is called when the action button is clicked
+	 */
+	protected abstract void editContact();
+	
+	/**
+	 * Removes the view from the detail view
+	 *
+	 * @param view the view to remove
+	 */
+	protected void removeFromDetailView(View view) {
+		
+		mainContainer.removeView(view);
+	}
+	
+	/**
+	 * Adds the view to the detail view
+	 *
+	 * @param view the view to add
+	 */
+	protected void addToDetailView(@NotNull View view) {
+		
+		mainContainer.addView(view);
 	}
 	
 }

@@ -35,10 +35,40 @@ public class CallHistory {
 		
 		if (incomingDuration != 0) return incomingDuration;
 		
-		return incomingDuration = getIncommingCalls().stream()
+		return incomingDuration = getIncomingCalls().stream()
 				.map(Call::getDuration)
 				.reduce(Integer::sum)
 				.orElse(0);
+	}
+	
+	/**
+	 * @return Gelen aramalar
+	 */
+	@NonNull
+	public List<Call> getIncomingCalls() {
+		
+		return getCalls(Call.INCOMING, Call.INCOMING_WIFI);
+	}
+	
+	/**
+	 * Verilen arama türlerine ait aramaları döndürür.
+	 *
+	 * @param callTypes Arama türleri
+	 * @return Arama kayıtları
+	 */
+	@NonNull
+	public List<Call> getCalls(int... callTypes) {
+		
+		List<Call> _calls = new ArrayList<>();
+		
+		Lister.loop(callTypes, type -> {
+			
+			var list = calls.get(type);
+			
+			if (list != null) _calls.addAll(list);
+		});
+		
+		return _calls;
 	}
 	
 	/**
@@ -52,15 +82,6 @@ public class CallHistory {
 				.map(Call::getDuration)
 				.reduce(Integer::sum)
 				.orElse(0);
-	}
-	
-	/**
-	 * @return Gelen aramalar
-	 */
-	@NonNull
-	public List<Call> getIncommingCalls() {
-		
-		return getCalls(Call.INCOMING, Call.INCOMING_WIFI);
 	}
 	
 	/**
@@ -90,30 +111,19 @@ public class CallHistory {
 		return getCalls(Call.REJECTED);
 	}
 	
-	/**
-	 * Verilen arama türlerine ait aramaları döndürür.
-	 *
-	 * @param callTypes Arama türleri
-	 * @return Arama kayıtları
-	 */
-	@NonNull
-	public List<Call> getCalls(int... callTypes) {
-		
-		List<Call> _calls = new ArrayList<>();
-		
-		Lister.loop(callTypes, type -> {
-			
-			var list = calls.get(type);
-			
-			if (list != null) _calls.addAll(list);
-		});
-		
-		return _calls;
-	}
-	
 	public int getIncomingCallSize() {
 		
 		return getCallSize(Call.INCOMING) + getCallSize(Call.INCOMING_WIFI);
+	}
+	
+	private int getCallSize(int callType) {
+		
+		return getCalls(callType).size();
+	}
+	
+	public int getMissedCallSize() {
+		
+		return getCallSize(Call.MISSED);
 	}
 	
 	public int getOutgoingCallSize() {
@@ -121,19 +131,9 @@ public class CallHistory {
 		return getCallSize(Call.OUTGOING) + getCallSize(Call.OUTGOING_WIFI);
 	}
 	
-	public int getMisedCallSize() {
-		
-		return getCallSize(Call.MISSED);
-	}
-	
 	public int getRejectedCallSize() {
 		
 		return getCallSize(Call.REJECTED);
-	}
-	
-	private int getCallSize(int callType) {
-		
-		return getCalls(callType).size();
 	}
 	
 }

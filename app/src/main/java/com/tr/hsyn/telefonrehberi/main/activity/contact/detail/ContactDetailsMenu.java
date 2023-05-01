@@ -19,12 +19,19 @@ import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.code.contact.act.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
 import com.tr.hsyn.telefonrehberi.main.dev.contact.system.SystemContacts;
+import com.tr.hsyn.time.Time;
 import com.tr.hsyn.xlog.xlog;
 
 
+/**
+ * Welcome to the contact details menu.
+ * The menu can delete or edit the current contact.
+ */
 public class ContactDetailsMenu extends CallSummary {
 	
-	
+	/**
+	 * Callback for edit contact
+	 */
 	private final ActivityResultLauncher<Intent> editCallBack = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), c -> {
 		
 		xlog.d("Kişiyi düzenleme işlemi tamamlandı");
@@ -42,62 +49,13 @@ public class ContactDetailsMenu extends CallSummary {
 		}
 	});
 	
+	/**
+	 * Called when edit contact is completed
+	 */
 	protected void onEditCompleted() {
 		
 		Over.Contacts.refreshContacts();
 		finishAndRemoveTask();
-	}
-	
-	/**
-	 * Kullanıcı menüden kişiyi silmek istediğinde
-	 */
-	@CallSuper
-	protected void onClickDeleteMenu() {
-		
-		//- Nihai silme işlemi bu kişiyi dönüşte kontrol edecek olan kişiye ait.
-		contact.setData(ContactKey.DELETED_DATE, true);
-		
-		//- Dön
-		onBackPressed();
-	}
-	
-	/**
-	 * Kişi için düzenleme sayfasına yönlendirir. (menu item click)
-	 */
-	protected void onClickEditMenu() {
-		
-		editContact();
-	}
-	
-	/**
-	 * Kişiyi edit etmek için telefon uygulamasına postala (action button click)
-	 */
-	@Override
-	protected final void editContact() {
-		
-		try {
-			
-			Intent intent = new Intent(Intent.ACTION_EDIT);
-			intent.setData(ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, contact.getContactId()));
-			intent.putExtra("finishActivityOnSaveCompleted", true);
-			
-			editCallBack.launch(intent);
-			//startActivityForResult(intent, RC_EDIT_CONTACT);
-		}
-		catch (Exception e) {
-			
-			SMessage.builder()
-					.message("Bu işlem için yüklü bir uygulama bulunmuyor")
-					.build()
-					.showOn(this);
-		}
-	}
-	
-	@Override
-	public void onBackPressed() {
-		
-		super.onBackPressed();
-		Bungee.slideLeft(this);
 	}
 	
 	@Override
@@ -125,5 +83,57 @@ public class ContactDetailsMenu extends CallSummary {
 		}
 		
 		return super.onOptionsItemSelected(item);
+	}
+	
+	/**
+	 * Kullanıcı menüden kişiyi silmek istediğinde
+	 */
+	@CallSuper
+	protected void onClickDeleteMenu() {
+		
+		//- Nihai silme işlemi bu kişiyi dönüşte kontrol edecek olan kişiye ait.
+		contact.setData(ContactKey.DELETED_DATE, Time.now());
+		
+		//- Dön
+		onBackPressed();
+	}
+	
+	@Override
+	public void onBackPressed() {
+		
+		super.onBackPressed();
+		Bungee.slideLeft(this);
+	}
+	
+	/**
+	 * Kişi için düzenleme sayfasına yönlendirir. (menu item click)
+	 */
+	protected void onClickEditMenu() {
+		
+		editContact();
+	}
+	
+	/**
+	 * Kişiyi düzenlemek için telefon uygulamasına postala (action button click)
+	 */
+	@Override
+	protected final void editContact() {
+		
+		try {
+			
+			Intent intent = new Intent(Intent.ACTION_EDIT);
+			intent.setData(ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, contact.getContactId()));
+			intent.putExtra("finishActivityOnSaveCompleted", true);
+			
+			editCallBack.launch(intent);
+			//startActivityForResult(intent, RC_EDIT_CONTACT);
+		}
+		catch (Exception e) {
+			
+			SMessage.builder()
+					.message("Bu işlem için yüklü bir uygulama bulunmuyor")
+					.build()
+					.showOn(this);
+		}
 	}
 }

@@ -5,14 +5,15 @@
 	<string name="call_record">Call Records</string>
 	<string name="call">Call</string>
 
-	<string name="incomming_call">Incomming Call</string>
-	<string name="outgoing_call">Outgoing Call</string>
-	<string name="missed_call">Missed Call</string>
-	<string name="rejected_call">Rejected Call</string>
-	<string name="blocked_call">Blocked Call</string>
+	<string name="call_type_incoming">Incoming Call</string>
+	<string name="call_type_outgoing">Outgoing Call</string>
+	<string name="call_type_missed">Missed Call</string>
+	<string name="call_type_rejected">Rejected Call</string>
+	<string name="call_type_blocked">Blocked Call</string>
+	<string name="call_type_unknown">Unknown Call</string>
 	<string name="deleted_call">Deleted Call</string>
 
-	<string name="incomming">Incomming</string>
+	<string name="incoming">Incoming</string>
 	<string name="outgoing">Outgoing</string>
 	<string name="missed">Missed</string>
 	<string name="rejected">Rejected</string>
@@ -29,5 +30,5 @@
 	<string name="will_delete">will delete</string>
 	<string name="confirm_delete_action">Confirm Delete Action!!</string>
 
-	
+
 </resources>

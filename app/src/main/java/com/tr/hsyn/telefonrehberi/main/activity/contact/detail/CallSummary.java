@@ -40,7 +40,7 @@ public abstract class CallSummary extends ContactDetailsHistory {
 	 */
 	private       ViewGroup mainLayout;
 	/**
-	 * Indicates whether the history of the object has been updated
+	 * Indicates whether the history has been updated.
 	 */
 	private       boolean   historyUpdated;
 	/**
@@ -65,7 +65,8 @@ public abstract class CallSummary extends ContactDetailsHistory {
 	private       boolean   anyOpenSummary;
 	
 	/**
-	 * Prepares the summary view for showing
+	 * @inheritDoc Prepares the summary view.
+	 * 		This is the entry point of all works.
 	 */
 	@Override
 	protected void prepare() {
@@ -78,7 +79,7 @@ public abstract class CallSummary extends ContactDetailsHistory {
 		
 		if (numbers == null || numbers.isEmpty()) {
 			//- if no numbers, do not show anything
-			removeDetailView(mainLayout);
+			removeFromDetailView(mainLayout);
 			return;
 		}
 		
@@ -116,15 +117,21 @@ public abstract class CallSummary extends ContactDetailsHistory {
 		needShowSummary = false;
 	}
 	
+	/**
+	 * Call history is the call log calls list of the selected contact have been kept in the super class.
+	 * And we need to keep track of its updates.
+	 * This method is called from the super class
+	 * when the history is updated or in the first loading.
+	 */
 	@Override
-	protected void onHistoryUpdate() {
+	protected void onHistoryLoad() {
 		
-		super.onHistoryUpdate();
+		super.onHistoryLoad();
 		
-		
+		// if no history, do not show anything
 		if (history == null || history.isEmpty()) {
 			
-			removeDetailView(mainLayout);
+			removeFromDetailView(mainLayout);
 			return;
 		}
 		
@@ -144,7 +151,7 @@ public abstract class CallSummary extends ContactDetailsHistory {
 			
 			xlog.d("Arama özeti hazırlanıyor");
 			
-			//- Arama geçmişinin güncellendiğini bildirelim
+			//- Arama geçmişinin güncellendiğini bildir
 			historyUpdated = true;
 			//- Bilgileri yenile
 			updateSummary();
@@ -153,19 +160,24 @@ public abstract class CallSummary extends ContactDetailsHistory {
 		else historyUpdated = true;
 	}
 	
+	/**
+	 * Remakes the summary view with updated history
+	 */
 	private void updateSummary() {
 		
 		Work.on(() -> createSummaryInfo(history))
 				.onSuccess(this::setupSummaryViews)
 				.onError(Throwable::printStackTrace)
-				.onLast(this::onSummaryUpdated)
+				.onLast(this::onSummaryUpdate)
 				.execute();
 	}
 	
-	private void onSummaryUpdated() {
+	/**
+	 * Called when the summary is updated or first time
+	 */
+	private void onSummaryUpdate() {
 		
 		//- Arama geçmişi güncellenmemiş ise normal göster-gizle işlemi yapılır
-		
 		if (!historyUpdated) {
 			
 			animateCallSummary();
@@ -184,6 +196,12 @@ public abstract class CallSummary extends ContactDetailsHistory {
 		//- görsel hangi durumdaysa (gizli yada görünür) öyle kalmaya devam edecek.
 	}
 	
+	/**
+	 * Called when the summary header is clicked.
+	 * And the call summary is opened in the same activity.
+	 *
+	 * @param view The view
+	 */
 	private void onClickSummaryHeader(@NonNull View view) {
 		
 		//! Genel Özet
@@ -194,7 +212,7 @@ public abstract class CallSummary extends ContactDetailsHistory {
 		//! ----------------------------------------------------------------------------------------------
 		
 		
-		//- Hızlı dokunuşları bertaraf edelim
+		//- Hızlı dokunuşları bertaraf et
 		if (!gateSummary.enter()) return;
 		
 		//- Arama özeti gösterildikten sonra öylece kalması düşünülüyordu.
@@ -268,6 +286,10 @@ public abstract class CallSummary extends ContactDetailsHistory {
 		}
 	}
 	
+	/**
+	 * Shows the call summary in the first time.
+	 * This method called only once or called when the history is updated.
+	 */
 	private void showCallSummary() {
 		
 		if (callSummaryView == null) {
@@ -294,11 +316,21 @@ public abstract class CallSummary extends ContactDetailsHistory {
 		needShowSummary = false;
 	}
 	
+	/**
+	 * Inflates the summary view.
+	 *
+	 * @return The summary view
+	 */
 	private View inflateSummaryView() {
 		
 		return getLayoutInflater().inflate(R.layout.call_details_summary, mainLayout, false);
 	}
 	
+	/**
+	 * Sets up the summary views.
+	 *
+	 * @param callHistory The call history
+	 */
 	private void setupSummaryViews(@NonNull final CallHistory callHistory) {
 		
 		//- Önümüzde iki yol var.
@@ -342,7 +374,7 @@ public abstract class CallSummary extends ContactDetailsHistory {
 			
 			int incomingSize = callHistory.getIncomingCallSize();
 			int outgoingSize = callHistory.getOutgoingCallSize();
-			int missedSize   = callHistory.getMisedCallSize();
+			int missedSize   = callHistory.getMissedCallSize();
 			int rejectedSize = callHistory.getRejectedCallSize();
 			
 			incomingCall.setText(String.valueOf(incomingSize));
@@ -356,7 +388,7 @@ public abstract class CallSummary extends ContactDetailsHistory {
 			totalCall.setText(String.valueOf(incomingSize + outgoingSize + missedSize + rejectedSize));
 			totalCallDuration.setText(Time.formatSeconds(callHistory.getIncomingDuration() + callHistory.getOutgoingDuration()));
 			
-			incomingRow.setOnClickListener(v -> showHistory(callHistory.getIncommingCalls()));
+			incomingRow.setOnClickListener(v -> showHistory(callHistory.getIncomingCalls()));
 			outgoingRow.setOnClickListener(v -> showHistory(callHistory.getOutgoingCalls()));
 			missedRow.setOnClickListener(v -> showHistory(callHistory.getMissedCalls()));
 			rejectedRow.setOnClickListener(v -> showHistory(callHistory.getRejectedCalls()));
@@ -383,6 +415,12 @@ public abstract class CallSummary extends ContactDetailsHistory {
 		}
 	}
 	
+	/**
+	 * Creates the summary info.
+	 *
+	 * @param history The history
+	 * @return The summary info
+	 */
 	@NonNull
 	private CallHistory createSummaryInfo(@NonNull List<Call> history) {
 		
@@ -394,6 +432,9 @@ public abstract class CallSummary extends ContactDetailsHistory {
 		return new CallHistory(contact, calls);
 	}
 	
+	/**
+	 * Animates the call summary. Show-hide.
+	 */
 	private void animateCallSummary() {
 		
 		if (isOpenedSummary) {

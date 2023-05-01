@@ -20,9 +20,11 @@ import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.code.android.Res;
 import com.tr.hsyn.telefonrehberi.code.android.dialog.ShowCall;
 import com.tr.hsyn.telefonrehberi.code.call.CallOver;
+import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.comment.CommentHelper;
 import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.comment.ContactCommentator;
 import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.comment.dialog.MostCallDialog;
 import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.comment.dialog.MostCallItemViewData;
+import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.data.History;
 import com.tr.hsyn.telefonrehberi.main.code.call.cast.Group;
 import com.tr.hsyn.telefonrehberi.main.code.comment.ContactCommentStore;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.ShowCallsDialog;
@@ -45,23 +47,40 @@ import java.util.List;
  */
 public class DefaultContactCommentator implements ContactCommentator {
 	
+	/**
+	 * The comment object.
+	 * All generated comments by the commentator will be appended into this object
+	 */
 	protected final Spanner             comment = new Spanner();
-	protected       ContactCommentStore commentStore;
-	protected       List<Call>          history;
-	protected       List<Call>          calls;
+	protected final CommentHelper       commentHelper;
+	/**
+	 * The list of all call log calls
+	 */
+	protected final List<Call>          calls;
+	/**
+	 * Call history of the contact
+	 */
+	protected       History             history;
+	/**
+	 * The current contact
+	 */
 	protected       Contact             contact;
-	//protected final String  DEFAULT_DATE_FORMAT = "d.M.yyyy";
+	/**
+	 * The comment store
+	 */
+	protected       ContactCommentStore commentStore;
+	//protected final String DEFAULT_DATE_FORMAT = "d.M.yyyy";
 	
 	/**
 	 * Constructs a new DefaultContactCommentator object with the given comment store.
 	 *
 	 * @param commentStore the comment store to be used by this commentator
 	 */
-	public DefaultContactCommentator(ContactCommentStore commentStore) {
+	public DefaultContactCommentator(ContactCommentStore commentStore, List<Call> calls, CommentHelper commentHelper) {
 		
-		this.commentStore = commentStore;
-		history           = getHistory();
-		calls             = getCalls();
+		this.commentStore  = commentStore;
+		this.calls         = calls;
+		this.commentHelper = commentHelper;
 	}
 	
 	/**
@@ -96,7 +115,18 @@ public class DefaultContactCommentator implements ContactCommentator {
 	public @NotNull CharSequence commentOn(@NotNull Contact contact) {
 		
 		this.contact = contact;
-		commentOnContact();
+		this.history = History.of(contact);
+		contact.setData(History.CALL_HISTORY_KEY, getHistory());
+		// Sort the history by time in descending order, 
+		// therefore, the most recent call will be the first, 
+		// the oldest call will be the last
+		history.sort((x, y) -> Long.compare(y.getTime(), x.getTime()));
+		
+		//if history null or empty, no need to go any further
+		if (history != null)
+			if (history.isEmpty()) comment.append(commentStore.noHistory());
+			else commentOnContact();
+		else comment.append(commentStore.historyNotFound());
 		
 		return comment;
 	}
@@ -108,37 +138,29 @@ public class DefaultContactCommentator implements ContactCommentator {
 	 */
 	private void commentOnContact() {
 		
-		xlog.d("History : %d", history.size());
+		// Here we start to generate the comment.
 		
-		boolean noHistory = history.isEmpty();
+		// Call history must not be 'null' and empty at this point
+		if (history == null || history.isEmpty())
+			throw new IllegalArgumentException("Call history must not be null or empty");
 		
-		if (noHistory) {
-			
-			xlog.d("Kişiye ait bir arama kaydı yok");
-			
-			noHistoryComment();
-		}
+		xlog.d("Accessed the call history [contact='%s', size=%d]", contact.getName(), history.size());
 		
-		if (!noHistory) {
+		Runny.run(() -> {
 			
-			xlog.d("There are some history : %d", history.size());
+			historyQuantityComment();
 			
-			Runny.run(() -> {
-				
-				historyQuantityComment();
-				
-				//mostCallComments();
-			});
-			
-		}
+			//mostCallComments();
+		});
 		
 	}
 	
 	/**
 	 * Generates a comment about the quantity of call history for the contact.
-	 * Appends the generated comment to the Comment object managed by this commentator.
+	 * Appends the generated comment to the {@link #comment} object managed by this commentator.
 	 */
 	private void historyQuantityComment() {
+		
 		//- 10'a 3 ölçek
 		//- orta değer (10, 10 * 3] aralığı
 		Scaler  scaler     = Scaler.createNewScaler(10, 3f);
@@ -153,7 +175,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 		
 		comment.append(name);
 		
-		ShowCallsDialog showCallsDialog = new ShowCallsDialog(commentStore.getActivity(), history);
+		ShowCallsDialog showCallsDialog = new ShowCallsDialog(commentStore.getActivity(), history.getHistory());
 		
 		View.OnClickListener listener = View -> showCallsDialog.show();
 		
@@ -167,19 +189,21 @@ public class DefaultContactCommentator implements ContactCommentator {
 		if (history.size() == 1) {
 			
 			Call                 call       = history.get(0);
-			String               callType   = commentStore.getActivity().getString(R.string.incomming_call);
+			String               callType   = Res.getCallType(commentStore.getActivity(), call.getType());
 			Duration             timeBefore = Time.howLongBefore(call.getTime());
 			ShowCall             showCall   = new ShowCall(commentStore.getActivity(), call);
 			View.OnClickListener listener1  = View -> showCall.show();
 			
 			comment.append("Bu arama", Spans.click(listener1, clickColor))
-					.append(Stringx.format(" %d %s önce gerçekleşmiş bir %s.", timeBefore.getValue(), timeBefore.getUnit(), callType.toLowerCase()));
+					.append(Stringx.format(" %d %s önce gerçekleşmiş bir ", timeBefore.getValue(), timeBefore.getUnit()))
+					.append(Stringx.format("%s", callType.toLowerCase()), Spans.bold())
+					.append(". ");
 			
 		}
 		else {
 			
-			Call     lastCall   = history.get(0);
-			Call     firstCall  = history.get(history.size() - 1);
+			Call     lastCall   = history.getLastCall();
+			Call     firstCall  = history.getFirstCall();
 			String   callType   = Res.getCallType(commentStore.getActivity(), lastCall.getType());
 			Duration timeBefore = Time.howLongBefore(lastCall.getTime());
 			ShowCall showCall   = new ShowCall(commentStore.getActivity(), lastCall);
@@ -187,10 +211,23 @@ public class DefaultContactCommentator implements ContactCommentator {
 			View.OnClickListener listener1 = View -> showCall.show();
 			
 			comment.append("Son arama", Spans.click(listener1, clickColor))
-					.append(Stringx.format(" %d %s önce gerçekleşmiş bir %s.", timeBefore.getValue(), timeBefore.getUnit(), callType.toLowerCase()));
+					.append(Stringx.format(" %d %s önce gerçekleşmiş bir ", timeBefore.getValue(), timeBefore.getUnit()))
+					.append(Stringx.format("%s", callType.toLowerCase()), Spans.bold())
+					.append(". ");
+			
+			comment.append(commentHelper.afterLastCallComment(history));
 		}
 		
 		
+	}
+	
+	/**
+	 * Generates a comment when there is no call history for the contact.
+	 * Appends the generated comment to the {@link #comment} object managed by this commentator.
+	 */
+	private void noHistoryComment() {
+		
+		comment.append("Bu kişi ile hiçbir iletişimin yok. ");
 	}
 	
 	/**
@@ -289,11 +326,9 @@ public class DefaultContactCommentator implements ContactCommentator {
 		
 		if (history.size() > 1) {
 			
-			history.sort((x, y) -> Long.compare(y.getTime(), x.getTime()));
-			
 			//- Kişinin en eski arama kaydı
-			Call   firstCall     = history.get(history.size() - 1);
-			Call   lastCall      = history.get(0);
+			Call   firstCall     = history.getFirstCall();
+			Call   lastCall      = history.getLastCall();
 			var    duration      = Time.toDuration(lastCall.getTime() - firstCall.getTime());
 			Unit[] durationUnits = {Unit.YEAR, Unit.MONTH, Unit.DAY, Unit.HOUR, Unit.MINUTE};
 			
@@ -314,16 +349,6 @@ public class DefaultContactCommentator implements ContactCommentator {
 			
 			
 		}
-	}
-	
-	
-	/**
-	 * Generates a comment when there is no call history for the contact.
-	 * Appends the generated comment to the Comment object managed by this commentator.
-	 */
-	private void noHistoryComment() {
-		
-		comment.append("Bu kişi ile hiçbir iletişimin yok. ");
 	}
 	
 	

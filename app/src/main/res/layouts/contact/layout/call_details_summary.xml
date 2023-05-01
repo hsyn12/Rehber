@@ -39,7 +39,7 @@
 				android:layout_height="wrap_content"
 				android:layout_gravity="center"
 				android:gravity="center"
-				android:text="@string/calling"
+				android:text="@string/w_calling"
 				android:textColor="@color/summary_second_color" />
 
 		<TextView
@@ -81,7 +81,7 @@
 				android:drawableStart="@drawable/incomming_call"
 				android:drawablePadding="6dp"
 				android:gravity="start|center_vertical"
-				android:text="@string/incomming"
+				android:text="@string/incoming"
 				android:textAllCaps="false" />
 
 		<TextView

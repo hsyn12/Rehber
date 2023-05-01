@@ -19,23 +19,12 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Uygulama genelinde kullanılan aynı tarz activity nesneleri için temel bir activity sınıfı.<br>
  * Soyut olan {@linkplain #getLayoutId()}} metodu ile verilecek görünüm dosyasını activity için set eder.<br>
- * Ayrıca, {@linkplain #hasToolbar()} metodu ile true dönülüyorsa, {@linkplain #getToolbarResourceId()} metodu<br>
- * {@link Toolbar} görselinin kaynak id değerini dönmeli. Bu şekilde toolbar set edilir ve rengi ana renk<br>
- * olarak belirlenir ve toolbar ikonunun click olayı için {@linkplain Activity#onBackPressed()}<br>
- * metodu verilir.
+ * Ayrıca, {@linkplain #hasToolbar()} metodu ile true dönülüyorsa, {@linkplain #getToolbarResourceId()} metodu
+ * {@link Toolbar} görselinin kaynak id değerini dönmeli.
+ * Bu şekilde toolbar set edilir ve rengi ana renk  olarak belirlenir
+ * ve toolbar ikonunun click olayı için {@linkplain Activity#onBackPressed()} metodu verilir.
  */
 public abstract class ActivityView extends AppCompatActivity {
-	
-	/**
-	 * @return Görünüm dosyasının id değeri
-	 */
-	@LayoutRes
-	protected abstract int getLayoutId();
-	
-	/**
-	 * Görünüm dosyası set edildikten (ve varsa toolbar ayarlandıktan) hemen sonra çağrılır.
-	 */
-	protected abstract void onCreate();
 	
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,21 +45,15 @@ public abstract class ActivityView extends AppCompatActivity {
 	}
 	
 	/**
-	 * Find a view.
-	 *
-	 * @param id  Resource id for the view
-	 * @param <T> Type of the view
-	 * @return View
+	 * @return Görünüm dosyasının id değeri
 	 */
-	protected final <T extends View> T findView(int id) {
-		
-		return findViewById(id);
-	}
+	@LayoutRes
+	protected abstract int getLayoutId();
 	
-	protected final <T extends View> T findView(@NotNull View view, int id) {
-		
-		return view.findViewById(id);
-	}
+	/**
+	 * Görünüm dosyası set edildikten (ve varsa toolbar ayarlandıktan) hemen sonra çağrılır.
+	 */
+	protected abstract void onCreate();
 	
 	/**
 	 * @return {@code true} if this activity has toolbar
@@ -90,6 +73,19 @@ public abstract class ActivityView extends AppCompatActivity {
 	}
 	
 	/**
+	 * @return Toolbar icon click handler (Default {@link Activity#onBackPressed()})
+	 */
+	protected Runnable getNavigationClickListener() {
+		
+		return this::onBackPressed;
+	}
+	
+	protected final <T extends View> T findView(@NotNull View view, int id) {
+		
+		return view.findViewById(id);
+	}
+	
+	/**
 	 * @return {@linkplain Toolbar}
 	 */
 	protected final Toolbar getToolbar() {
@@ -98,10 +94,14 @@ public abstract class ActivityView extends AppCompatActivity {
 	}
 	
 	/**
-	 * @return Toolbar icon click handler (Default {@link Activity#onBackPressed()})
+	 * Find a view.
+	 *
+	 * @param id  Resource id for the view
+	 * @param <T> Type of the view
+	 * @return View
 	 */
-	protected Runnable getNavigationClickListener() {
+	protected final <T extends View> T findView(int id) {
 		
-		return this::onBackPressed;
+		return findViewById(id);
 	}
 }

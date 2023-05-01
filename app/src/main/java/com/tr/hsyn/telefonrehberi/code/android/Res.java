@@ -16,12 +16,12 @@ public class Res {
 		switch (type) {
 			
 			case CallType.INCOMING:
-			case CallType.INCOMING_WIFI: return context.getString(R.string.incomming_call);
+			case CallType.INCOMING_WIFI: return context.getString(R.string.call_type_incoming);
 			case CallType.OUTGOING:
-			case CallType.OUTGOING_WIFI: return context.getString(R.string.outgoing_call);
-			case CallType.MISSED: return context.getString(R.string.missed_call);
-			case CallType.REJECTED: return context.getString(R.string.rejected_call);
-			case CallType.BLOCKED: return context.getString(R.string.blocked_call);
+			case CallType.OUTGOING_WIFI: return context.getString(R.string.call_type_outgoing);
+			case CallType.MISSED: return context.getString(R.string.call_type_missed);
+			case CallType.REJECTED: return context.getString(R.string.call_type_rejected);
+			case CallType.BLOCKED: return context.getString(R.string.call_type_blocked);
 			
 			default: return "";
 		}

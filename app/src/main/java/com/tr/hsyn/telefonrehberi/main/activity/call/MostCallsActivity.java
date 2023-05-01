@@ -105,11 +105,6 @@ public class MostCallsActivity extends ActivityView {
 		progressBar.setVisibility(View.GONE);
 	}
 	
-	private void showProgress() {
-		
-		progressBar.setVisibility(View.VISIBLE);
-	}
-	
 	private void filter() {
 		
 		switch (FILTER) {
@@ -118,28 +113,28 @@ public class MostCallsActivity extends ActivityView {
 				
 				imgType = AppCompatResources.getDrawable(this, R.drawable.incomming_call);
 				filteredCalls = calls.stream().filter(Call::isIncoming).collect(Collectors.toList());
-				textType = getString(R.string.incomming_call);
+				textType = getString(R.string.call_type_incoming);
 				break;
 			
 			case Res.Calls.FILTER_MOST_OUTGOING:
 				
 				imgType = AppCompatResources.getDrawable(this, R.drawable.outgoing_call);
 				filteredCalls = calls.stream().filter(Call::isOutgoing).collect(Collectors.toList());
-				textType = getString(R.string.outgoing_call);
+				textType = getString(R.string.call_type_outgoing);
 				break;
 			
 			case Res.Calls.FILTER_MOST_MISSED:
 				
 				imgType = AppCompatResources.getDrawable(this, R.drawable.missed_call);
 				filteredCalls = calls.stream().filter(Call::isOutgoing).collect(Collectors.toList());
-				textType = getString(R.string.missed_call);
+				textType = getString(R.string.call_type_missed);
 				break;
 			
 			case Res.Calls.FILTER_MOST_REJECTED:
 				
 				imgType = AppCompatResources.getDrawable(this, R.drawable.rejected_call);
 				filteredCalls = calls.stream().filter(Call::isOutgoing).collect(Collectors.toList());
-				textType = getString(R.string.rejected_call);
+				textType = getString(R.string.call_type_rejected);
 				break;
 			
 			
@@ -229,6 +224,11 @@ public class MostCallsActivity extends ActivityView {
 		
 		super.onBackPressed();
 		Bungee.slideUp(this);
+	}
+	
+	private void showProgress() {
+		
+		progressBar.setVisibility(View.VISIBLE);
 	}
 	
 }

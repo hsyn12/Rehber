@@ -37,11 +37,21 @@ import java.util.stream.Collectors;
 
 /**
  * This class's duty is to take the call log
- * and show the call history of the selected contact by dialog.
+ * and show the call history of the selected contact in a new activity.
  * So, it needs to have {@link Manifest.permission#READ_CALL_LOG} permission.
  * It can request the permission to access the call log if needed
- * (the permission if not has been taken it requests {@link PermissionHolder#CALL_LOG_PERMISSIONS}).
- * Permission results are sent to the subclasses which interested ones.
+ * (the permission if not has been taken before,
+ * it requests {@link PermissionHolder#CALL_LOG_PERMISSIONS}).
+ * If permissions are requested,
+ * permission results are sent to the subclasses which interested ones.<br>
+ *
+ * <p>
+ * So, this is the class which is responsible for taking the call history.
+ * Therefore,
+ * classes who are subclasses of this class can request the call history
+ * or can request the permissions through it.
+ * And they should do so.
+ * Thanks.
  */
 public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implements PermissionHolder {
 	
@@ -63,12 +73,14 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	private         boolean    isPermissionsRequested;
 	
 	/**
-	 * Prepares this activity for display by loading the call history for the
-	 * contact associated with this activity.
+	 * @inheritDoc Prepares this activity for display by loading the call history for the
+	 * 		contact associated with this activity.
+	 * 		This method is called only one time by the superclass while the activity has been settings up.
+	 * 		So this method is the starting point for this class and for subclasses.
 	 */
 	@Override
 	protected void prepare() {
-		
+		//! This call must be first.
 		super.prepare();
 		
 		List<String> numbers = contact.getData(ContactKey.NUMBERS);
@@ -132,12 +144,12 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	protected void onCallPermissionsDenied() {}
 	
 	/**
-	 * Callback method called when the history is updated or first load.
-	 * Override this method to perform custom actions when the history changes.
+	 * Callback method called when the history each load.
+	 * Override this method to perform custom actions when the history loaded.
 	 */
-	protected void onHistoryUpdate() {
+	protected void onHistoryLoad() {
 		
-		xlog.dx("Call history updated");
+		xlog.dx("Call history is updated");
 	}
 	
 	
@@ -172,7 +184,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 				//- Demek ki arama kayıtları yükleme istasyonundan yüklenmiş
 				//- Buradan sonrası sorun çıkarmaz
 				
-				xlog.d("Arama kayıtlarına erişim sağlandı");
+				xlog.d("Accessed the call logs");
 			}
 		}
 		else {
@@ -186,8 +198,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 			return new ArrayList<>(0);
 		}
 		
-		//- Kişiye ait arama kayıtlarını döndür
-		
+		//- This is the 'call history' of the selected contact
 		return calls.stream().filter(c -> PhoneNumbers.containsNumber(contact.getData(ContactKey.NUMBERS), c.getNumber())).collect(Collectors.toList());
 	}
 	
@@ -196,7 +207,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	 *
 	 * @param view Clicked view
 	 */
-	protected final void onClickShowHistory(View view) {
+	protected final void onShowHistory(View view) {
 		
 		//- view null ise bu metodu biz kendimiz çağırmışız demektir
 		//- Kapıya takılmamak için bunu kontrol etmemiz gerek
@@ -211,25 +222,21 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 			//- arama kayıtları için bir yenileme bilgisi kaydedilir
 			//- Bu bilgi aslında ana ekran için
 			//- Ancak kullanıcı buradan çıkmadığı için bazı ayarlamalar yapmamız gerekiyor
-			
 			if (Over.CallLog.Calls.isUpdated().bool()) {
 				
 				//- Evet kayıtların yenilenmesi gerek
 				//- Ancak bu bilgiye ana ekranın ihtiyaç duyması silinmesini engelliyor
 				//- Biz de kendi değişkenimizi kullanıyoruz
-				
 				if (!isNewHistory) {
 					
 					//- Arama kayıtları her yüklendiğinde isNewHistory true oluyor
 					//- Eğer true değilse tekrar yenilememiz gerek
-					
 					refreshHistory();
 					return;
 				}
 				
-				//- Kayıtlar yenilendi, bir sonraki yenileme için false yapıyoruz
+				//- Kayıtlar yenilenmiş, bir sonraki yenileme için false yapıyoruz
 				//- Eğer bunu yapmazsak activity kısır bir döngüye girer
-				
 				isNewHistory = false;
 			}
 			
@@ -243,7 +250,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 				}
 				else {
 					
-					//- İzin gerekli ise isteyelim
+					//- İzin gerekli ise iste
 					if (!hasCallLogPermissions()) {
 						
 						needShowHistory = true;
@@ -337,18 +344,23 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 		
 		Runny.run(this::showProgress);
 		
-		Work.on(this::getCallHistory).onSuccess(h -> {
-			
-			history      = h;
-			isNewHistory = true;
-			
-			onClickShowHistory(null);
-			onHistoryUpdate();
-		}).onLast(this::hideProgress).execute();
+		Work.on(this::getCallHistory)
+				.onSuccess(h -> {
+					
+					history      = h;
+					isNewHistory = true;
+					
+					onShowHistory(null);
+					onHistoryLoad();
+				})
+				.onLast(this::hideProgress)
+				.execute();
 	}
 	
 	/**
 	 * Adds the view for showing the contact history.
+	 * If the user touches this view, the history is shown by starting new activity.
+	 * That is the view that starts the action.
 	 *
 	 * @param history The call history for the contact.
 	 */
@@ -360,6 +372,8 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 		//- Kişinin geçmişine yönlendirecek olan görünüm sadece bir kez eklenmeli
 		if (!historyViewAdded) {
 			
+			historyViewAdded = true;
+			
 			View historyView = getLayoutInflater().inflate(R.layout.show_contact_history, mainContainer, false);
 			
 			mainContainer.addView(historyView);
@@ -370,9 +384,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 			View view = historyView.findViewById(R.id.contact_history_item);
 			
 			view.setBackgroundResource(Colors.getRipple());
-			view.setOnClickListener(this::onClickShowHistory);
-			
-			historyViewAdded = true;
+			view.setOnClickListener(this::onShowHistory);
 		}
 		
 		//- Geçmişin boş olması, ya gerçekten herhangi bir geçmiş kayıt olmadığı
@@ -383,7 +395,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 			if (hasCallLogPermissions()) {
 				
 				//- Geçmiş, izinlerden dolayı değil gerçekten olmadığı için boş
-				
+				//- Dolayısıyla hiç bir işlem yapmaya gerek yok
 				TextView text = findViewById(R.id.text_show_calls);
 				text.setText(getString(R.string.no_contact_history));
 			}
@@ -395,7 +407,11 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 			}
 		}
 		
-		onHistoryUpdate();
+		// Burada arama geçmişinin güncellendiğini bildiriyoruz.
+		// Bu sınıftaki görsel tıklandığında tüm geçmiş gösterilir.
+		// Ama henüz böyle bir şey yok.
+		// Sadece geçmiş ayarlandı.
+		onHistoryLoad();
 	}
 	
 	@Override

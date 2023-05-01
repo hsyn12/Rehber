@@ -26,34 +26,11 @@ import java.util.Calendar;
  */
 public abstract class RandomCallsActivityMenu extends RandomCallsActivityRutine implements CompoundButton.OnCheckedChangeListener {
 	
-	protected abstract void onContactsSelected();
-	
 	@Override
 	protected void onDestroy() {
 		
 		rutine.stopRutine();
 		super.onDestroy();
-	}
-	
-	private void showContactSelection() {
-		
-		rutine.delay();
-		
-		if (getSelectedContacts().isEmpty()) {
-			
-			Show.snake(this, "Rehberde kayıtlı kimse yok", GlobalMessage.WARN);
-			return;
-		}
-		
-		AdapterSelectContacts adapter = new AdapterSelectContacts(getContacts(), getSelectedContacts());
-		new DialogSelectContacts(this, adapter, this::onSelectContactsDialogClose);
-	}
-	
-	private void onSelectContactsDialogClose() {
-		
-		rutine.delay();
-		setSelectedContacts(getSelectedContacts());
-		onContactsSelected();
 	}
 	
 	@Override
@@ -83,14 +60,37 @@ public abstract class RandomCallsActivityMenu extends RandomCallsActivityRutine 
 		return true;
 	}
 	
+	private void showContactSelection() {
+		
+		rutine.delay();
+		
+		if (getSelectedContacts().isEmpty()) {
+			
+			Show.snake(this, "Rehberde kayıtlı kimse yok", GlobalMessage.WARN);
+			return;
+		}
+		
+		AdapterSelectContacts adapter = new AdapterSelectContacts(getContacts(), getSelectedContacts());
+		new DialogSelectContacts(this, adapter, this::onSelectContactsDialogClose);
+	}
+	
+	private void onSelectContactsDialogClose() {
+		
+		rutine.delay();
+		setSelectedContacts(getSelectedContacts());
+		onContactsSelected();
+	}
+	
+	protected abstract void onContactsSelected();
+	
 	@SuppressLint("InflateParams")
 	private void onMenuCallTypes() {
 		
 		var typeNames = Lists.newArrayList(
-				getString(R.string.incomming_call),
-				getString(R.string.outgoing_call),
-				getString(R.string.missed_call),
-				getString(R.string.rejected_call)
+				getString(R.string.call_type_incoming),
+				getString(R.string.call_type_outgoing),
+				getString(R.string.call_type_missed),
+				getString(R.string.call_type_rejected)
 		);
 		
 		var ids = Lists.newArrayList(
@@ -163,19 +163,19 @@ public abstract class RandomCallsActivityMenu extends RandomCallsActivityRutine 
 		
 		var text = buttonView.getText();
 		
-		if (text.equals(getString(R.string.incomming_call))) {
+		if (text.equals(getString(R.string.call_type_incoming))) {
 			
 			setCallTypeIncomming(isChecked);
 		}
-		else if (text.equals(getString(R.string.outgoing_call))) {
+		else if (text.equals(getString(R.string.call_type_outgoing))) {
 			
 			setCallTypeOutgoing(isChecked);
 		}
-		else if (text.equals(getString(R.string.missed_call))) {
+		else if (text.equals(getString(R.string.call_type_missed))) {
 			
 			setCallTypeMissed(isChecked);
 		}
-		else if (text.equals(getString(R.string.rejected_call))) {
+		else if (text.equals(getString(R.string.call_type_rejected))) {
 			
 			setCallTypeRejected(isChecked);
 		}

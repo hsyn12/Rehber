@@ -18,52 +18,10 @@ public class DefaultContactCommentStore implements ContactCommentStore {
 		this.activity = context;
 	}
 	
-	@NotNull
-	@Override
-	public Activity getActivity() {
-		
-		return activity;
-	}
-	
-	@NotNull
-	@Override
-	public CharSequence unknown() {
-		
-		return getString(R.string.unknown);
-	}
-	
-	@NotNull
-	@Override
-	public CharSequence noHistory() {
-		
-		return getString(R.string.no_history);
-	}
-	
-	@NotNull
-	@Override
-	public CharSequence savedDate() {
-		
-		return getString(R.string.saved_date);
-	}
-	
-	@NotNull
-	@Override
-	public CharSequence historySize(int size) {
-		
-		return getString(R.string.history_size, size);
-	}
-	
 	@Override
 	public @NotNull CharSequence sizeCall(int size) {
 		
 		return getString(R.string.size_call, size);
-	}
-	
-	@NotNull
-	@Override
-	public CharSequence historySizeOnly(int size) {
-		
-		return getString(R.string.history_size_only, size);
 	}
 	
 	@NotNull
@@ -82,13 +40,6 @@ public class DefaultContactCommentStore implements ContactCommentStore {
 	
 	@NotNull
 	@Override
-	public CharSequence thisContactHas() {
-		
-		return getString(R.string.word_contact_has_record);
-	}
-	
-	@NotNull
-	@Override
 	public CharSequence contactHas() {
 		
 		return getString(R.string.word_contact_has);
@@ -103,22 +54,9 @@ public class DefaultContactCommentStore implements ContactCommentStore {
 	
 	@NotNull
 	@Override
-	public CharSequence has() {
+	public Activity getActivity() {
 		
-		return getString(R.string.word_has);
-	}
-	
-	@NotNull
-	@Override
-	public CharSequence hasRecordOf() {
-		
-		return getString(R.string.word_contact_has_record_of);
-	}
-	
-	@NotNull
-	public CharSequence getString(int resourceId, Object... args) {
-		
-		return activity.getString(resourceId, args);
+		return activity;
 	}
 	
 }

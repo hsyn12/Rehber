@@ -88,9 +88,9 @@ public abstract class ContactDetailsHeadWay extends ContactDetailsView implement
 	/**
 	 * Writes base information about the contact,
 	 * phone numbers and image, for example.
-	 * Subclasses of this class need to override this method,
-	 * call super first,
-	 * and start their work from there.
+	 * Subclasses of this class have to override this method,
+	 * <u><strong>call super first</strong></u>,
+	 * and start their all work from there.
 	 */
 	@CallSuper
 	protected void prepare() {
