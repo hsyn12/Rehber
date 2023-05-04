@@ -87,4 +87,25 @@ public interface ContactCommentStore {
 		return getString(R.string.call_type_unknown);
 	}
 	
+	/**
+	 * Returns a string by getting all words from resource.
+	 * Words are separated by space.
+	 *
+	 * @param words resource id list for words
+	 * @return a string that separated by space
+	 */
+	@NotNull
+	default String getWords(int @NotNull ... words) {
+		
+		StringBuilder clause = new StringBuilder();
+		
+		for (int word : words) clause.append(getString(word));
+		
+		return clause.toString();
+	}
+	
+	default int getClickColor() {
+		
+		return getActivity().getColor(com.tr.hsyn.rescolors.R.color.orange_500);
+	}
 }

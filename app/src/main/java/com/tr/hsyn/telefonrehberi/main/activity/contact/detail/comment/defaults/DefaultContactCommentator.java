@@ -194,6 +194,8 @@ public class DefaultContactCommentator implements ContactCommentator {
 			ShowCall             showCall   = new ShowCall(commentStore.getActivity(), call);
 			View.OnClickListener listener1  = View -> showCall.show();
 			
+			
+			//bu arama 3 gün önce gerçekleşen bir arama
 			comment.append("Bu arama", Spans.click(listener1, clickColor))
 					.append(Stringx.format(" %d %s önce gerçekleşmiş bir ", timeBefore.getValue(), timeBefore.getUnit()))
 					.append(Stringx.format("%s", callType.toLowerCase()), Spans.bold())
@@ -202,23 +204,33 @@ public class DefaultContactCommentator implements ContactCommentator {
 		}
 		else {
 			
-			Call     lastCall   = history.getLastCall();
-			Call     firstCall  = history.getFirstCall();
-			String   callType   = Res.getCallType(commentStore.getActivity(), lastCall.getType());
-			Duration timeBefore = Time.howLongBefore(lastCall.getTime());
-			ShowCall showCall   = new ShowCall(commentStore.getActivity(), lastCall);
-			
-			View.OnClickListener listener1 = View -> showCall.show();
-			
-			comment.append("Son arama", Spans.click(listener1, clickColor))
-					.append(Stringx.format(" %d %s önce gerçekleşmiş bir ", timeBefore.getValue(), timeBefore.getUnit()))
-					.append(Stringx.format("%s", callType.toLowerCase()), Spans.bold())
-					.append(". ");
-			
+			comment.append(commentOnTheLastCall());
 			comment.append(commentHelper.afterLastCallComment(history));
 		}
 		
 		
+	}
+	
+	@Override
+	public @NotNull CharSequence commentOnTheLastCall() {
+		
+		Spanner comment    = new Spanner();
+		int     clickColor = getColor(com.tr.hsyn.rescolors.R.color.orange_500);
+		
+		Call     lastCall   = history.getLastCall();
+		Call     firstCall  = history.getFirstCall();
+		String   callType   = Res.getCallType(commentStore.getActivity(), lastCall.getType());
+		Duration timeBefore = Time.howLongBefore(lastCall.getTime());
+		ShowCall showCall   = new ShowCall(commentStore.getActivity(), lastCall);
+		
+		View.OnClickListener listener1 = View -> showCall.show();
+		
+		comment.append("Son arama", Spans.click(listener1, clickColor))
+				.append(Stringx.format(" %d %s önce gerçekleşmiş bir ", timeBefore.getValue(), timeBefore.getUnit()))
+				.append(Stringx.format("%s", callType.toLowerCase()), Spans.bold())
+				.append(". ");
+		
+		return comment;
 	}
 	
 	/**

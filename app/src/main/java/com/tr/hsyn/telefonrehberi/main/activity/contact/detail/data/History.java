@@ -25,7 +25,7 @@ public interface History {
 	DataKey CALL_HISTORY_KEY = DataKey.of(3434, "call_history");
 	
 	/**
-	 * Returns the history of a contact
+	 * Creates a new history of a contact
 	 *
 	 * @param contact the contact
 	 * @return the history

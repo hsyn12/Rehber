@@ -81,39 +81,6 @@ public final class Lister {
 		return false;
 	}
 	
-	public static <T> int getSize(@NotNull Iterable<T> iterable) {
-		
-		int size = 0;
-		
-		for (var ignored : iterable) size++;
-		
-		return size;
-	}
-	
-	@NotNull
-	public static <T> List<T> listOf(@NotNull Iterable<? extends T> iterable) {
-		
-		List<T> l = new ArrayList<>();
-		
-		for (var e : iterable) l.add(e);
-		
-		return l;
-	}
-	
-	/**
-	 * Yeni bir liste oluştur.
-	 *
-	 * @param t   Liste elemanları
-	 * @param <T> Eleman türü
-	 * @return {@link ArrayList}
-	 */
-	@SafeVarargs
-	@NotNull
-	public static <T> List<T> listOf(@NotNull T... t) {
-		
-		return new ArrayList<>(Arrays.asList(t));
-	}
-	
 	@NotNull
 	public static <T> Set<T> setOf(@NotNull Iterable<? extends T> iterable) {
 		
@@ -138,6 +105,25 @@ public final class Lister {
 	public static <T> T[] arrayOf(@NotNull T @NotNull ... t) {
 		
 		return t;
+	}
+	
+	public static int @NotNull [] toIntArray(@NotNull Iterable<Integer> iterable) {
+		
+		int   size = getSize(iterable);
+		int[] ar   = new int[size];
+		
+		for (int i = 0; i < size; i++) ar[i] = iterable.iterator().next();
+		
+		return ar;
+	}
+	
+	public static <T> int getSize(@NotNull Iterable<T> iterable) {
+		
+		int size = 0;
+		
+		for (var ignored : iterable) size++;
+		
+		return size;
 	}
 	
 	/**
@@ -178,16 +164,14 @@ public final class Lister {
 		return difference;
 	}
 	
-	/**
-	 * Liste üzerinde döngü oluştur.
-	 *
-	 * @param list     Liste
-	 * @param consumer Döngü işleyicisi
-	 * @param <T>      Liste elemanı türü
-	 */
-	public static <T> void loop(@NotNull Iterable<? extends T> list, @NotNull Consumer<T> consumer) {
+	@NotNull
+	public static <T> List<T> listOf(@NotNull Iterable<? extends T> iterable) {
 		
-		for (var i : list) consumer.accept(i);
+		List<T> l = new ArrayList<>();
+		
+		for (var e : iterable) l.add(e);
+		
+		return l;
 	}
 	
 	/**
@@ -211,18 +195,6 @@ public final class Lister {
 		
 		for (int i = 0; i < list.length; i++) consumer.accept(list[i]);
 	}
-	
-	/**
-	 * Sıfırdan başlayarak verilen sayıya kadar döngü oluşturur.
-	 *
-	 * @param loop     Döngü sayısı
-	 * @param consumer Döngü işleyicisi
-	 */
-	public static void loop(int loop, @NotNull IntConsumer consumer) {
-		
-		for (int i = 0; i < loop; i++) consumer.accept(i);
-	}
-	
 	
 	/**
 	 * Verilen listedeki tüm elemanları diğer listeden çıkarır.
@@ -251,6 +223,18 @@ public final class Lister {
 	}
 	
 	/**
+	 * Liste üzerinde döngü oluştur.
+	 *
+	 * @param list     Liste
+	 * @param consumer Döngü işleyicisi
+	 * @param <T>      Liste elemanı türü
+	 */
+	public static <T> void loop(@NotNull Iterable<? extends T> list, @NotNull Consumer<T> consumer) {
+		
+		for (var i : list) consumer.accept(i);
+	}
+	
+	/**
 	 * Verilen bir elemanın listedeki index eğerini döndürür.
 	 *
 	 * @param list         Aramanın yapılacağı liste
@@ -265,51 +249,6 @@ public final class Lister {
 				return i;
 		
 		return -1;
-	}
-	
-	/**
-	 * Liste elemanlarını belirtilen fonksiyona göre gruplar.<br><br>
-	 *
-	 * <pre>{@code
-	 * var list = listOf("a", "ab", "abc", "abcd", "e", "ef", "efg", "efgh");
-	 * var g = group(list, String::length);
-	 * System.out.printf("%s\n", g);
-	 * // {1=[a, e], 2=[ab, ef], 3=[abc, efg], 4=[abcd, efgh]}
-	 *
-	 * System.out.printf("%s\n", group(list, s -> s.charAt(0)));
-	 * // {a=[a, ab, abc, abcd], e=[e, ef, efg, efgh]}
-	 * }</pre>
-	 *
-	 * @param list      liste
-	 * @param keyMapper gruplama kriteri için fonksiyon
-	 * @param <T>       liste eleman türü
-	 * @param <R>       gruplama kriterinin türü
-	 * @return Verilen kritere göre gruplanmış elemanlardan oluşan bir {@code Map} nesnesi
-	 */
-	public static <T, R> @NotNull Map<R, List<T>> group(@NotNull List<? extends T> list, @NotNull Function<? super T, ? extends R> keyMapper) {
-		
-		Map<R, List<T>> groups = new HashMap<>();
-		
-		loop(list.size(), i -> {
-			
-			T t = list.get(i);
-			R r = keyMapper.apply(t);
-			
-			List<T> items = groups.get(r);
-			
-			if (items != null) {
-				
-				items.add(t);
-			}
-			else {
-				
-				items = new ArrayList<>();
-				items.add(t);
-				groups.put(r, items);
-			}
-		});
-		
-		return groups;
 	}
 	
 	/**
@@ -391,6 +330,76 @@ public final class Lister {
 		System.out.printf("%s\n", g);
 		System.out.printf("%s\n", group(list, s -> s.charAt(0)));
 		
+	}
+	
+	/**
+	 * Yeni bir liste oluştur.
+	 *
+	 * @param t   Liste elemanları
+	 * @param <T> Eleman türü
+	 * @return {@link ArrayList}
+	 */
+	@SafeVarargs
+	@NotNull
+	public static <T> List<T> listOf(@NotNull T... t) {
+		
+		return new ArrayList<>(Arrays.asList(t));
+	}
+	
+	/**
+	 * Liste elemanlarını belirtilen fonksiyona göre gruplar.<br><br>
+	 *
+	 * <pre>{@code
+	 * var list = listOf("a", "ab", "abc", "abcd", "e", "ef", "efg", "efgh");
+	 * var g = group(list, String::length);
+	 * System.out.printf("%s\n", g);
+	 * // {1=[a, e], 2=[ab, ef], 3=[abc, efg], 4=[abcd, efgh]}
+	 *
+	 * System.out.printf("%s\n", group(list, s -> s.charAt(0)));
+	 * // {a=[a, ab, abc, abcd], e=[e, ef, efg, efgh]}
+	 * }</pre>
+	 *
+	 * @param list      liste
+	 * @param keyMapper gruplama kriteri için fonksiyon
+	 * @param <T>       liste eleman türü
+	 * @param <R>       gruplama kriterinin türü
+	 * @return Verilen kritere göre gruplanmış elemanlardan oluşan bir {@code Map} nesnesi
+	 */
+	public static <T, R> @NotNull Map<R, List<T>> group(@NotNull List<? extends T> list, @NotNull Function<? super T, ? extends R> keyMapper) {
+		
+		Map<R, List<T>> groups = new HashMap<>();
+		
+		loop(list.size(), i -> {
+			
+			T t = list.get(i);
+			R r = keyMapper.apply(t);
+			
+			List<T> items = groups.get(r);
+			
+			if (items != null) {
+				
+				items.add(t);
+			}
+			else {
+				
+				items = new ArrayList<>();
+				items.add(t);
+				groups.put(r, items);
+			}
+		});
+		
+		return groups;
+	}
+	
+	/**
+	 * Sıfırdan başlayarak verilen sayıya kadar döngü oluşturur.
+	 *
+	 * @param loop     Döngü sayısı
+	 * @param consumer Döngü işleyicisi
+	 */
+	public static void loop(int loop, @NotNull IntConsumer consumer) {
+		
+		for (int i = 0; i < loop; i++) consumer.accept(i);
 	}
 	
 	

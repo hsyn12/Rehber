@@ -43,45 +43,6 @@ public class CallHistoryAdapter extends RecyclerView.Adapter<CallHistoryAdapter.
 	}
 	
 	@NonNull
-	private static String getLetter(String str) {
-		
-		var l = Stringx.getFirstChar(str);
-		
-		if (l.isEmpty()) return "?";
-		
-		if (Character.isAlphabetic(l.charAt(0))) return l.toUpperCase(Locale.ROOT);
-		
-		return "?";
-	}
-	
-	private static int getTypeIcon(int type) {
-		
-		switch (type) {
-			
-			case CallType.INCOMING:
-			case CallType.INCOMING_WIFI:
-				return R.drawable.incomming_call;
-			case CallType.OUTGOING:
-			case CallType.OUTGOING_WIFI:
-				return R.drawable.outgoing_call;
-			case CallType.MISSED:
-				return R.drawable.missed_call;
-			case CallType.REJECTED:
-				return R.drawable.rejected_call;
-			case CallType.BLOCKED:
-				return R.drawable.blocked_call;
-			case CallType.GET_REJECTED:
-				return R.drawable.get_rejected_call;
-			case CallType.UNREACHED:
-				return R.drawable.un_reached_call;
-			case CallType.UNRECEIVED:
-				return R.drawable.un_recieved_call;
-		}
-		
-		return R.drawable.incomming_call;
-	}
-	
-	@NonNull
 	@Override
 	public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 		
@@ -119,6 +80,45 @@ public class CallHistoryAdapter extends RecyclerView.Adapter<CallHistoryAdapter.
 				.buildRound(letter, color);
 		
 		holder.image.setImageDrawable(image);
+	}
+	
+	@NonNull
+	private static String getLetter(String str) {
+		
+		var l = Stringx.getFirstChar(str);
+		
+		if (l.isEmpty()) return "?";
+		
+		if (Character.isAlphabetic(l.charAt(0))) return l.toUpperCase(Locale.ROOT);
+		
+		return "?";
+	}
+	
+	private static int getTypeIcon(int type) {
+		
+		switch (type) {
+			
+			case CallType.INCOMING:
+			case CallType.INCOMING_WIFI:
+				return R.drawable.incomming_call;
+			case CallType.OUTGOING:
+			case CallType.OUTGOING_WIFI:
+				return R.drawable.outgoing_call;
+			case CallType.MISSED:
+				return R.drawable.missed_call;
+			case CallType.REJECTED:
+				return R.drawable.rejected_call;
+			case CallType.BLOCKED:
+				return R.drawable.blocked_call;
+			case CallType.GET_REJECTED:
+				return R.drawable.get_rejected_call;
+			case CallType.UNREACHED:
+				return R.drawable.un_reached_call;
+			case CallType.UNRECEIVED:
+				return R.drawable.un_recieved_call;
+		}
+		
+		return R.drawable.incomming_call;
 	}
 	
 	@Override

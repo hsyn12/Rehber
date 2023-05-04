@@ -15,16 +15,17 @@ import java.util.List;
 
 
 /**
- * The ContactCommentator interface defines the contract for commenting on a phone contact.
+ * The <code>ContactCommentator</code> interface defines the contract
+ * for commenting on a phone contact.
  * <p>
- * Implementations of this interface should provide specific functionality for commenting on different contacts.
+ * Implementations of this interface should provide specific functionality
+ * for commenting on different contacts.
  * <p>
  * This interface extends the Commentator<Contact> interface,
  * which defines the {@link Commentator#commentOn(Object)} method
  * for generating a comment on a contact.
  */
 public interface ContactCommentator extends Commentator<Contact> {
-	
 	
 	/**
 	 * Returns a list of all contacts.
@@ -73,9 +74,22 @@ public interface ContactCommentator extends Commentator<Contact> {
 	@Override
 	@NotNull CharSequence commentOn(@NotNull Contact contact);
 	
+	/**
+	 * Returns the history of the contact.
+	 *
+	 * @return the history of the contact
+	 */
 	default List<Call> getHistory() {
 		
 		return Blue.getObject(Key.CALL_HISTORY);
 	}
+	
+	/**
+	 * Return the comment about the last call.
+	 * The last call comment is about the last call between the contact and the user.
+	 *
+	 * @return the comment about the last call
+	 */
+	@NotNull CharSequence commentOnTheLastCall();
 	
 }

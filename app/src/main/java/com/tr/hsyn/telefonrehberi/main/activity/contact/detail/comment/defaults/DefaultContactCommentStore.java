@@ -59,4 +59,5 @@ public class DefaultContactCommentStore implements ContactCommentStore {
 		return activity;
 	}
 	
+	
 }

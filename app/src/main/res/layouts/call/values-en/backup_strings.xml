@@ -10,5 +10,10 @@
 	<string name="backup_option_3">Delete</string>
 	<string name="txt_completed">Completed</string>
 
+	<string-array name="backup_options">
+		<item>@string/backup_option_1</item>
+		<item>@string/backup_option_2</item>
+		<item>@string/backup_option_3</item>
+	</string-array>
 
 </resources>

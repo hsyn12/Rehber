@@ -7,7 +7,7 @@ android {
 	namespace 'com.tr.hsyn.telefonrehberi'
 	compileSdk rootProject.compileSdk
 
-	
+
 	def configKeyPath = "C:\\Rehber\\tr_hsyn.jks"
 
 	signingConfigs {
@@ -33,6 +33,9 @@ android {
 		versionName "1.0"
 
 		testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+		resConfigs "tr", "en"
+
 	}
 
 	buildTypes {

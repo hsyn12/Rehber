@@ -2,8 +2,8 @@ package com.tr.hsyn.calldata;
 
 
 /**
- * Arama Kaydı Türleri.<br>
- * Bir arama kaydı için geçerli olabilecek {@code 5} temel arama türü vardır.<br><br>
+ * Call types.<br>
+ * There are five base call types.<br><br>
  *
  * <ol>
  *    <li>{@link #INCOMING}</li>
@@ -13,7 +13,7 @@ package com.tr.hsyn.calldata;
  *    <li>{@link #BLOCKED}</li>
  * </ol><br>
  * <p>
- * Bunlara ek olarak {@code 3} arama türü daha vardır.<br><br>
+ * Additionally, there are three call types.<br><br>
  *
  * <ol>
  *    <li>{@link #UNREACHED}</li>
@@ -21,7 +21,7 @@ package com.tr.hsyn.calldata;
  *    <li>{@link #GET_REJECTED}</li>
  * </ol><br>
  * <p>
- * Ve iki internet araması türü.<br><br>
+ * And there are two internet call types.<br><br>
  *
  * <ol>
  *    <li>{@link #INCOMING_WIFI}</li>
@@ -31,47 +31,49 @@ package com.tr.hsyn.calldata;
 public interface CallType {
 	
 	/**
-	 * Gelen Arama Türü
+	 * Incoming call type
 	 */
 	int INCOMING      = 1;
 	/**
-	 * Giden Arama Türü
+	 * Outgoing call type
 	 */
 	int OUTGOING      = 2;
 	/**
-	 * Cevapsız Arama Türü
+	 * Missed call type
 	 */
 	int MISSED        = 3;
 	/**
-	 * Reddedilen Arama Türü
+	 * Rejected call type
 	 */
 	int REJECTED      = 5;
 	/**
-	 * Engellenen Arama Türü
+	 * Blocked call type
 	 */
 	int BLOCKED       = 6;
 	/**
-	 * Gelen internet araması Türü
+	 * Incoming internet call type
 	 */
 	int INCOMING_WIFI = 1000;
 	/**
-	 * Giden internet araması Türü
+	 * Outgoing internet call type
 	 */
 	int OUTGOING_WIFI = 1001;
 	/**
-	 * Ulaşmayan Giden Arama Türü.
+	 * Unreached call type
 	 */
 	int UNREACHED     = 9001;
 	/**
-	 * Ulaşmayan Gelen Arama Türü.
+	 * Unreceived call type
 	 */
 	int UNRECEIVED    = 9002;
 	/**
-	 * Reddedilen Giden Arama Türü
+	 * Get rejected call type
 	 */
 	int GET_REJECTED  = 9003;
-	
-	int getType();
+	/**
+	 * Unknown call type
+	 */
+	int UNKNOWN       = 545454;
 	
 	/**
 	 * @return Gelen Arama ise {@code true}
@@ -80,6 +82,8 @@ public interface CallType {
 		
 		return getType() == INCOMING || getType() == INCOMING_WIFI;
 	}
+	
+	int getType();
 	
 	/**
 	 * @return Giden Arama ise {@code true}
