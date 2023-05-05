@@ -130,8 +130,10 @@ public class CallStory implements Story<Call> {
 						
 						xlog.d("%d yeni arama kaydı var [%s]", newCalls.size(), newCalls);
 						
-						database.add(newCalls);
+						int count = database.add(newCalls);
 						databaseCalls.addAll(newCalls);
+						
+						xlog.d("%d calls added into the database", count);
 					}
 				}
 			}
@@ -165,30 +167,6 @@ public class CallStory implements Story<Call> {
 	/**
 	 * Veri tabanına yeni kayıt ekler.
 	 *
-	 * @param calls Kayıtlar
-	 * @return Başarılı bir şekilde eklenen kayıt sayısı
-	 */
-	@Override
-	public int addIntoDatabase(List<? extends Call> calls) {
-		
-		return database.add(calls);
-	}
-	
-	/**
-	 * Sisteme yeni kayıt ekler.
-	 *
-	 * @param calls Kayıtlar
-	 * @return Başarılı bir şekilde eklenen kayıt sayısı
-	 */
-	@Override
-	public int addIntoSystem(List<? extends Call> calls) {
-		
-		return Calls.add(contentResolver, calls);
-	}
-	
-	/**
-	 * Veri tabanına yeni kayıt ekler.
-	 *
 	 * @param call Kayıt
 	 * @return Başarı durumu
 	 */
@@ -196,85 +174,6 @@ public class CallStory implements Story<Call> {
 	public boolean addIntoDatabase(Call call) {
 		
 		return database.add(call);
-	}
-	
-	/**
-	 * Sisteme yeni kayıt ekler.
-	 *
-	 * @param call Kayıt
-	 * @return Yeni eklenen kaydın adresi
-	 */
-	@Override
-	public boolean addIntoSystem(Call call) {
-		
-		return Calls.add(contentResolver, call) != null;
-	}
-	
-	/**
-	 * Kaydı günceller.
-	 *
-	 * @param call Kayıt
-	 * @return Başarı durumu
-	 */
-	@Override
-	public boolean updateFromDatabase(@NonNull Call call) {
-		
-		return database.update(call, String.valueOf(call.getTime()));
-	}
-	
-	@Override
-	public int updateFromDatabase(@NotNull List<? extends Call> items) {
-		
-		return (int) items.stream().filter(this::updateFromDatabase).count();
-	}
-	
-	/**
-	 * Kaydı günceller.
-	 *
-	 * @param call Kayıt
-	 * @return Başarı durumu
-	 */
-	@Override
-	public boolean updateFromSystem(Call call) {
-		
-		return Calls.update(contentResolver, call);
-	}
-	
-	/**
-	 * Kaydı siler.
-	 *
-	 * @param calls Kayıtlar
-	 * @return Başarılı bir şekilde silinen kayıt sayısı
-	 */
-	@Override
-	public int deleteFromSystem(List<? extends Call> calls) {
-		
-		return Calls.delete(contentResolver, calls);
-	}
-	
-	/**
-	 * Kaydı siler.
-	 *
-	 * @param call Kayıt
-	 * @return Başarı durumu
-	 */
-	@Override
-	public boolean deleteFromSystem(@NotNull Call call) {
-		
-		return Calls.delete(contentResolver, call.getTime());
-	}
-	
-	@Override
-	public int delete(List<? extends Call> items) {
-		
-		int count = deleteFromSystem(items);
-		
-		long time = Time.now();
-		items.forEach(c -> c.setData(CallKey.DELETED_DATE, time));
-		
-		updateFromDatabase(items);
-		
-		return count;
 	}
 	
 	/**
@@ -306,6 +205,109 @@ public class CallStory implements Story<Call> {
 		
 		
 		return false;
+	}
+	
+	/**
+	 * Kaydı siler.
+	 *
+	 * @param call Kayıt
+	 * @return Başarı durumu
+	 */
+	@Override
+	public boolean deleteFromSystem(@NotNull Call call) {
+		
+		return Calls.delete(contentResolver, call.getTime());
+	}
+	
+	@Override
+	public int delete(List<? extends Call> items) {
+		
+		int count = deleteFromSystem(items);
+		
+		long time = Time.now();
+		items.forEach(c -> c.setData(CallKey.DELETED_DATE, time));
+		
+		updateFromDatabase(items);
+		
+		return count;
+	}
+	
+	@Override
+	public int updateFromDatabase(@NotNull List<? extends Call> items) {
+		
+		return (int) items.stream().filter(this::updateFromDatabase).count();
+	}
+	
+	/**
+	 * Kaydı günceller.
+	 *
+	 * @param call Kayıt
+	 * @return Başarı durumu
+	 */
+	@Override
+	public boolean updateFromSystem(Call call) {
+		
+		return Calls.update(contentResolver, call);
+	}
+	
+	/**
+	 * Sisteme yeni kayıt ekler.
+	 *
+	 * @param call Kayıt
+	 * @return Yeni eklenen kaydın adresi
+	 */
+	@Override
+	public boolean addIntoSystem(Call call) {
+		
+		return Calls.add(contentResolver, call) != null;
+	}
+	
+	/**
+	 * Veri tabanına yeni kayıt ekler.
+	 *
+	 * @param calls Kayıtlar
+	 * @return Başarılı bir şekilde eklenen kayıt sayısı
+	 */
+	@Override
+	public int addIntoDatabase(List<? extends Call> calls) {
+		
+		return database.add(calls);
+	}
+	
+	/**
+	 * Sisteme yeni kayıt ekler.
+	 *
+	 * @param calls Kayıtlar
+	 * @return Başarılı bir şekilde eklenen kayıt sayısı
+	 */
+	@Override
+	public int addIntoSystem(List<? extends Call> calls) {
+		
+		return Calls.add(contentResolver, calls);
+	}
+	
+	/**
+	 * Kaydı siler.
+	 *
+	 * @param calls Kayıtlar
+	 * @return Başarılı bir şekilde silinen kayıt sayısı
+	 */
+	@Override
+	public int deleteFromSystem(List<? extends Call> calls) {
+		
+		return Calls.delete(contentResolver, calls);
+	}
+	
+	/**
+	 * Kaydı günceller.
+	 *
+	 * @param call Kayıt
+	 * @return Başarı durumu
+	 */
+	@Override
+	public boolean updateFromDatabase(@NonNull Call call) {
+		
+		return database.update(call, String.valueOf(call.getTime()));
 	}
 	
 	@Override

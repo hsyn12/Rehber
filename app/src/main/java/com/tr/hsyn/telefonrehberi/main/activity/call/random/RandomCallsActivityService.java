@@ -18,48 +18,25 @@ import com.tr.hsyn.xlog.xlog;
 
 
 /**
- * Servise ilişkin bilgiler ve eylemler sunar.
+ * Provides service-related information and actions.
  */
 public abstract class RandomCallsActivityService extends RandomCallsActivityView implements ProgressListener<Call> {
 	
 	/**
-	 * Servis bağlantı nesnesi
+	 * Service connection object
 	 */
 	private final ServiceConnection serviceConnection = new RandomCallServiceConnection();
 	/**
-	 * Rastgele üretim servisi
+	 * Random production service
 	 */
 	protected     GenerationService randomCallService;
+	/**
+	 * Generation start time
+	 */
 	private       long              timeGenerationStart;
 	
 	/**
-	 * {@link RandomCallService} çalışmaya başladığında çağrılır.
-	 * Çalışmadan kasıt üretimin başlaması değildir,
-	 * servisin hafızaya yüklenip hazır hale gelmesidir.
-	 * Bu çağrıdan önce servise yönelik tüm çağrılar geçersizdir.
-	 * Bu çağrıdan sonra servis bağlantısı emri verilir, ayrıca bağlanma isteği
-	 * vermeye gerek yoktur.
-	 */
-	@CallSuper
-	protected void onServiceStartRunning() {
-		
-		xlog.d("Service start running");
-		
-		bindRandomCallsService();
-	}
-	
-	/**
-	 * {@link RandomCallService} tamamen durduğunda çağrılır.
-	 */
-	@CallSuper
-	protected void onServiceStopRunning() {
-		
-		xlog.d("Service stop running");
-		if (randomCallService != null) randomCallService = null;
-	}
-	
-	/**
-	 * Activity {@link RandomCallService}'e bağlandığında çağrılır.
+	 * Called when the Activity connects to {@link RandomCallService}.
 	 */
 	@CallSuper
 	protected void onServiceConnected() {
@@ -73,25 +50,18 @@ public abstract class RandomCallsActivityService extends RandomCallsActivityView
 	}
 	
 	/**
-	 * {@link RandomCallService} her üretime gidildiğinde görev başladı demektir.
-	 * Üretim her tamamlandığında ise görev tamamlandı demektir.
-	 * Bu metot her görev tamamlandığında çağrılır.
+	 * Each time the production is completed, the task is completed.
+	 * This method is called every time the task is completed.
 	 *
-	 * @param compilationType Görevin tamamlanma durumu
+	 * @param compilationType Completion status of the task.<br>
+	 *                        <code>1</code> - The user stops generation<br>
+	 *                        <code>2</code> - The generation stopped by unknown reason<br>
+	 *                        <code>3</code> - The generation stopped by an exception<br>
 	 */
 	@CallSuper
 	protected void onMissionCompleted(int compilationType) {
 		
 		xlog.d("Mission completed");
-	}
-	
-	/**
-	 * Activity'nin servis bağlantısı sona erdiğinde çağrılır.
-	 */
-	@CallSuper
-	protected void onServiceDisconnected() {
-		
-		xlog.d("Service disconnected");
 	}
 	
 	/**
@@ -127,11 +97,65 @@ public abstract class RandomCallsActivityService extends RandomCallsActivityView
 		xlog.d("Generation stopped [%dms]", System.currentTimeMillis() - timeGenerationStart);
 	}
 	
+	/**
+	 * Activity'nin servis bağlantısı sona erdiğinde çağrılır.
+	 */
+	@CallSuper
+	protected void onServiceDisconnected() {
+		
+		xlog.d("Service disconnected");
+	}
+	
 	@Override
 	protected void onCreate() {
 		
 		super.onCreate();
 		RandomCallService.listenRunning(this::onServiceRunningStateChange);
+	}
+	
+	/**
+	 * Servisin çalışma durumu her değiştiğinde çağrılır.
+	 *
+	 * @param isRunning Servis çalışıyorsa {@code true}, çalışmıyorsa {@code false}
+	 */
+	protected void onServiceRunningStateChange(boolean isRunning) {
+		
+		if (isRunning) onServiceStartRunning();
+		else onServiceStopRunning();
+	}
+	
+	/**
+	 * {@link RandomCallService} çalışmaya başladığında çağrılır.
+	 * Çalışmadan kasıt üretimin başlaması değildir,
+	 * servisin hafızaya yüklenip hazır hale gelmesidir.
+	 * Bu çağrıdan önce servise yönelik tüm çağrılar geçersizdir.
+	 * Bu çağrıdan sonra servis bağlantısı emri verilir, ayrıca bağlanma isteği
+	 * vermeye gerek yoktur.
+	 */
+	@CallSuper
+	protected void onServiceStartRunning() {
+		
+		xlog.d("Service start running");
+		
+		bindRandomCallsService();
+	}
+	
+	/**
+	 * Servise bağlanır
+	 */
+	protected final void bindRandomCallsService() {
+		
+		bindService(new Intent(this, RandomCallService.class), serviceConnection, 0);
+	}
+	
+	/**
+	 * {@link RandomCallService} tamamen durduğunda çağrılır.
+	 */
+	@CallSuper
+	protected void onServiceStopRunning() {
+		
+		xlog.d("Service stop running");
+		if (randomCallService != null) randomCallService = null;
 	}
 	
 	/**
@@ -154,6 +178,14 @@ public abstract class RandomCallsActivityService extends RandomCallsActivityView
 	}
 	
 	/**
+	 * @return Servis çalışıyorsa {@code true}, çalışmıyorsa {@code false}
+	 */
+	protected final boolean isServiceRunning() {
+		
+		return RandomCallService.isRunning();
+	}
+	
+	/**
 	 * Servisi durdur.
 	 * Eğer servis üretim yapmıyorsa zaten çalışmıyordur.
 	 * Eğer üretim yoksa ve çalışıyorsa,
@@ -173,33 +205,6 @@ public abstract class RandomCallsActivityService extends RandomCallsActivityView
 	}
 	
 	/**
-	 * Servisin çalışma durumu her değiştiğinde çağrılır.
-	 *
-	 * @param isRunning Servis çalışıyorsa {@code true}, çalışmıyorsa {@code false}
-	 */
-	protected void onServiceRunningStateChange(boolean isRunning) {
-		
-		if (isRunning) onServiceStartRunning();
-		else onServiceStopRunning();
-	}
-	
-	/**
-	 * @return Servis çalışıyorsa {@code true}, çalışmıyorsa {@code false}
-	 */
-	protected final boolean isServiceRunning() {
-		
-		return RandomCallService.isRunning();
-	}
-	
-	/**
-	 * @return Servis bağlı ise {@code true}, değilse {@code false}
-	 */
-	protected final boolean isServiceConnected() {
-		
-		return randomCallService != null;
-	}
-	
-	/**
 	 * @return Rastgele üretim yapılmakta ise {@code true}, değilse {@code false}
 	 */
 	protected final boolean isServiceWorking() {
@@ -208,11 +213,11 @@ public abstract class RandomCallsActivityService extends RandomCallsActivityView
 	}
 	
 	/**
-	 * Servise bağlanır
+	 * @return Servis bağlı ise {@code true}, değilse {@code false}
 	 */
-	protected final void bindRandomCallsService() {
+	protected final boolean isServiceConnected() {
 		
-		bindService(new Intent(this, RandomCallService.class), serviceConnection, 0);
+		return randomCallService != null;
 	}
 	
 	@Override

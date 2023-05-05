@@ -12,7 +12,8 @@ public interface ContactColumns {
 	String[] PROJECTION   = {
 			ContactsContract.Contacts._ID,
 			ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
-			ContactsContract.Contacts.PHOTO_THUMBNAIL_URI
+			ContactsContract.Contacts.PHOTO_THUMBNAIL_URI,
+			ContactsContract.Contacts.PHOTO_URI
 	};
 	/**
 	 * Data projection

@@ -35,7 +35,7 @@ package com.tr.hsyn.scaler
  *    val scaler = new Scaler(10, 2f);
  *    //bu nesne için minimum değer 10 ve aşağısıdır. (..., 10]
  *    //orta değer (10, 10 * scale] aralığıdır. (10, 20] on ve yirmi arası
- *    //yüksek değer (orta, 10 * scale * 2] aralığıdır. (20, 40] yürmi ve kırk arası
+ *    //yüksek değer (orta, 10 * scale * 2] aralığıdır. (20, 40] yirmi ve kırk arası
  *    //en yüksek değer (yüksek, 10 * scale * 3] aralığıdır. (40, ...) kırk ve üzeri
  *
  * @author hsyn 23.08.2022 18:14:23

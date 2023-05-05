@@ -127,10 +127,28 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 		
 	}
 	
-	@Override
-	protected void onClickNewContact(View view) {
+	/**
+	 * Dinleyicileri ayarla.
+	 */
+	private void setListeners() {
 		
-		newContactCallBack.launch(Contacts.createNewContactIntent());
+		//! Sayfa hazır olduğunda yükleme işlemi başlatılacak
+		//! Uygulama döngüsü burada başlıyor
+		pageContacts.setOnReady(this::loadContacts);
+		pageCallLog.setOnReady(this::loadCalls);
+		
+		pageContacts.setScrollListener(this);
+		pageContacts.setPageOwner(this);
+		//pageCallLog.setScrollListener(this);
+		pageCallLog.setPageOwner(this);
+		
+		pageContacts.setItemSelectListener(this::onContactSelected);
+		pageCallLog.setItemSelectListener(this::onCallSelected);
+		pageContacts.setSwipeListener(this::onContactSwipe);
+		pageCallLog.setSwipeListener(this::onCallSwipe);
+		pageCallLog.setOnCallAction(this::onCallAction);
+		pageCallLog.setOnDeleteAll(this::onDeleteAllCalls);
+		pageContacts.setRefreshListener(this);
 	}
 	
 	@CallSuper
@@ -162,7 +180,7 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 			
 			xlog.d("Contact Selected : %s", selectedContact);
 			
-			Blue.box(com.tr.hsyn.key.Key.CONTACT_SELECTED, selectedContact);
+			Blue.box(com.tr.hsyn.key.Key.SELECTED_CONTACT, selectedContact);
 			
 			startActivity(new Intent(this, ContactDetails.class));
 			
@@ -180,11 +198,11 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 		
 		if (keepCallSelection.enter()) {
 			
-			var call = pageCallLog.getItem(index);
+			Call call = pageCallLog.getItem(index);
 			
 			xlog.d("Selected : %s", call);
 			
-			Blue.box(Key.CALL_SELECTED, call);
+			Blue.box(Key.SELECTED_CALL, call);
 		}
 	}
 	
@@ -212,110 +230,6 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 			
 			xlog.d("Arama kaydı silinemedi : %s", number);
 		}
-	}
-	
-	@Override
-	protected void onDestroy() {
-		
-		//lifeEnd();
-		super.onDestroy();
-	}
-	
-	protected void onSelectedContactDeleted(@NonNull Contact contact) {
-		
-		xlog.d("Selected contact deleted : %s", contact);
-		pageContacts.deleteItem(contact);
-	}
-	
-	@Override
-	protected void onResume() {
-		
-		super.onResume();
-		
-		Use.ifNotNull(Over.Contacts.getSelectedContact(), this::checkSelectedContact);
-	}
-	
-	/**
-	 * Seçilen kişinin silinme durumunu kontrol eder.<br>
-	 * Bazı yerlerde veri tabanına direk erişim vardır ancak görsel bağlantıları yoktur,
-	 * böyle yerlerde kişi ile ilgili güncellemeler veri tabanı üzerinde yapılır ve
-	 * dönüşte kişinin ilişkili olduğu görsel nesneler kişiyi kontrol ederek
-	 * bir güncelleme olup olmadığa bakar ve
-	 * sadece görsel güncellemeyi icraa eder.<br>
-	 * Bu metot kişiyi kontrol eder ve silinmiş ise kişiyi kişiler listesinden çıkarır.
-	 *
-	 * @param selectedContact Seçilen kişi
-	 */
-	private void checkSelectedContact(@NonNull Contact selectedContact) {
-		
-		if (ContactKey.isDeleted(selectedContact)) {
-			
-			onSelectedContactDeleted(selectedContact);
-		}
-	}
-	
-	@Override
-	public void onCreateMenu(@NonNull @NotNull Menu menu, @NonNull @NotNull MenuInflater menuInflater) {
-		
-		menuInflater.inflate(R.menu.activity_main_menu, menu);
-		menuManager = new MenuManager(menu, Lister.listOf(R.id.main_menu_colors));
-	}
-	
-	@SuppressLint("NonConstantResourceId")
-	@Override
-	public boolean onMenuItemSelected(@NonNull @NotNull MenuItem item) {
-		
-		int id = item.getItemId();
-		
-		//noinspection SwitchStatementWithTooFewBranches
-		switch (id) {
-			
-			case R.id.main_menu_colors:
-				
-				var intent = new Intent(this, ColorsActivity.class);
-				
-				colorChangeCallBack.launch(intent);
-				
-				Bungee.slideUp(this);
-				return true;
-			
-		}
-		
-		return false;
-	}
-	
-	/**
-	 * Dinleyicileri ayarla.
-	 */
-	private void setListeners() {
-		
-		//! Sayfa hazır olduğunda yükleme işlemi başlatılacak
-		//! Uygulama döngüsü burada başlıyor
-		pageContacts.setOnReady(this::loadContacts);
-		pageCallLog.setOnReady(this::loadCalls);
-		
-		pageContacts.setScrollListener(this);
-		pageContacts.setPageOwner(this);
-		//pageCallLog.setScrollListener(this);
-		pageCallLog.setPageOwner(this);
-		
-		pageContacts.setItemSelectListener(this::onContactSelected);
-		pageCallLog.setItemSelectListener(this::onCallSelected);
-		pageContacts.setSwipeListener(this::onContactSwipe);
-		pageCallLog.setSwipeListener(this::onCallSwipe);
-		pageCallLog.setOnCallAction(this::onCallAction);
-		pageCallLog.setOnDeleteAll(this::onDeleteAllCalls);
-		pageContacts.setRefreshListener(this);
-	}
-	
-	/**
-	 * Sayfa yenileme talebi gönderildi.
-	 */
-	@Override
-	public void onRefresh() {
-		
-		if (currentPage == PAGE_CONTACTS) loadContacts();
-		else loadCalls();
 	}
 	
 	private void onDeleteAllCalls() {
@@ -361,6 +275,59 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 	}
 	
 	@Override
+	protected void onClickNewContact(View view) {
+		
+		newContactCallBack.launch(Contacts.createNewContactIntent());
+	}
+	
+	@Override
+	protected void onDestroy() {
+		
+		//lifeEnd();
+		super.onDestroy();
+	}
+	
+	@Override
+	public void onCreateMenu(@NonNull @NotNull Menu menu, @NonNull @NotNull MenuInflater menuInflater) {
+		
+		menuInflater.inflate(R.menu.activity_main_menu, menu);
+		menuManager = new MenuManager(menu, Lister.listOf(R.id.main_menu_colors));
+	}
+	
+	@SuppressLint("NonConstantResourceId")
+	@Override
+	public boolean onMenuItemSelected(@NonNull @NotNull MenuItem item) {
+		
+		int id = item.getItemId();
+		
+		//noinspection SwitchStatementWithTooFewBranches
+		switch (id) {
+			
+			case R.id.main_menu_colors:
+				
+				var intent = new Intent(this, ColorsActivity.class);
+				
+				colorChangeCallBack.launch(intent);
+				
+				Bungee.slideUp(this);
+				return true;
+			
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Sayfa yenileme talebi gönderildi.
+	 */
+	@Override
+	public void onRefresh() {
+		
+		if (currentPage == PAGE_CONTACTS) loadContacts();
+		else loadCalls();
+	}
+	
+	@Override
 	public void showMenu(boolean show) {
 		
 		pageContacts.showMenu(show);
@@ -374,5 +341,38 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 		super.onCallLogLoaded(calls, throwable);
 		
 		
+	}
+	
+	@Override
+	protected void onResume() {
+		
+		super.onResume();
+		
+		Use.ifNotNull(Over.Contacts.getSelectedContact(), this::checkSelectedContact);
+	}
+	
+	/**
+	 * Seçilen kişinin silinme durumunu kontrol eder.<br>
+	 * Bazı yerlerde veri tabanına direk erişim vardır ancak görsel bağlantıları yoktur,
+	 * böyle yerlerde kişi ile ilgili güncellemeler veri tabanı üzerinde yapılır ve
+	 * dönüşte kişinin ilişkili olduğu görsel nesneler kişiyi kontrol ederek
+	 * bir güncelleme olup olmadığa bakar ve
+	 * sadece görsel güncellemeyi icraa eder.<br>
+	 * Bu metot kişiyi kontrol eder ve silinmiş ise kişiyi kişiler listesinden çıkarır.
+	 *
+	 * @param selectedContact Seçilen kişi
+	 */
+	private void checkSelectedContact(@NonNull Contact selectedContact) {
+		
+		if (ContactKey.isDeleted(selectedContact)) {
+			
+			onSelectedContactDeleted(selectedContact);
+		}
+	}
+	
+	protected void onSelectedContactDeleted(@NonNull Contact contact) {
+		
+		xlog.d("Selected contact deleted : %s", contact);
+		pageContacts.deleteItem(contact);
 	}
 }

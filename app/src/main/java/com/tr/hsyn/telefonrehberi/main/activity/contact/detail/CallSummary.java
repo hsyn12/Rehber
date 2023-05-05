@@ -128,6 +128,8 @@ public abstract class CallSummary extends ContactDetailsHistory {
 		
 		super.onHistoryLoad();
 		
+		List<Call> history = contact.getData(ContactKey.CALL_HISTORY);
+		
 		// if no history, do not show anything
 		if (history == null || history.isEmpty()) {
 			
@@ -164,6 +166,10 @@ public abstract class CallSummary extends ContactDetailsHistory {
 	 * Remakes the summary view with updated history
 	 */
 	private void updateSummary() {
+		
+		List<Call> history = contact.getData(ContactKey.CALL_HISTORY);
+		
+		if (history == null) return;
 		
 		Work.on(() -> createSummaryInfo(history))
 				.onSuccess(this::setupSummaryViews)
@@ -301,6 +307,11 @@ public abstract class CallSummary extends ContactDetailsHistory {
 			callSummaryView = inflateSummaryView();
 		}
 		
+		List<Call> history = contact.getData(ContactKey.CALL_HISTORY);
+		
+		if (history == null) return;
+		
+		
 		//- Arama özetini R.layout.call_details_summary.xml
 		//- layout dosyası temsil ediyor.
 		//- Bu layout birçok görsel eleman bulunduruyor.
@@ -392,6 +403,9 @@ public abstract class CallSummary extends ContactDetailsHistory {
 			outgoingRow.setOnClickListener(v -> showHistory(callHistory.getOutgoingCalls()));
 			missedRow.setOnClickListener(v -> showHistory(callHistory.getMissedCalls()));
 			rejectedRow.setOnClickListener(v -> showHistory(callHistory.getRejectedCalls()));
+			
+			List<Call> history = contact.getData(ContactKey.CALL_HISTORY);
+			
 			totalRow.setOnClickListener(v -> showHistory(history));
 		}
 		

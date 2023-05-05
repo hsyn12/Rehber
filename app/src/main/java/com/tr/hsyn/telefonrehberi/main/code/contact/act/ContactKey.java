@@ -58,6 +58,16 @@ public interface ContactKey {
 	 */
 	DataKey DETAILS_APPLIED = DataKey.of(12, "detailsApplied");
 	
+	/**
+	 * Data key for the call history of a contact
+	 */
+	DataKey CALL_HISTORY = DataKey.of(13, "call_history");
+	
+	/**
+	 * Data key for the history object
+	 */
+	DataKey HISTORY = DataKey.of(14, "history");
+	
 	@Nullable
 	static List<String> getNumbers(@NotNull Contact contact) {
 		

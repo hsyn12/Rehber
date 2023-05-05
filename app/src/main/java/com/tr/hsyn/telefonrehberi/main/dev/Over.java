@@ -21,17 +21,19 @@ import java.util.List;
 /**
  * <h2>Over</h2>
  * <p>
- * Programın her yerinden erişilmesi gereken bazı kodlara erişim yöntemi sağlar.
- * Sınıf tamamen {@link Blue} sınıfı üzerinden çalışır.
- * {@code Blue} sınıfı kullanılırken erişilmek istenen nesnenin anahtarı bilinmek zorunda.
- * Ancak bu sınıf ({@code Over}) {@link Key} sınıfında tanımlanan nesne kodlarını
- * kullandırmak yerine daha açık ve anlaşılır metotlar sunar.
- * <br>
+ * It provides a method
+ * of accessing some code that needs to be accessed from anywhere in the program.
+ * The class runs entirely on the {@link Blue} class.
+ * When using the {@code Blue} class, the key of the object must be known.
+ * However,
+ * this class ({@code Over})
+ * offers more clear and understandable methods
+ * instead of using the object key codes defined in the {@link Key} class.
  *
  * <pre>{@code
- * List<Contact> contacts = Blue.getObject(Key.CONTACTS); // yerine
- * List<Contact> contacts =  Over.Contact.getContacts(); // kullanılır
- * // İkisi de aynı nesneyi döndürür
+ * List<Contact> contacts = Blue.getObject(Key.CONTACTS);
+ * List<Contact> contacts =  Over.Contact.getContacts();
+ * // Both return the same object
  * }</pre>
  *
  * @see Blue
@@ -40,7 +42,7 @@ import java.util.List;
 public interface Over {
 	
 	/**
-	 * Program ana dizini
+	 * Program home directory
 	 */
 	interface App {
 		
@@ -52,7 +54,7 @@ public interface Over {
 	}
 	
 	/**
-	 * Rehber dizini
+	 * Contacts directory
 	 */
 	interface Contacts {
 		
@@ -62,15 +64,15 @@ public interface Over {
 		}
 		
 		/**
-		 * @return Kişi listesinden en son seçilmiş kişiyi döndürür.
+		 * @return the last selected contact from the contact list
 		 */
 		static Contact getSelectedContact() {
 			
-			return Blue.getObject(Key.CONTACT_SELECTED);
+			return Blue.getObject(Key.SELECTED_CONTACT);
 		}
 		
 		/**
-		 * Rehber listesinin yenilenmesi gerektiğini bildiren bir işareti set eder.
+		 * Sets a flag indicating that the Contacts list needs to be refreshed.
 		 */
 		static void refreshContacts() {
 			
@@ -78,15 +80,11 @@ public interface Over {
 		}
 		
 		/**
-		 * Rehber yöneticisini döndürür.
+		 * There is a list of deleted contacts at {@link Key#DELETED_CONTACTS} key.
+		 * And this method adds the deleted contacts to the deleted contact list.
 		 *
-		 * @return Rehber yöneticisi
+		 * @param contacts contacts to be added to the deleted contact list
 		 */
-		static Story<Contact> getContactManager() {
-			
-			return Blue.getObject(Key.CONTACT_STORY);
-		}
-		
 		static void addDeleted(Contacts... contacts) {
 			
 			List<Contacts> contactList = getDeleted();
@@ -98,9 +96,11 @@ public interface Over {
 			}
 			
 			contactList.addAll(Arrays.asList(contacts));
-			
 		}
 		
+		/**
+		 * @return deleted contact list at {@link Key#DELETED_CONTACTS}
+		 */
 		static List<Contacts> getDeleted() {
 			
 			return Blue.getObject(Key.DELETED_CONTACTS);
@@ -108,14 +108,14 @@ public interface Over {
 	}
 	
 	/**
-	 * Arama kayıtları dizini
+	 * Call log directory
 	 */
 	interface CallLog {
 		
 		/**
-		 * Arama kayıtlarının olup olmadığını bildirir.
+		 * Indicates whether there are call logs.
 		 *
-		 * @return Arama kayıtları set edilmişse {@code true}, aksi halde {@code false}
+		 * @return {@code true} if call records are set, otherwise {@code false}
 		 */
 		static boolean exist() {
 			
@@ -123,9 +123,9 @@ public interface Over {
 		}
 		
 		/**
-		 * Arama kayıtları yöneticisini döndürür.
+		 * Returns the call logs manager.
 		 *
-		 * @return Arama kayıtları yöneticisi
+		 * @return the call logs manager
 		 */
 		static Story<Call> getCallLogManager() {
 			
@@ -133,27 +133,12 @@ public interface Over {
 		}
 		
 		/**
-		 * Arama kayıtlarında kalıcı bir değişiklik olduğunu ve
-		 * yenilenmesi gerektiğini bildiren bir işaret kaydeder.
+		 * Records a flag
+		 * indicating that there is a permanent change in the call logs and needs to be refreshed.
 		 */
 		static void refreshCallLog() {
 			
 			Blue.box(Key.REFRESH_CALL_LOG, true);
-		}
-		
-		/**
-		 * Ama kayıtlarında kalıcı bir değişiklik yapıldığında,
-		 * bu işlemi yapan kod kayıtların değiştiğini ve yenilenmesi gerektiğini bildiren bir bilgi kaydeder.
-		 * Bu metot kaydedilen bu bilgiyi kontrol eder ve yenilenme gerekliliği varsa {@code true} döndürür.
-		 * Metot sadece kontrol eder, bilgiyi değiştirmez.
-		 *
-		 * @return Arama kayıtlarının yenilenmesi gerekiyorsa {@code true}
-		 */
-		static boolean needRefreshCallLog() {
-			
-			Boolean b = Blue.getObject(Key.REFRESH_CALL_LOG);
-			
-			return b != null && b;
 		}
 		
 		/**
@@ -175,18 +160,24 @@ public interface Over {
 		}
 		
 		/**
+		 * Ama kayıtlarında kalıcı bir değişiklik yapıldığında,
+		 * bu işlemi yapan kod kayıtların değiştiğini ve yenilenmesi gerektiğini bildiren bir bilgi kaydeder.
+		 * Bu metot kaydedilen bu bilgiyi kontrol eder ve yenilenme gerekliliği varsa {@code true} döndürür.
+		 * Metot sadece kontrol eder, bilgiyi değiştirmez.
+		 *
+		 * @return Arama kayıtlarının yenilenmesi gerekiyorsa {@code true}
+		 */
+		static boolean needRefreshCallLog() {
+			
+			Boolean b = Blue.getObject(Key.REFRESH_CALL_LOG);
+			
+			return b != null && b;
+		}
+		
+		/**
 		 * Arama kayıtları listesi
 		 */
 		interface Calls {
-			
-			/**
-			 * @return {@code true} if calls updated
-			 */
-			@NonNull
-			static Bool isUpdated() {
-				
-				return new Bool(Blue.getObject(Key.CALL_LOG_UPDATED));
-			}
 			
 			static Bool isUpdated(@NonNull Bool newValue) {
 				
@@ -196,6 +187,15 @@ public interface Over {
 					Blue.box(Key.CALL_LOG_UPDATED, newValue.bool());
 				
 				return u;
+			}
+			
+			/**
+			 * @return {@code true} if calls updated
+			 */
+			@NonNull
+			static Bool isUpdated() {
+				
+				return new Bool(Blue.getObject(Key.CALL_LOG_UPDATED));
 			}
 			
 			/**

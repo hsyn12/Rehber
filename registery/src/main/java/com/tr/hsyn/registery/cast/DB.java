@@ -4,7 +4,6 @@ package com.tr.hsyn.registery.cast;
 import com.tr.hsyn.registery.column.Number;
 import com.tr.hsyn.registery.column.Raw;
 import com.tr.hsyn.registery.column.Text;
-import com.tr.hsyn.xlog.xlog;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -59,18 +58,6 @@ public interface DB {
 	String getDatabaseName();
 	
 	/**
-	 * @return Veri tabanında oluşturulacak tablonun ismi
-	 */
-	@NotNull
-	String getTableName();
-	
-	/**
-	 * @return Tablo içinde oluşturulacak kolonlar
-	 */
-	@NotNull
-	DBColumn[] getColumns();
-	
-	/**
 	 * @return primary key
 	 */
 	@NotNull
@@ -100,9 +87,21 @@ public interface DB {
 		
 		table.append(")");
 		
-		xlog.i("'%s' table created : %s", getTableName(), table);
+		//xlog.i("'%s' table created : %s", getTableName(), table);
 		return table.toString();
 	}
+	
+	/**
+	 * @return Veri tabanında oluşturulacak tablonun ismi
+	 */
+	@NotNull
+	String getTableName();
+	
+	/**
+	 * @return Tablo içinde oluşturulacak kolonlar
+	 */
+	@NotNull
+	DBColumn[] getColumns();
 	
 	/**
 	 * @return Database version

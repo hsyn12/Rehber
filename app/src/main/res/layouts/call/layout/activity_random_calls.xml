@@ -1,129 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layout_settings"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".main.activity.call.random.RandomCallsActivity">
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		xmlns:tools="http://schemas.android.com/tools"
+		android:id="@+id/layout_settings"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		tools:context=".main.activity.call.random.RandomCallsActivity">
 
-    <!-- Toolbar -->
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar_random_calls"
-        style="@style/ToolbarBasex"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:elevation="6dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="@drawable/left_arrow"
-        app:title="@string/title_random_calls_generator" />
+	<!-- Toolbar -->
+	<com.google.android.material.appbar.MaterialToolbar
+			android:id="@+id/toolbar_random_calls"
+			style="@style/ToolbarBasex"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:elevation="6dp"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:navigationIcon="@drawable/left_arrow"
+			app:title="@string/title_random_calls_generator" />
 
-    <!-- Main Layout -->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/generation_settings"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="@dimen/activity_horizontal_margin"
-        android:paddingEnd="@dimen/activity_horizontal_margin"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_random_calls">
+	<!-- Main Layout -->
+	<androidx.constraintlayout.widget.ConstraintLayout
+			android:id="@+id/generation_settings"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:paddingStart="@dimen/activity_horizontal_margin"
+			android:paddingEnd="@dimen/activity_horizontal_margin"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/toolbar_random_calls">
 
-        <TextView
-            android:id="@+id/text_generation_count"
-            style="@style/RandomCallsTextPrimary"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:text="@string/generation_count_hint"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+		<TextView
+				android:id="@+id/text_generation_count"
+				style="@style/RandomCallsTextPrimary"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="32dp"
+				android:text="@string/generation_count_hint"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
-            android:id="@+id/edit_text_generation_count"
-            style="@style/RandomCallsEditTextAppearance"
-            android:layout_width="130dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:autofillHints="20,30,50,100,150,200"
-            android:digits="0123456789"
-            android:hint="@string/generation_count_hint"
-            android:inputType="numberDecimal"
-            android:minHeight="56dp"
-            android:singleLine="true"
-            android:text="@string/generation_default_count"
-            android:textAlignment="center"
-            app:layout_constraintBaseline_toBaselineOf="@id/text_generation_count"
-            app:layout_constraintEnd_toEndOf="parent" />
+		<EditText
+				android:id="@+id/edit_text_generation_count"
+				style="@style/RandomCallsEditTextAppearance"
+				android:layout_width="130dp"
+				android:layout_height="wrap_content"
+				android:layout_marginEnd="@dimen/activity_horizontal_margin"
+				android:autofillHints="20,30,50,100,150,200"
+				android:digits="0123456789"
+				android:gravity="center"
+				android:hint="@string/generation_count_hint"
+				android:inputType="numberDecimal"
+				android:minHeight="56dp"
+				android:singleLine="true"
+				android:text="@string/generation_default_count"
+				app:layout_constraintBaseline_toBaselineOf="@id/text_generation_count"
+				app:layout_constraintEnd_toEndOf="parent" />
 
-        <Button
-            android:id="@+id/button_start"
-            style="@style/RandomCallsButton"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="60dp"
-            android:enabled="false"
-            android:text="@string/start"
-            android:textAllCaps="false"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_generation_count" />
+		<Button
+				android:id="@+id/button_start"
+				style="@style/RandomCallsButton"
+				android:layout_width="120dp"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="60dp"
+				android:enabled="false"
+				android:text="@string/start"
+				android:textAllCaps="false"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/text_generation_count" />
 
-        <com.tr.hsyn.htext.evaporate.EvaporateTextView
-            android:id="@+id/text_current_progress"
-            style="@style/RandomCallsTextPrimary"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_30dp"
-            android:textSize="17sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/button_start"
-            tools:text="Giden arama : hsyn" />
+		<com.tr.hsyn.htext.evaporate.EvaporateTextView
+				android:id="@+id/text_current_progress"
+				style="@style/RandomCallsTextPrimary"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/dimen_30dp"
+				android:textSize="17sp"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/button_start"
+				tools:text="Giden arama : hsyn" />
 
-        <ProgressBar
-            android:id="@+id/progress_generation"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_30dp"
-            android:indeterminate="true"
-            android:max="100"
-            android:min="0"
-            android:progress="0"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_current_progress" />
+		<ProgressBar
+				android:id="@+id/progress_generation"
+				style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/dimen_30dp"
+				android:indeterminate="true"
+				android:max="100"
+				android:min="0"
+				android:progress="0"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/text_current_progress" />
 
-        <TextView
-            android:id="@+id/text_progress"
-            style="@style/RandomCallsTextPrimary"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:textSize="17sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/progress_generation"
-            tools:text="25 / 254" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+		<TextView
+				android:id="@+id/text_progress"
+				style="@style/RandomCallsTextPrimary"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="6dp"
+				android:textSize="17sp"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/progress_generation"
+				tools:text="25 / 254" />
+	</androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- Description Text -->
-    <com.tr.hsyn.htext.typer.TyperTextView
-        android:id="@+id/text_description"
-        style="@style/RandomCallsTextPrimary"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/generation_settings"
-        app:typerSpeed="40"
-        tools:text="Üretilecek arama kayıtları" />
+	<!-- Description Text -->
+	<com.tr.hsyn.htext.typer.TyperTextView
+			android:id="@+id/text_description"
+			style="@style/RandomCallsTextPrimary"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/activity_horizontal_margin"
+			android:layout_marginTop="40dp"
+			android:layout_marginEnd="@dimen/activity_horizontal_margin"
+			android:textSize="16sp"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/generation_settings"
+			app:typerSpeed="40"
+			tools:text="Üretilecek arama kayıtları" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

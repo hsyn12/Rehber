@@ -17,12 +17,12 @@ import org.jetbrains.annotations.NotNull;
 
 
 /**
- * Uygulama genelinde kullanılan aynı tarz activity nesneleri için temel bir activity sınıfı.<br>
- * Soyut olan {@linkplain #getLayoutId()}} metodu ile verilecek görünüm dosyasını activity için set eder.<br>
- * Ayrıca, {@linkplain #hasToolbar()} metodu ile true dönülüyorsa, {@linkplain #getToolbarResourceId()} metodu
- * {@link Toolbar} görselinin kaynak id değerini dönmeli.
- * Bu şekilde toolbar set edilir ve rengi ana renk  olarak belirlenir
- * ve toolbar ikonunun click olayı için {@linkplain Activity#onBackPressed()} metodu verilir.
+ * A basic activity class for the same style of activity objects used throughout the application.
+ * Sets the view file to be exported with the abstract {@linkplain #getLayoutId()}} method.
+ * Also, with the {@linkplain #hasToolbar()} method If returning true,
+ * the {@linkplain #getToolbarResourceId()} method should return the resource id of the {@link Toolbar} view.
+ * In this way, the toolbar is set, and its color is determined as the main color,
+ * and the {@linkplain Activity#onBackPressed()} method is set for the click event of the toolbar icon.
  */
 public abstract class ActivityView extends AppCompatActivity {
 	
@@ -45,13 +45,13 @@ public abstract class ActivityView extends AppCompatActivity {
 	}
 	
 	/**
-	 * @return Görünüm dosyasının id değeri
+	 * @return The id of the view file
 	 */
 	@LayoutRes
 	protected abstract int getLayoutId();
 	
 	/**
-	 * Görünüm dosyası set edildikten (ve varsa toolbar ayarlandıktan) hemen sonra çağrılır.
+	 * Invoked immediately after the view file (and the toolbar, if any) has been set.
 	 */
 	protected abstract void onCreate();
 	
@@ -80,6 +80,14 @@ public abstract class ActivityView extends AppCompatActivity {
 		return this::onBackPressed;
 	}
 	
+	/**
+	 * Returns the view with the given id in the given view.
+	 *
+	 * @param view The view to find the view in it
+	 * @param id   The id of the view
+	 * @param <T>  Type of the view
+	 * @return View
+	 */
 	protected final <T extends View> T findView(@NotNull View view, int id) {
 		
 		return view.findViewById(id);

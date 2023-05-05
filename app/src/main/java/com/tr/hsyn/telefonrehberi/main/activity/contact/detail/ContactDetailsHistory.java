@@ -19,14 +19,13 @@ import com.tr.hsyn.execution.Work;
 import com.tr.hsyn.gate.AutoGate;
 import com.tr.hsyn.gate.DigiGate;
 import com.tr.hsyn.gate.Gate;
-import com.tr.hsyn.key.Key;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.telefonrehberi.R;
+import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.data.History;
 import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.history.ActivityCallList;
 import com.tr.hsyn.telefonrehberi.main.code.cast.PermissionHolder;
 import com.tr.hsyn.telefonrehberi.main.code.contact.act.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
-import com.tr.hsyn.xbox.Blue;
 import com.tr.hsyn.xlog.xlog;
 
 import java.util.ArrayList;
@@ -56,21 +55,19 @@ import java.util.stream.Collectors;
 public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implements PermissionHolder {
 	
 	/** Request code for call log permissions */
-	protected final int        RC_CALL_LOG     = 45;
+	protected final int     RC_CALL_LOG     = 45;
 	/** Gate for accessing the history data */
-	private final   Gate       gateHistory     = DigiGate.newGate(1000L, this::hideProgress);
+	private final   Gate    gateHistory     = DigiGate.newGate(1000L, this::hideProgress);
 	/** Gate used to block input while showing history. */
-	private final   Gate       gateShowHistory = AutoGate.newGate(1000L);
-	/** The list of call records for this contact. */
-	protected       List<Call> history;
+	private final   Gate    gateShowHistory = AutoGate.newGate(1000L);
 	/** Flag indicating whether the view for the contact history has been added to the UI. */
-	private         boolean    historyViewAdded;
+	private         boolean historyViewAdded;
 	/** Flag indicating whether we need to show the history (after receiving call log permissions). */
-	private         boolean    isNewHistory    = true;
+	private         boolean isNewHistory    = true;
 	/** Flag indicating whether call log permissions have been requested. */
-	private         boolean    needShowHistory;
+	private         boolean needShowHistory;
 	/** Flag indicating whether a new history needs to be loaded. */
-	private         boolean    isPermissionsRequested;
+	private         boolean isPermissionsRequested;
 	
 	/**
 	 * @inheritDoc Prepares this activity for display by loading the call history for the
@@ -152,7 +149,6 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 		xlog.dx("Call history is updated");
 	}
 	
-	
 	/**
 	 * Loads the call history for the contact associated with this activity.
 	 *
@@ -199,7 +195,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 		}
 		
 		//- This is the 'call history' of the selected contact
-		return calls.stream().filter(c -> PhoneNumbers.containsNumber(contact.getData(ContactKey.NUMBERS), c.getNumber())).collect(Collectors.toList());
+		return calls.stream().filter(c -> PhoneNumbers.containsNumber(contact.getData(ContactKey.NUMBERS), c.getNumber())).sorted((x, y) -> Long.compare(y.getTime(), x.getTime())).collect(Collectors.toList());
 	}
 	
 	/**
@@ -242,6 +238,8 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 			
 			needShowHistory = false;
 			
+			List<Call> history = contact.getData(ContactKey.CALL_HISTORY);
+			
 			if (history != null) {
 				
 				if (!history.isEmpty()) {
@@ -274,7 +272,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 			xlog.dx("Show call history for : %s", contact.getName());
 			
 			//- Geçmişi kaydet
-			Blue.box(Key.CALL_HISTORY, history);
+			//Blue.box(Key.CALL_HISTORY, history);
 			
 			Runny.run(() -> {
 				
@@ -347,8 +345,9 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 		Work.on(this::getCallHistory)
 				.onSuccess(h -> {
 					
-					history      = h;
 					isNewHistory = true;
+					contact.setData(ContactKey.CALL_HISTORY, h);
+					contact.setData(ContactKey.HISTORY, History.of(contact));
 					
 					onShowHistory(null);
 					onHistoryLoad();
@@ -366,8 +365,9 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	 */
 	private void addContactHistoryView(@NonNull List<Call> history) {
 		
-		this.history = history;
-		Blue.box(Key.CALL_HISTORY, history);
+		contact.setData(ContactKey.CALL_HISTORY, history);
+		contact.setData(ContactKey.HISTORY, History.of(contact));
+		//Blue.box(Key.CALL_HISTORY, history);
 		
 		//- Kişinin geçmişine yönlendirecek olan görünüm sadece bir kez eklenmeli
 		if (!historyViewAdded) {

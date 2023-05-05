@@ -10,7 +10,7 @@ import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.message.Show;
 import com.tr.hsyn.metadata.Creator;
-import com.tr.hsyn.metadata.Reason;
+import com.tr.hsyn.metadata.Description;
 import com.tr.hsyn.selector.ItemSelector;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.xbox.Blue;
@@ -19,12 +19,12 @@ import java.util.List;
 
 
 @Creator("hsyn_tr")
-@Reason("Rastgele arama kayıtları üretmek. Üretim, " +
-        "rehberdeki kişiler üzerinden yapılır. Bu kişiler isteğe göre seçilebilir. " +
-        "Üretilen arama kayıtları sistem kayıtlarına eklenir. " +
-        "TelefonRehberi kendi ürettiği kayıtlarla gerçek kayıtları " +
-        "birbirinden ayırt edebilir ancak sistem bunu ayırt edemez. Sisteme göre, " +
-        "üretilen kayıtların gerçek kayıtlardan hiçbir farkı yoktur.")
+@Description("Sınıfın amacı rastgele arama kayıtları üretmek. Üretim, " +
+             "rehberdeki kişiler üzerinden yapılır. Bu kişiler isteğe göre seçilebilir. " +
+             "Üretilen arama kayıtları sistem kayıtlarına eklenir. " +
+             "TelefonRehberi kendi ürettiği kayıtlarla gerçek kayıtları " +
+             "birbirinden ayırt edebilir ancak sistem bunu ayırt edemez. Sisteme göre, " +
+             "üretilen kayıtların gerçek kayıtlardan hiçbir farkı yoktur.")
 public class RandomCallsActivity extends RandomCallsActivityGeneration {
 	
 	protected ItemSelector<CharSequence> inGenerationSelector;
@@ -70,18 +70,18 @@ public class RandomCallsActivity extends RandomCallsActivityGeneration {
 		}
 	}
 	
+	@NonNull
+	@Override
+	protected List<Contact> getContacts() {
+		
+		return Lister.listOf(Blue.<List<Contact>>getObject(Key.CONTACTS));
+	}
+	
 	@Override
 	protected void onClickEditTextGeneration(View view) {
 		
 		super.onClickEditTextGeneration(view);
 		
 		rutine.delay();
-	}
-	
-	@NonNull
-	@Override
-	protected List<Contact> getContacts() {
-		
-		return Lister.listOf(Blue.<List<Contact>>getObject(Key.CONTACTS));
 	}
 }

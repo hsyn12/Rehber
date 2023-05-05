@@ -4,7 +4,7 @@ package com.tr.hsyn.telefonrehberi.main.activity.contact.detail.data;
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.contactdata.Contact;
-import com.tr.hsyn.datakey.DataKey;
+import com.tr.hsyn.telefonrehberi.main.code.contact.act.ContactKey;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -19,10 +19,6 @@ import java.util.stream.Collectors;
  */
 public interface History {
 	
-	/**
-	 * Data key for the call history of a contact
-	 */
-	DataKey CALL_HISTORY_KEY = DataKey.of(3434, "call_history");
 	
 	/**
 	 * Creates a new history of a contact
@@ -53,7 +49,7 @@ public interface History {
 	 */
 	default List<Call> getHistory() {
 		
-		return getContact().getData(CALL_HISTORY_KEY);
+		return getContact().getData(ContactKey.CALL_HISTORY);
 	}
 	
 	/**

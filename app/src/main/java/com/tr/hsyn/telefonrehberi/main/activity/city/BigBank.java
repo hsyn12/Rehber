@@ -58,6 +58,6 @@ public abstract class BigBank extends NorthBridge {
 	private @NotNull
 	List<Contact> loadContacts() {
 		
-		return Contacts.getSimpleContactList(getContentResolver());
+		return Contacts.getContacts(getContentResolver());
 	}
 }

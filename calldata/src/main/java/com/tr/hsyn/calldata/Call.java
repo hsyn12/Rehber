@@ -19,7 +19,7 @@ public class Call extends DatBoxer implements CallContact, CallTime, CallDuratio
 	//- Sistemden alınacak bilgiler
 	private       String name;
 	/**
-	 * Eksra bilgiler.
+	 * Extra info
 	 */
 	private       String extra;//- random ve trackType burada olacak
 	//-------------------------------
@@ -95,5 +95,16 @@ public class Call extends DatBoxer implements CallContact, CallTime, CallDuratio
 		return time;
 	}
 	
-	
+	@Override
+	public String toString() {
+		
+		return "Call{" +
+		       "number='" + number + '\'' +
+		       ", type=" + type +
+		       ", time=" + time +
+		       ", duration=" + duration +
+		       ", name='" + name + '\'' +
+		       ", extra='" + extra + '\'' +
+		       '}';
+	}
 }

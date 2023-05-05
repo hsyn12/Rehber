@@ -114,36 +114,6 @@ public class CallDatabase extends DBBase<Call> implements DBCalls {
 		return "f";
 	}
 	
-	@Override
-	@NonNull
-	public Values contentValuesOf(@NonNull final Call call) {
-		
-		Values values = new Values();
-		
-		if (call.getName() != null) values.put(NAME, call.getName());
-		else values.putNull(Values.TYPE_STRING, NAME);
-		
-		values.put(NUMBER, call.getNumber());
-		values.put(DATE, call.getTime());
-		values.put(TYPE, call.getType());
-		values.put(DURATION, call.getDuration());
-		values.put(CONTACT_ID, call.getLong(CallKey.CONTACT_ID, 0L));
-		values.put(DELETED_DATE, call.getLong(CallKey.DELETED_DATE, 0L));
-		values.put(RINGING_DURATION, call.getLong(CallKey.RINGING_DURATION, 0L));
-		values.put(EXTRA, call.getExtra());
-		
-		if (call.exist(CallKey.NOTE)) //noinspection ConstantConditions
-			values.put(NOTE, call.getData(CallKey.NOTE));
-		else values.putNull(Values.TYPE_STRING, NOTE);
-		
-		Set<Label> labels = call.getData(CallKey.LABELS);
-		
-		if (labels == null || labels.isEmpty()) values.putNull(Values.TYPE_STRING, LABELS);
-		else values.put(LABELS, getLabels(labels));
-		
-		return values;
-	}
-	
 	private int getTrackType(@NotNull Call call) {
 		
 		String extra = call.getExtra();
@@ -193,6 +163,36 @@ public class CallDatabase extends DBBase<Call> implements DBCalls {
 		return labelSet;
 	}
 	
+	@Override
+	@NonNull
+	public Values contentValuesOf(@NonNull final Call call) {
+		
+		Values values = new Values();
+		
+		if (call.getName() != null) values.put(NAME, call.getName());
+		else values.putNull(Values.TYPE_STRING, NAME);
+		
+		values.put(NUMBER, call.getNumber());
+		values.put(DATE, call.getTime());
+		values.put(TYPE, call.getType());
+		values.put(DURATION, call.getDuration());
+		values.put(CONTACT_ID, call.getLong(CallKey.CONTACT_ID, 0L));
+		values.put(DELETED_DATE, call.getLong(CallKey.DELETED_DATE, 0L));
+		values.put(RINGING_DURATION, call.getLong(CallKey.RINGING_DURATION, 0L));
+		values.put(EXTRA, call.getExtra());
+		
+		if (call.exist(CallKey.NOTE)) //noinspection ConstantConditions
+			values.put(NOTE, call.getData(CallKey.NOTE));
+		else values.putNull(Values.TYPE_STRING, NOTE);
+		
+		Set<Label> labels = call.getData(CallKey.LABELS);
+		
+		if (labels == null || labels.isEmpty()) values.putNull(Values.TYPE_STRING, LABELS);
+		else values.put(LABELS, getLabels(labels));
+		
+		return values;
+	}
+	
 	/**
 	 * Arama kayıtları bilgileri için veri tabanında oluşturulacak kolonlarını ve bazı temel bilgileri tanımlar.
 	 */
@@ -204,16 +204,30 @@ public class CallDatabase extends DBBase<Call> implements DBCalls {
 		
 		@NonNull
 		@Override
+		public String getDatabaseName() {
+			
+			return DATABASE;
+		}
+		
+		@Override
+		public @NotNull
+		String getPrimaryKey() {
+			
+			return DATE;
+		}
+		
+		@NonNull
+		@Override
 		public String getTableName() {
 			
 			return TABLE;
 		}
 		
-		@NonNull
+		@NotNull
 		@Override
-		public String getDatabaseName() {
+		public String toString() {
 			
-			return DATABASE;
+			return String.format("DB {%s}", Arrays.toString(getColumns()));
 		}
 		
 		@NonNull
@@ -224,7 +238,7 @@ public class CallDatabase extends DBBase<Call> implements DBCalls {
 					
 					DB.text(NAME),
 					DB.text(NUMBER),
-					DB.number(DATE).primaryKey(),
+					DB.number(DATE).primaryKey(false),
 					DB.number(TYPE),
 					DB.number(DURATION),
 					DB.text(CONTACT_ID),
@@ -234,20 +248,6 @@ public class CallDatabase extends DBBase<Call> implements DBCalls {
 					DB.text(EXTRA),
 					DB.text(LABELS)
 			};
-		}
-		
-		@Override
-		public @NotNull
-		String getPrimaryKey() {
-			
-			return DATE;
-		}
-		
-		@NotNull
-		@Override
-		public String toString() {
-			
-			return String.format("DB {%s}", Arrays.toString(getColumns()));
 		}
 	}
 }

@@ -3,11 +3,10 @@ package com.tr.hsyn.telefonrehberi.main.activity.contact.detail.comment;
 
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.contactdata.Contact;
-import com.tr.hsyn.key.Key;
 import com.tr.hsyn.telefonrehberi.main.code.comment.Commentator;
 import com.tr.hsyn.telefonrehberi.main.code.comment.ContactCommentStore;
+import com.tr.hsyn.telefonrehberi.main.code.contact.act.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
-import com.tr.hsyn.xbox.Blue;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -36,13 +35,6 @@ public interface ContactCommentator extends Commentator<Contact> {
 		
 		return Over.Contacts.getContacts();
 	}
-	
-	/**
-	 * Returns the contact for which the comment is being generated.
-	 *
-	 * @return current selected contact
-	 */
-	Contact getContact();
 	
 	/**
 	 * Returns the color associated with the given resource ID.
@@ -79,10 +71,17 @@ public interface ContactCommentator extends Commentator<Contact> {
 	 *
 	 * @return the history of the contact
 	 */
-	default List<Call> getHistory() {
+	default List<Call> getCallHistory() {
 		
-		return Blue.getObject(Key.CALL_HISTORY);
+		return getContact().getData(ContactKey.CALL_HISTORY);
 	}
+	
+	/**
+	 * Returns the contact for which the comment is being generated.
+	 *
+	 * @return current selected contact
+	 */
+	Contact getContact();
 	
 	/**
 	 * Return the comment about the last call.

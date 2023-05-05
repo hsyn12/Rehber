@@ -40,7 +40,7 @@ public abstract class RandomCallsActivityGeneration extends RandomCallsActivityM
 		if (isServiceWorking()) {
 			
 			buttonStartGeneration.setEnabled(false);
-			randomCallService.setForeground(false);
+			randomCallService.setFore(false);
 		}
 	}
 	
@@ -140,6 +140,22 @@ public abstract class RandomCallsActivityGeneration extends RandomCallsActivityM
 		Runny.run(() -> textCurrentProgress.animateText(getString(R.string.saving)), 300);
 	}
 	
+	/**
+	 * Üretim bilinmeyen bir sebeple durdu
+	 */
+	private void generationStop() {
+		
+		
+	}
+	
+	/**
+	 * Kullanıcı tarafından durduruldu
+	 */
+	private void generationStopped() {
+		
+		
+	}
+	
 	@SuppressLint({"DefaultLocale", "SetTextI18n"})
 	@Override
 	public void onProgress(@NonNull Call value, int currentProgress, int total) {
@@ -159,21 +175,5 @@ public abstract class RandomCallsActivityGeneration extends RandomCallsActivityM
 			
 			textProgress.setText("100 %");
 		}
-	}
-	
-	/**
-	 * Üretim bilinmeyen bir sebeple durdu
-	 */
-	private void generationStop() {
-		
-		
-	}
-	
-	/**
-	 * Kullanıcı tarafından durduruldu
-	 */
-	private void generationStopped() {
-		
-		
 	}
 }

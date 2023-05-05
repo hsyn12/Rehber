@@ -44,70 +44,110 @@ import java.util.function.Consumer;
 
 
 /**
- * Rastgele arama kaydı üretir ve sisteme ekler.
- * Bu servis Rehber ve arama kayıtları ile ilgili
- * izinlerin sağlandığını varsayar ve hiç bir izin kontrolü yapmaz.
+ * Generates random calls and saves them in the system and database.
+ * There is not any permission control in this service.
+ * So, you should already have taken the permissions before using this service.
+ * And this is why you should use this service within {@link RandomCallsActivity}.
+ * Some actions in this service need to the {@link RandomCallsActivity}.
+ *
+ * @author hsyn
+ * @see RandomCallsActivity
  */
 public class RandomCallService extends Service implements GenerationService {
 	
 	/**
-	 * Üretimin durdurulmasını talep eder.
-	 * Bu talep alındığında üretim durdurulur ve
-	 * o ana kadar üretilmiş kayıtlar (varsa) sisteme eklenir.
+	 * This is an action that can be sent to the service by {@link Service#startService(Intent)}.
+	 * This action is used to stop the service.
 	 */
 	public static final  String                                  ACTION_STOP_GENERATION = "action_stop_generation";
+	/**
+	 * This is an action that can be sent to the service by {@link Service#startService(Intent)}.
+	 * This action is used to open the {@link RandomCallsActivity}.
+	 */
 	public static final  String                                  ACTION_OPEN_ACTIVITY   = "action_open_activity";
+	/**
+	 * This observable object is used to determine if the service is running or not.
+	 * And it is used to change the service running state.
+	 */
 	private static final Observable<Boolean>                     running                = new Observe<>(false);
 	/**
-	 * Servis ön planda çalışıyorsa {@code true} değerindedir. Varsayılan {@code false} değeridir
-	 * ve servis arka planda çalışır.
+	 * Manages the service running state, background or foreground.
 	 */
 	public final         AtomicBoolean                           isForeground           = new AtomicBoolean(false);
 	/**
-	 * Servis, hem kendi durumunu hem de yapılan iş ile ilgili durumu
-	 * mesaj olarak bu nesnede tutar. İlgili kişiler mesajları buradan okuyabilir.
+	 * Messages that related to the service workings.
 	 */
 	public final         StateMessages                           stateMessages          = new StateMessages();
 	/**
-	 * Üretilecek toplam arama kaydı sayısı
+	 * Total progress count.
 	 */
 	private final        AtomicInteger                           totalProgress          = new AtomicInteger();
 	/**
-	 * Üretilen arama kaydı sayısı
+	 * Current progress counter.
 	 */
 	private final        AtomicInteger                           currentProgress        = new AtomicInteger();
 	/**
-	 * Üretilen arama kayıtları
+	 * Generated calls
 	 */
 	private final        List<Call>                              generatedCallList      = new ArrayList<>();
 	/**
-	 * Üretim başlamış ve devam etmekte ise {@code true} değerindedir.
+	 * <code>true</code> if the service is working in generation
 	 */
 	private final        Observable<Boolean>                     isWorking              = new Observe<>(false);
+	/**
+	 * ID of the notification.
+	 */
 	private final        int                                     NOTIFICATION_ID        = 810412;
+	/**
+	 * ID of the channel.
+	 */
 	private final        String                                  CHANNEL_ID             = "8112044796";
+	/**
+	 * Listener for the work in progress.
+	 */
 	private final        AtomicReference<ProgressListener<Call>> progressListener       = new AtomicReference<>(null);
 	/**
-	 * Arama kaydı üreticisi
+	 * Call Generator
 	 */
 	private              Generator<Call>                         callGenerator;
+	/**
+	 * Intent for the stop service
+	 */
 	private              Intent                                  stopIntent;
+	/**
+	 * Intent for the open activity
+	 */
 	private              Intent                                  openActivityIntent;
+	/**
+	 * Notification manager service
+	 */
 	private              NotificationManager                     notificationManager;
 	private              Notifications                           notifications;
 	/**
-	 * 0 tamamlandı
-	 * 1 durduruldu
-	 * 2 durdu
+	 * 0 - completed<br>
+	 * 1 - has been stopped<br>
+	 * 2 - stopped unknown<br>
+	 * 3 - error<br>
 	 */
 	private              int                                     completionType         = -1;
+	/**
+	 * Callback for the mission completed
+	 */
 	private              Consumer<Integer>                       onMissionCompleted;
 	
+	/**
+	 * Listen to the service running state
+	 *
+	 * @param listener listener
+	 */
 	public static void listenRunning(@Nullable Observer<Boolean> listener) {
 		
 		running.setObserver(listener);
 	}
 	
+	/**
+	 * @return <code>true</code> if the service is running
+	 */
 	public static boolean isRunning() {
 		
 		return running.get();
@@ -153,6 +193,20 @@ public class RandomCallService extends Service implements GenerationService {
 		}
 		
 		return START_NOT_STICKY;
+	}
+	
+	@Override
+	public void onDestroy() {
+		
+		running.set(false);
+		super.onDestroy();
+	}
+	
+	@Override
+	public IBinder onBind(Intent intent) {
+		
+		stateMessages.add("Servis bağlanıyor");
+		return new RandomCallsBinder();
 	}
 	
 	@Override
@@ -238,7 +292,7 @@ public class RandomCallService extends Service implements GenerationService {
 					xlog.d("Progress not listening");
 				}
 				
-			}//- While loop end here
+			}//- While the loop ends here
 			
 			if (currentProgress.get() >= args.getCount()) {//- Umulan çıkış
 				
@@ -272,29 +326,15 @@ public class RandomCallService extends Service implements GenerationService {
 	}
 	
 	@Override
-	public IBinder onBind(Intent intent) {
+	public boolean isInGeneration() {
 		
-		stateMessages.add("Servis bağlanıyor");
-		return new RandomCallsBinder();
+		return isWorking.get();
 	}
 	
 	@Override
-	public void onDestroy() {
+	public void onMissionCompleted(Consumer<Integer> consumer) {
 		
-		running.set(false);
-		super.onDestroy();
-	}
-	
-	@Override
-	public void listenServiceWorking(@Nullable Observer<Boolean> listener) {
-		
-		isWorking.setObserver(listener);
-	}
-	
-	@Override
-	public void listenGeneration(ProgressListener<Call> progressListener) {
-		
-		this.progressListener.set(progressListener);
+		this.onMissionCompleted = consumer;
 	}
 	
 	/**
@@ -324,24 +364,11 @@ public class RandomCallService extends Service implements GenerationService {
 				.addAction(R.drawable.delete_icon, getString(R.string.stop), PendingIntent.getService(this, 1, stopIntent, 0));
 	}
 	
-	@Override
-	public boolean isInGeneration() {
-		
-		return isWorking.get();
-	}
-	
-	@Override
-	public void setForeground(boolean isForeground) {
-		
-		if (this.isForeground.get() != isForeground) {
-			
-			if (isForeground) startFore();
-			else stopFore();
-			
-			this.isForeground.set(isForeground);
-		}
-	}
-	
+	/**
+	 * Called when the generation is completed
+	 *
+	 * @param exception Exception if occurred or <code>null</code>
+	 */
 	private void onGenerationCompleted(@Nullable Exception exception) {
 		
 		xlog.d("Üretilen arama kaydı sayısı : %d", generatedCallList.size());
@@ -381,21 +408,50 @@ public class RandomCallService extends Service implements GenerationService {
 			xlog.d("Hiç arama kaydı üretilmedi");
 		}
 		
-		setForeground(false);
+		setFore(false);
 		stopSelf();
 	}
 	
+	/**
+	 * Sets the service to foreground or background
+	 *
+	 * @param isForeground <code>true</code> if foreground
+	 */
 	@Override
-	public void onMissionCompleted(Consumer<Integer> consumer) {
+	public void setFore(boolean isForeground) {
 		
-		this.onMissionCompleted = consumer;
+		if (this.isForeground.get() != isForeground) {
+			
+			if (isForeground) startFore();
+			else stopFore();
+			
+			this.isForeground.set(isForeground);
+		}
 	}
 	
+	@Override
+	public void listenServiceWorking(@Nullable Observer<Boolean> listener) {
+		
+		isWorking.setObserver(listener);
+	}
+	
+	@Override
+	public void listenGeneration(ProgressListener<Call> progressListener) {
+		
+		this.progressListener.set(progressListener);
+	}
+	
+	/**
+	 * Sets the service to foreground
+	 */
 	private void startFore() {
 		
 		startForeground(NOTIFICATION_ID, getNotBuilder().build());
 	}
 	
+	/**
+	 * Stops the service from foreground to background
+	 */
 	private void stopFore() {
 		
 		stopForeground(true);
@@ -417,6 +473,9 @@ public class RandomCallService extends Service implements GenerationService {
 		
 	}
 	
+	/**
+	 * Binder class for the service.
+	 */
 	public final class RandomCallsBinder extends Binder implements ServiceReference {
 		
 		@Override

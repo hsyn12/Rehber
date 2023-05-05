@@ -19,6 +19,7 @@ import com.tr.hsyn.perfectsort.PerfectSort;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.telefonrehberi.main.code.contact.act.handler.MimeTypeHandler;
 import com.tr.hsyn.telefonrehberi.main.dev.contact.system.ContactColumns;
+import com.tr.hsyn.xlog.xlog;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -106,7 +107,7 @@ public interface Contacts extends ContactColumns {
 			var picCol       = cursor.getColumnIndex(PROJECTION[2]);
 			// endregion
 			
-			// region Taking data in while loop and creating contact object
+			// region Taking data in while loop and creating a contact object
 			
 			List<Contact> contacts = new ArrayList<>(cursor.getCount());
 			
@@ -161,7 +162,7 @@ public interface Contacts extends ContactColumns {
 			var bigPicCol    = cursor.getColumnIndex(PROJECTION[3]);
 			// endregion
 			
-			// region Taking data in while loop and creating contact object
+			// region Taking data in while loop and creating a contact object
 			
 			List<Contact> contacts = new ArrayList<>(cursor.getCount());
 			
@@ -171,63 +172,24 @@ public interface Contacts extends ContactColumns {
 				                          cursor.getString(nameCol),
 				                          cursor.getString(picCol));
 				
+				var bigPic = cursor.getString(bigPicCol);
+				contact.setData(ContactKey.BIG_PIC, bigPic);
 				setContact(resolver, contact);
 				contacts.add(contact);
 			}
 			// endregion
 			
 			cursor.close();
+			
+			//xlog.d("Found %d contacts", contacts.size());
+			
+			contacts.sort(PerfectSort.comparator(Contact::getName));
+			
 			return contacts;
 		}
-		
+		xlog.d("No contact");
 		//- return me
 		return new ArrayList<>(0);
-	}
-	
-	/**
-	 * Creates a new contact intent.
-	 *
-	 * @return the new contact intent
-	 */
-	@NonNull
-	static Intent createNewContactIntent() {
-		
-		Intent intent = new Intent(ContactsContract.Intents.Insert.ACTION);
-		intent.setType(ContactsContract.RawContacts.CONTENT_TYPE);
-		intent.putExtra("finishActivityOnSaveCompleted", true);
-		
-		return intent;
-	}
-	
-	/**
-	 * Creates an Intent to launch the Android Contacts app with a new contact form.
-	 * Takes in a phone number as a parameter and adds it to the Intent as an extra, so that it will be pre-filled in the contact form when the user launches it.
-	 *
-	 * @param number Phone number
-	 * @return New {@code Intent}
-	 */
-	@NonNull
-	static Intent createNewContactIntent(@NotNull String number) {
-		
-		Intent intent = createNewContactIntent();
-		intent.putExtra(ContactsContract.Intents.Insert.PHONE, number);
-		return intent;
-	}
-	
-	/**
-	 * Creates an Intent to add a new contact to the system contact book.
-	 *
-	 * @param name   The name of the new contact
-	 * @param number The phone number of the new contact.
-	 * @return An Intent to add a new contact to the system contact book.
-	 */
-	@NonNull
-	static Intent createNewContactIntent(@NotNull String name, @NotNull String number) {
-		
-		Intent intent = createNewContactIntent();
-		intent.putExtra(ContactsContract.Intents.Insert.NAME, name);
-		intent.putExtra(ContactsContract.Intents.Insert.PHONE, number);
-		return intent;
 	}
 	
 	static void setContact(@NotNull final ContentResolver contentResolver, @NotNull Contact contact) {
@@ -301,12 +263,79 @@ public interface Contacts extends ContactColumns {
 		if (!events.isEmpty()) contact.setData(ContactKey.EVENTS, events);
 	}
 	
+	private static void addNumbers(@NotNull Cursor cursor, int data1Column, @NotNull List<String> numbers) {
+		
+		final int numberLength = 13;
+		var       number       = PhoneNumbers.formatNumber(cursor.getString(data1Column), numberLength);
+		
+		var notExist = numbers.stream()
+				.noneMatch(num -> PhoneNumbers.equals(number, num));
+		
+		if (notExist) numbers.add(number);
+	}
+	
+	@SuppressLint("Range")
+	private static void addEvents(@NotNull Cursor cursor, String data1, @NotNull List<? super ContactDat> events) {
+		
+		int type = cursor.getInt(cursor.getColumnIndex(DATA_COLUMNS[2]));
+		
+		events.add(ContactDat.newData(data1, type));
+	}
+	
+	/**
+	 * Creates an Intent to launch the Android Contacts app with a new contact form.
+	 * Takes in a phone number as a parameter and adds it to the Intent as an extra, so that it will be pre-filled in the contact form when the user launches it.
+	 *
+	 * @param number Phone number
+	 * @return New {@code Intent}
+	 */
+	@NonNull
+	static Intent createNewContactIntent(@NotNull String number) {
+		
+		Intent intent = createNewContactIntent();
+		intent.putExtra(ContactsContract.Intents.Insert.PHONE, number);
+		return intent;
+	}
+	
+	/**
+	 * Creates a new contact intent.
+	 *
+	 * @return the new contact intent
+	 */
+	@NonNull
+	static Intent createNewContactIntent() {
+		
+		Intent intent = new Intent(ContactsContract.Intents.Insert.ACTION);
+		intent.setType(ContactsContract.RawContacts.CONTENT_TYPE);
+		intent.putExtra("finishActivityOnSaveCompleted", true);
+		
+		return intent;
+	}
+	
+	/**
+	 * Creates an Intent to add a new contact to the system contact book.
+	 *
+	 * @param name   The name of the new contact
+	 * @param number The phone number of the new contact.
+	 * @return An Intent to add a new contact to the system contact book.
+	 */
+	@NonNull
+	static Intent createNewContactIntent(@NotNull String name, @NotNull String number) {
+		
+		Intent intent = createNewContactIntent();
+		intent.putExtra(ContactsContract.Intents.Insert.NAME, name);
+		intent.putExtra(ContactsContract.Intents.Insert.PHONE, number);
+		return intent;
+	}
+	
 	public static void setContactDetails(@NotNull final ContentResolver contentResolver, @NotNull Contact contact, @NotNull MimeTypeHandler handler) {
 		
 		var uri    = Contents.getContactEntityUri(contact.getContactId());
 		var cursor = contentResolver.query(uri, null, null, null, null);
 		
-		if (cursor == null) {return;}
+		if (cursor == null) {
+			return;
+		}
 		
 		if (!cursor.moveToFirst()) {
 			
@@ -357,25 +386,6 @@ public interface Contacts extends ContactColumns {
 		handler.applyResult(contact);
 	}
 	
-	private static void addNumbers(@NotNull Cursor cursor, int data1Column, @NotNull List<String> numbers) {
-		
-		final int numberLength = 13;
-		var       number       = PhoneNumbers.formatNumber(cursor.getString(data1Column), numberLength);
-		
-		var notExist = numbers.stream()
-				.noneMatch(num -> PhoneNumbers.equals(number, num));
-		
-		if (notExist) numbers.add(number);
-	}
-	
-	@SuppressLint("Range")
-	private static void addEvents(@NotNull Cursor cursor, String data1, @NotNull List<? super ContactDat> events) {
-		
-		int type = cursor.getInt(cursor.getColumnIndex(DATA_COLUMNS[2]));
-		
-		events.add(ContactDat.newData(data1, type));
-	}
-	
 	/**
 	 * Verilen contact id değerine ait kişi için belirli bir mimetype ile kaydedilmiş bilgileri toplar.<br>
 	 * Bununla bir kişinin telefon numaraları veya email adresleri alınabilir.<br>
@@ -402,7 +412,7 @@ public interface Contacts extends ContactColumns {
 			
 			int          data1Col    = cursor.getColumnIndex(DATA_COLUMNS[0]);
 			int          mimeTypeCol = cursor.getColumnIndex(DATA_COLUMNS[1]);
-			List<String> datas       = new ArrayList<>(cursor.getCount());
+			List<String> data        = new ArrayList<>(cursor.getCount());
 			
 			while (cursor.moveToNext()) {
 				
@@ -412,12 +422,12 @@ public interface Contacts extends ContactColumns {
 					
 					var data1 = cursor.getString(data1Col);
 					
-					if (data1 != null) datas.add(data1);
+					if (data1 != null) data.add(data1);
 				}
 			}
 			
 			cursor.close();
-			return datas;
+			return data;
 		}
 		
 		return new ArrayList<>(0);

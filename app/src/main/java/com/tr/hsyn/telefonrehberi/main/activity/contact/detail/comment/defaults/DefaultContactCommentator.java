@@ -28,6 +28,7 @@ import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.data.History;
 import com.tr.hsyn.telefonrehberi.main.code.call.cast.Group;
 import com.tr.hsyn.telefonrehberi.main.code.comment.ContactCommentStore;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.ShowCallsDialog;
+import com.tr.hsyn.telefonrehberi.main.code.contact.act.ContactKey;
 import com.tr.hsyn.text.Span;
 import com.tr.hsyn.text.Spanner;
 import com.tr.hsyn.text.Spans;
@@ -84,17 +85,6 @@ public class DefaultContactCommentator implements ContactCommentator {
 	}
 	
 	/**
-	 * Returns the current contact being commented on.
-	 *
-	 * @return the current contact
-	 */
-	@Override
-	public Contact getContact() {
-		
-		return contact;
-	}
-	
-	/**
 	 * Returns the comment store being used by this commentator.
 	 *
 	 * @return the comment store
@@ -115,12 +105,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 	public @NotNull CharSequence commentOn(@NotNull Contact contact) {
 		
 		this.contact = contact;
-		this.history = History.of(contact);
-		contact.setData(History.CALL_HISTORY_KEY, getHistory());
-		// Sort the history by time in descending order, 
-		// therefore, the most recent call will be the first, 
-		// the oldest call will be the last
-		history.sort((x, y) -> Long.compare(y.getTime(), x.getTime()));
+		this.history = contact.getData(ContactKey.HISTORY);
 		
 		//if history null or empty, no need to go any further
 		if (history != null)
@@ -129,6 +114,17 @@ public class DefaultContactCommentator implements ContactCommentator {
 		else comment.append(commentStore.historyNotFound());
 		
 		return comment;
+	}
+	
+	/**
+	 * Returns the current contact being commented on.
+	 *
+	 * @return the current contact
+	 */
+	@Override
+	public Contact getContact() {
+		
+		return contact;
 	}
 	
 	/**
@@ -166,7 +162,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 		Scaler  scaler     = Scaler.createNewScaler(10, 3f);
 		int     scale      = scaler.getQuantity(history.size());
 		Spanner name       = new Spanner();
-		int     clickColor = getColor(com.tr.hsyn.rescolors.R.color.orange_500);
+		int     clickColor = commentStore.getClickColor();
 		
 		if (contact.getName() != null && !PhoneNumbers.isPhoneNumber(contact.getName()))
 			name.append(contact.getName(), Spans.bold(), Spans.foreground(getColor(R.color.purple_500)))

@@ -119,7 +119,7 @@ public class CallAdapter extends RecyclerView.Adapter<CallAdapter.Holder> implem
 		holder.ringingDuration.setText(Files.formatMilliSeconds(call.getLong(CallKey.RINGING_DURATION, 0L)));
 		holder.date.setText(Time.toString(call.getTime(), "d MMMM yyyy HH:mm"));
 		
-		String letter = getLeter(name);
+		String letter = getLetter(name);
 		int    color  = Colors.getRandomColor();
 		
 		Colors.setTintDrawable(holder.action.getDrawable(), color);
@@ -160,13 +160,35 @@ public class CallAdapter extends RecyclerView.Adapter<CallAdapter.Holder> implem
 		return 0;
 	}
 	
+	@Override
+	public void onViewAttachedToWindow(@NonNull @NotNull Holder holder) {
+		
+		super.onViewAttachedToWindow(holder);
+		
+		var selection = holder.selection;
+		var action    = holder.action;
+		
+		if (selectionMode) {
+			
+			selection.setChecked(selectedCalls.contains(calls.get(holder.getAdapterPosition())));
+			
+			selection.setVisibility(View.VISIBLE);
+			action.setVisibility(View.GONE);
+		}
+		else {
+			
+			selection.setVisibility(View.GONE);
+			action.setVisibility(View.VISIBLE);
+		}
+	}
+	
 	private int getTypeIcon(int type) {
 		
 		return Calls.getCallTypeIcon(type);
 	}
 	
 	@NonNull
-	private String getLeter(String str) {
+	private String getLetter(String str) {
 		
 		var l = Stringx.getFirstChar(str);
 		
@@ -210,28 +232,6 @@ public class CallAdapter extends RecyclerView.Adapter<CallAdapter.Holder> implem
 		
 		calls.clear();
 		notifyDataSetChanged();
-	}
-	
-	@Override
-	public void onViewAttachedToWindow(@NonNull @NotNull Holder holder) {
-		
-		super.onViewAttachedToWindow(holder);
-		
-		var selection = holder.selection;
-		var action    = holder.action;
-		
-		if (selectionMode) {
-			
-			selection.setChecked(selectedCalls.contains(calls.get(holder.getAdapterPosition())));
-			
-			selection.setVisibility(View.VISIBLE);
-			action.setVisibility(View.GONE);
-		}
-		else {
-			
-			selection.setVisibility(View.GONE);
-			action.setVisibility(View.VISIBLE);
-		}
 	}
 	
 	public final class Holder extends RecyclerView.ViewHolder {

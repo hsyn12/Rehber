@@ -97,7 +97,7 @@ public class ContactSearch extends ActivityView implements OnSearchViewListener,
 			
 			xlog.d("Selected : %s", selected.getName());
 			
-			Blue.box(Key.CONTACT_SELECTED, selected);
+			Blue.box(Key.SELECTED_CONTACT, selected);
 			openContactDetails();
 		}
 	}
@@ -124,14 +124,6 @@ public class ContactSearch extends ActivityView implements OnSearchViewListener,
 		swipeCallBack.setBgColor(Colors.getPrimaryColor());
 		ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeCallBack);
 		itemTouchHelper.attachToRecyclerView(list);
-	}
-	
-	@Override
-	public void onBackPressed() {
-		
-		super.onBackPressed();
-		
-		Bungee.zoomFast(this);
 	}
 	
 	/**
@@ -179,6 +171,14 @@ public class ContactSearch extends ActivityView implements OnSearchViewListener,
 	public void onSearchViewClosed() {
 		
 		onBackPressed();
+	}
+	
+	@Override
+	public void onBackPressed() {
+		
+		super.onBackPressed();
+		
+		Bungee.zoomFast(this);
 	}
 	
 	@Override

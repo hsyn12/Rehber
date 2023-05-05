@@ -9,11 +9,13 @@ import androidx.annotation.NonNull;
 
 import com.tr.hsyn.bungee.Bungee;
 import com.tr.hsyn.calldata.Call;
+import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.execution.Runny;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.code.call.act.Calls;
 import com.tr.hsyn.telefonrehberi.main.code.call.cast.CallKey;
+import com.tr.hsyn.telefonrehberi.main.code.contact.act.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.code.story.call.CallStory;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
 import com.tr.hsyn.xbox.Blue;
@@ -24,22 +26,25 @@ import java.util.List;
 
 
 /**
- * Bir kişinin arama geçmişi listesinden oluşan bir ekran.
- * Liste {@link Key#CALL_HISTORY} anahtarı ile kayıt edilmiş olmalıdır.
- * Burada sadece silme işlemi yapılabilir.
- * Silinen kayıtlar kalıcı olarak silinir ve
- * {@link Key#REFRESH_CALL_LOG} anahtarına {@code true} değeri atanır.
+ * This is a screen which shows the call history of the selected contact.
+ * Selected contact should have been set by {@link Key#SELECTED_CONTACT} key,
+ * otherwise it will throw an exception.<br>
+ * Any call can be deleted from the list.
+ * If any call is deleted, {@link Key#REFRESH_CALL_LOG} key is set to true.<br>
  */
 public class ActivityCallList extends ActivityCallHistoryView {
 	
 	/**
-	 * Arama kayıtları yöneticisi
+	 * Manager for call log
 	 */
 	private final CallStory          callStory = Blue.getObject(Key.CALL_STORY);
 	/**
-	 * Kişinin arama geçmişi
+	 * Call history list of the selected contact
 	 */
 	private       List<Call>         calls;
+	/**
+	 * Adapter for the list
+	 */
 	private       CallHistoryAdapter adapter;
 	
 	@Override
@@ -47,7 +52,11 @@ public class ActivityCallList extends ActivityCallHistoryView {
 		
 		super.onCreate();
 		
-		calls = Blue.getObject(Key.CALL_HISTORY);
+		Contact contact = Blue.getObject(Key.SELECTED_CONTACT);
+		
+		if (contact == null) throw new IllegalArgumentException("Contact is null");
+		
+		calls = contact.getData(ContactKey.CALL_HISTORY);
 		
 		if (calls == null) calls = new ArrayList<>(0);
 		
@@ -75,7 +84,7 @@ public class ActivityCallList extends ActivityCallHistoryView {
 	}
 	
 	/**
-	 * Kişi rehberde kayıtlıysa ismini kontrol eder ve toolbar'a yazar
+	 * If the contact is registered in the Contacts, it checks its name and writes it to the toolbar.
 	 */
 	private void checkName() {
 		
@@ -102,10 +111,9 @@ public class ActivityCallList extends ActivityCallHistoryView {
 	}
 	
 	/**
-	 * Kullanıcı listedeki bir kaydı silmek istediğinde çağrılır.
-	 * Burada kalıcı bir silme işlemi gerçekleştirilir.
+	 * Called when the user wants to delete a record in the list. A permanent deletion is performed here.
 	 *
-	 * @param index Silinecek kaydın verilen listedeki index değeri
+	 * @param index index of the record to be deleted
 	 */
 	private void onDeleted(int index) {
 		
@@ -137,7 +145,47 @@ public class ActivityCallList extends ActivityCallHistoryView {
 	}
 	
 	/**
-	 * Kullanıcı menüden tüm arama geçmişini silmek istediğinde çağrılır
+	 * Updates the record count when deletion is done
+	 */
+	private void updateSize() {
+		
+		setSubtitle(String.valueOf(calls.size()));
+		
+		if (calls.isEmpty()) emptyView.setVisibility(View.VISIBLE);
+		else emptyView.setVisibility(View.GONE);
+	}
+	
+	@Override
+	public void onBackPressed() {
+		
+		super.onBackPressed();
+		Bungee.slideLeft(this);
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		
+		getMenuInflater().inflate(R.menu.call_history_menu, menu);
+		
+		return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+		
+		if (item.getItemId() == R.id.menu_delete_all) {
+			
+			deleteAll();
+			return true;
+		}
+		
+		
+		return super.onOptionsItemSelected(item);
+	}
+	
+	/**
+	 * Called when the user wants to delete all call history from the menu.
+	 * And permanently deletes all records.
 	 */
 	private void deleteAll() {
 		
@@ -195,44 +243,5 @@ public class ActivityCallList extends ActivityCallHistoryView {
 			Over.CallLog.refreshCallLog();
 			Over.CallLog.Calls.Editor.delete(deletedCalls.toArray(new Call[0]));
 		}, false);
-	}
-	
-	/**
-	 * Silme işlemi yapıldığında kayıt sayısını günceller.
-	 */
-	private void updateSize() {
-		
-		setSubtitle(String.valueOf(calls.size()));
-		
-		if (calls.isEmpty()) emptyView.setVisibility(View.VISIBLE);
-		else emptyView.setVisibility(View.GONE);
-	}
-	
-	@Override
-	public void onBackPressed() {
-		
-		super.onBackPressed();
-		Bungee.slideLeft(this);
-	}
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		
-		getMenuInflater().inflate(R.menu.call_history_menu, menu);
-		
-		return super.onCreateOptionsMenu(menu);
-	}
-	
-	@Override
-	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-		
-		if (item.getItemId() == R.id.menu_delete_all) {
-			
-			deleteAll();
-			return true;
-		}
-		
-		
-		return super.onOptionsItemSelected(item);
 	}
 }

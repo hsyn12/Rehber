@@ -114,6 +114,8 @@ public class ContactDetailsAbout extends ContactDetailsMenu {
 	 */
 	private void onClickHeader(View view) {
 		
+		List<Call> history = contact.getData(ContactKey.CALL_HISTORY);
+		
 		if (history == null) {
 			
 			xlog.i("No call history yet");
@@ -137,7 +139,6 @@ public class ContactDetailsAbout extends ContactDetailsMenu {
 			reComment = false;
 			
 			Runny.run(() -> {
-				
 				
 				ContactCommentator commentator = createCommentator(this);
 				

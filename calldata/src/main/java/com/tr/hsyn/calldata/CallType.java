@@ -39,7 +39,7 @@ public interface CallType {
 	 */
 	int OUTGOING      = 2;
 	/**
-	 * Missed call type
+	 * Missed a call type
 	 */
 	int MISSED        = 3;
 	/**
