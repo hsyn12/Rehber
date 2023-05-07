@@ -192,8 +192,8 @@ dependencies {
 
 	//------------------------- mail -------------------------------------------------------------
 	//def work_version = '1.0.1'
-	implementation 'com.google.android.gms:play-services-auth:20.4.1'
-	implementation('com.google.api-client:google-api-client-android:2.1.2') {
+	implementation 'com.google.android.gms:play-services-auth:20.5.0'
+	implementation('com.google.api-client:google-api-client-android:2.2.0') {
 		exclude group: 'org.apache.httpcomponents'
 	}
 	implementation('com.google.apis:google-api-services-gmail:v1-rev98-1.25.0') {

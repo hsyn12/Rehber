@@ -29,7 +29,7 @@ android {
 dependencies {
 
 	implementation "androidx.appcompat:appcompat:${rootProject.appcompat}"
-	implementation 'com.google.android.material:material:1.7.0'
+	implementation 'com.google.android.material:material:1.8.0'
 	implementation project(path: ':fragment')
 	implementation project(path: ':selection')
 	implementation project(path: ':watch')

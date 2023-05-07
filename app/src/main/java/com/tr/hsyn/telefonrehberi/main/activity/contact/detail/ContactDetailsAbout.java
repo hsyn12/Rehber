@@ -15,9 +15,7 @@ import com.tr.hsyn.execution.Runny;
 import com.tr.hsyn.gate.AutoGate;
 import com.tr.hsyn.gate.Gate;
 import com.tr.hsyn.telefonrehberi.R;
-import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.comment.CommentHelper;
 import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.comment.ContactCommentator;
-import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.comment.defaults.DefaultCommentHelper;
 import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.comment.defaults.DefaultContactCommentator;
 import com.tr.hsyn.telefonrehberi.main.code.comment.ContactCommentStore;
 import com.tr.hsyn.telefonrehberi.main.code.comment.Moody;
@@ -161,17 +159,15 @@ public class ContactDetailsAbout extends ContactDetailsMenu {
 	 */
 	private static @NotNull ContactCommentator createCommentator(@NotNull Activity activity) {
 		
-		Moody moody         = Moody.getMood();
-		var   calls         = Over.CallLog.Calls.getCalls();
-		var   store         = ContactCommentStore.createCommentStore(activity, moody);
-		var   commentHelper = createCommentHelper(store, calls);
-		
+		Moody moody = Moody.getMood();
+		var   calls = Over.CallLog.Calls.getCalls();
+		var   store = ContactCommentStore.createCommentStore(activity, moody);
 		
 		switch (moody) {
 			
 			case DEFAULT:
 				
-				var commentator = new DefaultContactCommentator(store, calls, commentHelper);
+				var commentator = new DefaultContactCommentator(store, calls);
 				xlog.d("Default Commentator");
 				return commentator;
 			case HAPPY:
@@ -179,13 +175,7 @@ public class ContactDetailsAbout extends ContactDetailsMenu {
 		}
 		
 		xlog.d("Wrong moody : %d", moody.ordinal());
-		return new DefaultContactCommentator(store, calls, commentHelper);
-	}
-	
-	@NotNull
-	private static CommentHelper createCommentHelper(ContactCommentStore commentStore, List<Call> calls) {
-		
-		return new DefaultCommentHelper(commentStore, calls);
+		return new DefaultContactCommentator(store, calls);
 	}
 	
 	/**

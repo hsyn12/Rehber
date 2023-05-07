@@ -37,7 +37,7 @@ dependencies {
 	implementation project(path: ':xlog')
 	implementation project(path: ':collection')
 	implementation project(path: ':warnerlabel')
-	implementation 'androidx.annotation:annotation:1.5.0'
+	implementation 'androidx.annotation:annotation:1.6.0'
 	implementation project(path: ':registery')
 	implementation project(path: ':identity')
 	annotationProcessor project(path: ':warnerbros')

@@ -4,6 +4,7 @@ package com.tr.hsyn.telefonrehberi.main.activity.contact.detail.comment.defaults
 import android.view.View;
 
 import com.tr.hsyn.calldata.Call;
+import com.tr.hsyn.calldata.CallType;
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.contactdata.Contact;
@@ -20,7 +21,6 @@ import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.code.android.Res;
 import com.tr.hsyn.telefonrehberi.code.android.dialog.ShowCall;
 import com.tr.hsyn.telefonrehberi.code.call.CallOver;
-import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.comment.CommentHelper;
 import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.comment.ContactCommentator;
 import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.comment.dialog.MostCallDialog;
 import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.comment.dialog.MostCallItemViewData;
@@ -39,6 +39,7 @@ import com.tr.hsyn.xlog.xlog;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -53,7 +54,6 @@ public class DefaultContactCommentator implements ContactCommentator {
 	 * All generated comments by the commentator will be appended into this object
 	 */
 	protected final Spanner             comment = new Spanner();
-	protected final CommentHelper       commentHelper;
 	/**
 	 * The list of all call log calls
 	 */
@@ -77,11 +77,10 @@ public class DefaultContactCommentator implements ContactCommentator {
 	 *
 	 * @param commentStore the comment store to be used by this commentator
 	 */
-	public DefaultContactCommentator(ContactCommentStore commentStore, List<Call> calls, CommentHelper commentHelper) {
+	public DefaultContactCommentator(ContactCommentStore commentStore, List<Call> calls) {
 		
-		this.commentStore  = commentStore;
-		this.calls         = calls;
-		this.commentHelper = commentHelper;
+		this.commentStore = commentStore;
+		this.calls        = calls;
 	}
 	
 	/**
@@ -144,6 +143,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 		
 		Runny.run(() -> {
 			
+			//noinspection Convert2MethodRef
 			historyQuantityComment();
 			
 			//mostCallComments();
@@ -192,7 +192,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 			
 			
 			//bu arama 3 gün önce gerçekleşen bir arama
-			comment.append("Bu arama", Spans.click(listener1, clickColor))
+			comment.append("Bu arama kaydı", Spans.click(listener1, clickColor))
 					.append(Stringx.format(" %d %s önce gerçekleşmiş bir ", timeBefore.getValue(), timeBefore.getUnit()))
 					.append(Stringx.format("%s", callType.toLowerCase()), Spans.bold())
 					.append(". ");
@@ -201,10 +201,8 @@ public class DefaultContactCommentator implements ContactCommentator {
 		else {
 			
 			comment.append(commentOnTheLastCall());
-			comment.append(commentHelper.afterLastCallComment(history));
+			comment.append(aboutLastCallType());
 		}
-		
-		
 	}
 	
 	@Override
@@ -222,9 +220,58 @@ public class DefaultContactCommentator implements ContactCommentator {
 		View.OnClickListener listener1 = View -> showCall.show();
 		
 		comment.append("Son arama", Spans.click(listener1, clickColor))
+				.append(" kaydı ")
 				.append(Stringx.format(" %d %s önce gerçekleşmiş bir ", timeBefore.getValue(), timeBefore.getUnit()))
 				.append(Stringx.format("%s", callType.toLowerCase()), Spans.bold())
 				.append(". ");
+		
+		return comment;
+	}
+	
+	/**
+	 * @return comment about last call type
+	 */
+	private @NotNull CharSequence aboutLastCallType() {
+		
+		Spanner       comment  = new Spanner();
+		Call          lastCall = history.getLastCall();
+		List<Integer> types    = new ArrayList<>();
+		int           type     = lastCall.getType();
+		
+		types.add(type);
+		
+		switch (type) {//@off
+			case CallType.INCOMING: types.add(CallType.INCOMING_WIFI);break;
+			case CallType.OUTGOING: types.add(CallType.OUTGOING_WIFI);break;
+			case CallType.INCOMING_WIFI: types.add(CallType.INCOMING);break;
+			case CallType.OUTGOING_WIFI: types.add(CallType.OUTGOING);break;
+		}//@on
+		
+		var callTypes  = Lister.toIntArray(types);
+		var typedCalls = history.getCalls(callTypes);
+		var typeStr    = Res.getCallType(commentStore.getActivity(), type);
+		
+		if (typedCalls.size() == 1) {
+			
+			comment.append("Ve bu ")
+					.append(Stringx.format("%s", typeStr.toLowerCase()), Spans.bold())
+					.append(" kişiye ait tek ")
+					.append(Stringx.format("%s", typeStr.toLowerCase()), Spans.bold())
+					.append(". ");
+		}
+		else {
+			
+			var             calls           = history.getCalls(callTypes);
+			ShowCallsDialog showCallsDialog = new ShowCallsDialog(commentStore.getActivity(), calls, history.getContact().getName(), Stringx.format("%d %s", calls.size(), typeStr));
+			
+			View.OnClickListener listener = View -> showCallsDialog.show();
+			
+			comment.append("Ve bu ")
+					.append(Stringx.format("%s", typeStr.toLowerCase()), Spans.bold())
+					.append(" kişiye ait ")
+					.append(Stringx.format("%d %s", typedCalls.size(), typeStr.toLowerCase()), Spans.click(listener, commentStore.getClickColor()), Spans.underline())
+					.append("dan biri. ");
+		}
 		
 		return comment;
 	}
