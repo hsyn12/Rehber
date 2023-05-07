@@ -13,6 +13,22 @@ import java.util.Locale;
  */
 public class Locative implements WordExtension {
 	
+	public static void main(String[] args) {
+		
+		String[] names = {
+				
+				"Tahta", "Kalem", "Ev", "Otel", "Ayak", "Kale", "Pencere", "Dümen", "Telefon", "Çiçek", "Çarşaf", "Keşiş", "İn", "İç"
+		};
+		
+		var ext = new Locative();
+		
+		for (var name : names) {
+			
+			System.out.printf("%s-%s\n", name, ext.getExt(name));
+		}
+		
+	}
+	
 	@Override
 	public @NotNull String getExt(@NotNull String word) {
 		
@@ -26,15 +42,17 @@ public class Locative implements WordExtension {
 		
 		switch (lastCharType) {
 			
-			case CHAR_TYPE_VOWEL_THIN: return "de";
-			case CHAR_TYPE_VOWEL_THICK: return "da";
+			case CHAR_TYPE_VOWEL_THIN: return resources.getString("at_thin");
+			case CHAR_TYPE_VOWEL_THICK: return resources.getString("at_thick");
 			case CHAR_TYPE_CONSONANT_HARD:
-				if (WordExtension.isVowelThick(charMate)) return "ta";
-				else if (WordExtension.isVowelThin(charMate)) return "te";
+				if (WordExtension.isVowelThick(charMate)) return resources.getString("at_hard_thick");
+				else if (WordExtension.isVowelThin(charMate))
+					return resources.getString("at_hard_thin");
 				break;
 			case CHAR_TYPE_CONSONANT_SOFT:
-				if (WordExtension.isVowelThin(charMate)) return "de";
-				else if (WordExtension.isVowelThick(charMate)) return "da";
+				if (WordExtension.isVowelThin(charMate)) return resources.getString("at_soft_thin");
+				else if (WordExtension.isVowelThick(charMate))
+					return resources.getString("at_soft_thick");
 				break;
 		}
 		
@@ -50,23 +68,6 @@ public class Locative implements WordExtension {
 		else if (WordExtension.isConsonantSoft(lastChar) && WordExtension.isVowelThick(charMate))
 			return "da";
 		else return ""; */
-	}
-	
-	
-	public static void main(String[] args) {
-		
-		String[] names = {
-				
-				"Tahta", "Kalem", "Ev", "Otel", "Ayak", "Kale", "Pencere", "Dümen", "Telefon", "Çiçek", "Çarşaf", "Keşiş", "İn", "İç"
-		};
-		
-		var ext = new Locative();
-		
-		for (var name : names) {
-			
-			System.out.printf("%s-%s\n", name, ext.getExt(name));
-		}
-		
 	}
 	
 	

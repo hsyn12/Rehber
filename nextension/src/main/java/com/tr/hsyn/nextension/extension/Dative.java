@@ -26,15 +26,13 @@ public class Dative implements WordExtension {
 		
 		switch (lastCharType) {
 			
-			case CHAR_TYPE_VOWEL_THIN: return "ye";
-			case CHAR_TYPE_VOWEL_THICK: return "ya";
+			case CHAR_TYPE_VOWEL_THIN: return resources.getString("to_thin");
+			case CHAR_TYPE_VOWEL_THICK: return resources.getString("to_thick");
 			case CHAR_TYPE_CONSONANT_HARD:
-				if (WordExtension.isVowelThick(charMate)) return "a";
-				else if (WordExtension.isVowelThin(charMate)) return "e";
-				break;
 			case CHAR_TYPE_CONSONANT_SOFT:
-				if (WordExtension.isVowelThin(charMate)) return "e";
-				else if (WordExtension.isVowelThick(charMate)) return "a";
+				if (WordExtension.isVowelThick(charMate)) return resources.getString("to_hard_thick");
+				else if (WordExtension.isVowelThin(charMate))
+					return resources.getString("to_hard_thin");
 				break;
 		}
 		

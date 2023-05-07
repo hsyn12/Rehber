@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="tr">
-	
-	<string name="unknown">bilinmiyor</string>
-	<string name="saved_date">kişinin kayıt tarihi</string>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="en">
+
+	<string name="unknown">unknown</string>
+	<string name="saved_date">saved date</string>
 
 </resources>

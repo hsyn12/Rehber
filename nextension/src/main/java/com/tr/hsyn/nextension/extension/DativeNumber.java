@@ -1,7 +1,7 @@
 package com.tr.hsyn.nextension.extension;
 
 
-import com.tr.hsyn.nextension.NumberExtention;
+import com.tr.hsyn.nextension.NumberExtension;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -9,7 +9,19 @@ import org.jetbrains.annotations.NotNull;
 /**
  * -ye -ya- -e -a (Yönelme Hali) (Datif - Kime, Nereye, Neye)
  */
-public class DativeNumber implements NumberExtention {
+public class DativeNumber implements NumberExtension {
+	
+	public static void main(String[] args) {
+		
+		NumberExtension extention = new DativeNumber();
+		
+		for (int i = 0; i < 101; i += 1) {
+			
+			System.out.printf("%d-%s\n", i, extention.getExt(i));
+		}
+		
+		
+	}
 	
 	@Override
 	public @NotNull String getExt(long number) {
@@ -18,9 +30,9 @@ public class DativeNumber implements NumberExtention {
 		
 		if (_number.length() == 1) return ones(_number);
 		
-		if (NumberExtention.isLastZero(_number)) {
+		if (NumberExtension.isLastZero(_number)) {
 			
-			_number = NumberExtention.getLastByZero(_number);
+			_number = NumberExtension.getLastByZero(_number);
 			int  len   = _number.length();
 			char first = _number.charAt(0);
 			
@@ -34,20 +46,20 @@ public class DativeNumber implements NumberExtention {
 						case '3':
 						case '4':
 						case '6':
-						case '9': return "a";
+						case '9': return resources.getString("to_hard_thick");
 						case '2':
-						case '5': return "ye";
+						case '5': return resources.getString("to_thin");
 						case '7':
-						case '8': return "e";
+						case '8': return resources.getString("to_hard_thin");
 					}
 					break;
 				
 				case 3:
 				case 4:
 				case 5:
-				case 6: return "e";
+				case 6: return resources.getString("to_hard_thin");
 				
-				default: return "a";
+				default: return resources.getString("to_hard_thick");
 			}
 		}
 		else return ones(_number);
@@ -69,30 +81,18 @@ public class DativeNumber implements NumberExtention {
 		switch (c) {
 			
 			case '0':
-			case '9': return "a";
+			case '9': return resources.getString("to_hard_thick");
 			case '2':
-			case '7': return "ye";
+			case '7': return resources.getString("to_thin");
 			case '1':
 			case '3':
 			case '4':
 			case '5':
-			case '8': return "e";
-			case '6': return "ya";
+			case '8': return resources.getString("to_hard_thin");
+			case '6': return resources.getString("to_thick");
 			
 			
 			default: throw new IllegalArgumentException("This is not a number : " + number);
 		}
-	}
-	
-	public static void main(String[] args) {
-		
-		NumberExtention extention = new DativeNumber();
-		
-		for (int i = 0; i < 101; i += 1) {
-			
-			System.out.printf("%d-%s\n", i, extention.getExt(i));
-		}
-		
-		
 	}
 }

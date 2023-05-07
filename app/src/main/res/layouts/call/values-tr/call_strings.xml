@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="tr">
+
+	<string name="call_log">Arama Kayıtları</string>
+	<string name="call_record">Arama Kaydı</string>
+
+	<string name="call">Ara</string>
+
+	<!-- CallLog Calls -->
+	<string name="incoming">Gelen</string>
+	<string name="outgoing">Giden</string>
+	<string name="missed">Cevapsız</string>
+	<string name="rejected">Reddedilen</string>
+	<string name="blocked">Engellenen</string>
+	<string name="total">Toplam</string>
+
+	<string name="call_type_incoming">Gelen Arama</string>
+	<string name="call_type_outgoing">Giden Arama</string>
+	<string name="call_type_missed">Cevapsız Arama</string>
+	<string name="call_type_rejected">Reddedilen Arama</string>
+	<string name="call_type_blocked">Engellenen Arama</string>
+	<string name="call_type_unknown">Bilinmeyen Arama</string>
+	<string name="deleted_call">Silinen Arama</string>
+
+
+	<string name="delete_all">Hepsini Sil</string>
+	<string name="delete_all_calls">Tüm Kayıtları Sil</string>
+	<string name="transition_call">transition_call</string>
+	<string name="empty_call_list">Liste boş</string>
+	<string name="no_call_app">Arama yapacak uygulama bulunamadı</string>
+	<string name="no_app">Bu işlemi gerçekleştirecek uygulama bulunamadı</string>
+	<string name="will_delete">silinecek!</string>
+	<string name="confirm_delete_action">Silme İşlemini Onayla</string>
+
+
+</resources>

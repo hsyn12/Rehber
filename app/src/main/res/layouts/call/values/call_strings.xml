@@ -1,36 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="tr">
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="en">
 
-	<string name="call_log">Arama Kayıtları</string>
-	<string name="call_record">Arama Kaydı</string>
+	<string name="call_log">Call Log</string>
+	<string name="call_record">Call Records</string>
+	<string name="call">Call</string>
 
-	<string name="call">Ara</string>
+	<string name="call_type_incoming">Incoming Call</string>
+	<string name="call_type_outgoing">Outgoing Call</string>
+	<string name="call_type_missed">Missed Call</string>
+	<string name="call_type_rejected">Rejected Call</string>
+	<string name="call_type_blocked">Blocked Call</string>
+	<string name="call_type_unknown">Unknown Call</string>
+	<string name="deleted_call">Deleted Call</string>
 
-	<!-- CallLog Calls -->
-	<string name="incoming">Gelen</string>
-	<string name="outgoing">Giden</string>
-	<string name="missed">Cevapsız</string>
-	<string name="rejected">Reddedilen</string>
-	<string name="blocked">Engellenen</string>
-	<string name="total">Toplam</string>
-
-	<string name="call_type_incoming">Gelen Arama</string>
-	<string name="call_type_outgoing">Giden Arama</string>
-	<string name="call_type_missed">Cevapsız Arama</string>
-	<string name="call_type_rejected">Reddedilen Arama</string>
-	<string name="call_type_blocked">Engellenen Arama</string>
-	<string name="call_type_unknown">Bilinmeyen Arama</string>
-	<string name="deleted_call">Silinen Arama</string>
+	<string name="incoming">Incoming</string>
+	<string name="outgoing">Outgoing</string>
+	<string name="missed">Missed</string>
+	<string name="rejected">Rejected</string>
+	<string name="blocked">Blocked</string>
+	<string name="total">Total</string>
 
 
-	<string name="delete_all">Hepsini Sil</string>
-	<string name="delete_all_calls">Tüm Kayıtları Sil</string>
+	<string name="delete_all">Delete All</string>
+	<string name="delete_all_calls">Delete All Calls</string>
 	<string name="transition_call">transition_call</string>
-	<string name="empty_call_list">Liste boş</string>
-	<string name="no_call_app">Arama yapacak uygulama bulunamadı</string>
-	<string name="no_app">Bu işlemi gerçekleştirecek uygulama bulunamadı</string>
-	<string name="will_delete">silinecek!</string>
-	<string name="confirm_delete_action">Silme İşlemini Onayla</string>
+	<string name="empty_call_list">List is empty</string>
+	<string name="no_call_app">No application found to call</string>
+	<string name="no_app">No application found to perform this action</string>
+	<string name="will_delete">will delete</string>
+	<string name="confirm_delete_action">Confirm Delete Action!!</string>
 
 
 </resources>

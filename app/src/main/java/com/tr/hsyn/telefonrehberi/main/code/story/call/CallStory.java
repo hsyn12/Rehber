@@ -52,8 +52,8 @@ public class CallStory implements Story<Call> {
 		
 		//- Buradan veri tabanı listesi dönmeli
 		
-		var systemCalls   = loadFromSystem();
-		var databaseCalls = loadFromDatabase();
+		List<Call> systemCalls   = loadFromSystem();
+		List<Call> databaseCalls = loadFromDatabase();
 		
 		//xlog.d("Arama kayıtları alındı. Sistemde %d, veri tabanında %d arama kaydı var", systemCalls.size(), databaseCalls.size());
 		
@@ -61,7 +61,7 @@ public class CallStory implements Story<Call> {
 			
 			if (!systemCalls.isEmpty()) {
 				
-				//xlog.d("Veri tabanında arama kaydı yok ancak sistemde %d arama var. Sanırım bu ilk yükleme", systemCalls.size());
+				xlog.d("Veri tabanında arama kaydı yok ancak sistemde %d arama var. Sanırım bu ilk yükleme", systemCalls.size());
 				
 				var success = database.add(systemCalls);
 				

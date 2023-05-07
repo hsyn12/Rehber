@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string name="title_random_calls_generator">Rastgele Kayıt Üreticisi</string>
+	<string name="call_types_title">Arama Türleri</string>
+	<string name="generation_count_hint">Üretim Sayısı</string>
+	<string name="generation_default_count">10</string>
+	<string name="contacts">Kişiler</string>
+	<string name="start">Başlat</string>
+	<string name="select_all">Hepsini Seç</string>
+	<string name="service_activated">Servis aktif edildi</string>
+	<string name="service_deactivated">Servis durduruldu</string>
+	<string name="information_is_being_collected">Bilgi toplanıyor</string>
+	<string name="service_connection_established">Servis bağlantısı kuruldu</string>
+	<string name="service_disconnected">Servis bağlantısı kesildi</string>
+	<string name="invalid_generation_number">Geçersiz üretim sayısı</string>
+	<string name="warn_select_one_person">Üretim için en az bir kişi seçilmeli</string>
+	<string name="info_collection_completed">Bilgi toplama tamamlandı</string>
+	<string name="generation_over_count">Üretim %1$d kişi üzerinden yapılacak</string>
+	<string name="warn_select_one_call_type">Bir arama türü seçilmeli</string>
+	<string name="text_date_start">Tarih Başlangıcı</string>
+	<string name="text_date_end">Tarih Sonu</string>
+	<string name="text_track_free">Takip Serbest</string>
+	<string name="warn_waiting_contact_selection">Rehberden bir kişi seçilmesi bekleniyor</string>
+	<string name="warn_no_any_contact">Rehberde kimse yok</string>
+	<string name="menu_dates_limits">Tarih Sınırlaması</string>
+	<string name="call_types_selection_warn">* En az 1 arama türü seçilmeli. Eğer tüm arama türleri seçim dışı bırakılırsa, tüm arama türleri kullanılır</string>
+
+	<string name="generating_random_calls">Rastgele Arama Kaydı Üretiliyor</string>
+	<string name="generated_calls_saved">Aramalar sisteme kaydedildi</string>
+	<string name="saving">Kaydediliyor</string>
+	<string name="ready_for_generation">Üretim başlatılmaya hazır</string>
+
+	<string name="idle_message_generation_count">Üretilecek arama kaydı sayısı : %1$d</string>
+	<string name="idle_message_waiting_contact_selection">Kişilerin seçilmesi bekleniyor</string>
+	<string name="idle_message_record_will_saved">Üretilen arama kayıtları sisteme kaydedilir. Eğer sistem kayıt sayısı limiti aşılırsa en eski kayıtlar otomatik olarak sililir. Üretilen kayıtların sayısı ve zaman aralığı buna dikkat edilerek seçilmeli</string>
+
+
+</resources>

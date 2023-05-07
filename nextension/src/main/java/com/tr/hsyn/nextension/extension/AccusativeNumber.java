@@ -1,7 +1,7 @@
 package com.tr.hsyn.nextension.extension;
 
 
-import com.tr.hsyn.nextension.NumberExtention;
+import com.tr.hsyn.nextension.NumberExtension;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -11,7 +11,19 @@ import org.jetbrains.annotations.NotNull;
 /**
  * -ü -i -u -ı -yü -yi (Belirtme Hali) (Akuzatif - Neyi, Kimi)
  */
-public class AccusativeNumber implements NumberExtention {
+public class AccusativeNumber implements NumberExtension {
+	
+	public static void main(String[] args) {
+		
+		NumberExtension extention = new AccusativeNumber();
+		
+		for (int i = 0; i < 101; i += 1) {
+			
+			System.out.printf("%d-%s\n", i, extention.getExt(i));
+		}
+		
+		
+	}
 	
 	@Override
 	public @NotNull String getExt(long number) {
@@ -20,9 +32,9 @@ public class AccusativeNumber implements NumberExtention {
 		
 		if (_number.length() == 1) return ones(_number);
 		
-		if (NumberExtention.isLastZero(_number)) {
+		if (NumberExtension.isLastZero(_number)) {
 			
-			_number = NumberExtention.getLastByZero(_number);
+			_number = NumberExtension.getLastByZero(_number);
 			int  len   = _number.length();
 			char first = _number.charAt(0);
 			
@@ -33,25 +45,25 @@ public class AccusativeNumber implements NumberExtention {
 					switch (first) {
 						
 						case '1':
-						case '3': return "u";
+						case '3': return resources.getString("into_soft_thick");
 						case '2':
-						case '5': return "yi";
+						case '5': return resources.getString("into_thin");
 						case '4':
 						case '6':
-						case '9': return "ı";
+						case '9': return resources.getString("into_hard_thick");
 						case '8':
-						case '7': return "i";
+						case '7': return resources.getString("into_soft_thin");
 						
 						
 					}
 					break;
 				
-				case 3: return "ü";
+				case 3: return resources.getString("into_soft_thin_u");
 				case 4:
 				case 5:
-				case 6: return "i";
+				case 6: return resources.getString("into_soft_thin");
 				
-				default: return "u";
+				default: return resources.getString("into_soft_thick");
 			}
 		}
 		else return ones(_number);
@@ -72,30 +84,18 @@ public class AccusativeNumber implements NumberExtention {
 		
 		switch (c) {
 			
-			case '0': return "ı";
+			case '0': return resources.getString("into_hard_thick");
 			case '1':
 			case '5':
-			case '8': return "i";
+			case '8': return resources.getString("into_soft_thin");
 			case '2':
-			case '7': return "yi";
+			case '7': return resources.getString("into_thin");
 			case '3':
-			case '4': return "ü";
-			case '6': return "yı";
-			case '9': return "u";
+			case '4': return resources.getString("into_soft_thin_u");
+			case '6': return resources.getString("into_thick");
+			case '9': return resources.getString("into_soft_thick");
 			
 			default: throw new IllegalArgumentException("This is not a number : " + number);
 		}
-	}
-	
-	public static void main(String[] args) {
-		
-		NumberExtention extention = new AccusativeNumber();
-		
-		for (int i = 0; i < 101; i += 1) {
-			
-			System.out.printf("%d-%s\n", i, extention.getExt(i));
-		}
-		
-		
 	}
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="en">
 
-	<string name="contact_icon">Kişinin isminin baş harfini gösterecek olan ikon</string>
-	<string name="order_number">Kişinin sıralamadaki yerini gösterir</string>
+	<string name="contact_icon">Icon that will show the initials of the person\'s name</string>
+	<string name="order_number">Shows the contact\'s place in the ranking</string>
 
 </resources>

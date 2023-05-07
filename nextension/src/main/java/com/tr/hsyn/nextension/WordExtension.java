@@ -11,9 +11,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.ResourceBundle;
 
 
 public interface WordExtension {
+	
+	ResourceBundle resources = ResourceBundle.getBundle("strings");
 	
 	/**
 	 * Bir harfin kalın ünlülerden biri olduğunu bildirir. ({@code ['a', 'ı', 'o', 'u']}'den biri)
@@ -57,14 +60,6 @@ public interface WordExtension {
 	 */
 	List<Character> CONSONANTS_SOFT          = Arrays.asList('b', 'c', 'd', 'g', 'j', 'l', 'm', 'n', 'r', 'v', 'z', 'x', 'y', 'w');
 	
-	/**
-	 * Kelimeye uygun eki döndürür.
-	 *
-	 * @param word Kelime
-	 * @return Kelimenin eki
-	 */
-	@NotNull String getExt(@NotNull String word);
-	
 	static int getCharType(char c) {
 		
 		if (VOWELS_THICK.contains(c)) return CHAR_TYPE_VOWEL_THICK;
@@ -72,27 +67,6 @@ public interface WordExtension {
 		if (CONSONANTS_HARD.contains(c)) return CHAR_TYPE_CONSONANT_HARD;
 		if (CONSONANTS_SOFT.contains(c)) return CHAR_TYPE_CONSONANT_SOFT;
 		return CHAR_TYPE_UNKNOWN;
-	}
-	
-	/**
-	 * Ekin türüne göre uygun eklenti nesnesi oluşturur.
-	 *
-	 * @param type Ek türü (mesela {@link Extension#TYPE_AT})
-	 * @return {@link WordExtension} nesnesi
-	 */
-	@NotNull
-	static WordExtension create(int type) {
-		
-		switch (type) {
-			
-			case Extension.TYPE_FROM: return new Ablative();
-			case Extension.TYPE_TO: return new Dative();
-			case Extension.TYPE_POSS: return new Possessive();
-			case Extension.TYPE_IN_TO: return new Accusative();
-			case Extension.TYPE_AT: return new Locative();
-			
-			default: throw new IllegalArgumentException("There is no extension class for type : " + type);
-		}
 	}
 	
 	/**
@@ -159,6 +133,35 @@ public interface WordExtension {
 		
 		return WordExtension.create(what).getExt(word);
 	}
+	
+	/**
+	 * Ekin türüne göre uygun eklenti nesnesi oluşturur.
+	 *
+	 * @param type Ek türü (mesela {@link Extension#TYPE_AT})
+	 * @return {@link WordExtension} nesnesi
+	 */
+	@NotNull
+	static WordExtension create(int type) {
+		
+		switch (type) {
+			
+			case Extension.TYPE_FROM: return new Ablative();
+			case Extension.TYPE_TO: return new Dative();
+			case Extension.TYPE_POSS: return new Possessive();
+			case Extension.TYPE_IN_TO: return new Accusative();
+			case Extension.TYPE_AT: return new Locative();
+			
+			default: throw new IllegalArgumentException("There is no extension class for type : " + type);
+		}
+	}
+	
+	/**
+	 * Kelimeye uygun eki döndürür.
+	 *
+	 * @param word Kelime
+	 * @return Kelimenin eki
+	 */
+	@NotNull String getExt(@NotNull String word);
 	
 	/**
 	 * Bir karakterin kalın ünlülerden biri olup olmadığını test eder.<br>

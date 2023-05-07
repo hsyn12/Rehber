@@ -26,15 +26,18 @@ public class Ablative implements WordExtension {
 		
 		switch (lastCharType) {
 			
-			case CHAR_TYPE_VOWEL_THIN: return "den";
-			case CHAR_TYPE_VOWEL_THICK: return "dan";
+			//den
+			case CHAR_TYPE_VOWEL_THIN: return resources.getString("from_thin");
+			case CHAR_TYPE_VOWEL_THICK: return resources.getString("from_thick");
 			case CHAR_TYPE_CONSONANT_HARD:
-				if (WordExtension.isVowelThick(charMate)) return "tan";
-				else if (WordExtension.isVowelThin(charMate)) return "ten";
+				if (WordExtension.isVowelThick(charMate)) return resources.getString("from_hard_thick");
+				else if (WordExtension.isVowelThin(charMate))
+					return resources.getString("from_hard_thin");
 				break;
 			case CHAR_TYPE_CONSONANT_SOFT:
-				if (WordExtension.isVowelThin(charMate)) return "den";
-				else if (WordExtension.isVowelThick(charMate)) return "dan";
+				if (WordExtension.isVowelThin(charMate)) return resources.getString("from_soft_thin");
+				else if (WordExtension.isVowelThick(charMate))
+					return resources.getString("from_soft_thick");
 				break;
 		}
 		

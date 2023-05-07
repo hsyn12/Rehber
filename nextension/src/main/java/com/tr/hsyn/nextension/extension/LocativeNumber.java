@@ -1,7 +1,7 @@
 package com.tr.hsyn.nextension.extension;
 
 
-import com.tr.hsyn.nextension.NumberExtention;
+import com.tr.hsyn.nextension.NumberExtension;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -9,7 +9,19 @@ import org.jetbrains.annotations.NotNull;
 /**
  * -de -da -te -ta (Bulunma Hali) (Lokatif - Nerede, Kimde, Nede)
  */
-public class LocativeNumber implements NumberExtention {
+public class LocativeNumber implements NumberExtension {
+	
+	public static void main(String[] args) {
+		
+		NumberExtension extention = new LocativeNumber();
+		
+		for (int i = 0; i < 101; i += 1) {
+			
+			System.out.printf("%d-%s\n", i, extention.getExt(i));
+		}
+		
+		
+	}
 	
 	@Override
 	public @NotNull String getExt(long number) {
@@ -18,9 +30,9 @@ public class LocativeNumber implements NumberExtention {
 		
 		if (_number.length() == 1) return ones(_number);
 		
-		if (NumberExtention.isLastZero(_number)) {
+		if (NumberExtension.isLastZero(_number)) {
 			
-			_number = NumberExtention.getLastByZero(_number);
+			_number = NumberExtension.getLastByZero(_number);
 			int  len   = _number.length();
 			char first = _number.charAt(0);
 			
@@ -32,22 +44,22 @@ public class LocativeNumber implements NumberExtention {
 						
 						case '1':
 						case '3':
-						case '9': return "da";
+						case '9': return resources.getString("at_soft_thick");
 						case '2':
 						case '5':
-						case '8': return "de";
+						case '8': return resources.getString("at_soft_thin");
 						case '4':
-						case '6': return "ta";
-						case '7': return "te";
+						case '6': return resources.getString("at_hard_thick");
+						case '7': return resources.getString("at_hard_thin");
 					}
 					break;
 				
 				case 3:
 				case 4:
 				case 5:
-				case 6: return "de";
+				case 6: return resources.getString("at_soft_thin");
 				
-				default: return "da";
+				default: return resources.getString("at_soft_thick");
 			}
 		}
 		else return ones(_number);
@@ -70,28 +82,16 @@ public class LocativeNumber implements NumberExtention {
 			
 			case '0':
 			case '6':
-			case '9': return "da";
+			case '9': return resources.getString("at_soft_thick");
 			case '1':
 			case '2':
 			case '7':
-			case '8': return "de";
+			case '8': return resources.getString("at_soft_thin");
 			case '3':
 			case '4':
-			case '5': return "te";
+			case '5': return resources.getString("at_hard_thin");
 			
 			default: throw new IllegalArgumentException("This is not a number : " + number);
 		}
-	}
-	
-	public static void main(String[] args) {
-		
-		NumberExtention extention = new LocativeNumber();
-		
-		for (int i = 0; i < 101; i += 1) {
-			
-			System.out.printf("%d-%s\n", i, extention.getExt(i));
-		}
-		
-		
 	}
 }

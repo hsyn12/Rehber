@@ -10,11 +10,15 @@ import com.tr.hsyn.nextension.extension.PossessiveNumber;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ResourceBundle;
+
 
 /**
  * Sayılara ek bulan sınıfları tanımlar ve bu iş için gerekli bazı yardımcı metotlar sağlar.
  */
-public interface NumberExtention {
+public interface NumberExtension {
+	
+	ResourceBundle resources = WordExtension.resources;
 	
 	/**
 	 * Gün bildiren ek türü (1'i, 2'si, 24'i, 29'u vb)
@@ -30,6 +34,17 @@ public interface NumberExtention {
 		if (number.length() <= 1) return false;
 		
 		return number.charAt(number.length() - 1) == '0';
+	}
+	
+	/**
+	 * Sayının, sonu sıfırla biten kısmını döndürür. (1230 -> 30, 2050 -> 50, 1200 -> 200 vb.)
+	 *
+	 * @param number Sayı
+	 * @return Sıfırla biten sayı
+	 */
+	static @NotNull String getLastByZero(@NotNull String number) {
+		
+		return number.substring(number.length() - (countLastZero(number) + 1));
 	}
 	
 	/**
@@ -52,39 +67,6 @@ public interface NumberExtention {
 	}
 	
 	/**
-	 * Ekin türüne göre uygun eklenti nesnesi oluşturur.
-	 *
-	 * @param type Ek türü (mesela {@link Extension#TYPE_AT})
-	 * @return {@link NumberExtention} nesnesi
-	 */
-	@NotNull
-	static NumberExtention create(int type) {
-		
-		switch (type) {
-			
-			case Extension.TYPE_FROM: return new AblativeNumber();
-			case Extension.TYPE_TO: return new DativeNumber();
-			case Extension.TYPE_POSS: return new PossessiveNumber();
-			case Extension.TYPE_IN_TO: return new AccusativeNumber();
-			case Extension.TYPE_AT: return new LocativeNumber();
-			case NumberExtention.TYPE_DAY: return new DayNumber();
-			
-			default: throw new IllegalArgumentException("There is no extension class for type : " + type);
-		}
-	}
-	
-	/**
-	 * Sayının, sonu sıfırla biten kısmını döndürür. (1230 -> 30, 2050 -> 50, 1200 -> 200 vb.)
-	 *
-	 * @param number Sayı
-	 * @return Sıfırla biten sayı
-	 */
-	static @NotNull String getLastByZero(@NotNull String number) {
-		
-		return number.substring(number.length() - (countLastZero(number) + 1));
-	}
-	
-	/**
 	 * Sayının sonuna uygun eki döndürür.
 	 *
 	 * @param number        Sayı
@@ -94,6 +76,28 @@ public interface NumberExtention {
 	static @NotNull String getNumberExt(long number, int extensionType) {
 		
 		return create(extensionType).getExt(number);
+	}
+	
+	/**
+	 * Ekin türüne göre uygun eklenti nesnesi oluşturur.
+	 *
+	 * @param type Ek türü (mesela {@link Extension#TYPE_AT})
+	 * @return {@link NumberExtension} nesnesi
+	 */
+	@NotNull
+	static NumberExtension create(int type) {
+		
+		switch (type) {
+			
+			case Extension.TYPE_FROM: return new AblativeNumber();
+			case Extension.TYPE_TO: return new DativeNumber();
+			case Extension.TYPE_POSS: return new PossessiveNumber();
+			case Extension.TYPE_IN_TO: return new AccusativeNumber();
+			case Extension.TYPE_AT: return new LocativeNumber();
+			case NumberExtension.TYPE_DAY: return new DayNumber();
+			
+			default: throw new IllegalArgumentException("There is no extension class for type : " + type);
+		}
 	}
 	
 	/**

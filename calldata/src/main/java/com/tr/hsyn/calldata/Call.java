@@ -5,6 +5,7 @@ import com.tr.hsyn.datboxer.DatBoxer;
 import com.tr.hsyn.identity.Identity;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 
 /**
@@ -93,6 +94,18 @@ public class Call extends DatBoxer implements CallContact, CallTime, CallDuratio
 	public long getId() {
 		
 		return time;
+	}
+	
+	@Override
+	public int hashCode() {
+		
+		return Objects.hash(time);
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		
+		return obj instanceof Call && time == ((Call) obj).time;
 	}
 	
 	@Override

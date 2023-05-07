@@ -12,7 +12,7 @@ import com.tr.hsyn.counter.Counter;
 import com.tr.hsyn.daytimes.DayTime;
 import com.tr.hsyn.execution.Runny;
 import com.tr.hsyn.nextension.Extension;
-import com.tr.hsyn.nextension.NumberExtention;
+import com.tr.hsyn.nextension.NumberExtension;
 import com.tr.hsyn.nextension.WordExtension;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.scaler.Scaler;
@@ -309,7 +309,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 			int percent = (history.size() * 100) / calls.size();
 			
 			if (percent > 0)
-				comment.append(Stringx.format("Bu kayıtlar, tüm arama kayıtlarının yüzde %d'%s oluyor. ", percent, NumberExtention.getNumberExt(percent, NumberExtention.TYPE_DAY)));
+				comment.append(Stringx.format("Bu kayıtlar, tüm arama kayıtlarının yüzde %d'%s oluyor. ", percent, NumberExtension.getNumberExt(percent, NumberExtension.TYPE_DAY)));
 			
 			//todo yüzde değeri 1'e ulaşmıyorsa ne olacak
 			

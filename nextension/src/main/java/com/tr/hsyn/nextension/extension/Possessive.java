@@ -27,34 +27,34 @@ public class Possessive implements WordExtension {
 			
 			if (lastChar == 'ü' || lastChar == 'ö') {
 				
-				return "nün";
+				return resources.getString("poss_thin_uo");
 			}
 			else {
 				
-				return "nin";
+				return resources.getString("poss_thin");
 			}
 		}
 		else if (WordExtension.isVowelThick(lastChar)) {
 			
 			if (lastChar == 'u' || lastChar == 'o') {
 				
-				return "nun";
+				return resources.getString("poss_thick_uo");
 			}
 			else {
 				
-				return "nın";
+				return resources.getString("poss_thick");
 			}
 		}
 		else if (WordExtension.isConsonantHard(lastChar) && WordExtension.isVowelThin(charMate))
-			return "in";
+			return resources.getString("poss_hard_thin");
 		else if (WordExtension.isConsonantHard(lastChar) && WordExtension.isVowelThick(charMate))
-			return "ın";
+			return resources.getString("poss_hard_thick");
 		else if (WordExtension.isConsonantSoft(lastChar) && WordExtension.isVowelThick(charMate))
-			return "un";
+			return resources.getString("poss_soft_thick");
 		else if (WordExtension.isConsonantSoft(lastChar) && WordExtension.isVowelThin(charMate)) {
 			
-			if (charMate == 'ü' || charMate == 'ö') return "ün";
-			return "in";
+			if (charMate == 'ü' || charMate == 'ö') return resources.getString("poss_soft_thin_uo");
+			return resources.getString("poss_soft_thin");
 		}
 		else return "";
 	}

@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="tr">
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="en">
 
-	<string name="title_backup_activity">Arama Kaydı Yedekleri</string>
-	<string name="delete_backup">Yedeği sil</string>
-	<string name="no_backup">Kayıt Yok</string>
-	<string name="no_backup_description">Yedeklenen bir arama kaydı yok</string>
-	<string name="backup_option_1">Göster</string>
-	<string name="backup_option_2">Geri Yükle</string>
-	<string name="backup_option_3">Sil</string>
-	<string name="txt_completed">Tamamlandı</string>
-
+	<string name="title_backup_activity">Call Record Backups</string>
+	<string name="delete_backup">Delete backup</string>
+	<string name="no_backup">No Record</string>
+	<string name="no_backup_description">No call logs backed up</string>
+	<string name="backup_option_1">Show</string>
+	<string name="backup_option_2">Restore</string>
+	<string name="backup_option_3">Delete</string>
+	<string name="txt_completed">Completed</string>
 
 	<string-array name="backup_options">
 		<item>@string/backup_option_1</item>
 		<item>@string/backup_option_2</item>
 		<item>@string/backup_option_3</item>
 	</string-array>
+
 </resources>

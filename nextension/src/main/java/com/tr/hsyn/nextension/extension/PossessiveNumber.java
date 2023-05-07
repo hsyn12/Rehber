@@ -1,7 +1,7 @@
 package com.tr.hsyn.nextension.extension;
 
 
-import com.tr.hsyn.nextension.NumberExtention;
+import com.tr.hsyn.nextension.NumberExtension;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -9,7 +9,19 @@ import org.jetbrains.annotations.NotNull;
 /**
  * -in -ün -nin -nün -un -ın (İyelik Eki)
  */
-public class PossessiveNumber implements NumberExtention {
+public class PossessiveNumber implements NumberExtension {
+	
+	public static void main(String[] args) {
+		
+		NumberExtension extention = new PossessiveNumber();
+		
+		for (int i = 100; i < 10001; i += 10) {
+			
+			System.out.printf("%d-%s\n", i, extention.getExt(i));
+		}
+		
+		
+	}
 	
 	@Override
 	public @NotNull String getExt(long number) {
@@ -18,9 +30,9 @@ public class PossessiveNumber implements NumberExtention {
 		
 		if (_number.length() == 1) return ones(_number);
 		
-		if (NumberExtention.isLastZero(_number)) {
+		if (NumberExtension.isLastZero(_number)) {
 			
-			_number = NumberExtention.getLastByZero(_number);
+			_number = NumberExtension.getLastByZero(_number);
 			int  len   = _number.length();
 			char first = _number.charAt(0);
 			
@@ -31,23 +43,23 @@ public class PossessiveNumber implements NumberExtention {
 					switch (first) {
 						
 						case '1':
-						case '3': return "un";
+						case '3': return resources.getString("poss_soft_thick");
 						case '2':
-						case '5': return "nin";
+						case '5': return resources.getString("poss_thin");
 						case '7':
-						case '8': return "in";
+						case '8': return resources.getString("poss_hard_thin");
 						case '6':
 						case '4':
-						case '9': return "ın";
+						case '9': return resources.getString("poss_hard_thick");
 					}
 					break;
 				
-				case 3: return "ün";
+				case 3: return resources.getString("poss_soft_thin_uo");
 				case 4:
 				case 5:
-				case 6: return "in";
+				case 6: return resources.getString("poss_hard_thin");
 				
-				default: return "un";
+				default: return resources.getString("poss_soft_thick");
 			}
 		}
 		else return ones(_number);
@@ -68,31 +80,19 @@ public class PossessiveNumber implements NumberExtention {
 		
 		switch (c) {
 			
-			case '0': return "ın";
+			case '0': return resources.getString("poss_hard_thick");
 			case '1':
 			case '5':
-			case '8': return "in";
+			case '8': return resources.getString("poss_hard_thin");
 			case '2':
-			case '7': return "nin";
+			case '7': return resources.getString("poss_thin");
 			case '3':
-			case '4': return "ün";
-			case '6': return "nın";
-			case '9': return "un";
+			case '4': return resources.getString("poss_soft_thin_uo");
+			case '6': return resources.getString("poss_thick");
+			case '9': return resources.getString("poss_soft_thick");
 			
 			default: throw new IllegalArgumentException("This is not a number : " + number);
 		}
-	}
-	
-	public static void main(String[] args) {
-		
-		NumberExtention extention = new PossessiveNumber();
-		
-		for (int i = 100; i < 10001; i += 10) {
-			
-			System.out.printf("%d-%s\n", i, extention.getExt(i));
-		}
-		
-		
 	}
 	
 }
