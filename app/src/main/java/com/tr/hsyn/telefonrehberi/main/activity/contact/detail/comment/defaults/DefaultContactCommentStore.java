@@ -4,7 +4,7 @@ package com.tr.hsyn.telefonrehberi.main.activity.contact.detail.comment.defaults
 import android.app.Activity;
 
 import com.tr.hsyn.telefonrehberi.R;
-import com.tr.hsyn.telefonrehberi.main.code.comment.ContactCommentStore;
+import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.comment.ContactCommentStore;
 
 import org.jetbrains.annotations.NotNull;
 

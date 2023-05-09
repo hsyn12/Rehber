@@ -15,18 +15,16 @@ import com.tr.hsyn.nextension.Extension;
 import com.tr.hsyn.nextension.NumberExtension;
 import com.tr.hsyn.nextension.WordExtension;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
-import com.tr.hsyn.scaler.Scaler;
 import com.tr.hsyn.string.Stringx;
-import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.code.android.Res;
 import com.tr.hsyn.telefonrehberi.code.android.dialog.ShowCall;
 import com.tr.hsyn.telefonrehberi.code.call.CallOver;
+import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.comment.ContactCommentStore;
 import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.comment.ContactCommentator;
 import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.comment.dialog.MostCallDialog;
 import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.comment.dialog.MostCallItemViewData;
 import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.data.History;
 import com.tr.hsyn.telefonrehberi.main.code.call.cast.Group;
-import com.tr.hsyn.telefonrehberi.main.code.comment.ContactCommentStore;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.ShowCallsDialog;
 import com.tr.hsyn.telefonrehberi.main.code.contact.act.ContactKey;
 import com.tr.hsyn.text.Span;
@@ -159,13 +157,13 @@ public class DefaultContactCommentator implements ContactCommentator {
 		
 		//- 10'a 3 ölçek
 		//- orta değer (10, 10 * 3] aralığı
-		Scaler  scaler     = Scaler.createNewScaler(10, 3f);
-		int     scale      = scaler.getQuantity(history.size());
+		//Scaler  scaler     = Scaler.createNewScaler(10, 3f);
+		//int     scale      = scaler.getQuantity(history.size());
 		Spanner name       = new Spanner();
-		int     clickColor = commentStore.getClickColor();
+		int     clickColor = getClickColor();
 		
 		if (contact.getName() != null && !PhoneNumbers.isPhoneNumber(contact.getName()))
-			name.append(contact.getName(), Spans.bold(), Spans.foreground(getColor(R.color.purple_500)))
+			name.append(contact.getName(), Spans.bold(), Spans.foreground(getForegroundColor()))
 					.append(Stringx.format("'%s ait ", WordExtension.getWordExt(contact.getName(), Extension.TYPE_TO)));
 		else name.append("Kişiye ait ");
 		
@@ -174,9 +172,6 @@ public class DefaultContactCommentator implements ContactCommentator {
 		ShowCallsDialog showCallsDialog = new ShowCallsDialog(commentStore.getActivity(), history.getHistory());
 		
 		View.OnClickListener listener = View -> showCallsDialog.show();
-		
-		if (scaler.isMin(scale))
-			comment.append("sadece ");
 		
 		comment.append(Stringx.format("%s", commentStore.sizeCall(history.size())), Spans.click(listener, clickColor), Spans.underline())
 				.append(" kaydı var. ");
@@ -269,7 +264,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 			comment.append("Ve bu ")
 					.append(Stringx.format("%s", typeStr.toLowerCase()), Spans.bold())
 					.append(" kişiye ait ")
-					.append(Stringx.format("%d %s", typedCalls.size(), typeStr.toLowerCase()), Spans.click(listener, commentStore.getClickColor()), Spans.underline())
+					.append(Stringx.format("%d %s", typedCalls.size(), typeStr.toLowerCase()), Spans.click(listener, getClickColor()), Spans.underline())
 					.append("dan biri. ");
 		}
 		

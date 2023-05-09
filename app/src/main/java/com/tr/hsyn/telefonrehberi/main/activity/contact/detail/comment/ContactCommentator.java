@@ -1,10 +1,12 @@
 package com.tr.hsyn.telefonrehberi.main.activity.contact.detail.comment;
 
 
+import android.app.Activity;
+
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.contactdata.Contact;
+import com.tr.hsyn.telefonrehberi.main.code.comment.CommentEditor;
 import com.tr.hsyn.telefonrehberi.main.code.comment.Commentator;
-import com.tr.hsyn.telefonrehberi.main.code.comment.ContactCommentStore;
 import com.tr.hsyn.telefonrehberi.main.code.contact.act.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
 
@@ -20,11 +22,11 @@ import java.util.List;
  * Implementations of this interface should provide specific functionality
  * for commenting on different contacts.
  * <p>
- * This interface extends the Commentator<Contact> interface,
+ * This interface extends the {@link Commentator} interface,
  * which defines the {@link Commentator#commentOn(Object)} method
  * for generating a comment on a contact.
  */
-public interface ContactCommentator extends Commentator<Contact> {
+public interface ContactCommentator extends Commentator<Contact>, CommentEditor {
 	
 	/**
 	 * Returns a list of all contacts.
@@ -53,6 +55,13 @@ public interface ContactCommentator extends Commentator<Contact> {
 	 * @return the {@link ContactCommentStore} instance associated with this {@link ContactCommentator}
 	 */
 	ContactCommentStore getCommentStore();
+	
+	
+	@Override
+	default @NotNull Activity getActivity() {
+		
+		return getCommentStore().getActivity();
+	}
 	
 	/**
 	 * This method is responsible for commenting on a contact.

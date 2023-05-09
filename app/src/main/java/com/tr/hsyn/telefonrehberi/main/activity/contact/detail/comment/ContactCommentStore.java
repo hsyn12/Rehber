@@ -1,4 +1,4 @@
-package com.tr.hsyn.telefonrehberi.main.code.comment;
+package com.tr.hsyn.telefonrehberi.main.activity.contact.detail.comment;
 
 
 import android.app.Activity;
@@ -6,6 +6,8 @@ import android.app.Activity;
 import com.tr.hsyn.calldata.CallType;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.comment.defaults.DefaultContactCommentStore;
+import com.tr.hsyn.telefonrehberi.main.code.comment.CommentStore;
+import com.tr.hsyn.telefonrehberi.main.code.comment.Moody;
 import com.tr.hsyn.xlog.xlog;
 
 import org.jetbrains.annotations.NotNull;
@@ -17,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
  * or need to use classes/interface that implemented/extended this interface.
  * All comments are provided in here.
  */
-public interface ContactCommentStore {
+public interface ContactCommentStore extends CommentStore {
 	
 	/**
 	 * Returns a {@link ContactCommentStore} instance.
@@ -66,8 +68,6 @@ public interface ContactCommentStore {
 		return getActivity().getString(resourceId, args);
 	}
 	
-	@NotNull
-	Activity getActivity();
 	
 	default CharSequence noHistory() {
 		
@@ -104,8 +104,5 @@ public interface ContactCommentStore {
 		return clause.toString();
 	}
 	
-	default int getClickColor() {
-		
-		return getActivity().getColor(com.tr.hsyn.rescolors.R.color.orange_500);
-	}
+	
 }

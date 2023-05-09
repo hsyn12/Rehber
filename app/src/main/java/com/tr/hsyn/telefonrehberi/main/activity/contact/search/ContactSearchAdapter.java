@@ -115,7 +115,7 @@ public class ContactSearchAdapter extends RecyclerView.Adapter<ContactSearchAdap
 					.beginConfig()
 					.useFont(ResourcesCompat.getFont(holder.itemView.getContext(), com.tr.hsyn.resfont.R.font.z))
 					.endConfig()
-					.buildRound(getLeter(contact.getName()), color);
+					.buildRound(getLetter(contact.getName()), color);
 			
 			holder.image.setImageDrawable(image);
 		}
@@ -124,11 +124,11 @@ public class ContactSearchAdapter extends RecyclerView.Adapter<ContactSearchAdap
 			holder.image.setImageURI(Uri.parse(pic));
 		}
 		
-		setHightlight(holder);
+		setHighlight(holder);
 	}
 	
 	@NonNull
-	private String getLeter(String str) {
+	private String getLetter(String str) {
 		
 		var l = Stringx.getFirstChar(str);
 		
@@ -143,6 +143,46 @@ public class ContactSearchAdapter extends RecyclerView.Adapter<ContactSearchAdap
 	public int getItemCount() {
 		
 		return filteredContacts.size();
+	}
+	
+	private void setHighlight(Holder holder) {
+		
+		if (searchText.isEmpty()) {return;}
+		
+		String name   = holder.name.getText().toString();
+		String number = holder.number.getText().toString();
+		
+		if (!isNumber) {
+			
+			Integer[] indexes = Stringx.indexOfMatches(name, searchText);
+			
+			//xlog.d(Arrays.toString(indexes));
+			
+			Spanner spanner = new Spanner(name);
+			
+			for (int i = 0; i < indexes.length - 1; i += 2) {
+				
+				spanner.setSpans(indexes[i], indexes[i + 1], Spans.background(markColor));
+			}
+			
+			holder.name.setText(spanner);
+			holder.number.setText(PhoneNumbers.beautifyNumber(number));
+		}
+		else {
+			
+			Integer[] indexes = Stringx.indexOfMatches(number, searchText);
+			xlog.d(Arrays.toString(indexes));
+			Spanner spanner = new Spanner(number);
+			
+			for (int i = 0; i < indexes.length - 1; i += 2) {
+				
+				spanner.setSpans(indexes[i], indexes[i + 1], Spans.background(markColor));
+			}
+			
+			holder.name.setText(name);
+			holder.number.setText(spanner);
+		}
+		
 	}
 	
 	@SuppressLint("NotifyDataSetChanged")
@@ -194,47 +234,7 @@ public class ContactSearchAdapter extends RecyclerView.Adapter<ContactSearchAdap
 	@SuppressWarnings("ConstantConditions")
 	private List<Contact> searchByNumber(String searchText) {
 		
-		return contacts.stream().filter(c -> c.getData(ContactKey.NUMBERS) != null && !ContactKey.getNumbers(c).isEmpty() && Stringx.isMatch(ContactKey.getNumbers(c).get(0), searchText)).collect(Collectors.toList());
-	}
-	
-	private void setHightlight(Holder holder) {
-		
-		if (searchText.isEmpty()) {return;}
-		
-		String name   = holder.name.getText().toString();
-		String number = holder.number.getText().toString();
-		
-		if (!isNumber) {
-			
-			Integer[] indexes = Stringx.indexOfMatches(name, searchText);
-			
-			//xlog.d(Arrays.toString(indexes));
-			
-			Spanner spanner = new Spanner(name);
-			
-			for (int i = 0; i < indexes.length - 1; i += 2) {
-				
-				spanner.setSpans(indexes[i], indexes[i + 1], Spans.background(markColor));
-			}
-			
-			holder.name.setText(spanner);
-			holder.number.setText(PhoneNumbers.beautifyNumber(number));
-		}
-		else {
-			
-			Integer[] indexes = Stringx.indexOfMatches(number, searchText);
-			xlog.d(Arrays.toString(indexes));
-			Spanner spanner = new Spanner(number);
-			
-			for (int i = 0; i < indexes.length - 1; i += 2) {
-				
-				spanner.setSpans(indexes[i], indexes[i + 1], Spans.background(markColor));
-			}
-			
-			holder.name.setText(name);
-			holder.number.setText(spanner);
-		}
-		
+		return contacts.stream().filter(c -> c.getData(ContactKey.NUMBERS) != null && !ContactKey.getNumbers(c).isEmpty() && PhoneNumbers.containsNumber(ContactKey.getNumbers(c), searchText)).collect(Collectors.toList());
 	}
 	
 	static final class Holder extends RecyclerView.ViewHolder {
