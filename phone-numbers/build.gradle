@@ -5,6 +5,7 @@ plugins {
 dependencies {
 
 	implementation project(path: ':string')
+	implementation project(path: ':xlog')
 	compileOnly "org.jetbrains:annotations:${rootProject.annotations}"
 }
 

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="confirm">Confirm</string>
-    <string name="reject">Reject</string>
-    <string name="confirm_title">Process Confirmation</string>
-    <string name="confirm_message">Do you approve the process</string>
-</resources>

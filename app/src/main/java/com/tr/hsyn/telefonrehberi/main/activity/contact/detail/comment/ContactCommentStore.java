@@ -63,12 +63,6 @@ public interface ContactCommentStore extends CommentStore {
 		return getString(R.string.history_not_found);
 	}
 	
-	default String getString(int resourceId, Object... args) {
-		
-		return getActivity().getString(resourceId, args);
-	}
-	
-	
 	default CharSequence noHistory() {
 		
 		return getString(R.string.no_history);
@@ -104,5 +98,11 @@ public interface ContactCommentStore extends CommentStore {
 		return clause.toString();
 	}
 	
-	
+	/**
+	 * @return a single call string
+	 */
+	default CharSequence singleCall() {
+		
+		return getString(R.string.single_call);
+	}
 }

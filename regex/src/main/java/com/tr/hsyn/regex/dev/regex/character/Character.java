@@ -26,16 +26,17 @@ public interface Character extends Text {
 	 * A digit.  {@code \p{N}}
 	 */
 	String DIGIT           = "\\p{N}";
+	String DIGITS          = "\\p{N}+";
 	/**
 	 * Any character except digit. {@code \P{N}}
 	 */
 	String NON_DIGIT       = "\\P{N}";
 	/**
-	 * A whitespace character, including line break. {@code [ \t\r\n\f\x0B]}
+	 * A space character, including line break. {@code [ \t\r\n\f\x0B]}
 	 */
 	String WHITE_SPACE     = "\\p{Z}";
 	/**
-	 * Any character except white space.
+	 * Any character except space.
 	 */
 	String NON_WHITE_SPACE = "\\P{Z}";
 	/**
@@ -176,6 +177,14 @@ public interface Character extends Text {
 	}
 	
 	/**
+	 * Returns a non-null character that is guaranteed to be different from any other character.
+	 * This method is useful for initializing variables that need to have a default value.
+	 *
+	 * @return a non-null character that is guaranteed to be different from any other character
+	 */
+	@NotNull Character non();
+	
+	/**
 	 * Checks if the given text matches the current text concatenated with one or more Quanta.
 	 *
 	 * @param text the text to be checked for a match
@@ -185,14 +194,6 @@ public interface Character extends Text {
 		
 		return text.matches(getText() + Quanta.ONE_OR_MORE);
 	}
-	
-	/**
-	 * Returns a non-null character that is guaranteed to be different from any other character.
-	 * This method is useful for initializing variables that need to have a default value.
-	 *
-	 * @return a non-null character that is guaranteed to be different from any other character
-	 */
-	@NotNull Character non();
 	
 	
 }

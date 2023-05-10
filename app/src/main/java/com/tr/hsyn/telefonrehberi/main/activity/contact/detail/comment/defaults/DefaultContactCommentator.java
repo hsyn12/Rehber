@@ -11,11 +11,10 @@ import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.counter.Counter;
 import com.tr.hsyn.daytimes.DayTime;
 import com.tr.hsyn.execution.Runny;
-import com.tr.hsyn.nextension.Extension;
 import com.tr.hsyn.nextension.NumberExtension;
-import com.tr.hsyn.nextension.WordExtension;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.string.Stringx;
+import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.code.android.Res;
 import com.tr.hsyn.telefonrehberi.code.android.dialog.ShowCall;
 import com.tr.hsyn.telefonrehberi.code.call.CallOver;
@@ -137,6 +136,13 @@ public class DefaultContactCommentator implements ContactCommentator {
 		if (history == null || history.isEmpty())
 			throw new IllegalArgumentException("Call history must not be null or empty");
 		
+		
+		if (history.size() == 1) {
+			commentOnSingleCall();
+			return;
+		}
+		
+		
 		xlog.d("Accessed the call history [contact='%s', size=%d]", contact.getName(), history.size());
 		
 		Runny.run(() -> {
@@ -149,55 +155,56 @@ public class DefaultContactCommentator implements ContactCommentator {
 		
 	}
 	
+	private void commentOnSingleCall() {
+		
+		comment.append(commentStore.singleCall()).append(". ");
+		commentOnTheSingleCall(history.get(0));
+	}
+	
+	private void commentOnTheSingleCall(@NotNull Call call) {
+		
+		int                  clickColor = getClickColor();
+		Duration             timeBefore = Time.howLongBefore(call.getTime());
+		String               callType   = Res.getCallType(commentStore.getActivity(), call.getType());
+		ShowCall             showCall   = new ShowCall(commentStore.getActivity(), call);
+		View.OnClickListener listener1  = View -> showCall.show();
+		
+		//bu arama 3 gün önce gerçekleşen bir arama
+		comment.append("Bu arama", Spans.click(listener1, clickColor))
+				.append(Stringx.format(" %d %s önce gerçekleşmiş bir ", timeBefore.getValue(), timeBefore.getUnit()))
+				.append(Stringx.format("%s", callType.toLowerCase()), Spans.bold())
+				.append(". ");
+	}
+	
 	/**
 	 * Generates a comment about the quantity of call history for the contact.
 	 * Appends the generated comment to the {@link #comment} object managed by this commentator.
 	 */
 	private void historyQuantityComment() {
 		
-		//- 10'a 3 ölçek
-		//- orta değer (10, 10 * 3] aralığı
-		//Scaler  scaler     = Scaler.createNewScaler(10, 3f);
-		//int     scale      = scaler.getQuantity(history.size());
+		// Now, we are sure that the call history size has been more than one.
+		// The call history of the current contact has two calls at least.
+		
+		//- The comment object which the all comments will be appended into
 		Spanner name       = new Spanner();
 		int     clickColor = getClickColor();
 		
-		if (contact.getName() != null && !PhoneNumbers.isPhoneNumber(contact.getName()))
-			name.append(contact.getName(), Spans.bold(), Spans.foreground(getForegroundColor()))
-					.append(Stringx.format("'%s ait ", WordExtension.getWordExt(contact.getName(), Extension.TYPE_TO)));
-		else name.append("Kişiye ait ");
 		
-		comment.append(name);
+		// We want to inform the user about the quantity of call history.
+		// For example, 'The contact has 2 calls'
 		
-		ShowCallsDialog showCallsDialog = new ShowCallsDialog(commentStore.getActivity(), history.getHistory());
+		String               _name           = contact.getName() != null && !PhoneNumbers.isPhoneNumber(contact.getName()) ? contact.getName() : Stringx.toTitle(getString(R.string.word_contact));
+		ShowCallsDialog      showCallsDialog = new ShowCallsDialog(commentStore.getActivity(), history.getHistory());
+		View.OnClickListener listener        = View -> showCallsDialog.show();
 		
-		View.OnClickListener listener = View -> showCallsDialog.show();
+		name.append(_name, Spans.bold(), Spans.foreground(getTextColor()))
+				.append(" ")
+				.append(getString(R.string.word_has))
+				.append(Stringx.format("%s", getString(R.string.word_calls_with_size, history.size())), Spans.click(listener, clickColor), Spans.underline());
 		
-		comment.append(Stringx.format("%s", commentStore.sizeCall(history.size())), Spans.click(listener, clickColor), Spans.underline())
-				.append(" kaydı var. ");
 		
-		
-		if (history.size() == 1) {
-			
-			Call                 call       = history.get(0);
-			String               callType   = Res.getCallType(commentStore.getActivity(), call.getType());
-			Duration             timeBefore = Time.howLongBefore(call.getTime());
-			ShowCall             showCall   = new ShowCall(commentStore.getActivity(), call);
-			View.OnClickListener listener1  = View -> showCall.show();
-			
-			
-			//bu arama 3 gün önce gerçekleşen bir arama
-			comment.append("Bu arama kaydı", Spans.click(listener1, clickColor))
-					.append(Stringx.format(" %d %s önce gerçekleşmiş bir ", timeBefore.getValue(), timeBefore.getUnit()))
-					.append(Stringx.format("%s", callType.toLowerCase()), Spans.bold())
-					.append(". ");
-			
-		}
-		else {
-			
-			comment.append(commentOnTheLastCall());
-			comment.append(aboutLastCallType());
-		}
+		comment.append(commentOnTheLastCall());
+		comment.append(aboutLastCallType());
 	}
 	
 	@Override

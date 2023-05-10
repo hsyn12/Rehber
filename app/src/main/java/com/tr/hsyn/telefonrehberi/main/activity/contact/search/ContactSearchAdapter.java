@@ -43,7 +43,7 @@ public class ContactSearchAdapter extends RecyclerView.Adapter<ContactSearchAdap
 	
 	private final List<Contact>     contacts;
 	private final ItemIndexListener selectListener;
-	private final int               markColor        = Colors.lighter(Colors.getPrimaryColor(), 0.3f);
+	private final int               markColor        = Colors.lighter(Colors.getPrimaryColor(), 0.2f);
 	private       List<Contact>     filteredContacts = new ArrayList<>();
 	private       String            searchText       = "";
 	private       boolean           isNumber;
@@ -202,13 +202,12 @@ public class ContactSearchAdapter extends RecyclerView.Adapter<ContactSearchAdap
 			}
 			else {
 				
-				if (Stringx.test(searchText).isNot(Character.DIGIT)) {
+				if (Stringx.test(searchText).isNot(Character.DIGITS)) {
 					
 					isNumber         = false;
 					filteredContacts = searchByName(searchText.toLowerCase());
 				}
 				else {
-					
 					isNumber         = true;
 					filteredContacts = searchByNumber(searchText);
 				}
@@ -234,6 +233,7 @@ public class ContactSearchAdapter extends RecyclerView.Adapter<ContactSearchAdap
 	@SuppressWarnings("ConstantConditions")
 	private List<Contact> searchByNumber(String searchText) {
 		
+		xlog.d("searchByNumber: " + searchText);
 		return contacts.stream().filter(c -> c.getData(ContactKey.NUMBERS) != null && !ContactKey.getNumbers(c).isEmpty() && PhoneNumbers.containsNumber(ContactKey.getNumbers(c), searchText)).collect(Collectors.toList());
 	}
 	

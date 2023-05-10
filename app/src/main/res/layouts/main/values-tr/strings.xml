@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string name="search_result">%d kayıt bulundu</string>
+	<string name="select_directory">Bir Klasör Seç</string>
+	<string name="msg_directory_selection">Bazı kayıtlar uygulamadan bağımsız kalıcı olarak kaydedilebilir. Uygulama kaldırılsa bile bu bilgiler kayıtlı kalır ve tekrar yüklendiğinde aynı klasör seçilerek daha önce kaydedilmiş bilgiler kullanılabilir.</string>
+
+	<string name="txt_close">Kapat</string>
+	<string name="txt_sign_in">Giriş Yap</string>
+	<string name="permission_denied">İzin reddedildi</string>
+	<string name="permission_permenently_denied">Gereken izin sistem tarafından otomatik olarak reddediliyor. Uygulama ayarlarının izinler bölümünden düzeltebilirsin</string>
+	<string name="the_end">\u0DF4</string>
+	<string name="fix_it">Düzelt</string>
+	<string name="stop">Durdur</string>
+	<string name="completed">Tamamlandı</string>
+	<string name="search">Arama</string>
+	<string name="no_permissions">Gerekli izinler yok</string>
+
+
+	<!-- account types -->
+	<string name="account_type_twitter" translatable="false">com.twitter.android.auth.login</string>
+	<string name="account_type_whatsapp" translatable="false">com.whatsapp</string>
+	<string name="account_type_google" translatable="false">com.google</string>
+	<string name="account_type_messenger" translatable="false">com.facebook.messenger</string>
+	<string name="account_type_sim" translatable="false">com.android.sim</string>
+
+	<!-- account names -->
+	<string name="account_name_whatsapp" translatable="false">WhatsApp</string>
+	<string name="account_name_messenger" translatable="false">Messenger</string>
+	<string name="account_name_sim_1" translatable="false">SIM1</string>
+	<string name="account_name_sim_2" translatable="false">SIM2</string>
+
+	<!-- Contacts Groups -->
+
+	<string name="contact_group_my_contacts">Kişilerim</string>
+	<string name="contact_group_friends">Arkadaşlarım</string>
+	<string name="contact_group_family">Ailem</string>
+	<string name="contact_group_coworkers">İş Arkadaşlarım</string>
+	<string name="contact_group_started">Favoriler</string>
+	<string name="groups">Gruplar</string>
+
+
+	<string name="remove_user">%1$s \'%2$s\' grubundan çıkarılsın mı? </string>
+	<string name="remove_from_group">Kişiyi gruptan çıkar?</string>
+	<string name="cancel">İptal</string>
+	<string name="remove">Çıkar</string>
+	<string name="add">Ekle</string>
+	<string name="add_user">Seçilen kişiler \'%s\' grubuna eklensin mi?</string>
+	<string name="msg_removed_from_group">%s gruptan çıkarıldı</string>
+	<string name="group_alert">Bu grup, hesaba kayıtlı kişilerin otomatik olarak eklendiği bir gruptur. Bu grupta değişiklik yapılamaz</string>
+	<string name="understand">Anladım</string>
+	<string name="no_number">Kişinin numarası yok</string>
+	<string name="no_information">Gerekli bilgiler alınamadı</string>
+	<string name="no_name">(İsimsiz)</string>
+	<string name="msg_group_visable">Grup rehberde görünür oldu : \'%s\'</string>
+	<string name="msg_group_invisable">Grup gizlendi : \'%s\'</string>
+	<string name="deleted">%s silindi</string>
+	<string name="not_deleted">%s silinemedi</string>
+	<string name="is_delete">%s silinsin mi?</string>
+
+	<string name="group_added">%s eklendi</string>
+	<string name="group_not_added">%s eklenemedi</string>
+	<string name="okey">Tamam</string>
+	<string name="new_group_name">Yeni Grup İsmi</string>
+	<string name="renkler">Renkler</string>
+	<string name="no_member">Grupta kimse yok</string>
+	<string name="hide">Gizle</string>
+	<string name="show">Göster</string>
+	<string name="create_new_group">Yeni Grup Oluştur</string>
+	<string name="yaz">yaz…</string>
+	<string name="send_message">Mesaj Gönder</string>
+	<string name="rename">Yeniden Adlandır</string>
+
+	<string name="assign_ringtone">Zil Sesi Ata (%s)</string>
+	<string name="select_ringtone">Zil sesi seç</string>
+
+	<string name="ringtone_set">Grup zil sesi ayarlandı : %s</string>
+	<string name="ringing_duration">%.2fsn</string>
+	<string name="speaking_duration">%.2fsn</string>
+	<string name="off_the_record">Kayıt dışı</string>
+	<string name="speaking_duration_str">Konuşma süresi</string>
+	<string name="ringing_duration_str">Çalma süresi</string>
+	<string name="total_duration_str">Toplam süre</string>
+	<string name="unknown_call_ringing_duration">Aramanın kaydı uygulama tarafından kaydedilmediği için telefonun çalma süresi bilinmiyor.</string>
+	<string name="not_enough_info">Yeterli bilgi toplanmadığı için bir karşılaştırma yapılamıyor.</string>
+
+	<!--****************************************-->
+
+	<string name="stringValue1">Kaç Tane</string>
+	<string name="stringValue2">System kayıtlarına eklensin</string>
+	<string name="stringValue3">System kayıtları sınırlı sayıda kayıt tuttuğu için üretilen son kayıtlar sisteme eklenir.</string>
+	<string name="stringValue4">&amp;</string>
+	<string name="stringValue5">Paylaşılabilir olarak ayarla (hata ayıklama için)</string>
+	<string name="stringValue6">Üret</string>
+
+	<string name="contacts_merge_mark_all">Tümünü İşaretle</string>
+	<string name="contacts_merge_unmark_all">Tüm İşaretleri Kaldır</string>
+	<string name="contacts_merge_merge">İşaretlileri Birleştir</string>
+	<string name="contacts_merge_remove">İşaretlileri Yoksay</string>
+	<string name="contacts_merge_merge_marked">Birleştir</string>
+	<string name="contacts_merge_mark_unmark_all">İşaretle</string>
+
+	<string name="action">ACTION</string>
+	<string name="content_description_call_type">Arama türü</string>
+	<string name="permission_usage">İzin Kullanımı</string>
+	<string name="deleting">Siliniyor</string>
+	<string name="main_settings">Genel Ayarlar</string>
+	<string name="arama_takibi">Arama Takibi</string>
+	<string name="delete_database">Veritabanını Sil</string>
+	<string name="generate_random_calls">Rastgele Kayıt Üret</string>
+	<string name="arama_takip_servisi">Arama Takip Servisi</string>
+	<string name="notification_switch_description">Pil optimizasyonu devre dışı bırakıldığı halde arama takibinde sorun yaşanıyorsa Arama Takip Servisini aktif edebilirsin. Bu servis arama takibinde pil tüketimine etki etmez, ancak servis çalıştığı sürece uygulama kodları hafızada yüklü kalır. Bu da (80–100 MB\'lık) hafıza alanının sürekli işgal edilmesi anlamına gelir. Eğer hafıza sorunun yoksa servisi aktif edebilirsin.</string>
+	<string name="takip_servisi">Arama Takip Servisi</string>
+	<string name="notification_service_reason_description">Uygulamanın seni engellenemez bir şekilde uyarabilmesi için Bildirim Erişimi İzni vermen gerekiyor. Çünkü uygulama senin rehber ve arama kayıtları bilgilerini kullanmakta. Bilgilerin hassasiyeti açısından, yanlışlıkla yada kötü amaçlı kullanılmaması için uygulamanın sana ulaşması gerek.</string>
+	<string name="bildirim_servisi">Bildirim Servisi</string>
+	<string name="sign_in_description">Giriş yaparak diğer kullanıcılar ile bağlantı kurabilir ve paylaşımda bulunabilirsin.</string>
+	<string name="connection_state">Bağlantı Durumu</string>
+	<string name="connections">Bağlantılar</string>
+	<string name="sign_out">Çıkış Yap</string>
+	<string name="test_et">Test Et</string>
+
+	<string name="title_activity_security_settings">ActivitySecuritySettings</string>
+	<!--
+	This string is used for square devices and overridden by hello_world in
+	values-round/strings.xml for round devices.
+	-->
+	<string name="hello_world">Hello Square World!</string>
+	<string name="call_summary_icon_description">Arama özetleri ikonu</string>
+	<string name="call_summary_expand_icon_description">Arama özeti genişletme ikonu</string>
+	<string name="add_phone_number">Telefon numarası ekle</string>
+	<string name="add_phone_number_icon_description">Telefon numarası ekleme ikonu</string>
+
+
+	<string name="contact_image">Kişinin resmi</string>
+	<string name="contact_icon_description">Kişinin küçük resmi</string>
+	<string name="text_notification_listener_state">Servis Durumu</string>
+	<string name="destek_ol">Destek Ol</string>
+	<string name="turkish_locale_tr">tr</string>
+
+
+</resources>

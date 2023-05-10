@@ -27,48 +27,6 @@ public class PhoneNumbers {
 	private static final String NUMBER_TYPE_4 = "[0-9]{12}";//905434937530
 	private static final String NUMBER_TYPE_5 = "[0-9]{14}";//+xxx5434937530 alan kodu 3 haneli
 	
-	public static int getNumberType(@NotNull String number) {
-		
-		if (number.matches(NUMBER_TYPE_1)) return 1;
-		if (number.matches(NUMBER_TYPE_2)) return 2;
-		if (number.matches(NUMBER_TYPE_3)) return 3;
-		if (number.matches(NUMBER_TYPE_4)) return 4;
-		if (number.matches(NUMBER_TYPE_5)) return 5;
-		
-		return 0;
-	}
-	
-	@NotNull
-	public static String getRealNumber(@NotNull String number) {
-		
-		return number.replaceAll("[^0-9+]", "");
-	}
-	
-	/**
-	 * Verilen telefon numarasını belirtilen uzunlukta formatlar.
-	 * String içindeki sayı harici tüm karakterler (boşluk dahil) silinir.
-	 * Sonuçta sadece sayılardan oluşan boşluksuz bitişik bir string kalır.
-	 * Telefon numarası eğer belirtilen uzunluğu aşmıyorsa sonuç string döner,
-	 * aşıyorsa uzunluğu eşitlemek için baştaki karakterler kırpılır.<br><br>
-	 * <p>
-	 * Örnek olarak <br>
-	 * {@code format("+90 543 493 7530", 10)} = "5434937530"<br>
-	 * {@code format("+90 543 493 7530", 7)} = "4937530"<br>
-	 *
-	 * @param number Telefon numarası
-	 * @param size   İstenen uzunluk
-	 * @return Formatlı numara
-	 */
-	@NotNull
-	public static String formatNumber(@NotNull String number, int size) {
-		
-		number = Stringx.trimNonDigits(number);
-		
-		if (number.length() <= size) return number;
-		
-		return number.substring(number.length() - size);
-	}
-	
 	/**
 	 * Rakamların arasına boşluk koyarak daha okunur bir numara döndürür.<br>
 	 * <p>
@@ -146,6 +104,23 @@ public class PhoneNumbers {
 		return getNumberType(number) != 0;
 	}
 	
+	public static int getNumberType(@NotNull String number) {
+		
+		if (number.matches(NUMBER_TYPE_1)) return 1;
+		if (number.matches(NUMBER_TYPE_2)) return 2;
+		if (number.matches(NUMBER_TYPE_3)) return 3;
+		if (number.matches(NUMBER_TYPE_4)) return 4;
+		if (number.matches(NUMBER_TYPE_5)) return 5;
+		
+		return 0;
+	}
+	
+	@NotNull
+	public static String getRealNumber(@NotNull String number) {
+		
+		return number.replaceAll("[^0-9+]", "");
+	}
+	
 	/**
 	 * Bir listedeki numaraların içinde bir numara aranmasını sağlar.
 	 *
@@ -190,9 +165,37 @@ public class PhoneNumbers {
 		var n1 = formatNumber(number1, 10);
 		var n2 = formatNumber(number2, 10);
 		
-		return n1.equals(n2);
+		if (n1.equals(n2)) return true;
+		
+		if (n1.length() >= n2.length()) return n1.contains(n2);
+		
+		return n2.contains(n1);
 	}
 	
+	/**
+	 * Verilen telefon numarasını belirtilen uzunlukta formatlar.
+	 * String içindeki sayı harici tüm karakterler (boşluk dahil) silinir.
+	 * Sonuçta sadece sayılardan oluşan boşluksuz bitişik bir string kalır.
+	 * Telefon numarası eğer belirtilen uzunluğu aşmıyorsa sonuç string döner,
+	 * aşıyorsa uzunluğu eşitlemek için baştaki karakterler kırpılır.<br><br>
+	 * <p>
+	 * Örnek olarak <br>
+	 * {@code format("+90 543 493 7530", 10)} = "5434937530"<br>
+	 * {@code format("+90 543 493 7530", 7)} = "4937530"<br>
+	 *
+	 * @param number Telefon numarası
+	 * @param size   İstenen uzunluk
+	 * @return Formatlı numara
+	 */
+	@NotNull
+	public static String formatNumber(@NotNull String number, int size) {
+		
+		number = Stringx.trimNonDigits(number);
+		
+		if (number.length() <= size) return number;
+		
+		return number.substring(number.length() - size);
+	}
 	
 	/**
 	 * İki telefon numarası listesini eşitlik için kontrol eder.

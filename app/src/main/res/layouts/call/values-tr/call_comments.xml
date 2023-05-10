@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:locale="tr">
-
+	<string name="single_call">Bu kişiye ait sadece tek bir arama kaydı var</string>
 	<string name="log">kaydı</string>
 	<string name="size_call">%d arama</string>
 	<string name="no_history">Kişiye ait bir arama kaydı yok</string>

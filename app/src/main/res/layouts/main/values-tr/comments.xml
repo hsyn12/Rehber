@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string name="word_only">sadece</string>
+	<string name="word_any">hiç bir</string>
+	<string name="word_has">sahip</string>
+	<string name="word_this_is">bu</string>
+	<string name="word_contact">kişi</string>
+	<string name="word_this_contact">Bu kişi</string>
+	<string name="word_call">arama</string>
+	<string name="word_calls_with_size">%d arama kaydı</string>
+	<string name="word_his_record">kaydı</string>
+	<string name="word_record">kayıt</string>
+	<string name="word_the_most_call">en fazla arama</string>
+	<string name="word_contact_has_record">@string/word_this_contact</string>
+	<string name="word_contact_has_record_of">@string/word_this_contact</string>
+	<string name="word_contact_has">kaydına sahip kişi</string>
+	<string name="word_contact_has_one_of_them">kaydına sahip %1$d kişiden biri</string>
+</resources>

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:locale="en">
+
+	<string name="single_call">This contact has just a single call</string>
 	<string name="log">log</string>
-	<string name="size_call">%d call</string>
+	<string name="size_call">%d calls</string>
 	<string name="no_history">There is no any call log belong to the contact</string>
 	<string name="history_not_found">Unable to access contact\'s call logs</string>
 	<string name="history_size">There are %1$d calls belong to the contact</string>
