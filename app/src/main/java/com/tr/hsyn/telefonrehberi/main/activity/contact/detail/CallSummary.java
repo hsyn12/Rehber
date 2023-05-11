@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 
 import com.tr.hsyn.calldata.Call;
@@ -118,11 +119,12 @@ public abstract class CallSummary extends ContactDetailsHistory {
 	}
 	
 	/**
-	 * Call history is the call log calls list of the selected contact have been kept in the super class.
-	 * And we need to keep track of its updates.
-	 * This method is called from the super class
-	 * when the history is updated or in the first loading.
+	 * @inheritDoc Call history is the list of call of the selected contact have been kept in the super class.
+	 * 		And we need to keep track of its updates.
+	 * 		This method is called from the super class
+	 * 		when the history is updated or in the first loading.
 	 */
+	@CallSuper
 	@Override
 	protected void onHistoryLoad() {
 		

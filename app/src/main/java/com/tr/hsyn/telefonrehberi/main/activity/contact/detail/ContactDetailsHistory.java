@@ -142,7 +142,8 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	
 	/**
 	 * Callback method called when the history each load.
-	 * Override this method to perform custom actions when the history loaded.
+	 * Override this method to perform custom actions when the history loaded
+	 * (or at the first loading).
 	 */
 	protected void onHistoryLoad() {
 		
@@ -155,7 +156,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	 * @return The call history for the contact, or an empty list if there is no history.
 	 * @see #hasCallLogPermissions()
 	 */
-	protected final List<Call> getCallHistory() {
+	private final List<Call> getCallHistory() {
 		
 		//- Eğer arama kayıtları en az bir kez yüklenmiş ise sorun yok
 		//- Ancak yüklenmemiş ise, kayıtların buradan yüklenmesi biraz karışıklık yaratabilir.

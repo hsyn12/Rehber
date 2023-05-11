@@ -6,6 +6,7 @@ import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.contactdata.ContactDat;
 import com.tr.hsyn.datakey.DataKey;
 import com.tr.hsyn.label.Label;
+import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.data.History;
 import com.tr.hsyn.time.Time;
 
 import org.jetbrains.annotations.NotNull;
@@ -59,12 +60,14 @@ public interface ContactKey {
 	DataKey DETAILS_APPLIED = DataKey.of(12, "detailsApplied");
 	
 	/**
-	 * Data key for the call history of a contact
+	 * Data key for the call history of a contact.<br>
+	 * <code>List of Calls</code>
 	 */
 	DataKey CALL_HISTORY = DataKey.of(13, "call_history");
 	
 	/**
-	 * Data key for the history object
+	 * Data key for the history object.<br>
+	 * {@link History} object
 	 */
 	DataKey HISTORY = DataKey.of(14, "history");
 	

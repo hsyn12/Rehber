@@ -68,8 +68,10 @@ public class ContactDetailsAbout extends ContactDetailsMenu {
 		// because the call history must be updated before all
 		super.onHistoryLoad();
 		
-		// The contact must have one phone number at least
-		if (contact.exist(ContactKey.NUMBERS) && Over.CallLog.exist()) {
+		List<Call> history = contact.getData(ContactKey.CALL_HISTORY);
+		
+		// The contact must have one call at least
+		if (history != null && history.size() > 0) {
 			
 			Runny.run(this::setStatistics, false);
 			
