@@ -9,7 +9,6 @@
 	<string name="word_this_contact">Bu kişi</string>
 	<string name="word_call">arama</string>
 	<string name="word_calls_with_size">%d arama kaydı</string>
-	<string name="word_his_record">kaydı</string>
 	<string name="word_record">kayıt</string>
 	<string name="word_the_most_call">en fazla arama</string>
 	<string name="word_contact_has_record">@string/word_this_contact</string>

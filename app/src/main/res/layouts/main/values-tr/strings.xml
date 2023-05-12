@@ -17,18 +17,7 @@
 	<string name="no_permissions">Gerekli izinler yok</string>
 
 
-	<!-- account types -->
-	<string name="account_type_twitter" translatable="false">com.twitter.android.auth.login</string>
-	<string name="account_type_whatsapp" translatable="false">com.whatsapp</string>
-	<string name="account_type_google" translatable="false">com.google</string>
-	<string name="account_type_messenger" translatable="false">com.facebook.messenger</string>
-	<string name="account_type_sim" translatable="false">com.android.sim</string>
-
-	<!-- account names -->
-	<string name="account_name_whatsapp" translatable="false">WhatsApp</string>
-	<string name="account_name_messenger" translatable="false">Messenger</string>
-	<string name="account_name_sim_1" translatable="false">SIM1</string>
-	<string name="account_name_sim_2" translatable="false">SIM2</string>
+	
 
 	<!-- Contacts Groups -->
 
