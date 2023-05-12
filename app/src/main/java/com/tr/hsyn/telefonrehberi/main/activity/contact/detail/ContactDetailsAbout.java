@@ -92,7 +92,12 @@ public class ContactDetailsAbout extends ContactDetailsMenu {
 	@SuppressLint("InflateParams")
 	private void setupCommentViews() {
 		
-		view_about_content = (ViewGroup) getLayoutInflater().inflate(R.layout.contact_about_content, mainContainer, false);
+		view_about_content =
+				(ViewGroup) getLayoutInflater()
+						.inflate(
+								R.layout.contact_about_content,
+								mainContainer,
+								false);
 		text_about         = findView(view_about_content, R.id.text_about);
 		text_about.setMovementMethod(new LinkMovementMethod());
 		
@@ -100,7 +105,9 @@ public class ContactDetailsAbout extends ContactDetailsMenu {
 		View      view_about_header = view_about_content.findViewById(R.id.about_header);
 		ImageView image_about_icon  = findView(view_about_content, R.id.about_icon);
 		
-		Colors.setTintDrawable(image_about_icon.getDrawable(), Colors.lighter(Colors.getPrimaryColor(), 0.2f));
+		Colors.setTintDrawable(
+				image_about_icon.getDrawable(),
+				Colors.lighter(Colors.getPrimaryColor(), 0.2f));
 		view_about_header.setBackgroundResource(ripple);
 		
 		addToDetailView(view_about_content);
@@ -154,7 +161,8 @@ public class ContactDetailsAbout extends ContactDetailsMenu {
 	}
 	
 	/**
-	 * Creates a new instance of a {@link ContactCommentator} based on the current mood of the application.
+	 * Creates a new instance of a {@link ContactCommentator}
+	 * based on the current mood of the application.
 	 *
 	 * @param activity the activity object
 	 * @return a new instance of a {@link ContactCommentator}
