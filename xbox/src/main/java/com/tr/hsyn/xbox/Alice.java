@@ -78,10 +78,10 @@ public class Alice implements Writer {
 			
 			sb.append(Time.ToString()).append("\n")
 					.append(String.format("%s\n", "-".repeat(ruleSize)))
-					.append(String.format("Kayıt sayısı              : %d\n", visitors.size()))
-					.append(String.format("Satır sayısı              : %d\n", rawCount))
-					.append(String.format("Byte sayısı               : %d [%.2fMB]\n", bytes, bytes / (float) (1024 * 1024)))
-					.append(String.format("Byte limiti               : %d [%.2fMB]\n", sizeLimit, sizeLimit / (float) (1024 * 1024)));
+					.append(String.format("Kayıt sayısı               : %d\n", visitors.size()))
+					.append(String.format("Satır sayısı               : %d\n", rawCount))
+					.append(String.format("Byte sayısı                : %d [%.2fMB]\n", bytes, bytes / (float) (1024 * 1024)))
+					.append(String.format("Byte limiti                : %d [%.2fMB]\n", sizeLimit, sizeLimit / (float) (1024 * 1024)));
 			
 			
 			long interval = bytes - sizeLimit;

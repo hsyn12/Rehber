@@ -77,32 +77,14 @@ public class MostCallsActivity extends ActivityView {
 		
 	}
 	
-	private void showList(@NotNull List<MostCallsItemData> data) {
+	private void setTitle() {
 		
-		this.data = data;
+		Toolbar toolbar = findView(R.id.most_calls_toolbar);
 		
-		if (!data.isEmpty()) {
-			
-			emptyView.setVisibility(View.GONE);
-			
-			list.setAdapter(new MostCallsAdapter(data, this::onClickItem));
-		}
+		Toolbarx.setToolbar(this, toolbar, this::onBackPressed);
 		
-		hideProgress();
-	}
-	
-	private void onClickItem(int index) {
-		
-		var item = data.get(index);
-		
-		xlog.d(item);
-		
-		
-	}
-	
-	private void hideProgress() {
-		
-		progressBar.setVisibility(View.GONE);
+		assert getSupportActionBar() != null;
+		getSupportActionBar().setTitle(Res.Calls.getCallFilterName(this, FILTER));
 	}
 	
 	private void filter() {
@@ -111,7 +93,7 @@ public class MostCallsActivity extends ActivityView {
 			
 			case Res.Calls.FILTER_MOST_INCOMING:
 				
-				imgType = AppCompatResources.getDrawable(this, R.drawable.incomming_call);
+				imgType = AppCompatResources.getDrawable(this, R.drawable.incoming_call);
 				filteredCalls = calls.stream().filter(Call::isIncoming).collect(Collectors.toList());
 				textType = getString(R.string.call_type_incoming);
 				break;
@@ -189,6 +171,27 @@ public class MostCallsActivity extends ActivityView {
 		return groups.stream().map(this::createItemData).collect(Collectors.toList());
 	}
 	
+	private void showList(@NotNull List<MostCallsItemData> data) {
+		
+		this.data = data;
+		
+		if (!data.isEmpty()) {
+			
+			emptyView.setVisibility(View.GONE);
+			
+			list.setAdapter(new MostCallsAdapter(data, this::onClickItem));
+		}
+		
+		hideProgress();
+	}
+	
+	@Override
+	public void onBackPressed() {
+		
+		super.onBackPressed();
+		Bungee.slideUp(this);
+	}
+	
 	@NotNull
 	private MostCallsItemData createItemData(@NotNull Group<Call> group) {
 		
@@ -209,21 +212,18 @@ public class MostCallsActivity extends ActivityView {
 		return new MostCallsItemData(group.getValue().getName(), txt, imgType, rank);
 	}
 	
-	private void setTitle() {
+	private void onClickItem(int index) {
 		
-		Toolbar toolbar = findView(R.id.most_calls_toolbar);
+		var item = data.get(index);
 		
-		Toolbarx.setToolbar(this, toolbar, this::onBackPressed);
+		xlog.d(item);
 		
-		assert getSupportActionBar() != null;
-		getSupportActionBar().setTitle(Res.Calls.getCallFilterName(this, FILTER));
+		
 	}
 	
-	@Override
-	public void onBackPressed() {
+	private void hideProgress() {
 		
-		super.onBackPressed();
-		Bungee.slideUp(this);
+		progressBar.setVisibility(View.GONE);
 	}
 	
 	private void showProgress() {

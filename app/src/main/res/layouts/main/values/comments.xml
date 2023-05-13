@@ -4,15 +4,26 @@
 	<string name="word_only">only</string>
 	<string name="word_any">any</string>
 	<string name="word_has">has</string>
-	<string name="word_this_is">this</string>
+	<string name="word_this">this</string>
 	<string name="word_contact">contact</string>
 	<string name="word_this_contact">This contact</string>
 	<string name="word_call">call</string>
-	<string name="word_calls_with_size">%d calls</string>
+	<string name="word_this_call">This call</string>
+	<string name="word_calls">%d calls</string>
 	<string name="word_record">record</string>
 	<string name="word_the_most_call">the most call records</string>
-	<string name="word_contact_has_record">This contact has</string>
+	<string name="word_contact_has">This contact has</string>
 	<string name="word_contact_has_record_of">This contact is one of the %1$d contact with</string>
-	<string name="word_contact_has" />
 	<string name="word_contact_has_one_of_them">@string/word_contact_has_record_of</string>
+	<string name="word_exist" />
+	<string name="word_date_before">is from %d %s ago</string>
+	<string name="word_date_unit">%d %s</string>
+	<string name="word_from" translatable="false">from</string>
+	<string name="word_is_from" translatable="false">is from</string>
+	<string name="word_is" translatable="false">is</string>
+	<string name="word_is_ago" translatable="false">ago</string>
+	<string name="word_the_last_call">The last call</string>
+	<string name="word_happened">happened</string>
+	<string name="word_a">a</string>
+	<string name="word_an" translatable="false">an</string>
 </resources>

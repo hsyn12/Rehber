@@ -78,7 +78,7 @@
 				android:layout_width="@dimen/call_details_summary_first_item_width"
 				android:layout_height="match_parent"
 				android:background="@drawable/ripple_accent"
-				android:drawableStart="@drawable/incomming_call"
+				android:drawableStart="@drawable/incoming_call"
 				android:drawablePadding="6dp"
 				android:gravity="start|center_vertical"
 				android:text="@string/incoming"

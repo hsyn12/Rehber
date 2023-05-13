@@ -23,6 +23,7 @@ import com.tr.hsyn.telefonrehberi.main.code.call.act.Calls;
 import com.tr.hsyn.telefonrehberi.main.code.call.cast.CallKey;
 import com.tr.hsyn.textdrawable.TextDrawable;
 import com.tr.hsyn.time.Time;
+import com.tr.hsyn.xlog.xlog;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -39,14 +40,18 @@ public class ShowCall {
 		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 		builder.setCancelable(true);
 		
-		
 		View view = activity.getLayoutInflater().inflate(R.layout.call, null, false);
-		
 		setCallInfo(view, call);
 		builder.setView(view);
 		
-		dialog                                              = builder.create();
-		dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimationBounce;
+		try {
+			dialog                                              = builder.create();
+			dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimationBounce;
+		}
+		catch (Exception e) {
+			xlog.e(e);
+			throw e;
+		}
 	}
 	
 	private void setCallInfo(@NotNull View view, @NotNull Call call) {
@@ -90,16 +95,6 @@ public class ShowCall {
 		image.setImageDrawable(_image);
 	}
 	
-	private void onCancel() {
-		
-		dialog.dismiss();
-	}
-	
-	public void show() {
-		
-		dialog.show();
-	}
-	
 	private int getTypeIcon(int type) {
 		
 		return Calls.getCallTypeIcon(type);
@@ -115,6 +110,16 @@ public class ShowCall {
 		if (Character.isAlphabetic(l.charAt(0))) return l.toUpperCase(Locale.ROOT);
 		
 		return "?";
+	}
+	
+	private void onCancel() {
+		
+		dialog.dismiss();
+	}
+	
+	public void show() {
+		
+		dialog.show();
 	}
 	
 }

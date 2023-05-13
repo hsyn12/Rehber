@@ -294,7 +294,7 @@ public interface Calls {
 			
 			case CallType.INCOMING:
 			case CallType.INCOMING_WIFI:
-				return com.tr.hsyn.resdrawcalltype.R.drawable.incomming_call;
+				return com.tr.hsyn.resdrawcalltype.R.drawable.incoming_call;
 			case CallType.OUTGOING:
 			case CallType.OUTGOING_WIFI:
 				return com.tr.hsyn.resdrawcalltype.R.drawable.outgoing_call;

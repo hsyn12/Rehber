@@ -3,10 +3,11 @@ package com.tr.hsyn.time;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ResourceBundle;
+
 
 /**
  * Type of the time units.
- * En çok kullanılan zaman birimlerini tanımlar.
  */
 public enum Unit {
 	/**
@@ -38,19 +39,21 @@ public enum Unit {
 	 */
 	MILLISECOND;
 	
+	static final ResourceBundle BUNDLE = ResourceBundle.getBundle("units");
+	
 	@NotNull
 	@Override
 	public String toString() {
 		
 		switch (this) {
 			
-			case YEAR: return "yıl";
-			case MONTH: return "ay";
-			case DAY: return "gün";
-			case HOUR: return "saat";
-			case MINUTE: return "dakika";
-			case SECOND: return "saniye";
-			case MILLISECOND: return "milisaniye";
+			case YEAR: return BUNDLE.getString("YEAR");
+			case MONTH: return BUNDLE.getString("MONTH");
+			case DAY: return BUNDLE.getString("DAY");
+			case HOUR: return BUNDLE.getString("HOUR");
+			case MINUTE: return BUNDLE.getString("MINUTE");
+			case SECOND: return BUNDLE.getString("SECOND");
+			case MILLISECOND: return BUNDLE.getString("MILLISECOND");
 			default: return "";
 		}
 	}

@@ -72,40 +72,6 @@ public abstract class CallLogFilter extends CallList implements Filter, HaveCall
 		setFilter(index);
 	}
 	
-	@Override
-	protected void listenBackPress() {
-		
-		// This callback will only be called when MyFragment is at least Started.
-		
-		requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
-	}
-	
-	@Override
-	protected void dontListenBackPress() {
-		
-		callback.remove();
-	}
-	
-	@Override
-	public int getFilter() {
-		
-		return filter;
-	}
-	
-	@Override
-	public void setFilter(int filter) {
-		
-		changeFilter(filter);
-		
-		if (filter != this.filter) {
-			
-			if (filter <= 6) this.filter = filter;
-			else showMostCalls(filter);
-		}
-		
-		//xlog.d("Call Filter : %d [%s]", filter, getFilterName(filter));
-	}
-	
 	private void changeFilter(int filter) {
 		
 		if (filter <= 6) {
@@ -126,6 +92,26 @@ public abstract class CallLogFilter extends CallList implements Filter, HaveCall
 		Blue.box(Key.MOST_CALLS_FILTER_TYPE, filter);
 		startActivity(new Intent(getContext(), MostCallsActivity.class));
 		Bungee.slideDown(getContext());
+	}
+	
+	private void filterAll() {
+		
+		Blue.box(Key.CALL_LOG_FILTER, new CallLogSearchInfo(getList(), filter));
+		
+		if (filteredCalls != null) {
+			
+			filteredCalls.clear();
+			filteredCalls = null;
+		}
+		
+		adapter = new CallAdapter(getList(), this, colorHolder, this::onCallAction, this::onLongClickItem, this::onItemSelectionChange);
+		recyclerView.setAdapter(adapter);
+		
+		var titleCallLog = getString(R.string.call_logs);
+		
+		setTitle(titleCallLog);
+		checkEmpty();
+		updateSubTitle();
 	}
 	
 	private void filterByType(int type) {
@@ -161,6 +147,20 @@ public abstract class CallLogFilter extends CallList implements Filter, HaveCall
 		}, false);
 	}
 	
+	private void onCallAction(int index) {
+		
+		if (onCallAction != null) onCallAction.onItemIndex(index);
+	}
+	
+	private void onItemSelectionChange(boolean isSelected) {
+		
+		if (isSelected) selectedItemsCounter++;
+		else selectedItemsCounter--;
+		
+		
+		setSubTitle(Stringx.format("%d / %d", adapter.getSize(), selectedItemsCounter));
+	}
+	
 	private void setFilterAdapter() {
 		
 		if (filteredCalls != null) {
@@ -189,13 +189,38 @@ public abstract class CallLogFilter extends CallList implements Filter, HaveCall
 		hideProgress();
 	}
 	
-	private void onItemSelectionChange(boolean isSelected) {
+	@Override
+	protected void listenBackPress() {
 		
-		if (isSelected) selectedItemsCounter++;
-		else selectedItemsCounter--;
+		// This callback will only be called when MyFragment is at least Started.
 		
+		requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+	}
+	
+	@Override
+	protected void dontListenBackPress() {
 		
-		setSubTitle(Stringx.format("%d / %d", adapter.getSize(), selectedItemsCounter));
+		callback.remove();
+	}
+	
+	@Override
+	public int getFilter() {
+		
+		return filter;
+	}
+	
+	@Override
+	public void setFilter(int filter) {
+		
+		changeFilter(filter);
+		
+		if (filter != this.filter) {
+			
+			if (filter <= 6) this.filter = filter;
+			else showMostCalls(filter);
+		}
+		
+		//xlog.d("Call Filter : %d [%s]", filter, getFilterName(filter));
 	}
 	
 	@Override
@@ -207,35 +232,10 @@ public abstract class CallLogFilter extends CallList implements Filter, HaveCall
 		}
 	}
 	
-	private void onCallAction(int index) {
-		
-		if (onCallAction != null) onCallAction.onItemIndex(index);
-	}
-	
 	@Override
 	public void setOnCallAction(ItemIndexListener onCallAction) {
 		
 		this.onCallAction = onCallAction;
-	}
-	
-	private void filterAll() {
-		
-		Blue.box(Key.CALL_LOG_FILTER, new CallLogSearchInfo(getList(), filter));
-		
-		if (filteredCalls != null) {
-			
-			filteredCalls.clear();
-			filteredCalls = null;
-		}
-		
-		adapter = new CallAdapter(getList(), this, colorHolder, this::onCallAction, this::onLongClickItem, this::onItemSelectionChange);
-		recyclerView.setAdapter(adapter);
-		
-		var titleCallLog = getString(R.string.call_log);
-		
-		setTitle(titleCallLog);
-		checkEmpty();
-		updateSubTitle();
 	}
 	
 	@Override
@@ -243,8 +243,8 @@ public abstract class CallLogFilter extends CallList implements Filter, HaveCall
 		
 		super.setList(list);
 		
-		setFilter(filter);
 		setTitle(filters[filter]);
+		setFilter(filter);
 		updateSubTitle();
 		checkEmpty();
 		

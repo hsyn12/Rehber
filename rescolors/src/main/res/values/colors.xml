@@ -1501,7 +1501,7 @@
 	<color name="grey_55">#8CEFEFEF</color>
 	<color name="grey_85">#D9efefef</color>
 
-	<color name="text_color_primary">#A6000000</color>
+	<color name="text_color_primary">@color/black_50</color>
 	<color name="text_tree_d">#BF333333</color>
 	<color name="text_tree_d_light">#BF5E5E5E</color>
 	<color name="text_tree_d_ex_light">#4D5E5E5E</color>
@@ -1511,7 +1511,7 @@
 	<color name="spacer_color">#26000000</color>
 
 	<color name="navigation_background">#2b2b2b</color>
-	<color name="calllog_popup_menu_background">#dadfe2</color>
+	<color name="call_log_popup_menu_background">#dadfe2</color>
 	<color name="contact_item_text_color">#B0212121</color>
 	<color name="call_log_item_text_color">#9C0B0125</color>
 	<color name="call_log_seconds_item_text_color">#7c0b0125</color>

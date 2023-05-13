@@ -71,7 +71,7 @@ public class ActivityCallList extends ActivityCallHistoryView {
 		}
 		else {
 			
-			setTitle(getString(R.string.call_log));
+			setTitle(getString(R.string.call_logs));
 		}
 		
 		setSubtitle(String.valueOf(calls.size()));

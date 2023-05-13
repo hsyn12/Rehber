@@ -10,7 +10,6 @@ import androidx.appcompat.widget.Toolbar;
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.fastscroller.FastScrollRecyclerView;
-import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.code.Phone;
 import com.tr.hsyn.xrelativelayout.RelativeLayoutx;
@@ -67,18 +66,17 @@ public class ShowCallsDialog {
 		
 		//noinspection ReplaceNullCheck
 		if (subTitle != null) toolbar.setSubtitle(subTitle);
-		else toolbar.setSubtitle(Stringx.format("%d Arama", calls.size()));
-		
-	}
-	
-	public void show() {
-		
-		dialog.show();
+		else toolbar.setSubtitle(activity.getString(R.string.word_calls, calls.size()));
 	}
 	
 	private void onCancel() {
 		
 		dialog.dismiss();
+	}
+	
+	public void show() {
+		
+		dialog.show();
 	}
 	
 }

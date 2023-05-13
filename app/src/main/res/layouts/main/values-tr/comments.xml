@@ -3,16 +3,23 @@
 
 	<string name="word_only">sadece</string>
 	<string name="word_any">hiç bir</string>
-	<string name="word_has">sahip</string>
-	<string name="word_this_is">bu</string>
+	<string name="word_has">ait</string>
+	<string name="word_this">bu</string>
 	<string name="word_contact">kişi</string>
 	<string name="word_this_contact">Bu kişi</string>
 	<string name="word_call">arama</string>
-	<string name="word_calls_with_size">%d arama kaydı</string>
+	<string name="word_this_call">Bu arama</string>
+	<string name="word_calls">%d arama kaydı</string>
 	<string name="word_record">kayıt</string>
 	<string name="word_the_most_call">en fazla arama</string>
-	<string name="word_contact_has_record">@string/word_this_contact</string>
+	<string name="word_contact_has">@string/word_this_contact</string>
 	<string name="word_contact_has_record_of">@string/word_this_contact</string>
-	<string name="word_contact_has">kaydına sahip kişi</string>
 	<string name="word_contact_has_one_of_them">kaydına sahip %1$d kişiden biri</string>
+
+	<string name="word_exist">var</string>
+	<string name="word_date_before">%d %s önce</string>
+	<string name="word_date_unit">%d %s</string>
+	<string name="word_happened">gerçekleşmiş</string>
+	<string name="word_the_last_call">Son arama kaydı</string>
+	<string name="word_a">bir</string>
 </resources>

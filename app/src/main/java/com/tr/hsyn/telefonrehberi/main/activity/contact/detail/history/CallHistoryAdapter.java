@@ -82,25 +82,13 @@ public class CallHistoryAdapter extends RecyclerView.Adapter<CallHistoryAdapter.
 		holder.image.setImageDrawable(image);
 	}
 	
-	@NonNull
-	private static String getLetter(String str) {
-		
-		var l = Stringx.getFirstChar(str);
-		
-		if (l.isEmpty()) return "?";
-		
-		if (Character.isAlphabetic(l.charAt(0))) return l.toUpperCase(Locale.ROOT);
-		
-		return "?";
-	}
-	
 	private static int getTypeIcon(int type) {
 		
 		switch (type) {
 			
 			case CallType.INCOMING:
 			case CallType.INCOMING_WIFI:
-				return R.drawable.incomming_call;
+				return R.drawable.incoming_call;
 			case CallType.OUTGOING:
 			case CallType.OUTGOING_WIFI:
 				return R.drawable.outgoing_call;
@@ -118,7 +106,19 @@ public class CallHistoryAdapter extends RecyclerView.Adapter<CallHistoryAdapter.
 				return R.drawable.un_recieved_call;
 		}
 		
-		return R.drawable.incomming_call;
+		return R.drawable.incoming_call;
+	}
+	
+	@NonNull
+	private static String getLetter(String str) {
+		
+		var l = Stringx.getFirstChar(str);
+		
+		if (l.isEmpty()) return "?";
+		
+		if (Character.isAlphabetic(l.charAt(0))) return l.toUpperCase(Locale.ROOT);
+		
+		return "?";
 	}
 	
 	@Override

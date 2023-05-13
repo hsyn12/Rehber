@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:locale="tr">
 
-	<string name="call_log">Arama Kayıtları</string>
+	<string name="call_logs">Arama Kayıtları</string>
 	<string name="call_record">Arama Kaydı</string>
 
 	<string name="call">Ara</string>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:locale="en">
 
-	<string name="call_log">Call Log</string>
+	<string name="call_logs">Call Logs</string>
 	<string name="call_record">Call Records</string>
 	<string name="call">Call</string>
 
