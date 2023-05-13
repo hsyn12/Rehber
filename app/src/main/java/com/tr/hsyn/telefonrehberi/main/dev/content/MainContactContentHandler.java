@@ -65,6 +65,6 @@ public class MainContactContentHandler implements ContentHandler<Contact> {
 	@Override
 	public Comparator<Contact> getComparator() {
 		
-		return PerfectSort.comparator(Contact::getName);
+		return PerfectSort.stringComparator(Contact::getName);
 	}
 }

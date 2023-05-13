@@ -124,7 +124,7 @@ public interface Contacts extends ContactColumns {
 			
 			cursor.close();
 			
-			contacts.sort(PerfectSort.comparator(Contact::getName));
+			contacts.sort(PerfectSort.stringComparator(Contact::getName));
 			return contacts;
 		}
 		
@@ -183,7 +183,7 @@ public interface Contacts extends ContactColumns {
 			
 			//xlog.d("Found %d contacts", contacts.size());
 			
-			contacts.sort(PerfectSort.comparator(Contact::getName));
+			contacts.sort(PerfectSort.stringComparator(Contact::getName));
 			
 			return contacts;
 		}

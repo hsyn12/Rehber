@@ -42,6 +42,6 @@ public class SqlContactHandler implements SQLContentHandler<Contact> {
 	@Override
 	public Comparator<Contact> getComparator() {
 		
-		return PerfectSort.comparator(Contact::getName);
+		return PerfectSort.stringComparator(Contact::getName);
 	}
 }
