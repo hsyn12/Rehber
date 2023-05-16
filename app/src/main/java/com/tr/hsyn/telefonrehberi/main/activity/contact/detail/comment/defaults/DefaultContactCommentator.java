@@ -43,7 +43,8 @@ import java.util.List;
 
 
 /**
- * This class implements the ContactCommentator interface and provides default behavior for commenting on a contact.
+ * This class implements the ContactCommentator interface and
+ * provides default behavior for commenting on a contact.
  * It retrieves the call history of the contact and generates comments based on that history.
  */
 public class DefaultContactCommentator implements ContactCommentator {
@@ -58,7 +59,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 	 */
 	protected final List<Call>          calls;
 	/**
-	 * Call history of the contact
+	 * History of the contact
 	 */
 	protected       History             history;
 	/**

@@ -7,19 +7,29 @@ import com.tr.hsyn.text.Span;
 import com.tr.hsyn.text.Spans;
 
 
+/**
+ * Extends {@link CommentStore} in first hand.
+ * Moreover, it provides a closer insight into the comments.
+ * Text color, underline and clickable text, etc.
+ */
 public interface CommentEditor extends CommentStore {
 	
-	
+	/**
+	 * Returns the color for the text for emphasis text.
+	 *
+	 * @return the color
+	 */
 	default int getTextColor() {
 		
 		return getActivity().getColor(com.tr.hsyn.rescolors.R.color.purple_500);
 	}
 	
-	default String getString(int resourceId, Object... args) {
-		
-		return getActivity().getString(resourceId, args);
-	}
-	
+	/**
+	 * Returns the spans for the clickable text.
+	 *
+	 * @param listener the listener to be used for the click
+	 * @return the spans
+	 */
 	default Span[] getClickSpans(View.OnClickListener listener) {
 		
 		return new Span[]{

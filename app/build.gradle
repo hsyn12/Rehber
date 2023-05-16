@@ -8,7 +8,7 @@ android {
 	compileSdk rootProject.compileSdk
 
 
-	def configKeyPath = "C:\\Rehber\\tr_hsyn.jks"
+	def configKeyPath = "C:\\Users\\xyz\\StudioProjects\\Rehber\\tr_hsyn.jks"
 
 	signingConfigs {
 		myconfig {
@@ -181,7 +181,7 @@ dependencies {
 	annotationProcessor project(path: ':warnerbros')
 
 	implementation "androidx.appcompat:appcompat:${rootProject.appcompat}"
-	implementation 'com.google.android.material:material:1.8.0'
+	implementation 'com.google.android.material:material:1.9.0'
 	implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 	testImplementation 'junit:junit:4.13.2'
 	androidTestImplementation 'androidx.test.ext:junit:1.1.5'
