@@ -2,5 +2,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:locale="en">
 	<string name="rehber">Contacts</string>
 	<string name="no_contact">No Contact</string>
+	<string name="call_summary">Call Summary</string>
+	<string name="call_history">Call History</string>
+	<string name="about_contact">About The Contact</string>
 
 </resources>

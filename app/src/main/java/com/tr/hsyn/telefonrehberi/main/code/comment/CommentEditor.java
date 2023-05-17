@@ -15,6 +15,17 @@ import com.tr.hsyn.text.Spans;
 public interface CommentEditor extends CommentStore {
 	
 	/**
+	 * Returns the color associated with the given resource ID.
+	 *
+	 * @param id the resource ID of the color
+	 * @return the color associated with the given resource ID
+	 */
+	default int getColor(int id) {
+		
+		return getActivity().getColor(id);
+	}
+	
+	/**
 	 * Returns the color for the text for emphasis text.
 	 *
 	 * @return the color

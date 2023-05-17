@@ -2,5 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:locale="tr">
 	<string name="rehber">Rehber</string>
 	<string name="no_contact">Rehberde kayıtlı bir kişi yok</string>
-
+	<string name="call_summary">Arama Özeti</string>
+	<string name="call_history">Arama Geçmişi</string>
+	<string name="about_contact">Kişi Hakkında</string>
 </resources>

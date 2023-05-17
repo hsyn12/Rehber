@@ -43,9 +43,8 @@ import java.util.List;
 
 
 /**
- * This class implements the ContactCommentator interface and
+ * This class implements the {@link ContactCommentator} interface and
  * provides default behavior for commenting on a contact.
- * It retrieves the call history of the contact and generates comments based on that history.
  */
 public class DefaultContactCommentator implements ContactCommentator {
 	
@@ -55,7 +54,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 	 */
 	protected final Spanner             comment = new Spanner();
 	/**
-	 * The list of all call log calls
+	 * The list of all call log calls that also included the calls of the current contact
 	 */
 	protected final List<Call>          calls;
 	/**
@@ -70,12 +69,12 @@ public class DefaultContactCommentator implements ContactCommentator {
 	 * The comment store
 	 */
 	protected       ContactCommentStore commentStore;
-	//protected final String DEFAULT_DATE_FORMAT = "d.M.yyyy";
 	
 	/**
-	 * Constructs a new DefaultContactCommentator object with the given comment store.
+	 * Constructs a new {@link DefaultContactCommentator} object with the given comment store.
 	 *
 	 * @param commentStore the comment store to be used by this commentator
+	 * @param calls        the list of all call log calls that also included the calls of the current contact
 	 */
 	public DefaultContactCommentator(ContactCommentStore commentStore, List<Call> calls) {
 		
@@ -107,9 +106,10 @@ public class DefaultContactCommentator implements ContactCommentator {
 		this.history = contact.getData(ContactKey.HISTORY);
 		
 		//if history null or empty, no need to go any further
-		if (history != null)
+		if (history != null) {
 			if (history.isEmpty()) comment.append(commentStore.noHistory());
 			else commentOnContact();
+		}
 		else comment.append(commentStore.historyNotFound());
 		
 		return comment;
@@ -128,25 +128,24 @@ public class DefaultContactCommentator implements ContactCommentator {
 		if (history == null || history.isEmpty())
 			throw new IllegalArgumentException("Call history must not be null or empty");
 		
-		
 		if (history.size() == 1) {
 			commentOnSingleCall();
 			return;
 		}
 		
-		
 		xlog.d("Accessed the call history [contact='%s', size=%d]", contact.getName(), history.size());
 		
+		//noinspection LambdaCanBeReplacedWithAnonymous
 		Runny.run(() -> {
-			
 			//noinspection Convert2MethodRef
 			historyQuantityComment();
-			
-			//mostCallComments();
 		});
-		
 	}
 	
+	/**
+	 * Appends a comment about the single call to the {@link #comment} object
+	 * managed by this commentator.
+	 */
 	private void commentOnSingleCall() {
 		
 		comment.append(commentStore.singleCall()).append(". ");
@@ -162,17 +161,17 @@ public class DefaultContactCommentator implements ContactCommentator {
 		// Now, we are sure that the call history size has been more than one.
 		// The call history of the current contact has two calls at least.
 		
-		// We want to inform the user about the quantity of call history.
+		// We want to inform the user about the quantity of the call history.
 		// For example, 'The contact has 2 calls'
 		
-		String               _name    = contact.getName() != null && !PhoneNumbers.isPhoneNumber(contact.getName()) ? contact.getName() : Stringx.toTitle(getString(R.string.word_contact));
-		View.OnClickListener listener = View -> new ShowCallsDialog(commentStore.getActivity(), history.getHistory()).show();
-		comment.append(_name, Spans.bold(), Spans.foreground(getTextColor()));
+		String               name     = contact.getName() != null && !PhoneNumbers.isPhoneNumber(contact.getName()) ? contact.getName() : Stringx.toTitle(getString(R.string.word_contact));
+		View.OnClickListener listener = view -> new ShowCallsDialog(commentStore.getActivity(), history.getHistory()).show();
+		comment.append(name, Spans.bold(), Spans.foreground(getTextColor()));
 		
 		// We have two language resources forever, I think
 		if (commentStore.isTurkishLanguage()) {
 			
-			var extension = WordExtension.getWordExt(_name, Extension.TYPE_TO);
+			var extension = WordExtension.getWordExt(name, Extension.TYPE_TO);
 			
 			comment.append(Stringx.format("'%s %s ", extension, getString(R.string.word_has)))
 					.append(Stringx.format("%s", getString(R.string.word_calls, history.size())), getClickSpans(listener))
@@ -192,16 +191,19 @@ public class DefaultContactCommentator implements ContactCommentator {
 		
 		
 		this.comment.append(commentOnTheLastCall());
-		//this.comment.append(aboutLastCallType());
+		this.comment.append(aboutLastCallType());
 	}
 	
+	/**
+	 * Appends a comment about the given call to the {@link #comment} object.
+	 *
+	 * @param call the call to comment on
+	 */
 	private void commentOnTheSingleCall(@NotNull Call call) {
 		
 		Duration             timeBefore = Time.howLongBefore(call.getTime());
 		String               callType   = Res.getCallType(commentStore.getActivity(), call.getType());
-		View.OnClickListener listener1  = View -> new ShowCall(commentStore.getActivity(), call).show();
-		
-		xlog.d("Before language: %s", commentStore.isTurkishLanguage());
+		View.OnClickListener listener1  = view -> new ShowCall(commentStore.getActivity(), call).show();
 		
 		if (commentStore.isTurkishLanguage()) {
 			
@@ -232,24 +234,106 @@ public class DefaultContactCommentator implements ContactCommentator {
 		
 	}
 	
+	/**
+	 * @return comment about last call type
+	 */
+	private @NotNull CharSequence aboutLastCallType() {
+		
+		Spanner       commentAboutLastCallType = new Spanner();
+		Call          lastCall                 = history.getLastCall();
+		List<Integer> types                    = new ArrayList<>();
+		int           type                     = lastCall.getType();
+		
+		types.add(type);
+		//@off
+		switch (type) {
+			case CallType.INCOMING: types.add(CallType.INCOMING_WIFI);break;
+			case CallType.OUTGOING: types.add(CallType.OUTGOING_WIFI);break;
+			case CallType.INCOMING_WIFI: types.add(CallType.INCOMING);break;
+			case CallType.OUTGOING_WIFI: types.add(CallType.OUTGOING);break;
+		default: break;
+		}//@on
+		
+		var callTypes  = Lister.toIntArray(types);
+		var typedCalls = history.getCalls(callTypes);
+		var typeStr    = Res.getCallType(commentStore.getActivity(), type);
+		
+		if (typedCalls.size() == 1) {
+			
+			if (commentStore.isTurkishLanguage()) {
+				
+				commentAboutLastCallType.append("Ve bu ")
+						.append(Stringx.format("%s", typeStr.toLowerCase()), Spans.bold())
+						.append(" kişiye ait tek ")
+						.append(Stringx.format("%s", typeStr.toLowerCase()), Spans.bold())
+						.append(". ");
+			}
+			else {
+				
+				commentAboutLastCallType.append("And this ")
+						.append(Stringx.format("%s", typeStr.toLowerCase()), Spans.bold())
+						.append(" is only single ")
+						.append(Stringx.format("%s", typeStr.toLowerCase()), Spans.bold())
+						.append(" of this contact. ");
+			}
+		}
+		else {
+			
+			var             historyCalls    = history.getCalls(callTypes);
+			ShowCallsDialog showCallsDialog = new ShowCallsDialog(commentStore.getActivity(), historyCalls, history.getContact().getName(), Stringx.format("%d %s", historyCalls.size(), typeStr));
+			
+			View.OnClickListener listener = view -> showCallsDialog.show();
+			
+			if (commentStore.isTurkishLanguage()) {
+				
+				commentAboutLastCallType.append("Ve bu ")
+						.append(Stringx.format("%s", typeStr.toLowerCase()), Spans.bold())
+						.append(" kişiye ait ")
+						.append(Stringx.format("%d %s", typedCalls.size(), typeStr.toLowerCase()), Spans.click(listener, getClickColor()), Spans.underline())
+						.append("dan biri. ");
+			}
+			else {
+				//and this call is one of the 33 outgoing calls
+				commentAboutLastCallType.append("And this ")
+						.append(Stringx.format("%s", typeStr.toLowerCase()), Spans.bold())
+						.append(" is one of the ")
+						.append(Stringx.format("%d %ss", typedCalls.size(), typeStr.toLowerCase()), Spans.click(listener, getClickColor()), Spans.underline())
+						.append(". ");
+			}
+		}
+		
+		return commentAboutLastCallType;
+	}
+	
+	/**
+	 * Returns the current contact being commented on.
+	 *
+	 * @return the current contact
+	 */
+	@Override
+	public Contact getContact() {
+		
+		return contact;
+	}
+	
+	/**
+	 * @return
+	 * @inheritDoc
+	 */
 	@Override
 	public @NotNull CharSequence commentOnTheLastCall() {
 		
-		Spanner comment    = new Spanner();
-		int     clickColor = getColor(com.tr.hsyn.rescolors.R.color.orange_500);
-		
-		Call lastCall = history.getLastCall();
-		//Call firstCall = history.getFirstCall();
-		String   callType   = Res.getCallType(commentStore.getActivity(), lastCall.getType());
-		Duration timeBefore = Time.howLongBefore(lastCall.getTime());
-		ShowCall showCall   = new ShowCall(commentStore.getActivity(), lastCall);
-		
-		View.OnClickListener listener1 = View -> showCall.show();
+		Spanner              commentOnTheLastCall = new Spanner();
+		Call                 lastCall             = history.getLastCall();
+		String               callType             = Res.getCallType(commentStore.getActivity(), lastCall.getType());
+		Duration             timeBefore           = Time.howLongBefore(lastCall.getTime());
+		ShowCall             showCall             = new ShowCall(commentStore.getActivity(), lastCall);
+		View.OnClickListener listener1            = view -> showCall.show();
 		
 		if (commentStore.isTurkishLanguage()) {
 			
 			// bu arama 3 gün önce olan bir cevapsız çağrı
-			comment.append(getString(R.string.word_the_last_call), getClickSpans(listener1))
+			commentOnTheLastCall.append(getString(R.string.word_the_last_call), getClickSpans(listener1))
 					.append(" ")
 					.append(getString(R.string.word_date_before, timeBefore.getValue(), timeBefore.getUnit()))
 					.append(" ")
@@ -263,7 +347,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 		else {
 			
 			// this call is from 3 days ago
-			comment.append(getString(R.string.word_the_last_call), getClickSpans(listener1))
+			commentOnTheLastCall.append(getString(R.string.word_the_last_call), getClickSpans(listener1))
 					.append(" ")
 					.append(getString(R.string.word_is))
 					.append(" ")
@@ -279,74 +363,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 			
 		}
 		
-		return comment;
-	}
-	
-	/**
-	 * @return comment about last call type
-	 */
-	private @NotNull CharSequence aboutLastCallType() {
-		
-		Spanner       comment  = new Spanner();
-		Call          lastCall = history.getLastCall();
-		List<Integer> types    = new ArrayList<>();
-		int           type     = lastCall.getType();
-		
-		types.add(type);
-		
-		switch (type) {//@off
-            case CallType.INCOMING:
-                types.add(CallType.INCOMING_WIFI);
-                break;
-            case CallType.OUTGOING:
-                types.add(CallType.OUTGOING_WIFI);
-                break;
-            case CallType.INCOMING_WIFI:
-                types.add(CallType.INCOMING);
-                break;
-            case CallType.OUTGOING_WIFI:
-                types.add(CallType.OUTGOING);
-                break;
-        }//@on
-		
-		var callTypes  = Lister.toIntArray(types);
-		var typedCalls = history.getCalls(callTypes);
-		var typeStr    = Res.getCallType(commentStore.getActivity(), type);
-		
-		if (typedCalls.size() == 1) {
-			
-			comment.append("Ve bu ")
-					.append(Stringx.format("%s", typeStr.toLowerCase()), Spans.bold())
-					.append(" kişiye ait tek ")
-					.append(Stringx.format("%s", typeStr.toLowerCase()), Spans.bold())
-					.append(". ");
-		}
-		else {
-			
-			var             calls           = history.getCalls(callTypes);
-			ShowCallsDialog showCallsDialog = new ShowCallsDialog(commentStore.getActivity(), calls, history.getContact().getName(), Stringx.format("%d %s", calls.size(), typeStr));
-			
-			View.OnClickListener listener = View -> showCallsDialog.show();
-			
-			comment.append("Ve bu ")
-					.append(Stringx.format("%s", typeStr.toLowerCase()), Spans.bold())
-					.append(" kişiye ait ")
-					.append(Stringx.format("%d %s", typedCalls.size(), typeStr.toLowerCase()), Spans.click(listener, getClickColor()), Spans.underline())
-					.append("dan biri. ");
-		}
-		
-		return comment;
-	}
-	
-	/**
-	 * Returns the current contact being commented on.
-	 *
-	 * @return the current contact
-	 */
-	@Override
-	public Contact getContact() {
-		
-		return contact;
+		return commentOnTheLastCall;
 	}
 	
 	/**

@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="en">
+<resources>
 
 	<string name="contact_details_add_phone_number">Telefon numarası ekle</string>
 	<string name="contact_details_contact_not_found">Kişi Bulanamadı</string>
-	<string name="show_contact_history">Arama geçmişi</string>
 	<string name="no_contact_history">Arama geçmişi yok</string>
 	<string name="delete">Sil</string>
 	<string name="edit">Düzenle</string>
@@ -11,5 +10,6 @@
 	<string name="calling">Arama %s</string>
 	<string name="w_calling">Arama</string>
 	<string name="speaking">Konuşma</string>
+
 
 </resources>

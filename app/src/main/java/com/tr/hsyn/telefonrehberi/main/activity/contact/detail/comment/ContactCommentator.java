@@ -39,14 +39,14 @@ public interface ContactCommentator extends Commentator<Contact>, CommentEditor 
 	}
 	
 	/**
-	 * Returns the color associated with the given resource ID.
+	 * Returns the activity by calling {@link #getCommentStore()}.
 	 *
-	 * @param id the resource ID of the color
-	 * @return the color associated with the given resource ID
+	 * @return the activity
 	 */
-	default int getColor(int id) {
+	@Override
+	default @NotNull Activity getActivity() {
 		
-		return getCommentStore().getActivity().getColor(id);
+		return getCommentStore().getActivity();
 	}
 	
 	/**
@@ -55,13 +55,6 @@ public interface ContactCommentator extends Commentator<Contact>, CommentEditor 
 	 * @return the {@link ContactCommentStore} instance associated with this {@link ContactCommentator}
 	 */
 	ContactCommentStore getCommentStore();
-	
-	
-	@Override
-	default @NotNull Activity getActivity() {
-		
-		return getCommentStore().getActivity();
-	}
 	
 	/**
 	 * This method is responsible for commenting on a contact.
@@ -76,9 +69,9 @@ public interface ContactCommentator extends Commentator<Contact>, CommentEditor 
 	@NotNull CharSequence commentOn(@NotNull Contact contact);
 	
 	/**
-	 * Returns the history of the contact.
+	 * Returns the call history of the contact.
 	 *
-	 * @return the history of the contact
+	 * @return the call history of the contact
 	 */
 	default List<Call> getCallHistory() {
 		

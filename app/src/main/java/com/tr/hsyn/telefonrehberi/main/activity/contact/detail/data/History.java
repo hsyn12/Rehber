@@ -15,16 +15,17 @@ import java.util.stream.Collectors;
 
 
 /**
- * Describes the history of a contact and provides some helper methods.
+ * Describes the history of a contact and provides some methods to manage it.
+ * History means the call history between a contact and the user.
+ * And this class makes it easy to manage it.
  */
 public interface History {
 	
-	
 	/**
-	 * Creates a new history of a contact
+	 * Creates a new history for the given contact.
 	 *
-	 * @param contact the contact
-	 * @return the history
+	 * @param contact the contact to be used by this history
+	 * @return the history for the given contact
 	 */
 	@NotNull
 	static History of(@NotNull Contact contact) {
@@ -33,9 +34,9 @@ public interface History {
 	}
 	
 	/**
-	 * Returns the most recent call
+	 * Returns the most recent call.
 	 *
-	 * @return the last call
+	 * @return the most recent call
 	 */
 	default Call getLastCall() {
 		
@@ -43,7 +44,7 @@ public interface History {
 	}
 	
 	/**
-	 * Returns all calls of the contact
+	 * Returns all calls that between the contact and the user.
 	 *
 	 * @return the calls
 	 */
@@ -53,14 +54,14 @@ public interface History {
 	}
 	
 	/**
-	 * Returns the contact
+	 * Returns the contact.
 	 *
 	 * @return the contact
 	 */
 	@NotNull Contact getContact();
 	
 	/**
-	 * Returns the oldest call
+	 * Returns the oldest call.
 	 *
 	 * @return the first call
 	 */
@@ -70,9 +71,9 @@ public interface History {
 	}
 	
 	/**
-	 * Returns the size of the history
+	 * Returns the size of the call history of the contact.
 	 *
-	 * @return the size
+	 * @return the size of the call history
 	 */
 	default int size() {
 		
@@ -80,9 +81,9 @@ public interface History {
 	}
 	
 	/**
-	 * Returns true if the history is empty
+	 * Returns whether the call history is empty.
 	 *
-	 * @return true if the history is empty
+	 * @return {@code true} if the call history is empty
 	 */
 	default boolean isEmpty() {
 		
@@ -101,7 +102,7 @@ public interface History {
 	}
 	
 	/**
-	 * Sorts the history
+	 * Sorts the history.
 	 *
 	 * @param comparator the comparator
 	 */
