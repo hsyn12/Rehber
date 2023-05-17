@@ -189,7 +189,6 @@ public class DefaultContactCommentator implements ContactCommentator {
 					.append(". ");
 		}
 		
-		
 		this.comment.append(commentOnTheLastCall());
 		this.comment.append(aboutLastCallType());
 	}
