@@ -3,8 +3,9 @@ package com.tr.hsyn.telefonrehberi.main.activity.contact.detail.comment.defaults
 
 import android.view.View;
 
+import androidx.annotation.NonNull;
+
 import com.tr.hsyn.calldata.Call;
-import com.tr.hsyn.calldata.CallType;
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.contactdata.Contact;
@@ -38,7 +39,6 @@ import com.tr.hsyn.xlog.xlog;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -123,10 +123,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 	private void commentOnContact() {
 		
 		// Here we start to generate the comment.
-		
-		// Call history must not be 'null' and empty at this point
-		if (history == null || history.isEmpty())
-			throw new IllegalArgumentException("Call history must not be null or empty");
+		// Call history is not 'null' and not empty at this point
 		
 		if (history.size() == 1) {
 			commentOnSingleCall();
@@ -135,10 +132,11 @@ public class DefaultContactCommentator implements ContactCommentator {
 		
 		xlog.d("Accessed the call history [contact='%s', size=%d]", contact.getName(), history.size());
 		
-		//noinspection LambdaCanBeReplacedWithAnonymous
 		Runny.run(() -> {
-			//noinspection Convert2MethodRef
-			historyQuantityComment();
+			
+			this.comment.append(historyQuantityComment());
+			this.comment.append(commentOnTheLastCall());
+			this.comment.append(aboutLastCallType());
 		});
 	}
 	
@@ -153,10 +151,11 @@ public class DefaultContactCommentator implements ContactCommentator {
 	}
 	
 	/**
-	 * Generates a comment about the quantity of call history for the contact.
-	 * Appends the generated comment to the {@link #comment} object managed by this commentator.
+	 * Returns a comment about the quantity of call history for the contact.
+	 * For example, <code>'The contact has <u>2 calls</u>'</code>.
 	 */
-	private void historyQuantityComment() {
+	@NonNull
+	private CharSequence historyQuantityComment() {
 		
 		// Now, we are sure that the call history size has been more than one.
 		// The call history of the current contact has two calls at least.
@@ -164,73 +163,32 @@ public class DefaultContactCommentator implements ContactCommentator {
 		// We want to inform the user about the quantity of the call history.
 		// For example, 'The contact has 2 calls'
 		
-		String               name     = contact.getName() != null && !PhoneNumbers.isPhoneNumber(contact.getName()) ? contact.getName() : Stringx.toTitle(getString(R.string.word_contact));
-		View.OnClickListener listener = view -> new ShowCallsDialog(commentStore.getActivity(), history.getHistory()).show();
-		comment.append(name, Spans.bold(), Spans.foreground(getTextColor()));
+		Spanner              quantityComment = new Spanner();
+		String               name            = contact.getName() != null && !PhoneNumbers.isPhoneNumber(contact.getName()) ? contact.getName() : Stringx.toTitle(getString(R.string.word_contact));
+		View.OnClickListener listener        = view -> new ShowCallsDialog(commentStore.getActivity(), history.getHistory()).show();
+		quantityComment.append(name, Spans.bold(), Spans.foreground(getTextColor()));
 		
 		// We have two language resources forever, I think
 		if (commentStore.isTurkishLanguage()) {
 			
 			var extension = WordExtension.getWordExt(name, Extension.TYPE_TO);
 			
-			comment.append(Stringx.format("'%s %s ", extension, getString(R.string.word_has)))
+			quantityComment.append(Stringx.format("'%s %s ", extension, getString(R.string.word_has)))
 					.append(Stringx.format("%s", getString(R.string.word_calls, history.size())), getClickSpans(listener))
 					.append(" ")
 					.append(getString(R.string.word_exist))
 					.append(". ");
-			
 		}
 		else {
 			
-			comment.append(" ")
+			quantityComment.append(" ")
 					.append(getString(R.string.word_has))
 					.append(" ")
 					.append(Stringx.format("%s", getString(R.string.word_calls, history.size())), getClickSpans(listener))
 					.append(". ");
 		}
 		
-		this.comment.append(commentOnTheLastCall());
-		this.comment.append(aboutLastCallType());
-	}
-	
-	/**
-	 * Appends a comment about the given call to the {@link #comment} object.
-	 *
-	 * @param call the call to comment on
-	 */
-	private void commentOnTheSingleCall(@NotNull Call call) {
-		
-		Duration             timeBefore = Time.howLongBefore(call.getTime());
-		String               callType   = Res.getCallType(commentStore.getActivity(), call.getType());
-		View.OnClickListener listener1  = view -> new ShowCall(commentStore.getActivity(), call).show();
-		
-		if (commentStore.isTurkishLanguage()) {
-			
-			// bu arama 3 gün önce olan bir cevapsız çağrı
-			comment.append(getString(R.string.word_this_call), getClickSpans(listener1))
-					.append(" ")
-					.append(getString(R.string.word_date_before, timeBefore.getValue(), timeBefore.getUnit()))
-					.append(" ")
-					.append(getString(R.string.word_happened))
-					.append(" ")
-					.append(getString(R.string.word_a))
-					.append(Stringx.format("%s", callType.toLowerCase()), Spans.bold())
-					.append(". ");
-		}
-		else {
-			
-			// this call is from 3 days ago
-			comment.append(getString(R.string.word_this_call), getClickSpans(listener1))
-					.append(" ")
-					.append(getString(R.string.word_is_from))
-					.append(" ")
-					.append(getString(R.string.word_date_unit, timeBefore.getValue(), timeBefore.getUnit()))
-					.append(Stringx.format("%s", timeBefore.getValue() > 1 ? "s " : " "))
-					.append(getString(R.string.word_is_ago))
-					.append(". ");
-			
-		}
-		
+		return quantityComment;
 	}
 	
 	/**
@@ -238,24 +196,13 @@ public class DefaultContactCommentator implements ContactCommentator {
 	 */
 	private @NotNull CharSequence aboutLastCallType() {
 		
-		Spanner       commentAboutLastCallType = new Spanner();
-		Call          lastCall                 = history.getLastCall();
-		List<Integer> types                    = new ArrayList<>();
-		int           type                     = lastCall.getType();
+		Spanner commentAboutLastCallType = new Spanner();
+		Call    lastCall                 = history.getLastCall();
+		int     type                     = lastCall.getType();
 		
-		types.add(type);
-		//@off
-		switch (type) {
-			case CallType.INCOMING: types.add(CallType.INCOMING_WIFI);break;
-			case CallType.OUTGOING: types.add(CallType.OUTGOING_WIFI);break;
-			case CallType.INCOMING_WIFI: types.add(CallType.INCOMING);break;
-			case CallType.OUTGOING_WIFI: types.add(CallType.OUTGOING);break;
-		default: break;
-		}//@on
-		
-		var callTypes  = Lister.toIntArray(types);
-		var typedCalls = history.getCalls(callTypes);
-		var typeStr    = Res.getCallType(commentStore.getActivity(), type);
+		int[]      callTypes  = Res.getCallTypes(type);
+		List<Call> typedCalls = history.getCalls(callTypes);
+		String     typeStr    = Res.getCallType(commentStore.getActivity(), type);
 		
 		if (typedCalls.size() == 1) {
 			
@@ -302,6 +249,46 @@ public class DefaultContactCommentator implements ContactCommentator {
 		}
 		
 		return commentAboutLastCallType;
+	}
+	
+	/**
+	 * Appends a comment about the given call to the {@link #comment} object.
+	 *
+	 * @param call the call to comment on
+	 */
+	private void commentOnTheSingleCall(@NotNull Call call) {
+		
+		Duration             timeBefore = Time.howLongBefore(call.getTime());
+		String               callType   = Res.getCallType(commentStore.getActivity(), call.getType());
+		View.OnClickListener listener1  = view -> new ShowCall(commentStore.getActivity(), call).show();
+		
+		if (commentStore.isTurkishLanguage()) {
+			
+			// bu arama 3 gün önce olan bir cevapsız çağrı
+			comment.append(getString(R.string.word_this_call), getClickSpans(listener1))
+					.append(" ")
+					.append(getString(R.string.word_date_before, timeBefore.getValue(), timeBefore.getUnit()))
+					.append(" ")
+					.append(getString(R.string.word_happened))
+					.append(" ")
+					.append(getString(R.string.word_a))
+					.append(Stringx.format("%s", callType.toLowerCase()), Spans.bold())
+					.append(". ");
+		}
+		else {
+			
+			// this call is from 3 days ago
+			comment.append(getString(R.string.word_this_call), getClickSpans(listener1))
+					.append(" ")
+					.append(getString(R.string.word_is_from))
+					.append(" ")
+					.append(getString(R.string.word_date_unit, timeBefore.getValue(), timeBefore.getUnit()))
+					.append(Stringx.format("%s", timeBefore.getValue() > 1 ? "s " : " "))
+					.append(getString(R.string.word_is_ago))
+					.append(". ");
+			
+		}
+		
 	}
 	
 	/**
@@ -363,6 +350,15 @@ public class DefaultContactCommentator implements ContactCommentator {
 		}
 		
 		return commentOnTheLastCall;
+	}
+	
+	private CharSequence commentLastCallTypeRank() {
+		
+		Spanner rank     = new Spanner();
+		Call    lastCall = history.getLastCall();
+		
+		
+		return rank;
 	}
 	
 	/**

@@ -32,7 +32,7 @@ import java.util.Locale;
 
 public class ShowCall {
 	
-	private final AlertDialog dialog;
+	private AlertDialog dialog;
 	
 	@SuppressLint("InflateParams")
 	public ShowCall(@NotNull Activity activity, @NotNull Call call) {
@@ -83,7 +83,7 @@ public class ShowCall {
 		ringingDuration.setText(Files.formatMilliSeconds(call.getLong(CallKey.RINGING_DURATION, 0L)));
 		date.setText(Time.toString(call.getTime(), "d MMMM yyyy HH:mm"));
 		
-		String letter = getLeter(_name);
+		String letter = getLetter(_name);
 		int    color  = Colors.getRandomColor();
 		
 		Drawable _image = TextDrawable.builder()
@@ -101,7 +101,7 @@ public class ShowCall {
 	}
 	
 	@NonNull
-	private String getLeter(String str) {
+	private String getLetter(String str) {
 		
 		var l = Stringx.getFirstChar(str);
 		

@@ -4,6 +4,7 @@ package com.tr.hsyn.telefonrehberi.main.activity.contact.detail.data;
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.contactdata.Contact;
+import com.tr.hsyn.telefonrehberi.code.android.Res;
 import com.tr.hsyn.telefonrehberi.main.code.contact.act.ContactKey;
 
 import org.jetbrains.annotations.NotNull;
@@ -78,6 +79,18 @@ public interface History {
 	default int size() {
 		
 		return getHistory().size();
+	}
+	
+	default int size(int callType) {
+		
+		var types = Res.getCallTypes(callType);
+		
+		if (types.length == 1) {
+			
+			return (int) getHistory().stream().filter(call -> call.getType() == callType).count();
+		}
+		
+		return (int) getHistory().stream().filter(call -> call.getType() == callType || call.getType() == types[1]).count();
 	}
 	
 	/**

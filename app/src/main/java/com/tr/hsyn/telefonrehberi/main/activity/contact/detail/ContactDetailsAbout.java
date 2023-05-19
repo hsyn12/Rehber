@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.UiThread;
+
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.execution.Runny;
@@ -193,6 +195,7 @@ public class ContactDetailsAbout extends ContactDetailsMenu {
 	 *
 	 * @param comment the comment
 	 */
+	@UiThread
 	private void onCommentReady(CharSequence comment) {
 		
 		text_about.setText(comment);

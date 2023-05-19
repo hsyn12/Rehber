@@ -10,19 +10,18 @@ import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 
 import com.tr.hsyn.calldata.Call;
+import com.tr.hsyn.calldata.CallType;
 import com.tr.hsyn.colors.Colors;
-import com.tr.hsyn.execution.Work;
 import com.tr.hsyn.gate.AutoGate;
 import com.tr.hsyn.gate.Gate;
 import com.tr.hsyn.telefonrehberi.R;
-import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.data.CallHistory;
+import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.data.History;
 import com.tr.hsyn.telefonrehberi.main.code.contact.act.ContactKey;
 import com.tr.hsyn.time.Time;
 import com.tr.hsyn.vanimator.ViewAnimator;
 import com.tr.hsyn.xlog.xlog;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 /**
@@ -84,8 +83,7 @@ public abstract class CallSummary extends ContactDetailsHistory {
 			return;
 		}
 		
-		
-		//- Bu, arama özeti görünümünün başlığıdır ve mainLayout içinde halihazırda bulanmaktadır
+		//- Bu, arama özeti görünümünün başlığıdır ve mainLayout içinde halihazırda bulunmaktadır
 		View summaryHeader = mainLayout.findViewById(R.id.call_summary_header);
 		summaryHeader.setBackgroundResource(Colors.getRipple());
 		
@@ -95,11 +93,11 @@ public abstract class CallSummary extends ContactDetailsHistory {
 		ImageView icon = findView(summaryHeader, R.id.call_summary_icon);
 		
 		Colors.setTintDrawable(icon.getDrawable(), Colors.lighter(Colors.getPrimaryColor(), 0.2f));
-		
-		//- Görüldüğü üzere giriş çok sade
-		//- Esas olay kullanıcının talebi ile başlar
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	@Override
 	protected void onCallPermissionsGrant() {
 		
@@ -112,6 +110,9 @@ public abstract class CallSummary extends ContactDetailsHistory {
 		}
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	@Override
 	protected void onCallPermissionsDenied() {
 		
@@ -130,7 +131,7 @@ public abstract class CallSummary extends ContactDetailsHistory {
 		
 		super.onHistoryLoad();
 		
-		List<Call> history = contact.getData(ContactKey.CALL_HISTORY);
+		History history = contact.getData(ContactKey.HISTORY);
 		
 		// if no history, do not show anything
 		if (history == null || history.isEmpty()) {
@@ -162,46 +163,6 @@ public abstract class CallSummary extends ContactDetailsHistory {
 		}
 		//- Daha önce açılmamışsa sadece işaretliyoruz
 		else historyUpdated = true;
-	}
-	
-	/**
-	 * Remakes the summary view with updated history
-	 */
-	private void updateSummary() {
-		
-		List<Call> history = contact.getData(ContactKey.CALL_HISTORY);
-		
-		if (history == null) return;
-		
-		Work.on(() -> createSummaryInfo(history))
-				.onSuccess(this::setupSummaryViews)
-				.onError(Throwable::printStackTrace)
-				.onLast(this::onSummaryUpdate)
-				.execute();
-	}
-	
-	/**
-	 * Called when the summary is updated or first time
-	 */
-	private void onSummaryUpdate() {
-		
-		//- Arama geçmişi güncellenmemiş ise normal göster-gizle işlemi yapılır
-		if (!historyUpdated) {
-			
-			animateCallSummary();
-		}
-		else {
-			
-			xlog.d("Arama özeti güncellendi");
-			//- Arama geçmişi güncellenmiş.
-			//- Bu noktada arama geçmişinin güncellenmesinden dolayı
-			//- görsel elemanlar da güncellenmiş duruma geldi.
-			//- Yani güncelleme işlemi tamamlandı
-			historyUpdated = false;
-		}
-		
-		//- Eğer arama geçmişi güncellenmiş ise
-		//- görsel hangi durumdaysa (gizli yada görünür) öyle kalmaya devam edecek.
 	}
 	
 	/**
@@ -295,10 +256,51 @@ public abstract class CallSummary extends ContactDetailsHistory {
 	}
 	
 	/**
+	 * Animates the call summary. Show-hide.
+	 */
+	private void animateCallSummary() {
+		
+		if (isOpenedSummary) {
+			
+			isOpenedSummary = false;
+			ViewAnimator.on(callSummaryView).alpha(1, 0).pivotY(0).scaleY(1, 0).translationY(0, -150).duration(200).onStop(() -> callSummaryView.setVisibility(View.GONE)).start();
+			
+			ViewAnimator.on(mainLayout.findViewById(R.id.expand_indicator)).rotation(180, 0).duration(500).start();
+		}
+		else {
+			
+			isOpenedSummary = true;
+			anyOpenSummary  = true;
+			
+			callSummaryView.setVisibility(View.VISIBLE);
+			
+			ViewAnimator.on(callSummaryView).alpha(0, 1).pivotY(0).scaleY(0, 1).translationY(-150, 0).duration(200).start();
+			
+			ViewAnimator.on(mainLayout.findViewById(R.id.expand_indicator)).rotation(0, 180).duration(500).start();
+		}
+	}
+	
+	/**
 	 * Shows the call summary in the first time.
 	 * This method called only once or called when the history is updated.
 	 */
 	private void showCallSummary() {
+		
+		History history = contact.getData(ContactKey.HISTORY);
+		
+		if (history == null) return;
+		
+		setupSummaryViews(history);
+		animateCallSummary();
+		needShowSummary = false;
+	}
+	
+	/**
+	 * Sets up the summary views.
+	 *
+	 * @param callHistory The call history
+	 */
+	private void setupSummaryViews(@NonNull final History callHistory) {
 		
 		if (callSummaryView == null) {
 			
@@ -308,43 +310,6 @@ public abstract class CallSummary extends ContactDetailsHistory {
 			//- Şuan null görünüyor ve görünümü oluşturuyoruz
 			callSummaryView = inflateSummaryView();
 		}
-		
-		List<Call> history = contact.getData(ContactKey.CALL_HISTORY);
-		
-		if (history == null) return;
-		
-		
-		//- Arama özetini R.layout.call_details_summary.xml
-		//- layout dosyası temsil ediyor.
-		//- Bu layout birçok görsel eleman bulunduruyor.
-		//- Bu görsel elemanların hazırlanması ve gerekli bilgilerle doldurması için
-		//- önce arka planda gerekli bilgileri hazırlayan bir metoda,
-		//- sonra da bilgileri görsellere aktaran bir başka metoda yönlendiriyoruz
-		Work.on(() -> createSummaryInfo(history))
-				.onSuccess(this::setupSummaryViews)
-				.onError(Throwable::printStackTrace)
-				.onLast(this::animateCallSummary)
-				.execute();
-		
-		needShowSummary = false;
-	}
-	
-	/**
-	 * Inflates the summary view.
-	 *
-	 * @return The summary view
-	 */
-	private View inflateSummaryView() {
-		
-		return getLayoutInflater().inflate(R.layout.call_details_summary, mainLayout, false);
-	}
-	
-	/**
-	 * Sets up the summary views.
-	 *
-	 * @param callHistory The call history
-	 */
-	private void setupSummaryViews(@NonNull final CallHistory callHistory) {
 		
 		//- Önümüzde iki yol var.
 		//- Eğer buraya kullanıcı talebiyle gelinmişse,
@@ -385,26 +350,29 @@ public abstract class CallSummary extends ContactDetailsHistory {
 			//- Arama geçmişi güncellenmiş.
 			//- Biz de görsel elemanlardaki bilgileri güncelleyelim
 			
-			int incomingSize = callHistory.getIncomingCallSize();
-			int outgoingSize = callHistory.getOutgoingCallSize();
-			int missedSize   = callHistory.getMissedCallSize();
-			int rejectedSize = callHistory.getRejectedCallSize();
+			int incomingSize = callHistory.size(CallType.INCOMING);
+			int outgoingSize = callHistory.size(CallType.OUTGOING);
+			int missedSize   = callHistory.size(CallType.MISSED);
+			int rejectedSize = callHistory.size(CallType.REJECTED);
 			
 			incomingCall.setText(String.valueOf(incomingSize));
 			outgoingCall.setText(String.valueOf(outgoingSize));
 			missedCall.setText(String.valueOf(missedSize));
 			rejectedCall.setText(String.valueOf(rejectedSize));
 			
-			incomingCallDuration.setText(Time.formatSeconds(callHistory.getIncomingDuration()));
-			outgoingCallDuration.setText(Time.formatSeconds(callHistory.getOutgoingDuration()));
+			var incomingDuration = callHistory.getDuration(CallType.INCOMING, CallType.INCOMING_WIFI);
+			var outgoingDuration = callHistory.getDuration(CallType.OUTGOING, CallType.OUTGOING_WIFI);
+			
+			incomingCallDuration.setText(Time.formatSeconds(incomingDuration));
+			outgoingCallDuration.setText(Time.formatSeconds(outgoingDuration));
 			
 			totalCall.setText(String.valueOf(incomingSize + outgoingSize + missedSize + rejectedSize));
-			totalCallDuration.setText(Time.formatSeconds(callHistory.getIncomingDuration() + callHistory.getOutgoingDuration()));
+			totalCallDuration.setText(Time.formatSeconds(incomingDuration + outgoingDuration));
 			
-			incomingRow.setOnClickListener(v -> showHistory(callHistory.getIncomingCalls()));
-			outgoingRow.setOnClickListener(v -> showHistory(callHistory.getOutgoingCalls()));
-			missedRow.setOnClickListener(v -> showHistory(callHistory.getMissedCalls()));
-			rejectedRow.setOnClickListener(v -> showHistory(callHistory.getRejectedCalls()));
+			incomingRow.setOnClickListener(v -> showHistory(callHistory.getCalls(CallType.INCOMING, CallType.INCOMING_WIFI)));
+			outgoingRow.setOnClickListener(v -> showHistory(callHistory.getCalls(CallType.OUTGOING, CallType.OUTGOING_WIFI)));
+			missedRow.setOnClickListener(v -> showHistory(callHistory.getCalls(CallType.MISSED)));
+			rejectedRow.setOnClickListener(v -> showHistory(callHistory.getCalls(CallType.REJECTED)));
 			
 			List<Call> history = contact.getData(ContactKey.CALL_HISTORY);
 			
@@ -432,44 +400,49 @@ public abstract class CallSummary extends ContactDetailsHistory {
 	}
 	
 	/**
-	 * Creates the summary info.
+	 * Inflates the summary view.
 	 *
-	 * @param history The history
-	 * @return The summary info
+	 * @return The summary view
 	 */
-	@NonNull
-	private CallHistory createSummaryInfo(@NonNull List<Call> history) {
+	private View inflateSummaryView() {
 		
-		//- Arama özeti, kişinin arama kayıtlarını türlerine göre ayırır.
-		//- Ve bu türlerle ilgili bilgiler sunar
-		
-		var calls = history.stream().collect(Collectors.groupingBy(Call::getType));
-		
-		return new CallHistory(contact, calls);
+		return getLayoutInflater().inflate(R.layout.call_details_summary, mainLayout, false);
 	}
 	
 	/**
-	 * Animates the call summary. Show-hide.
+	 * Remakes the summary view with updated history
 	 */
-	private void animateCallSummary() {
+	private void updateSummary() {
 		
-		if (isOpenedSummary) {
+		History history = contact.getData(ContactKey.HISTORY);
+		
+		if (history == null) return;
+		
+		setupSummaryViews(history);
+		onSummaryUpdate();
+	}
+	
+	/**
+	 * Called when the summary is updated or first time
+	 */
+	private void onSummaryUpdate() {
+		
+		//- Arama geçmişi güncellenmemiş ise normal göster-gizle işlemi yapılır
+		if (!historyUpdated) {
 			
-			isOpenedSummary = false;
-			ViewAnimator.on(callSummaryView).alpha(1, 0).pivotY(0).scaleY(1, 0).translationY(0, -150).duration(200).onStop(() -> callSummaryView.setVisibility(View.GONE)).start();
-			
-			ViewAnimator.on(mainLayout.findViewById(R.id.expand_indicator)).rotation(180, 0).duration(500).start();
+			animateCallSummary();
 		}
 		else {
 			
-			isOpenedSummary = true;
-			anyOpenSummary  = true;
-			
-			callSummaryView.setVisibility(View.VISIBLE);
-			
-			ViewAnimator.on(callSummaryView).alpha(0, 1).pivotY(0).scaleY(0, 1).translationY(-150, 0).duration(200).start();
-			
-			ViewAnimator.on(mainLayout.findViewById(R.id.expand_indicator)).rotation(0, 180).duration(500).start();
+			xlog.d("Arama özeti güncellendi");
+			//- Arama geçmişi güncellenmiş.
+			//- Bu noktada arama geçmişinin güncellenmesinden dolayı
+			//- görsel elemanlar da güncellenmiş duruma geldi.
+			//- Yani güncelleme işlemi tamamlandı
+			historyUpdated = false;
 		}
+		
+		//- Eğer arama geçmişi güncellenmiş ise
+		//- görsel hangi durumdaysa (gizli yada görünür) öyle kalmaya devam edecek.
 	}
 }
