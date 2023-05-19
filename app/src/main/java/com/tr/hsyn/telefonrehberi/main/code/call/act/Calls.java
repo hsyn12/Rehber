@@ -113,7 +113,7 @@ public interface Calls {
 		values.put(COLUMNS[0], phoneCall.getName());
 		values.put(COLUMNS[1], phoneCall.getNumber());
 		values.put(COLUMNS[2], phoneCall.getTime());
-		values.put(COLUMNS[3], phoneCall.getType());
+		values.put(COLUMNS[3], phoneCall.getCallType());
 		values.put(COLUMNS[4], phoneCall.getDuration());
 		values.put(COLUMNS[5], createExtraInfo(phoneCall));
 		values.put(CallLog.Calls.IS_READ, 1);
@@ -160,7 +160,7 @@ public interface Calls {
 			values.put(COLUMNS[0], phoneCall.getName());
 			values.put(COLUMNS[1], phoneCall.getNumber());
 			values.put(COLUMNS[2], phoneCall.getTime());
-			values.put(COLUMNS[3], phoneCall.getType());
+			values.put(COLUMNS[3], phoneCall.getCallType());
 			values.put(COLUMNS[4], phoneCall.getDuration());
 			values.put(COLUMNS[5], createExtraInfo(phoneCall));
 			values.put(CallLog.Calls.IS_READ, 1);
@@ -227,7 +227,7 @@ public interface Calls {
 		values.put(COLUMNS[0], phoneCall.getName());
 		values.put(COLUMNS[1], phoneCall.getNumber());
 		values.put(COLUMNS[2], phoneCall.getTime());
-		values.put(COLUMNS[3], phoneCall.getType());
+		values.put(COLUMNS[3], phoneCall.getCallType());
 		values.put(COLUMNS[4], phoneCall.getDuration());
 		values.put(COLUMNS[5], createExtraInfo(phoneCall));
 		

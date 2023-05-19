@@ -5,135 +5,194 @@ import androidx.annotation.NonNull;
 
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.collection.Lister;
-import com.tr.hsyn.contactdata.Contact;
+import com.tr.hsyn.phone_numbers.PhoneNumbers;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 
 /**
- * Bir kişiye ait arama özeti bilgilerini tutar
+ * Manages the call logs.
  */
-public class CallCollection {
+public final class CallCollection {
 	
-	private final Contact                  contact;
-	private final Map<Integer, List<Call>> calls;
-	private       int                      incomingDuration;
-	private       int                      outgoingDuration;
-	
-	public CallCollection(Contact contact, Map<Integer, List<Call>> calls) {
-		
-		this.contact = contact;
-		this.calls   = calls;
-	}
+	private final List<Call>              calls;
+	private final Map<String, List<Call>> numberedCalls;
+	private final List<Call>              incomingCalls;
+	private final List<Call>              outgoingCalls;
+	private final List<Call>              missedCalls;
+	private final List<Call>              rejectedCalls;
+	private final int                     incomingDuration;
+	private final int                     outgoingDuration;
 	
 	/**
-	 * @return Gelen aramalardaki toplam konuşma süresi (saniye)
+	 * Creates a new call collection.
+	 *
+	 * @param calls the calls
 	 */
-	public int getIncomingDuration() {
+	private CallCollection(@NotNull List<Call> calls) {
 		
-		if (incomingDuration != 0) return incomingDuration;
+		this.calls    = calls;
+		numberedCalls = calls.stream().collect(Collectors.groupingBy(call -> PhoneNumbers.formatNumber(call.getNumber(), 10)));
+		incomingCalls = getCalls(Call.INCOMING, Call.INCOMING_WIFI);
+		outgoingCalls = getCalls(Call.OUTGOING, Call.OUTGOING_WIFI);
+		missedCalls   = getCalls(Call.MISSED);
+		rejectedCalls = getCalls(Call.REJECTED);
 		
-		return incomingDuration = getIncomingCalls().stream()
+		incomingDuration = getIncomingCalls().stream()
+				.map(Call::getDuration)
+				.reduce(Integer::sum)
+				.orElse(0);
+		
+		outgoingDuration = getOutgoingCalls().stream()
 				.map(Call::getDuration)
 				.reduce(Integer::sum)
 				.orElse(0);
 	}
 	
 	/**
-	 * @return Gelen aramalar
+	 * Creates a new call collection.
+	 *
+	 * @param calls the calls
+	 * @return the call collection
 	 */
-	@NonNull
-	public List<Call> getIncomingCalls() {
+	@NotNull
+	public static CallCollection create(@NotNull List<Call> calls) {
 		
-		return getCalls(Call.INCOMING, Call.INCOMING_WIFI);
+		return new CallCollection(calls);
 	}
 	
 	/**
-	 * Verilen arama türlerine ait aramaları döndürür.
+	 * Returns all calls with the given call types.
 	 *
-	 * @param callTypes Arama türleri
-	 * @return Arama kayıtları
+	 * @param callTypes call types
+	 * @return calls
 	 */
 	@NonNull
 	public List<Call> getCalls(int... callTypes) {
 		
 		List<Call> _calls = new ArrayList<>();
 		
-		Lister.loop(callTypes, type -> {
-			
-			var list = calls.get(type);
-			
-			if (list != null) _calls.addAll(list);
-		});
+		Lister.loop(callTypes, type -> _calls.addAll(getCalls(type)));
 		
 		return _calls;
 	}
 	
 	/**
-	 * @return Giden aramalardaki toplam konuşma süresi (saniye)
+	 * Returns all calls with the given number.
+	 *
+	 * @param phoneNumber the number
+	 * @return calls
 	 */
-	public int getOutgoingDuration() {
+	public @NotNull List<Call> getCallsByNumber(@NotNull String phoneNumber) {
 		
-		if (outgoingDuration != 0) return outgoingDuration;
+		phoneNumber = PhoneNumbers.formatNumber(phoneNumber, 10);
+		//noinspection DataFlowIssue
+		return numberedCalls.getOrDefault(phoneNumber, new ArrayList<>(0));
 		
-		return outgoingDuration = getOutgoingCalls().stream()
-				.map(Call::getDuration)
-				.reduce(Integer::sum)
-				.orElse(0);
 	}
 	
 	/**
-	 * @return Giden aramalar
+	 * @return incoming calls
+	 */
+	@NonNull
+	public List<Call> getIncomingCalls() {
+		
+		return incomingCalls;
+	}
+	
+	/**
+	 * @return outgoing calls
 	 */
 	@NonNull
 	public List<Call> getOutgoingCalls() {
 		
-		return getCalls(Call.OUTGOING, Call.OUTGOING_WIFI);
+		return outgoingCalls;
 	}
 	
 	/**
-	 * @return Cevapsız aramalar
+	 * @return total speaking duration of all incoming calls (seconds)
+	 */
+	public int getIncomingDuration() {
+		
+		return incomingDuration;
+	}
+	
+	/**
+	 * @return total speaking duration of all outgoing calls (seconds)
+	 */
+	public int getOutgoingDuration() {
+		
+		return outgoingDuration;
+	}
+	
+	/**
+	 * @return missed calls
 	 */
 	@NonNull
 	public List<Call> getMissedCalls() {
 		
-		return getCalls(Call.MISSED);
+		return missedCalls;
 	}
 	
 	/**
-	 * @return Reddedilen aramalar
+	 * @return rejected calls
 	 */
 	@NonNull
 	public List<Call> getRejectedCalls() {
 		
-		return getCalls(Call.REJECTED);
+		return rejectedCalls;
 	}
 	
-	public int getIncomingCallSize() {
+	/**
+	 * @param callType call type
+	 * @return call size for the given call type
+	 */
+	public int getCallSize(int callType) {
 		
-		return getCallSize(Call.INCOMING) + getCallSize(Call.INCOMING_WIFI);
+		switch (callType) {
+			case Call.INCOMING:
+			case Call.INCOMING_WIFI:
+				return incomingCalls.size();
+			case Call.OUTGOING:
+			case Call.OUTGOING_WIFI:
+				return outgoingCalls.size();
+			case Call.MISSED:
+				return missedCalls.size();
+			case Call.REJECTED:
+				return rejectedCalls.size();
+			default: return getCalls(callType).size();
+		}
 	}
 	
-	private int getCallSize(int callType) {
+	/**
+	 * Returns all calls with the given call type.
+	 *
+	 * @param callType call type
+	 * @return calls
+	 */
+	@NotNull
+	private List<Call> getCalls(int callType) {
 		
-		return getCalls(callType).size();
+		Predicate<Call> typePredicate = call -> call.getCallType() == callType;
+		return getCalls(typePredicate);
 	}
 	
-	public int getMissedCallSize() {
+	/**
+	 * Returns all calls that match the given predicate.
+	 *
+	 * @param predicate the predicate
+	 * @return calls
+	 */
+	@NotNull
+	public List<Call> getCalls(@NotNull Predicate<Call> predicate) {
 		
-		return getCallSize(Call.MISSED);
-	}
-	
-	public int getOutgoingCallSize() {
-		
-		return getCallSize(Call.OUTGOING) + getCallSize(Call.OUTGOING_WIFI);
-	}
-	
-	public int getRejectedCallSize() {
-		
-		return getCallSize(Call.REJECTED);
+		return calls.stream().filter(predicate).collect(Collectors.toList());
 	}
 	
 }

@@ -33,15 +33,15 @@ public class AboutContact {
 	}
 	
 	@NotNull
-	public List<Call> getCallsByType(int callType) {
-		
-		return history.stream().filter(c -> c.getType() == callType).collect(Collectors.toList());
-	}
-	
-	@NotNull
 	public List<Call> getIncommingCalls() {
 		
 		return getCallsByType(CallType.INCOMING);
+	}
+	
+	@NotNull
+	public List<Call> getCallsByType(int callType) {
+		
+		return history.stream().filter(c -> c.getCallType() == callType).collect(Collectors.toList());
 	}
 	
 	@NotNull

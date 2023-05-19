@@ -20,12 +20,12 @@ public class PhoneNumbers {
 	/**
 	 * Telefon numaraları için maximum uzunluk
 	 */
-	public static final  int    N_MAX         = 14;
-	private static final String NUMBER_TYPE_1 = "[0-9]{11}";//05434937530
-	private static final String NUMBER_TYPE_2 = "[0-9]{13}";//+905434937530
-	private static final String NUMBER_TYPE_3 = "[0-9]{10}";//5434937530
-	private static final String NUMBER_TYPE_4 = "[0-9]{12}";//905434937530
-	private static final String NUMBER_TYPE_5 = "[0-9]{14}";//+xxx5434937530 alan kodu 3 haneli
+	public static final  int    N_MAX         = 15;
+	private static final String NUMBER_TYPE_1 = "[0-9]{10}";//5434937530
+	private static final String NUMBER_TYPE_2 = "[0-9]{11}";//05434937530
+	private static final String NUMBER_TYPE_3 = "[0-9]{12}";//905434937530
+	private static final String NUMBER_TYPE_4 = "[0-9]{13}";//+905434937530
+	private static final String NUMBER_TYPE_5 = "[0-9]{13,15}";//+xxxxx5434937530
 	
 	/**
 	 * Rakamların arasına boşluk koyarak daha okunur bir numara döndürür.<br>
@@ -74,10 +74,10 @@ public class PhoneNumbers {
 	 * <strong>Kurallar</strong><br>
 	 * <strong>----------</strong><br>
 	 * <ol>
-	 *    <li>Rakam harici bir karakteri olan string elbette bir telefon numarası olamaz. Ancak aşağıda tek tırnak içindeki karakterleri görmezden geliyorum<br>
+	 *    <li>Rakam harici bir karakteri olan string elbette bir telefon numarası olamaz. Ancak aşağıda tek tırnak içindeki karakterleri görmezden gelir.<br>
 	 * 		<pre>	'+', '(', ')', ' ' boşluk karakteri</pre></li>
-	 *    <li>Yukarıdaki karakterler hariç bir string'in telefon numarası olabilmesi için en az on (10) en fazla ondört (14) haneli
-	 * 	 olması gerektiğini varsayıyorum.</li>
+	 *    <li>Yukarıdaki karakterler hariç bir string'in telefon numarası olabilmesi için en az on (10) en fazla on beş (15) haneli
+	 * 	 olması gerektiğini varsayar.</li>
 	 * </ol>
 	 * <br>
 	 * <strong>Sonuçlar</strong><br>
@@ -86,8 +86,8 @@ public class PhoneNumbers {
 	 *    <li>Yukarıdaki görmezden gelinen karakterler haricinde
 	 * 	  rakam olmayan bir karakterle karşılaşılırsa {@code false} döner.</li>
 	 *    <li>Yukarıdaki görmezden gelinen karakterler string'ten çıkarıldıktan sonra
-	 * 	  geriye kalan ve sadece rakamlardan oluşan string'ın uzunluğu
-	 * 	  10'dan küçükse yada 14'ten büyükse {@code false} döner.</li>
+	 * 	  geriye kalan ve sadece rakamlardan oluşan string'in uzunluğu
+	 * 	  10'dan küçükse yada 15'ten büyükse {@code false} döner.</li>
 	 * </ol>
 	 *
 	 * @param number String
@@ -104,6 +104,24 @@ public class PhoneNumbers {
 		return getNumberType(number) != 0;
 	}
 	
+	/**
+	 * Eliminates all non-numeric characters except {@code +} sign.
+	 *
+	 * @param number String
+	 * @return Eliminated string
+	 */
+	@NotNull
+	public static String getRealNumber(@NotNull String number) {
+		
+		return number.replaceAll("[^0-9+]", "");
+	}
+	
+	/**
+	 * Returns the type of the number
+	 *
+	 * @param number number
+	 * @return number type. Zero if invalid
+	 */
 	public static int getNumberType(@NotNull String number) {
 		
 		if (number.matches(NUMBER_TYPE_1)) return 1;
@@ -113,12 +131,6 @@ public class PhoneNumbers {
 		if (number.matches(NUMBER_TYPE_5)) return 5;
 		
 		return 0;
-	}
-	
-	@NotNull
-	public static String getRealNumber(@NotNull String number) {
-		
-		return number.replaceAll("[^0-9+]", "");
 	}
 	
 	/**

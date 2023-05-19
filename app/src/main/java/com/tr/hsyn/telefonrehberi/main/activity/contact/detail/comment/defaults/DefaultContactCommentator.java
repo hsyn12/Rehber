@@ -198,7 +198,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 		
 		Spanner commentAboutLastCallType = new Spanner();
 		Call    lastCall                 = history.getLastCall();
-		int     type                     = lastCall.getType();
+		int     type                     = lastCall.getCallType();
 		
 		int[]      callTypes  = Res.getCallTypes(type);
 		List<Call> typedCalls = history.getCalls(callTypes);
@@ -259,7 +259,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 	private void commentOnTheSingleCall(@NotNull Call call) {
 		
 		Duration             timeBefore = Time.howLongBefore(call.getTime());
-		String               callType   = Res.getCallType(commentStore.getActivity(), call.getType());
+		String               callType   = Res.getCallType(commentStore.getActivity(), call.getCallType());
 		View.OnClickListener listener1  = view -> new ShowCall(commentStore.getActivity(), call).show();
 		
 		if (commentStore.isTurkishLanguage()) {
@@ -311,7 +311,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 		
 		Spanner              commentOnTheLastCall = new Spanner();
 		Call                 lastCall             = history.getLastCall();
-		String               callType             = Res.getCallType(commentStore.getActivity(), lastCall.getType());
+		String               callType             = Res.getCallType(commentStore.getActivity(), lastCall.getCallType());
 		Duration             timeBefore           = Time.howLongBefore(lastCall.getTime());
 		ShowCall             showCall             = new ShowCall(commentStore.getActivity(), lastCall);
 		View.OnClickListener listener1            = view -> showCall.show();

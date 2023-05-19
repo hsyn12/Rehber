@@ -76,7 +76,7 @@ public class ShowCall {
 		name.setText(_name);
 		number.setText(_number);
 		
-		Drawable _type = ContextCompat.getDrawable(view.getContext(), getTypeIcon(call.getType()));
+		Drawable _type = ContextCompat.getDrawable(view.getContext(), getTypeIcon(call.getCallType()));
 		
 		type.setImageDrawable(_type);
 		callDuration.setText(Files.formatSeconds(call.getDuration()));

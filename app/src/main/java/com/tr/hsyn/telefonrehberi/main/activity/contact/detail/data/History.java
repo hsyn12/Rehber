@@ -81,18 +81,6 @@ public interface History {
 		return getHistory().size();
 	}
 	
-	default int size(int callType) {
-		
-		var types = Res.getCallTypes(callType);
-		
-		if (types.length == 1) {
-			
-			return (int) getHistory().stream().filter(call -> call.getType() == callType).count();
-		}
-		
-		return (int) getHistory().stream().filter(call -> call.getType() == callType || call.getType() == types[1]).count();
-	}
-	
 	/**
 	 * Returns whether the call history is empty.
 	 *
@@ -159,11 +147,23 @@ public interface History {
 		
 		Lister.loop(types, type -> {
 			
-			var list = calls.stream().filter(call -> call.getType() == type).collect(Collectors.toList());
+			var list = calls.stream().filter(call -> call.getCallType() == type).collect(Collectors.toList());
 			
 			_calls.addAll(list);
 		});
 		
 		return _calls;
+	}
+	
+	default int size(int callType) {
+		
+		var types = Res.getCallTypes(callType);
+		
+		if (types.length == 1) {
+			
+			return (int) getHistory().stream().filter(call -> call.getCallType() == callType).count();
+		}
+		
+		return (int) getHistory().stream().filter(call -> call.getCallType() == callType || call.getCallType() == types[1]).count();
 	}
 }

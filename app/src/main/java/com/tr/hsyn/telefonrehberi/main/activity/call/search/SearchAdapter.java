@@ -168,46 +168,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> im
 		return calls.stream().filter(c -> Stringx.isMatch(c.getNumber(), searchText)).collect(Collectors.toList());
 	}
 	
-	private void setHightlight(Holder holder) {
-		
-		if (searchText.isEmpty()) {return;}
-		
-		String name   = holder.name.getText().toString();
-		String number = holder.number.getText().toString();
-		
-		if (!isNumber) {//- Arama sırasında set edilmiş olmalı
-			
-			Integer[] indexes = Stringx.indexOfMatches(name, searchText);
-			
-			//xlog.d(Arrays.toString(indexes));
-			
-			Spanner spanner = new Spanner(name);
-			
-			for (int i = 0; i < indexes.length - 1; i += 2) {
-				
-				spanner.setSpans(indexes[i], indexes[i + 1], Spans.background(markColor));
-			}
-			
-			holder.name.setText(spanner);
-			holder.number.setText(PhoneNumbers.beautifyNumber(number));
-		}
-		else {
-			
-			Integer[] indexes = Stringx.indexOfMatches(number, searchText);
-			//xlog.d(Arrays.toString(indexes));
-			Spanner spanner = new Spanner(number);
-			
-			for (int i = 0; i < indexes.length - 1; i += 2) {
-				
-				spanner.setSpans(indexes[i], indexes[i + 1], Spans.background(markColor));
-			}
-			
-			holder.name.setText(name);
-			holder.number.setText(spanner);
-		}
-		
-	}
-	
 	@NonNull
 	@Override
 	public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -227,7 +187,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> im
 		holder.name.setText(name);
 		holder.number.setText(number);
 		
-		Drawable type = ContextCompat.getDrawable(holder.itemView.getContext(), getTypeIcon(call.getType()));
+		Drawable type = ContextCompat.getDrawable(holder.itemView.getContext(), getTypeIcon(call.getCallType()));
 		
 		holder.type.setImageDrawable(type);
 		holder.speakDuration.setText(Files.formatSeconds(call.getDuration()));
@@ -266,6 +226,46 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> im
 			return l.toUpperCase(Locale.ROOT);
 		
 		return "?";
+	}
+	
+	private void setHightlight(Holder holder) {
+		
+		if (searchText.isEmpty()) {return;}
+		
+		String name   = holder.name.getText().toString();
+		String number = holder.number.getText().toString();
+		
+		if (!isNumber) {//- Arama sırasında set edilmiş olmalı
+			
+			Integer[] indexes = Stringx.indexOfMatches(name, searchText);
+			
+			//xlog.d(Arrays.toString(indexes));
+			
+			Spanner spanner = new Spanner(name);
+			
+			for (int i = 0; i < indexes.length - 1; i += 2) {
+				
+				spanner.setSpans(indexes[i], indexes[i + 1], Spans.background(markColor));
+			}
+			
+			holder.name.setText(spanner);
+			holder.number.setText(PhoneNumbers.beautifyNumber(number));
+		}
+		else {
+			
+			Integer[] indexes = Stringx.indexOfMatches(number, searchText);
+			//xlog.d(Arrays.toString(indexes));
+			Spanner spanner = new Spanner(number);
+			
+			for (int i = 0; i < indexes.length - 1; i += 2) {
+				
+				spanner.setSpans(indexes[i], indexes[i + 1], Spans.background(markColor));
+			}
+			
+			holder.name.setText(name);
+			holder.number.setText(spanner);
+		}
+		
 	}
 	
 	@Override

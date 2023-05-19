@@ -14,7 +14,7 @@ import java.util.Objects;
 public class Call extends DatBoxer implements CallContact, CallTime, CallDuration, CallType, Serializable, Identity {
 	
 	private final String number;
-	private final int    type;
+	private final int    callType;
 	private final long   time;
 	private final int    duration;
 	//- Sistemden alınacak bilgiler
@@ -25,21 +25,21 @@ public class Call extends DatBoxer implements CallContact, CallTime, CallDuratio
 	private       String extra;//- random ve trackType burada olacak
 	//-------------------------------
 	
-	public Call(String name, String number, int type, long time, int duration) {
+	public Call(String name, String number, int callType, long time, int duration) {
 		
 		this.name     = name;
 		this.number   = number;
 		this.time     = time;
-		this.type     = type;
+		this.callType = callType;
 		this.duration = duration;
 	}
 	
-	public Call(String name, String number, int type, long time, int duration, String extra) {
+	public Call(String name, String number, int callType, long time, int duration, String extra) {
 		
 		this.name     = name;
 		this.number   = number;
 		this.time     = time;
-		this.type     = type;
+		this.callType = callType;
 		this.duration = duration;
 		this.extra    = extra;
 	}
@@ -85,9 +85,9 @@ public class Call extends DatBoxer implements CallContact, CallTime, CallDuratio
 	}
 	
 	@Override
-	public int getType() {
+	public int getCallType() {
 		
-		return type;
+		return callType;
 	}
 	
 	@Override
@@ -113,7 +113,7 @@ public class Call extends DatBoxer implements CallContact, CallTime, CallDuratio
 		
 		return "Call{" +
 		       "number='" + number + '\'' +
-		       ", type=" + type +
+		       ", type=" + callType +
 		       ", time=" + time +
 		       ", duration=" + duration +
 		       ", name='" + name + '\'' +

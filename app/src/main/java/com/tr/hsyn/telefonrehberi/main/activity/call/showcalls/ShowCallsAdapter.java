@@ -65,7 +65,7 @@ public class ShowCallsAdapter extends FastAdapter<Call> {
 		holder.name.setText(name);
 		holder.number.setText(number);
 		
-		Drawable type = ContextCompat.getDrawable(holder.itemView.getContext(), getTypeIcon(call.getType()));
+		Drawable type = ContextCompat.getDrawable(holder.itemView.getContext(), getTypeIcon(call.getCallType()));
 		
 		holder.type.setImageDrawable(type);
 		holder.speakDuration.setText(Files.formatSeconds(call.getDuration()));

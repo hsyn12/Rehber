@@ -104,46 +104,6 @@ public class CallDatabase extends DBBase<Call> implements DBCalls {
 		return call;
 	}
 	
-	private String getRandom(String extra) {
-		
-		if (extra == null || !extra.startsWith(Calls.ACCOUNT_ID)) return "f";
-		
-		try {return extra.split(SEPARATOR)[1];}
-		catch (Exception ignore) {}
-		
-		return "f";
-	}
-	
-	private int getTrackType(@NotNull Call call) {
-		
-		String extra = call.getExtra();
-		
-		if (extra != null && extra.startsWith(Calls.ACCOUNT_ID)) {
-			
-			var parts = extra.split(SEPARATOR);
-			
-			try {return Integer.parseInt(parts[2]);}
-			catch (Exception e) {xlog.e(e);}
-		}
-		
-		return 0;
-	}
-	
-	/**
-	 * Etiket listesi boş olmamalı.
-	 *
-	 * @param labels Etiket listesi
-	 * @return Etiketlerin string karşılığı
-	 */
-	private @NotNull String getLabels(@NotNull Set<Label> labels) {
-		
-		StringBuilder sb = new StringBuilder();
-		
-		for (var label : labels) sb.append(label).append(SEPARATOR);
-		
-		return sb.subSequence(0, sb.lastIndexOf(SEPARATOR)).toString();
-	}
-	
 	private @NotNull Set<Label> getLabels(String labels) {
 		
 		Set<Label> labelSet = new HashSet<>();
@@ -163,6 +123,46 @@ public class CallDatabase extends DBBase<Call> implements DBCalls {
 		return labelSet;
 	}
 	
+	/**
+	 * Etiket listesi boş olmamalı.
+	 *
+	 * @param labels Etiket listesi
+	 * @return Etiketlerin string karşılığı
+	 */
+	private @NotNull String getLabels(@NotNull Set<Label> labels) {
+		
+		StringBuilder sb = new StringBuilder();
+		
+		for (var label : labels) sb.append(label).append(SEPARATOR);
+		
+		return sb.subSequence(0, sb.lastIndexOf(SEPARATOR)).toString();
+	}
+	
+	private int getTrackType(@NotNull Call call) {
+		
+		String extra = call.getExtra();
+		
+		if (extra != null && extra.startsWith(Calls.ACCOUNT_ID)) {
+			
+			var parts = extra.split(SEPARATOR);
+			
+			try {return Integer.parseInt(parts[2]);}
+			catch (Exception e) {xlog.e(e);}
+		}
+		
+		return 0;
+	}
+	
+	private String getRandom(String extra) {
+		
+		if (extra == null || !extra.startsWith(Calls.ACCOUNT_ID)) return "f";
+		
+		try {return extra.split(SEPARATOR)[1];}
+		catch (Exception ignore) {}
+		
+		return "f";
+	}
+	
 	@Override
 	@NonNull
 	public Values contentValuesOf(@NonNull final Call call) {
@@ -174,7 +174,7 @@ public class CallDatabase extends DBBase<Call> implements DBCalls {
 		
 		values.put(NUMBER, call.getNumber());
 		values.put(DATE, call.getTime());
-		values.put(TYPE, call.getType());
+		values.put(TYPE, call.getCallType());
 		values.put(DURATION, call.getDuration());
 		values.put(CONTACT_ID, call.getLong(CallKey.CONTACT_ID, 0L));
 		values.put(DELETED_DATE, call.getLong(CallKey.DELETED_DATE, 0L));
@@ -223,13 +223,6 @@ public class CallDatabase extends DBBase<Call> implements DBCalls {
 			return TABLE;
 		}
 		
-		@NotNull
-		@Override
-		public String toString() {
-			
-			return String.format("DB {%s}", Arrays.toString(getColumns()));
-		}
-		
 		@NonNull
 		@Override
 		public DBColumn[] getColumns() {
@@ -248,6 +241,13 @@ public class CallDatabase extends DBBase<Call> implements DBCalls {
 					DB.text(EXTRA),
 					DB.text(LABELS)
 			};
+		}
+		
+		@NotNull
+		@Override
+		public String toString() {
+			
+			return String.format("DB {%s}", Arrays.toString(getColumns()));
 		}
 	}
 }

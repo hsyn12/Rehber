@@ -80,17 +80,17 @@ public interface CallType {
 	 */
 	default boolean isIncoming() {
 		
-		return getType() == INCOMING || getType() == INCOMING_WIFI;
+		return getCallType() == INCOMING || getCallType() == INCOMING_WIFI;
 	}
 	
-	int getType();
+	int getCallType();
 	
 	/**
 	 * @return Giden Arama ise {@code true}
 	 */
 	default boolean isOutgoing() {
 		
-		return getType() == OUTGOING || getType() == OUTGOING_WIFI;
+		return getCallType() == OUTGOING || getCallType() == OUTGOING_WIFI;
 	}
 	
 	/**
@@ -98,7 +98,7 @@ public interface CallType {
 	 */
 	default boolean isMissed() {
 		
-		return getType() == MISSED;
+		return getCallType() == MISSED;
 	}
 	
 	/**
@@ -106,7 +106,7 @@ public interface CallType {
 	 */
 	default boolean isRejected() {
 		
-		return getType() == REJECTED;
+		return getCallType() == REJECTED;
 	}
 	
 	/**
@@ -114,7 +114,7 @@ public interface CallType {
 	 */
 	default boolean isBlocked() {
 		
-		return getType() == BLOCKED;
+		return getCallType() == BLOCKED;
 	}
 	
 	/**
@@ -122,7 +122,7 @@ public interface CallType {
 	 */
 	default boolean isUnReached() {
 		
-		return getType() == UNREACHED;
+		return getCallType() == UNREACHED;
 	}
 	
 	/**
@@ -130,7 +130,7 @@ public interface CallType {
 	 */
 	default boolean isUnReceived() {
 		
-		return getType() == UNRECEIVED;
+		return getCallType() == UNRECEIVED;
 	}
 	
 	/**
@@ -138,12 +138,12 @@ public interface CallType {
 	 */
 	default boolean isGetRejected() {
 		
-		return getType() == GET_REJECTED;
+		return getCallType() == GET_REJECTED;
 	}
 	
 	default boolean isType(int type) {
 		
-		return type == getType();
+		return type == getCallType();
 	}
 	
 }
