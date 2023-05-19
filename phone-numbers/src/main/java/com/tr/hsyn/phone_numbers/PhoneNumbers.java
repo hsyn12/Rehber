@@ -146,14 +146,14 @@ public class PhoneNumbers {
 		
 		for (var n : numbers) {
 			
-			if (equals(n, number)) return true;
+			if (equalsOrContains(n, number)) return true;
 		}
 		
 		return false;
 	}
 	
 	/**
-	 * İki numarayı eşitlik için karşılaştırır.<br>
+	 * İki numarayı eşitlik yada içerme için karşılaştırır.<br>
 	 * Aradaki boşluk ve sayısal olmayan karakterler önemli değil,
 	 * sadece sayısal bölümler karşılaştırılır.<br><br>
 	 *
@@ -166,11 +166,9 @@ public class PhoneNumbers {
 	 *
 	 * @param number1 Number1
 	 * @param number2 Number2
-	 * @return İki numara eşitse {@code true}
-	 * @see #N_MIN
-	 * @see #N_MAX
+	 * @return İki numara eşitse yada biri diğerini içeriyorsa {@code true}
 	 */
-	public static boolean equals(@NotNull String number1, @NotNull String number2) {
+	public static boolean equalsOrContains(@NotNull String number1, @NotNull String number2) {
 		
 		if (number1.equals(number2)) return true;
 		
@@ -215,7 +213,7 @@ public class PhoneNumbers {
 	 * Eğer iki liste de aynı telefon numaralarını tutuyorsa {@code true} döner.<br><br>
 	 *
 	 * <pre>
-	 * String n1 = "5434937530";
+	 * String n1 = "05434937530";
 	 * String n2 = "5434937530";
 	 *
 	 * List<String> l1 = Lists.newArrayList(n1, "5");
@@ -226,7 +224,7 @@ public class PhoneNumbers {
 	 * @param numbers2 Numbers
 	 * @return İki liste eşitse {@code true}
 	 */
-	public static boolean equals(@NotNull List<String> numbers1, @NotNull List<String> numbers2) {
+	public static boolean equalsOrContains(@NotNull List<String> numbers1, @NotNull List<String> numbers2) {
 		
 		if (numbers1.size() == numbers2.size()) {
 			
@@ -236,7 +234,7 @@ public class PhoneNumbers {
 				
 				for (String n2 : numbers2) {
 					
-					if (equals(n1, n2)) match++;
+					if (equalsOrContains(n1, n2)) match++;
 				}
 			}
 			

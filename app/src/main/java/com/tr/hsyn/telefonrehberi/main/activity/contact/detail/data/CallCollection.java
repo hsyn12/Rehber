@@ -34,6 +34,18 @@ public final class CallCollection {
 	 * Creates a new call collection.
 	 *
 	 * @param calls the calls
+	 * @return the call collection
+	 */
+	@NotNull
+	public static CallCollection create(@NotNull List<Call> calls) {
+		
+		return new CallCollection(calls);
+	}
+	
+	/**
+	 * Creates a new call collection.
+	 *
+	 * @param calls the calls
 	 */
 	private CallCollection(@NotNull List<Call> calls) {
 		
@@ -53,18 +65,6 @@ public final class CallCollection {
 				.map(Call::getDuration)
 				.reduce(Integer::sum)
 				.orElse(0);
-	}
-	
-	/**
-	 * Creates a new call collection.
-	 *
-	 * @param calls the calls
-	 * @return the call collection
-	 */
-	@NotNull
-	public static CallCollection create(@NotNull List<Call> calls) {
-		
-		return new CallCollection(calls);
 	}
 	
 	/**

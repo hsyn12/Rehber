@@ -269,7 +269,7 @@ public interface Contacts extends ContactColumns {
 		var       number       = PhoneNumbers.formatNumber(cursor.getString(data1Column), numberLength);
 		
 		var notExist = numbers.stream()
-				.noneMatch(num -> PhoneNumbers.equals(number, num));
+				.noneMatch(num -> PhoneNumbers.equalsOrContains(number, num));
 		
 		if (notExist) numbers.add(number);
 	}
@@ -464,7 +464,7 @@ public interface Contacts extends ContactColumns {
 			
 			String number = cursor.getString(numberCol);
 			
-			if (PhoneNumbers.equals(phoneNumber, number)) {
+			if (PhoneNumbers.equalsOrContains(phoneNumber, number)) {
 				
 				id = cursor.getLong(idCol);
 				break;

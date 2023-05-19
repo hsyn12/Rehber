@@ -411,7 +411,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 			long count = counter.count(winner, Group::size);
 			
 			//- Bu kişi en çok arama kaydına sahip kişi mi?
-			if (PhoneNumbers.equals(phoneNumber, winner.getValue().getNumber())) {
+			if (PhoneNumbers.equalsOrContains(phoneNumber, winner.getValue().getNumber())) {
 				
 				var viewData = Lister.map(groups, e -> {
 					

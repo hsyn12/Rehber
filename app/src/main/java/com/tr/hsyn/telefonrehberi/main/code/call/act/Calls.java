@@ -277,7 +277,7 @@ public interface Calls {
 			
 			String _number = cursor.getString(numberCol);
 			
-			if (PhoneNumbers.equals(_number, number)) {
+			if (PhoneNumbers.equalsOrContains(_number, number)) {
 				
 				name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_PRIMARY));
 				break;

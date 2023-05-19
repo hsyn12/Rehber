@@ -29,7 +29,7 @@ public class NumberHandler extends MimeTypeHandler {
 		var       number       = PhoneNumbers.formatNumber(data1, numberLength);
 		
 		var notExist = numbers.stream()
-				.noneMatch(num -> PhoneNumbers.equals(number, num));
+				.noneMatch(num -> PhoneNumbers.equalsOrContains(number, num));
 		
 		if (notExist) numbers.add(number);
 		
