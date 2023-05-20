@@ -165,7 +165,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 		
 		Spanner              quantityComment = new Spanner();
 		String               name            = contact.getName() != null && !PhoneNumbers.isPhoneNumber(contact.getName()) ? contact.getName() : Stringx.toTitle(getString(R.string.word_contact));
-		View.OnClickListener listener        = view -> new ShowCallsDialog(commentStore.getActivity(), history.getHistory()).show();
+		View.OnClickListener listener        = view -> new ShowCallsDialog(commentStore.getActivity(), history.getCalls()).show();
 		quantityComment.append(name, Spans.bold(), Spans.foreground(getTextColor()));
 		
 		// We have two language resources forever, I think
@@ -201,7 +201,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 		int     type                     = lastCall.getCallType();
 		
 		int[]      callTypes  = Res.getCallTypes(type);
-		List<Call> typedCalls = history.getCalls(callTypes);
+		List<Call> typedCalls = history.getCallsByTypes(callTypes);
 		String     typeStr    = Res.getCallType(commentStore.getActivity(), type);
 		
 		if (typedCalls.size() == 1) {
@@ -225,7 +225,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 		}
 		else {
 			
-			var             historyCalls    = history.getCalls(callTypes);
+			var             historyCalls    = history.getCallsByTypes(callTypes);
 			ShowCallsDialog showCallsDialog = new ShowCallsDialog(commentStore.getActivity(), historyCalls, history.getContact().getName(), Stringx.format("%d %s", historyCalls.size(), typeStr));
 			
 			View.OnClickListener listener = view -> showCallsDialog.show();

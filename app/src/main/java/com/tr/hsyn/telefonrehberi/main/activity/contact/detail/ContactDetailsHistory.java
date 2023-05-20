@@ -26,14 +26,12 @@ import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.data.CallCollecti
 import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.data.History;
 import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.history.ActivityCallList;
 import com.tr.hsyn.telefonrehberi.main.code.cast.PermissionHolder;
-import com.tr.hsyn.telefonrehberi.main.code.contact.act.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
 import com.tr.hsyn.xbox.Blue;
 import com.tr.hsyn.xlog.xlog;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -65,6 +63,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	/** Gate used to block input while showing history. */
 	private final   Gate           gateShowHistory = AutoGate.newGate(1000L);
 	protected       CallCollection callCollection;
+	protected       History        history;
 	/** Flag indicating whether the view for the contact history has been added to the UI. */
 	private         boolean        historyViewAdded;
 	/** Flag indicating whether we need to show the history (after receiving call log permissions). */
@@ -162,7 +161,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	 * @see #hasCallLogPermissions()
 	 */
 	@NotNull
-	private List<Call> getCallHistory() {
+	private History getCallHistory() {
 		
 		//- Eğer arama kayıtları en az bir kez yüklenmiş ise sorun yok
 		//- Ancak yüklenmemiş ise, kayıtların buradan yüklenmesi biraz karışıklık yaratabilir.
@@ -198,13 +197,69 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 			//- İzinleri şimdi sormuyoruz çünkü kullanıcının tıklaması gerek
 			//- Şimdilik boş dönüyoruz
 			
-			return new ArrayList<>(0);
+			return History.ofEmpty(contact);
 		}
 		
 		List<Call> calls = callCollection.getCallsByNumbers(phoneNumbers);
 		calls.sort((x, y) -> Long.compare(y.getTime(), x.getTime()));
 		//- This is the 'call history' of the selected contact
-		return calls;
+		return History.of(contact, calls);
+	}
+	
+	/**
+	 * Adds the view for showing the contact history.
+	 * If the user touches this view, the history is shown by starting new activity.
+	 * That is the view that starts the action.
+	 *
+	 * @param history The call history for the contact.
+	 */
+	private void addContactHistoryView(@NonNull History history) {
+		
+		this.history = history;
+		
+		//- Kişinin geçmişine yönlendirecek olan görünüm sadece bir kez eklenmeli
+		if (!historyViewAdded) {
+			
+			historyViewAdded = true;
+			
+			View historyView = getLayoutInflater().inflate(R.layout.show_contact_history, mainContainer, false);
+			
+			mainContainer.addView(historyView);
+			
+			ImageView icon = historyView.findViewById(R.id.contact_history_icon);
+			Colors.setTintDrawable(icon.getDrawable(), Colors.lighter(Colors.getPrimaryColor(), 0.2f));
+			
+			View view = historyView.findViewById(R.id.contact_history_item);
+			
+			view.setBackgroundResource(Colors.getRipple());
+			view.setOnClickListener(this::onShowHistory);
+		}
+		
+		//- Geçmişin boş olması, ya gerçekten herhangi bir geçmiş kayıt olmadığı
+		//- yada izinlerden dolayı boş geldiği anlamına gelir
+		
+		if (history.isEmpty()) {
+			
+			if (hasCallLogPermissions()) {
+				
+				//- Geçmiş, izinlerden dolayı değil gerçekten olmadığı için boş
+				//- Dolayısıyla hiç bir işlem yapmaya gerek yok
+				TextView text = findViewById(R.id.text_show_calls);
+				text.setText(getString(R.string.no_contact_history));
+			}
+			else {
+				
+				//- Geçmiş, izinlerden dolayı boş
+				
+				xlog.d("Kişinin geçmişi için izinler bekleniyor");
+			}
+		}
+		
+		// Burada arama geçmişinin güncellendiğini bildiriyoruz.
+		// Bu sınıftaki görsel tıklandığında tüm geçmiş gösterilir.
+		// Ama henüz böyle bir şey yok.
+		// Sadece geçmiş ayarlandı.
+		onHistoryLoad();
 	}
 	
 	/**
@@ -247,13 +302,11 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 			
 			needShowHistory = false;
 			
-			List<Call> history = contact.getData(ContactKey.CALL_HISTORY);
-			
 			if (history != null) {
 				
 				if (!history.isEmpty()) {
 					
-					showHistory(history);
+					showCalls(history.getCalls());
 				}
 				else {
 					
@@ -266,28 +319,6 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 					else xlog.d("No call history");
 				}
 			}
-		}
-	}
-	
-	/**
-	 * Shows the call history for the contact associated with this activity.
-	 *
-	 * @param history The call history to show.
-	 */
-	protected final void showHistory(List<Call> history) {
-		
-		if (gateShowHistory.enter()) {
-			
-			xlog.dx("Show call history for : %s", contact.getName());
-			
-			//- Geçmişi kaydet
-			//Blue.box(Key.CALL_HISTORY, history);
-			
-			Runny.run(() -> {
-				
-				startActivity(new Intent(this, ActivityCallList.class));
-				Bungee.slideRight(this);
-			}, 150);
 		}
 	}
 	
@@ -355,9 +386,6 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 				.onSuccess(h -> {
 					
 					isNewHistory = true;
-					contact.setData(ContactKey.CALL_HISTORY, h);
-					contact.setData(ContactKey.HISTORY, History.of(contact));
-					
 					onShowHistory(null);
 					onHistoryLoad();
 				})
@@ -366,61 +394,23 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	}
 	
 	/**
-	 * Adds the view for showing the contact history.
-	 * If the user touches this view, the history is shown by starting new activity.
-	 * That is the view that starts the action.
-	 *
-	 * @param history The call history for the contact.
+	 * Shows the call history for the contact associated with this activity.
 	 */
-	private void addContactHistoryView(@NonNull List<Call> history) {
+	protected final void showCalls(List<Call> calls) {
 		
-		contact.setData(ContactKey.CALL_HISTORY, history);
-		contact.setData(ContactKey.HISTORY, History.of(contact));
-		//Blue.box(Key.CALL_HISTORY, history);
-		
-		//- Kişinin geçmişine yönlendirecek olan görünüm sadece bir kez eklenmeli
-		if (!historyViewAdded) {
+		if (gateShowHistory.enter()) {
 			
-			historyViewAdded = true;
+			xlog.dx("Show call history for : %s", contact.getName());
 			
-			View historyView = getLayoutInflater().inflate(R.layout.show_contact_history, mainContainer, false);
+			//- Geçmişi kaydet
+			Blue.box(Key.SHOW_CALLS, calls);
 			
-			mainContainer.addView(historyView);
-			
-			ImageView icon = historyView.findViewById(R.id.contact_history_icon);
-			Colors.setTintDrawable(icon.getDrawable(), Colors.lighter(Colors.getPrimaryColor(), 0.2f));
-			
-			View view = historyView.findViewById(R.id.contact_history_item);
-			
-			view.setBackgroundResource(Colors.getRipple());
-			view.setOnClickListener(this::onShowHistory);
+			Runny.run(() -> {
+				
+				startActivity(new Intent(this, ActivityCallList.class));
+				Bungee.slideRight(this);
+			}, 150);
 		}
-		
-		//- Geçmişin boş olması, ya gerçekten herhangi bir geçmiş kayıt olmadığı
-		//- yada izinlerden dolayı boş geldiği anlamına gelir
-		
-		if (history.isEmpty()) {
-			
-			if (hasCallLogPermissions()) {
-				
-				//- Geçmiş, izinlerden dolayı değil gerçekten olmadığı için boş
-				//- Dolayısıyla hiç bir işlem yapmaya gerek yok
-				TextView text = findViewById(R.id.text_show_calls);
-				text.setText(getString(R.string.no_contact_history));
-			}
-			else {
-				
-				//- Geçmiş, izinlerden dolayı boş
-				
-				xlog.d("Kişinin geçmişi için izinler bekleniyor");
-			}
-		}
-		
-		// Burada arama geçmişinin güncellendiğini bildiriyoruz.
-		// Bu sınıftaki görsel tıklandığında tüm geçmiş gösterilir.
-		// Ama henüz böyle bir şey yok.
-		// Sadece geçmiş ayarlandı.
-		onHistoryLoad();
 	}
 	
 	@Override

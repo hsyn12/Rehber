@@ -70,7 +70,7 @@ public class ContactDetailsAbout extends ContactDetailsMenu {
 		// because the call history must be updated before all
 		super.onHistoryLoad();
 		
-		List<Call> history = contact.getData(ContactKey.CALL_HISTORY);
+		List<Call> history = contact.getData(ContactKey.SHOW_CALLS);
 		
 		// The contact must have one call at least
 		if (history != null && history.size() > 0) {
@@ -123,7 +123,7 @@ public class ContactDetailsAbout extends ContactDetailsMenu {
 	 */
 	private void onClickHeader(View view) {
 		
-		List<Call> history = contact.getData(ContactKey.CALL_HISTORY);
+		List<Call> history = contact.getData(ContactKey.SHOW_CALLS);
 		
 		if (history == null) {
 			

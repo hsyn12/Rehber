@@ -29,9 +29,25 @@ public interface History {
 	 * @return the history for the given contact
 	 */
 	@NotNull
-	static History of(@NotNull Contact contact) {
+	static History of(@NotNull Contact contact, @NotNull List<Call> calls) {
 		
-		return new ContactCallHistory(contact);
+		var h = new ContactCallHistory(contact, calls);
+		
+		contact.setData(ContactKey.HISTORY, h);
+		
+		return h;
+	}
+	
+	/**
+	 * Creates a new empty history for the given contact.
+	 *
+	 * @param contact the contact to be used by this history
+	 * @return the history for the given contact
+	 */
+	@NotNull
+	static History ofEmpty(@NotNull Contact contact) {
+		
+		return new ContactCallHistory(contact, new ArrayList<>(0));
 	}
 	
 	/**
@@ -41,7 +57,7 @@ public interface History {
 	 */
 	default Call getLastCall() {
 		
-		return getHistory().get(0);
+		return getCalls().get(0);
 	}
 	
 	/**
@@ -49,13 +65,10 @@ public interface History {
 	 *
 	 * @return the calls
 	 */
-	default List<Call> getHistory() {
-		
-		return getContact().getData(ContactKey.CALL_HISTORY);
-	}
+	@NotNull List<Call> getCalls();
 	
 	/**
-	 * Returns the contact.
+	 * Returns the contact that this history belongs to.
 	 *
 	 * @return the contact
 	 */
@@ -68,7 +81,7 @@ public interface History {
 	 */
 	default Call getFirstCall() {
 		
-		return getHistory().get(size() - 1);
+		return getCalls().get(size() - 1);
 	}
 	
 	/**
@@ -78,7 +91,7 @@ public interface History {
 	 */
 	default int size() {
 		
-		return getHistory().size();
+		return getCalls().size();
 	}
 	
 	/**
@@ -88,7 +101,7 @@ public interface History {
 	 */
 	default boolean isEmpty() {
 		
-		return getHistory().isEmpty();
+		return getCalls().isEmpty();
 	}
 	
 	/**
@@ -99,7 +112,7 @@ public interface History {
 	 */
 	default Call get(int index) {
 		
-		return getHistory().get(index);
+		return getCalls().get(index);
 	}
 	
 	/**
@@ -109,7 +122,7 @@ public interface History {
 	 */
 	default void sort(Comparator<Call> comparator) {
 		
-		getHistory().sort(comparator);
+		getCalls().sort(comparator);
 	}
 	
 	/**
@@ -120,7 +133,7 @@ public interface History {
 	 */
 	default int getDuration(int... types) {
 		
-		return getCalls(types).stream().mapToInt(Call::getDuration).sum();
+		return getCallsByTypes(types).stream().mapToInt(Call::getDuration).sum();
 	}
 	
 	/**
@@ -129,9 +142,9 @@ public interface History {
 	 * @param types the call types
 	 * @return the calls
 	 */
-	default @NotNull List<Call> getCalls(int... types) {
+	default @NotNull List<Call> getCallsByTypes(int... types) {
 		
-		return getCalls(getHistory(), types);
+		return getCallsByTypes(getCalls(), types);
 	}
 	
 	/**
@@ -141,7 +154,7 @@ public interface History {
 	 * @param types the call types
 	 * @return the calls
 	 */
-	static @NotNull List<Call> getCalls(List<Call> calls, int... types) {
+	static @NotNull List<Call> getCallsByTypes(List<Call> calls, int... types) {
 		
 		List<Call> _calls = new ArrayList<>();
 		
@@ -155,15 +168,21 @@ public interface History {
 		return _calls;
 	}
 	
+	/**
+	 * Returns the size of the given call type.
+	 *
+	 * @param callType the call type
+	 * @return the size
+	 */
 	default int size(int callType) {
 		
 		var types = Res.getCallTypes(callType);
 		
 		if (types.length == 1) {
 			
-			return (int) getHistory().stream().filter(call -> call.getCallType() == callType).count();
+			return (int) getCalls().stream().filter(call -> call.getCallType() == callType).count();
 		}
 		
-		return (int) getHistory().stream().filter(call -> call.getCallType() == callType || call.getCallType() == types[1]).count();
+		return (int) getCalls().stream().filter(call -> call.getCallType() == callType || call.getCallType() == types[1]).count();
 	}
 }

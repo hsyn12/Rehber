@@ -15,7 +15,6 @@ import com.tr.hsyn.key.Key;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.code.call.act.Calls;
 import com.tr.hsyn.telefonrehberi.main.code.call.cast.CallKey;
-import com.tr.hsyn.telefonrehberi.main.code.contact.act.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.code.story.call.CallStory;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
 import com.tr.hsyn.xbox.Blue;
@@ -56,7 +55,7 @@ public class ActivityCallList extends ActivityCallHistoryView {
 		
 		if (contact == null) throw new IllegalArgumentException("Contact is null");
 		
-		calls = contact.getData(ContactKey.CALL_HISTORY);
+		calls = Blue.getObject(Key.SHOW_CALLS);
 		
 		if (calls == null) calls = new ArrayList<>(0);
 		

@@ -9,7 +9,6 @@ import android.widget.TextView;
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 
-import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.calldata.CallType;
 import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.gate.AutoGate;
@@ -369,14 +368,12 @@ public abstract class CallSummary extends ContactDetailsHistory {
 			totalCall.setText(String.valueOf(incomingSize + outgoingSize + missedSize + rejectedSize));
 			totalCallDuration.setText(Time.formatSeconds(incomingDuration + outgoingDuration));
 			
-			incomingRow.setOnClickListener(v -> showHistory(callHistory.getCalls(CallType.INCOMING, CallType.INCOMING_WIFI)));
-			outgoingRow.setOnClickListener(v -> showHistory(callHistory.getCalls(CallType.OUTGOING, CallType.OUTGOING_WIFI)));
-			missedRow.setOnClickListener(v -> showHistory(callHistory.getCalls(CallType.MISSED)));
-			rejectedRow.setOnClickListener(v -> showHistory(callHistory.getCalls(CallType.REJECTED)));
+			incomingRow.setOnClickListener(v -> showCalls(callHistory.getCallsByTypes(CallType.INCOMING, CallType.INCOMING_WIFI)));
+			outgoingRow.setOnClickListener(v -> showCalls(callHistory.getCallsByTypes(CallType.OUTGOING, CallType.OUTGOING_WIFI)));
+			missedRow.setOnClickListener(v -> showCalls(callHistory.getCallsByTypes(CallType.MISSED)));
+			rejectedRow.setOnClickListener(v -> showCalls(callHistory.getCallsByTypes(CallType.REJECTED)));
 			
-			List<Call> history = contact.getData(ContactKey.CALL_HISTORY);
-			
-			totalRow.setOnClickListener(v -> showHistory(history));
+			totalRow.setOnClickListener(v -> showCalls(history.getCalls()));
 		}
 		
 		if (!summaryViewAdded) {

@@ -61,12 +61,6 @@ public interface ContactKey {
 	DataKey DETAILS_APPLIED = DataKey.of(12, "detailsApplied");
 	
 	/**
-	 * Data key for the call history of a contact.<br>
-	 * <code>List of Calls</code>
-	 */
-	DataKey CALL_HISTORY = DataKey.of(13, "call_history");
-	
-	/**
 	 * Data key for the history object.<br>
 	 * {@link History} object
 	 */

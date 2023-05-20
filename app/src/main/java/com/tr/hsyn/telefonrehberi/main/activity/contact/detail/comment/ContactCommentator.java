@@ -75,7 +75,7 @@ public interface ContactCommentator extends Commentator<Contact>, CommentEditor 
 	 */
 	default List<Call> getCallHistory() {
 		
-		return getContact().getData(ContactKey.CALL_HISTORY);
+		return getContact().getData(ContactKey.SHOW_CALLS);
 	}
 	
 	/**
