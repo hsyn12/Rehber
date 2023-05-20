@@ -30,11 +30,10 @@ public class Key extends Atom {
 	@Deprecated(forRemoval = true)
 	public static final Key CALL_HISTORY           = Key.of(18, "Call History");
 	public static final Key CALL_LOG_UPDATED       = Key.of(19, "CallLog Updated");
-	
-	public Key(long id, @NotNull String name) {
-		
-		super(id, name);
-	}
+	/**
+	 * The object that consists of all call log calls.
+	 */
+	public static final Key CALL_COLLECTION        = Key.of(20, "Call Collection");
 	
 	@NotNull
 	public static Key of(long id, @NotNull String name) {
@@ -46,6 +45,11 @@ public class Key extends Atom {
 	public static Key ofEmpty() {
 		
 		return EMPTY;
+	}
+	
+	public Key(long id, @NotNull String name) {
+		
+		super(id, name);
 	}
 	
 	public boolean isEmpty() {

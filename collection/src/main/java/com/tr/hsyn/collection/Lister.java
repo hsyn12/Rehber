@@ -2,6 +2,7 @@ package com.tr.hsyn.collection;
 
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -402,5 +403,13 @@ public final class Lister {
 		for (int i = 0; i < loop; i++) consumer.accept(i);
 	}
 	
+	/**
+	 * @param list list
+	 * @return {@code true} if {@code list} is not {@code null} and not empty, {@code false} otherwise
+	 */
+	public static boolean exist(@Nullable List<?> list) {
+		
+		return list != null && !list.isEmpty();
+	}
 	
 }

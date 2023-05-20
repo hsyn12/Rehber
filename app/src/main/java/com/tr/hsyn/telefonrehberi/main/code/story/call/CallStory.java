@@ -7,9 +7,11 @@ import androidx.annotation.NonNull;
 
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.collection.Lister;
+import com.tr.hsyn.execution.Runny;
 import com.tr.hsyn.keep.Keep;
 import com.tr.hsyn.registery.cast.Database;
 import com.tr.hsyn.string.Stringx;
+import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.data.CallCollection;
 import com.tr.hsyn.telefonrehberi.main.code.call.act.Calls;
 import com.tr.hsyn.telefonrehberi.main.code.call.cast.CallKey;
 import com.tr.hsyn.telefonrehberi.main.code.database.call.CallDatabase;
@@ -76,10 +78,12 @@ public class CallStory implements Story<Call> {
 				
 				systemCalls.sort((x, y) -> Long.compare(y.getTime(), x.getTime()));
 				
+				Runny.run(() -> CallCollection.create(systemCalls), false);
 				return systemCalls;
 			}
 			else {
 				
+				CallCollection.createEmpty();
 				xlog.d("Sistemde arama kaydı yok");
 			}
 		}
@@ -94,6 +98,8 @@ public class CallStory implements Story<Call> {
 				databaseCalls.forEach(c -> c.setData(CallKey.DELETED_DATE, now));
 				
 				database.update(databaseCalls);
+				
+				CallCollection.createEmpty();
 				return new ArrayList<>(0);
 			}
 			else {
@@ -125,7 +131,6 @@ public class CallStory implements Story<Call> {
 						databaseCalls.removeAll(deletedCalls);
 					}
 					
-					
 					if (!newCalls.isEmpty()) {
 						
 						xlog.d("%d yeni arama kaydı var [%s]", newCalls.size(), newCalls);
@@ -143,6 +148,7 @@ public class CallStory implements Story<Call> {
 		//! Hangi diğer ayrıntıları?
 		
 		databaseCalls.sort((x, y) -> Long.compare(y.getTime(), x.getTime()));
+		Runny.run(() -> CallCollection.create(databaseCalls), false);
 		return databaseCalls;
 	}
 	
@@ -207,29 +213,28 @@ public class CallStory implements Story<Call> {
 		return false;
 	}
 	
+	@Override
+	public boolean deleteFromDatabase(Call item) {
+		
+		return database.delete(item);
+	}
+	
+	@Override
+	public int deleteFromDatabase(List<? extends Call> items) {
+		
+		return database.delete(items);
+	}
+	
 	/**
-	 * Kaydı siler.
+	 * Kaydı günceller.
 	 *
 	 * @param call Kayıt
 	 * @return Başarı durumu
 	 */
 	@Override
-	public boolean deleteFromSystem(@NotNull Call call) {
+	public boolean updateFromDatabase(@NonNull Call call) {
 		
-		return Calls.delete(contentResolver, call.getTime());
-	}
-	
-	@Override
-	public int delete(List<? extends Call> items) {
-		
-		int count = deleteFromSystem(items);
-		
-		long time = Time.now();
-		items.forEach(c -> c.setData(CallKey.DELETED_DATE, time));
-		
-		updateFromDatabase(items);
-		
-		return count;
+		return database.update(call, String.valueOf(call.getTime()));
 	}
 	
 	@Override
@@ -299,27 +304,28 @@ public class CallStory implements Story<Call> {
 	}
 	
 	/**
-	 * Kaydı günceller.
+	 * Kaydı siler.
 	 *
 	 * @param call Kayıt
 	 * @return Başarı durumu
 	 */
 	@Override
-	public boolean updateFromDatabase(@NonNull Call call) {
+	public boolean deleteFromSystem(@NotNull Call call) {
 		
-		return database.update(call, String.valueOf(call.getTime()));
+		return Calls.delete(contentResolver, call.getTime());
 	}
 	
 	@Override
-	public boolean deleteFromDatabase(Call item) {
+	public int delete(List<? extends Call> items) {
 		
-		return database.delete(item);
-	}
-	
-	@Override
-	public int deleteFromDatabase(List<? extends Call> items) {
+		int count = deleteFromSystem(items);
 		
-		return database.delete(items);
+		long time = Time.now();
+		items.forEach(c -> c.setData(CallKey.DELETED_DATE, time));
+		
+		updateFromDatabase(items);
+		
+		return count;
 	}
 	
 }

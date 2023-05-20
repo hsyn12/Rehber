@@ -41,12 +41,15 @@ import java.util.List;
 public abstract class ContactDetailsHeadWay extends ContactDetailsView implements ThreadedWork {
 	
 	/** The selected contact */
-	protected Contact contact;
+	protected Contact      contact;
+	protected List<String> phoneNumbers;
 	
 	@Override
 	protected void onCreate() {
 		
 		super.onCreate();
+		
+		//! We have to have the selected contact
 		
 		contact = Over.Contacts.getSelectedContact();
 		
@@ -54,33 +57,6 @@ public abstract class ContactDetailsHeadWay extends ContactDetailsView implement
 			
 			Show.tost(this, getString(R.string.contact_details_contact_not_found));
 			onBackPressed();
-		}
-		else setDetails();
-	}
-	
-	/**
-	 * Sets the details of the contact and calls {@link #prepare()} method.
-	 */
-	private void setDetails() {
-		
-		boolean detailsApplied = contact.getBool(ContactKey.DETAILS_APPLIED);
-		
-		if (!detailsApplied) {
-			
-			workOnBackground(() -> {
-				
-				MimeTypeHandlers handlers = new MimeTypeHandlers(new NumberHandler());
-				
-				Contacts.setContactDetails(getContentResolver(), contact, handlers);
-				
-				if (contact.getPic() != null) {
-					
-					contact.setData(ContactKey.BIG_PIC, Contacts.getBigPic(getContentResolver(), contact.getContactId()));
-				}
-				
-				workOnMain(this::prepare);
-				
-			});
 		}
 		else prepare();
 	}
@@ -133,11 +109,11 @@ public abstract class ContactDetailsHeadWay extends ContactDetailsView implement
 	 */
 	private void setNumbers() {
 		
-		List<String> numbers = contact.getData(ContactKey.NUMBERS);
+		phoneNumbers = ContactKey.getNumbers(contact);
 		
-		if (numbers != null && !numbers.isEmpty()) {
+		if (phoneNumbers != null && !phoneNumbers.isEmpty()) {
 			
-			for (var number : numbers) {
+			for (var number : phoneNumbers) {
 				
 				View view = getLayoutInflater().inflate(R.layout.number_item, numbersLayout, false);
 				
@@ -177,6 +153,29 @@ public abstract class ContactDetailsHeadWay extends ContactDetailsView implement
 	}
 	
 	/**
+	 * Listener for the 'sent message' view click event.
+	 *
+	 * @param view sent message view
+	 */
+	private void onClickMessage(@NonNull View view) {
+		
+		xlog.d("Message to : %s", view.getTag());
+		openMessages((String) view.getTag());
+	}
+	
+	/**
+	 * Listener for the call view click event.
+	 *
+	 * @param view call view
+	 */
+	private void onClickCall(@NonNull View view) {
+		
+		xlog.d("Call to : %s", view.getTag());
+		
+		Phone.makeCall(this, (String) view.getTag());
+	}
+	
+	/**
 	 * Listener for the no number view click event.
 	 *
 	 * @param view no number view
@@ -186,17 +185,6 @@ public abstract class ContactDetailsHeadWay extends ContactDetailsView implement
 		xlog.d("Telefon numarası ekle");
 		
 		onClickEdit(view);
-	}
-	
-	/**
-	 * Listener for the 'sent message' view click event.
-	 *
-	 * @param view sent message view
-	 */
-	private void onClickMessage(@NonNull View view) {
-		
-		xlog.d("Message to : %s", view.getTag());
-		openMessages((String) view.getTag());
 	}
 	
 	/**
@@ -218,15 +206,31 @@ public abstract class ContactDetailsHeadWay extends ContactDetailsView implement
 	}
 	
 	/**
-	 * Listener for the call view click event.
-	 *
-	 * @param view call view
+	 * Sets the details of the contact and calls {@link #prepare()} method.
 	 */
-	private void onClickCall(@NonNull View view) {
+	@Deprecated(forRemoval = true)
+	private void setDetails() {
 		
-		xlog.d("Call to : %s", view.getTag());
+		boolean detailsApplied = contact.getBool(ContactKey.DETAILS_APPLIED);
 		
-		Phone.makeCall(this, (String) view.getTag());
+		if (!detailsApplied) {
+			
+			workOnBackground(() -> {
+				
+				MimeTypeHandlers handlers = new MimeTypeHandlers(new NumberHandler());
+				
+				Contacts.setContactDetails(getContentResolver(), contact, handlers);
+				
+				if (contact.getPic() != null) {
+					
+					contact.setData(ContactKey.BIG_PIC, Contacts.getBigPic(getContentResolver(), contact.getContactId()));
+				}
+				
+				workOnMain(this::prepare);
+				
+			});
+		}
+		else prepare();
 	}
 	
 	/**

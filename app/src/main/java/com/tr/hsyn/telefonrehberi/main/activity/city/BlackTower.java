@@ -151,19 +151,6 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 		pageContacts.setRefreshListener(this);
 	}
 	
-	@CallSuper
-	protected void onCallAction(int index) {
-		
-		if (keepCallAction.enter()) {
-			
-			//todo Aramayı gerçekleştir
-			
-			var call = pageCallLog.getItem(index);
-			xlog.d("Call action : %s", Stringx.overWrite(call.getNumber()));
-		}
-		
-	}
-	
 	/**
 	 * Kişi seçildi.
 	 *
@@ -230,6 +217,19 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 			
 			xlog.d("Arama kaydı silinemedi : %s", number);
 		}
+	}
+	
+	@CallSuper
+	protected void onCallAction(int index) {
+		
+		if (keepCallAction.enter()) {
+			
+			//todo Aramayı gerçekleştir
+			
+			var call = pageCallLog.getItem(index);
+			xlog.d("Call action : %s", Stringx.overWrite(call.getNumber()));
+		}
+		
 	}
 	
 	private void onDeleteAllCalls() {
@@ -339,8 +339,6 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 	protected void onCallLogLoaded(List<Call> calls, Throwable throwable) {
 		
 		super.onCallLogLoaded(calls, throwable);
-		
-		
 	}
 	
 	@Override

@@ -5,7 +5,10 @@ import androidx.annotation.NonNull;
 
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.collection.Lister;
+import com.tr.hsyn.key.Key;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
+import com.tr.hsyn.string.Stringx;
+import com.tr.hsyn.xbox.Blue;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -32,21 +35,47 @@ public final class CallCollection {
 	
 	/**
 	 * Creates a new call collection.
+	 * Also, it is stored on the blue cloud.
 	 *
 	 * @param calls the calls
 	 * @return the call collection
+	 * @see Key#CALL_COLLECTION
 	 */
 	@NotNull
 	public static CallCollection create(@NotNull List<Call> calls) {
 		
-		return new CallCollection(calls);
+		var collection = new CallCollection(calls);
+		
+		Blue.box(Key.CALL_COLLECTION, collection);
+		
+		return collection;
+	}
+	
+	@NotNull
+	public static CallCollection createEmpty() {
+		
+		var collection = new CallCollection();
+		
+		Blue.box(Key.CALL_COLLECTION, collection);
+		
+		return collection;
 	}
 	
 	/**
-	 * Creates a new call collection.
-	 *
-	 * @param calls the calls
+	 * Creates a new empty call collection.
 	 */
+	private CallCollection() {
+		
+		this.calls       = null;
+		numberedCalls    = null;
+		incomingCalls    = null;
+		outgoingCalls    = null;
+		missedCalls      = null;
+		rejectedCalls    = null;
+		incomingDuration = 0;
+		outgoingDuration = 0;
+	}
+	
 	private CallCollection(@NotNull List<Call> calls) {
 		
 		this.calls    = calls;
@@ -81,20 +110,6 @@ public final class CallCollection {
 		Lister.loop(callTypes, type -> _calls.addAll(getCalls(type)));
 		
 		return _calls;
-	}
-	
-	/**
-	 * Returns all calls with the given number.
-	 *
-	 * @param phoneNumber the number
-	 * @return calls
-	 */
-	public @NotNull List<Call> getCallsByNumber(@NotNull String phoneNumber) {
-		
-		phoneNumber = PhoneNumbers.formatNumber(phoneNumber, 10);
-		//noinspection DataFlowIssue
-		return numberedCalls.getOrDefault(phoneNumber, new ArrayList<>(0));
-		
 	}
 	
 	/**
@@ -195,4 +210,44 @@ public final class CallCollection {
 		return calls.stream().filter(predicate).collect(Collectors.toList());
 	}
 	
+	/**
+	 * Returns all calls for the given numbers.
+	 *
+	 * @param numbers the numbers
+	 * @return calls
+	 */
+	@NotNull
+	public List<Call> getCallsByNumbers(List<String> numbers) {
+		
+		List<Call> calls = new ArrayList<>();
+		
+		if (numbers == null || isEmpty()) return calls;
+		
+		for (var number : numbers) calls.addAll(getCallsByNumber(number));
+		
+		return calls;
+		
+		//return numberedCalls.getOrDefault(PhoneNumbers.formatNumber(number, 10), new ArrayList<>(0));
+	}
+	
+	public boolean isEmpty() {
+		
+		return calls == null || calls.isEmpty();
+	}
+	
+	/**
+	 * Returns all calls with the given number.
+	 *
+	 * @param phoneNumber the number
+	 * @return calls
+	 */
+	public @NotNull List<Call> getCallsByNumber(String phoneNumber) {
+		
+		if (Stringx.isNoboe(phoneNumber) || isEmpty()) return new ArrayList<>(0);
+		
+		phoneNumber = PhoneNumbers.formatNumber(phoneNumber, 10);
+		//noinspection DataFlowIssue
+		return numberedCalls.getOrDefault(phoneNumber, new ArrayList<>(0));
+		
+	}
 }

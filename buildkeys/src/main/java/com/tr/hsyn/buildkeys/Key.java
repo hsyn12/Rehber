@@ -11,6 +11,7 @@ import com.tr.hsyn.reflection.Clazz;
  *
  * @author hsyn 31 Mayıs 2022 Salı 19:10
  */
+@Deprecated(forRemoval = true)
 public class Key {
 	
 	/**

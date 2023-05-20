@@ -13,25 +13,29 @@ import androidx.annotation.NonNull;
 import com.tr.hsyn.bool.Bool;
 import com.tr.hsyn.bungee.Bungee;
 import com.tr.hsyn.calldata.Call;
+import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.execution.Runny;
 import com.tr.hsyn.execution.Work;
 import com.tr.hsyn.gate.AutoGate;
 import com.tr.hsyn.gate.DigiGate;
 import com.tr.hsyn.gate.Gate;
-import com.tr.hsyn.phone_numbers.PhoneNumbers;
+import com.tr.hsyn.key.Key;
 import com.tr.hsyn.telefonrehberi.R;
+import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.data.CallCollection;
 import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.data.History;
 import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.history.ActivityCallList;
 import com.tr.hsyn.telefonrehberi.main.code.cast.PermissionHolder;
 import com.tr.hsyn.telefonrehberi.main.code.contact.act.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
+import com.tr.hsyn.xbox.Blue;
 import com.tr.hsyn.xlog.xlog;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 
 /**
@@ -55,19 +59,20 @@ import java.util.stream.Collectors;
 public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implements PermissionHolder {
 	
 	/** Request code for call log permissions */
-	protected final int     RC_CALL_LOG     = 45;
+	protected final int            RC_CALL_LOG     = 45;
 	/** Gate for accessing the history data */
-	private final   Gate    gateHistory     = DigiGate.newGate(1000L, this::hideProgress);
+	private final   Gate           gateHistory     = DigiGate.newGate(1000L, this::hideProgress);
 	/** Gate used to block input while showing history. */
-	private final   Gate    gateShowHistory = AutoGate.newGate(1000L);
+	private final   Gate           gateShowHistory = AutoGate.newGate(1000L);
+	protected       CallCollection callCollection;
 	/** Flag indicating whether the view for the contact history has been added to the UI. */
-	private         boolean historyViewAdded;
+	private         boolean        historyViewAdded;
 	/** Flag indicating whether we need to show the history (after receiving call log permissions). */
-	private         boolean isNewHistory    = true;
+	private         boolean        isNewHistory    = true;
 	/** Flag indicating whether call log permissions have been requested. */
-	private         boolean needShowHistory;
+	private         boolean        needShowHistory;
 	/** Flag indicating whether a new history needs to be loaded. */
-	private         boolean isPermissionsRequested;
+	private         boolean        isPermissionsRequested;
 	
 	/**
 	 * @inheritDoc Prepares this activity for display by loading the call history for the
@@ -80,9 +85,9 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 		//! This call must be first.
 		super.prepare();
 		
-		List<String> numbers = contact.getData(ContactKey.NUMBERS);
-		//- Telefon numarası yoksa hiçbir işleme gerek yok
-		if (numbers != null && !numbers.isEmpty()) {
+		//- If no any phone numbers, then no history
+		
+		if (Lister.exist(phoneNumbers)) {
 			
 			setHistory();
 		}
@@ -156,11 +161,12 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	 * @return The call history for the contact, or an empty list if there is no history.
 	 * @see #hasCallLogPermissions()
 	 */
-	private final List<Call> getCallHistory() {
+	@NotNull
+	private List<Call> getCallHistory() {
 		
 		//- Eğer arama kayıtları en az bir kez yüklenmiş ise sorun yok
 		//- Ancak yüklenmemiş ise, kayıtların buradan yüklenmesi biraz karışıklık yaratabilir.
-		List<Call> calls = Over.CallLog.Calls.getCalls();
+		callCollection = Blue.getObject(Key.CALL_COLLECTION);
 		
 		//- Öncelikle arama kayıtları izinlerine bakılmalı
 		if (hasCallLogPermissions()) {
@@ -169,12 +175,12 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 			//- Ancak bu yükleme, yükleme istasyonunda mı yoksa burada mı gerçekleşti bilmiyoruz
 			//- Kullanıcı uygulamayı ilk kez açıp, kişiler listesinden bir tıkla buraya gelmiş olabilir
 			//- Durum böyle ise bu değişkenin null olması gerek
-			if (calls == null) {
+			if (callCollection == null) {
 				
 				//- Burada anlıyoruz ki kullanıcı yükleme istasyonuna gitmemiş
 				//- Bu durumda arama kayıtlarını buradan yüklememiz gerek
 				
-				calls = Over.CallLog.getCallLogManager().load();
+				Over.CallLog.getCallLogManager().load();
 			}
 			else {
 				
@@ -195,8 +201,10 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 			return new ArrayList<>(0);
 		}
 		
+		List<Call> calls = callCollection.getCallsByNumbers(phoneNumbers);
+		calls.sort((x, y) -> Long.compare(y.getTime(), x.getTime()));
 		//- This is the 'call history' of the selected contact
-		return calls.stream().filter(c -> PhoneNumbers.containsNumber(contact.getData(ContactKey.NUMBERS), c.getNumber())).sorted((x, y) -> Long.compare(y.getTime(), x.getTime())).collect(Collectors.toList());
+		return calls;
 	}
 	
 	/**
