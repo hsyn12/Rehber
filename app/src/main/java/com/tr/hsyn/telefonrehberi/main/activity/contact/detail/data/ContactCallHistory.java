@@ -1,6 +1,8 @@
 package com.tr.hsyn.telefonrehberi.main.activity.contact.detail.data;
 
 
+import android.annotation.SuppressLint;
+
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.contactdata.Contact;
 
@@ -43,5 +45,13 @@ public class ContactCallHistory implements History {
 	public @NotNull Contact getContact() {
 		
 		return contact;
+	}
+	
+	@SuppressLint("DefaultLocale")
+	@NotNull
+	@Override
+	public String toString() {
+		
+		return String.format("History{calls=%d}", calls.size());
 	}
 }

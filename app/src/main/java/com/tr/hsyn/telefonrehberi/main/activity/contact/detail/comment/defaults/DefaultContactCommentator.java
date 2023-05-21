@@ -11,7 +11,6 @@ import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.counter.Counter;
 import com.tr.hsyn.daytimes.DayTime;
-import com.tr.hsyn.execution.Runny;
 import com.tr.hsyn.nextension.Extension;
 import com.tr.hsyn.nextension.NumberExtension;
 import com.tr.hsyn.nextension.WordExtension;
@@ -132,12 +131,9 @@ public class DefaultContactCommentator implements ContactCommentator {
 		
 		xlog.d("Accessed the call history [contact='%s', size=%d]", contact.getName(), history.size());
 		
-		Runny.run(() -> {
-			
-			this.comment.append(historyQuantityComment());
-			this.comment.append(commentOnTheLastCall());
-			this.comment.append(aboutLastCallType());
-		});
+		this.comment.append(historyQuantityComment());
+		this.comment.append(commentOnTheLastCall());
+		this.comment.append(aboutLastCallType());
 	}
 	
 	/**

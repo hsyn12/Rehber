@@ -3,11 +3,9 @@ package com.tr.hsyn.telefonrehberi.main.activity.contact.detail.comment;
 
 import android.app.Activity;
 
-import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.telefonrehberi.main.code.comment.CommentEditor;
 import com.tr.hsyn.telefonrehberi.main.code.comment.Commentator;
-import com.tr.hsyn.telefonrehberi.main.code.contact.act.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
 
 import org.jetbrains.annotations.NotNull;
@@ -67,16 +65,6 @@ public interface ContactCommentator extends Commentator<Contact>, CommentEditor 
 	 */
 	@Override
 	@NotNull CharSequence commentOn(@NotNull Contact contact);
-	
-	/**
-	 * Returns the call history of the contact.
-	 *
-	 * @return the call history of the contact
-	 */
-	default List<Call> getCallHistory() {
-		
-		return getContact().getData(ContactKey.SHOW_CALLS);
-	}
 	
 	/**
 	 * Returns the contact for which the comment is being generated.

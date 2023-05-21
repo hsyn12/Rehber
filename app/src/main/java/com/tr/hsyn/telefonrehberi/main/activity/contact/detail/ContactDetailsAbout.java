@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import androidx.annotation.UiThread;
 
-import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.execution.Runny;
 import com.tr.hsyn.gate.AutoGate;
@@ -21,14 +20,11 @@ import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.comment.ContactCo
 import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.comment.ContactCommentator;
 import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.comment.defaults.DefaultContactCommentator;
 import com.tr.hsyn.telefonrehberi.main.code.comment.Moody;
-import com.tr.hsyn.telefonrehberi.main.code.contact.act.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
 import com.tr.hsyn.vanimator.ViewAnimator;
 import com.tr.hsyn.xlog.xlog;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 
 /**
@@ -69,8 +65,6 @@ public class ContactDetailsAbout extends ContactDetailsMenu {
 		// This must be the first call in the onHistoryLoad method
 		// because the call history must be updated before all
 		super.onHistoryLoad();
-		
-		List<Call> history = contact.getData(ContactKey.SHOW_CALLS);
 		
 		// The contact must have one call at least
 		if (history != null && history.size() > 0) {
@@ -123,8 +117,6 @@ public class ContactDetailsAbout extends ContactDetailsMenu {
 	 */
 	private void onClickHeader(View view) {
 		
-		List<Call> history = contact.getData(ContactKey.SHOW_CALLS);
-		
 		if (history == null) {
 			
 			xlog.i("No call history yet");
@@ -151,9 +143,11 @@ public class ContactDetailsAbout extends ContactDetailsMenu {
 				
 				ContactCommentator commentator = createCommentator(this);
 				
-				var comment = commentator.commentOn(contact);
-				
-				Runny.run(() -> onCommentReady(comment), true);
+				Runny.run(() -> {
+					
+					var comment = commentator.commentOn(contact);
+					onCommentReady(comment);
+				}, true);
 			}, false);
 		}
 		else {

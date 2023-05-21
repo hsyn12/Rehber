@@ -163,7 +163,7 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 		//- Art arda seçimleri görmezden gel 
 		if (keepContactSelection.enter()) {
 			
-			var selectedContact = pageContacts.getItem(index);
+			Contact selectedContact = pageContacts.getItem(index);
 			
 			xlog.d("Contact Selected : %s", selectedContact);
 			

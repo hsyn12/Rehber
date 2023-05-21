@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 
@@ -166,6 +167,29 @@ public interface History {
 		});
 		
 		return _calls;
+	}
+	
+	/**
+	 * Returns all calls of the given call type.
+	 *
+	 * @param callType the call type
+	 * @return the calls
+	 */
+	default @NotNull List<Call> getCalls(int callType) {
+		
+		Predicate<Call> test = call -> call.getCallType() == callType;
+		return getCalls(test);
+	}
+	
+	/**
+	 * Returns all calls that match the given predicate.
+	 *
+	 * @param predicate the predicate
+	 * @return the calls
+	 */
+	default @NotNull List<Call> getCalls(@NotNull Predicate<Call> predicate) {
+		
+		return getCalls().stream().filter(predicate).collect(Collectors.toList());
 	}
 	
 	/**

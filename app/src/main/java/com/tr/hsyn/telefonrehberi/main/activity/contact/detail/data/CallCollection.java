@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 
 /**
- * Manages the call logs.
+ * Collection of the call logs.
  */
 public final class CallCollection {
 	
