@@ -207,6 +207,16 @@ public class PhoneNumbers {
 		return number.substring(number.length() - size);
 	}
 	
+	public static boolean equals(@NotNull String number1, @NotNull String number2) {
+		
+		if (number1.equals(number2)) return true;
+		
+		var n1 = formatNumber(number1, N_MIN);
+		var n2 = formatNumber(number2, N_MIN);
+		
+		return n1.equals(n2);
+	}
+	
 	/**
 	 * İki telefon numarası listesini eşitlik için kontrol eder.
 	 * Telefon numaralarının liste içindeki yeri önemli değildir.

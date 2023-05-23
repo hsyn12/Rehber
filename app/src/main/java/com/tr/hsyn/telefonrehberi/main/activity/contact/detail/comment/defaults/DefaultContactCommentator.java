@@ -24,7 +24,10 @@ import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.comment.ContactCo
 import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.comment.ContactCommentator;
 import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.comment.dialog.MostCallDialog;
 import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.comment.dialog.MostCallItemViewData;
+import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.data.CallCollection;
 import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.data.History;
+import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.data.RankList;
+import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.data.RankMate;
 import com.tr.hsyn.telefonrehberi.main.code.call.cast.Group;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.ShowCallsDialog;
 import com.tr.hsyn.telefonrehberi.main.code.contact.act.ContactKey;
@@ -94,6 +97,8 @@ public class DefaultContactCommentator implements ContactCommentator {
 	
 	/**
 	 * Generates a comment on the specified contact.
+	 * This method is the entry point to the commentator.
+	 * So, it ensures that the contact is not null and not empty for the methods that called after.
 	 *
 	 * @param contact the contact to comment on
 	 * @return the generated comment as a CharSequence
@@ -124,16 +129,17 @@ public class DefaultContactCommentator implements ContactCommentator {
 		// Here we start to generate the comment.
 		// Call history is not 'null' and not empty at this point
 		
+		xlog.d("Accessed the call history [contact='%s', size=%d]", contact.getName(), history.size());
+		
 		if (history.size() == 1) {
 			commentOnSingleCall();
 			return;
 		}
 		
-		xlog.d("Accessed the call history [contact='%s', size=%d]", contact.getName(), history.size());
-		
-		this.comment.append(historyQuantityComment());
+		this.comment.append(commentQuantity());
+		this.comment.append(commentMostQuantity());
 		this.comment.append(commentOnTheLastCall());
-		this.comment.append(aboutLastCallType());
+		this.comment.append(commentLastCallType());
 	}
 	
 	/**
@@ -151,7 +157,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 	 * For example, <code>'The contact has <u>2 calls</u>'</code>.
 	 */
 	@NonNull
-	private CharSequence historyQuantityComment() {
+	private CharSequence commentQuantity() {
 		
 		// Now, we are sure that the call history size has been more than one.
 		// The call history of the current contact has two calls at least.
@@ -188,9 +194,39 @@ public class DefaultContactCommentator implements ContactCommentator {
 	}
 	
 	/**
+	 * Returns the comment about the most quantity of calls.
+	 *
+	 * @return the comment
+	 */
+	private @NotNull CharSequence commentMostQuantity() {
+		
+		var            com        = new Spanner();
+		CallCollection collection = getCallCollection();
+		
+		if (collection == null) {
+			
+			xlog.w("Cannot find call collection");
+			return com;
+		}
+		
+		var      ranks    = new RankList(collection.getNumberedCalls()).getRankMap();
+		RankMate rankMate = new RankMate(ranks);
+		var      numbers  = ContactKey.getNumbers(contact);
+		int      rank     = -1;
+		
+		
+		if (numbers.size() == 1) {
+			
+			rank = rankMate.getRank(history.size());
+		}
+		
+		return com;
+	}
+	
+	/**
 	 * @return comment about last call type
 	 */
-	private @NotNull CharSequence aboutLastCallType() {
+	private @NotNull CharSequence commentLastCallType() {
 		
 		Spanner commentAboutLastCallType = new Spanner();
 		Call    lastCall                 = history.getLastCall();
@@ -299,7 +335,6 @@ public class DefaultContactCommentator implements ContactCommentator {
 	}
 	
 	/**
-	 * @return
 	 * @inheritDoc
 	 */
 	@Override

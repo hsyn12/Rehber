@@ -4,11 +4,15 @@ package com.tr.hsyn.telefonrehberi.main.activity.contact.detail.comment;
 import android.app.Activity;
 
 import com.tr.hsyn.contactdata.Contact;
+import com.tr.hsyn.key.Key;
+import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.data.CallCollection;
 import com.tr.hsyn.telefonrehberi.main.code.comment.CommentEditor;
 import com.tr.hsyn.telefonrehberi.main.code.comment.Commentator;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
+import com.tr.hsyn.xbox.Blue;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -80,5 +84,16 @@ public interface ContactCommentator extends Commentator<Contact>, CommentEditor 
 	 * @return the comment about the last call
 	 */
 	@NotNull CharSequence commentOnTheLastCall();
+	
+	/**
+	 * Returns the {@link CallCollection} object.
+	 * This object is used to analize the calls of the all call logs.
+	 *
+	 * @return {@link CallCollection} object
+	 */
+	default @Nullable CallCollection getCallCollection() {
+		
+		return Blue.getObject(Key.CALL_COLLECTION);
+	}
 	
 }

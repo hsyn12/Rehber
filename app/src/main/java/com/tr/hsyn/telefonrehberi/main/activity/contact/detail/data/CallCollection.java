@@ -80,8 +80,8 @@ public final class CallCollection {
 		
 		this.calls    = calls;
 		numberedCalls = calls.stream().collect(Collectors.groupingBy(call -> PhoneNumbers.formatNumber(call.getNumber(), 10)));
-		incomingCalls = getCalls(Call.INCOMING, Call.INCOMING_WIFI);
-		outgoingCalls = getCalls(Call.OUTGOING, Call.OUTGOING_WIFI);
+		incomingCalls = getCallsByTypes(Call.INCOMING, Call.INCOMING_WIFI);
+		outgoingCalls = getCallsByTypes(Call.OUTGOING, Call.OUTGOING_WIFI);
 		missedCalls   = getCalls(Call.MISSED);
 		rejectedCalls = getCalls(Call.REJECTED);
 		
@@ -103,13 +103,28 @@ public final class CallCollection {
 	 * @return calls
 	 */
 	@NonNull
-	public List<Call> getCalls(int... callTypes) {
+	public List<Call> getCallsByTypes(int... callTypes) {
 		
 		List<Call> _calls = new ArrayList<>();
 		
 		Lister.loop(callTypes, type -> _calls.addAll(getCalls(type)));
 		
 		return _calls;
+	}
+	
+	/**
+	 * Returns the object that mapped phone number against its calls.
+	 *
+	 * @return the object that mapped phone number against its calls
+	 */
+	public Map<String, List<Call>> getNumberedCalls() {
+		
+		return numberedCalls;
+	}
+	
+	public List<Call> getCalls() {
+		
+		return calls;
 	}
 	
 	/**
