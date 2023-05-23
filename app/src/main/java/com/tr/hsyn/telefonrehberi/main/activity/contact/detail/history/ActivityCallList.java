@@ -102,7 +102,6 @@ public class ActivityCallList extends ActivityCallHistoryView {
 				else {
 					
 					xlog.d("Kişinin ismi bulunamadı");
-					
 				}
 			}
 			

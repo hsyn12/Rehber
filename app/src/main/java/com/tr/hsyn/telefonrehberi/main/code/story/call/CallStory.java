@@ -7,8 +7,10 @@ import androidx.annotation.NonNull;
 
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.collection.Lister;
+import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.execution.Runny;
 import com.tr.hsyn.keep.Keep;
+import com.tr.hsyn.regex.Nina;
 import com.tr.hsyn.registery.cast.Database;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.main.activity.contact.detail.data.CallCollection;
@@ -16,6 +18,7 @@ import com.tr.hsyn.telefonrehberi.main.code.call.act.Calls;
 import com.tr.hsyn.telefonrehberi.main.code.call.cast.CallKey;
 import com.tr.hsyn.telefonrehberi.main.code.database.call.CallDatabase;
 import com.tr.hsyn.telefonrehberi.main.dev.Story;
+import com.tr.hsyn.telefonrehberi.main.dev.contact.system.SystemContacts;
 import com.tr.hsyn.time.Time;
 import com.tr.hsyn.xlog.xlog;
 
@@ -326,6 +329,48 @@ public class CallStory implements Story<Call> {
 		updateFromDatabase(items);
 		
 		return count;
+	}
+	
+	private void updateInfo(List<Call> calls) {
+		
+		for (Call call : calls) {
+			
+			long id = CallKey.getContactId(call);
+			
+			if (id == 0L || Stringx.isNoboe(call.getName())) {
+				
+				Contact contact = SystemContacts.getContact(contentResolver, call.getNumber());
+				
+				if (contact != null) {
+					
+					String name = contact.getName();
+					
+					var isName = Nina.regex("[^0-9+]").find(name).isInvalid();
+					
+					boolean isUpdate = false;
+					
+					if (isName) {
+						
+						isUpdate = true;
+						call.setName(name);
+						xlog.d("Call owner found : %s", name);
+					}
+					
+					if (contact.getContactId() != 0) {
+						
+						isUpdate = true;
+						CallKey.setContactId(call, contact.getId());
+					}
+					
+					if (isUpdate) {
+						
+						updateFromSystem(call);
+						updateFromDatabase(call);
+					}
+				}
+			}
+		}
+		
 	}
 	
 }

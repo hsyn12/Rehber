@@ -20,8 +20,6 @@ import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.code.call.cast.CallKey;
 import com.tr.hsyn.xlog.xlog;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -77,7 +75,7 @@ public interface Calls {
 			
 			while (cursor.moveToNext()) {
 				
-				//String extra = cursor.getString(extraCol);
+				String extra = cursor.getString(extraCol);
 				
 				var c = new Call(
 						cursor.getString(nameCol),
@@ -89,6 +87,7 @@ public interface Calls {
 				);
 				
 				//xlog.d("%s %s - Extra : %s", c.getName(), c.getNumber(), extra);
+				c.setExtra(extra);
 				calls.add(c);
 			}
 			
@@ -137,8 +136,9 @@ public interface Calls {
 		//- İlk bilgi ACCOUNT_ID
 		//- Sonra random t/f
 		//- track type int
+		//- contact id
 		
-		return String.format("%s;%s;%d", ACCOUNT_ID, call.getBool(CallKey.RANDOM) ? "t" : "f", call.getInt(CallKey.TRACK_TYPE, 0));
+		return String.format("%s;%s;%d;%d", ACCOUNT_ID, call.getBool(CallKey.RANDOM) ? "t" : "f", call.getInt(CallKey.TRACK_TYPE, 0), call.getLong(CallKey.CONTACT_ID, 0));
 	}
 	
 	/**
@@ -313,15 +313,6 @@ public interface Calls {
 		}
 		
 		return R.drawable.ring;
-	}
-	
-	static void updateExtra(@NotNull List<Call> calls) {
-		
-		for (var call : calls) {
-			
-			
-		}
-		
 	}
 	
 }

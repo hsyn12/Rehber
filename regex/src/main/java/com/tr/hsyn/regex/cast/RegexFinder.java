@@ -21,6 +21,32 @@ public interface RegexFinder extends RegexTester {
 	}
 	
 	/**
+	 * Returns all matches of the regex in the text.
+	 *
+	 * @param text       the text to test
+	 * @param beginIndex the index to start from
+	 * @return all matches of the regex in the text
+	 */
+	@NotNull
+	default List<Index> findAll(@NotNull CharSequence text, int beginIndex) {
+		
+		var list = new ArrayList<Index>();
+		
+		if (beginIndex < 0) beginIndex = 0;
+		if (text.length() <= beginIndex) return list;
+		
+		var matcher = createMatcher(text.toString().substring(beginIndex));
+		
+		while (matcher.find()) {
+			
+			if (matcher.start() != matcher.end())
+				list.add(Index.of(matcher.start(), matcher.end()));
+		}
+		
+		return list;
+	}
+	
+	/**
 	 * This method finds the first occurrence of a pattern in the given text and returns its start and end indices.
 	 * If no match is found, it returns {@link Index#INVALID_INDEX}.
 	 *
@@ -28,7 +54,9 @@ public interface RegexFinder extends RegexTester {
 	 * @return an Index object representing the start and end indices of the first match, or an invalid index if no match is found
 	 * @throws NullPointerException if the text parameter is null
 	 */
-	default Index find(@NotNull CharSequence text) {
+	default Index find(CharSequence text) {
+		
+		if (text == null) return Index.INVALID_INDEX;
 		
 		var matcher = createMatcher(text);
 		
@@ -70,32 +98,6 @@ public interface RegexFinder extends RegexTester {
 		if (matcher.find()) return new Index(matcher.start(groupOrder), matcher.end(groupOrder));
 		
 		return Index.INVALID_INDEX;
-	}
-	
-	/**
-	 * Returns all matches of the regex in the text.
-	 *
-	 * @param text       the text to test
-	 * @param beginIndex the index to start from
-	 * @return all matches of the regex in the text
-	 */
-	@NotNull
-	default List<Index> findAll(@NotNull CharSequence text, int beginIndex) {
-		
-		var list = new ArrayList<Index>();
-		
-		if (beginIndex < 0) beginIndex = 0;
-		if (text.length() <= beginIndex) return list;
-		
-		var matcher = createMatcher(text.toString().substring(beginIndex));
-		
-		while (matcher.find()) {
-			
-			if (matcher.start() != matcher.end())
-				list.add(Index.of(matcher.start(), matcher.end()));
-		}
-		
-		return list;
 	}
 	
 	/**

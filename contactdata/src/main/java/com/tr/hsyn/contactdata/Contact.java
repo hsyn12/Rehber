@@ -18,47 +18,29 @@ import java.util.Objects;
 @Keep
 public class Contact extends DatBoxer implements Identity {
 	
-	private static final DataKey NAME = DataKey.of(1, "name");
-	private static final DataKey PIC  = DataKey.of(2, "pic");
-	private final        long    contactId;
+	private final long   contactId;
+	private final String name;
+	private final String pic;
 	
 	public Contact(@NotNull Contact contact) {
 		
 		contactId = contact.contactId;
-		
-		for (var key : contact.keySet()) {
-			
-			setData(key, contact.getData(key));
-		}
+		name      = contact.name;
+		pic       = contact.pic;
 	}
 	
 	public Contact(long contactId, String name, String pic) {
 		
 		this.contactId = contactId;
-		setPic(pic);
-		setName(name);
+		this.name      = name;
+		this.pic       = pic;
 	}
 	
 	@Nullable
-	public String getPic() {return getData(PIC);}
-	
-	public void setPic(String pic) {
-		
-		setData(PIC, pic);
-	}
-	
-	public long getContactId() {
-		
-		return contactId;
-	}
+	public String getPic() {return pic;}
 	
 	@Nullable
-	public String getName() {return getData(NAME);}
-	
-	public void setName(String name) {
-		
-		setData(NAME, name);
-	}
+	public String getName() {return name;}
 	
 	@Override
 	public long getId() {
@@ -67,15 +49,15 @@ public class Contact extends DatBoxer implements Identity {
 	}
 	
 	@Override
-	public boolean equals(Object obj) {
-		
-		return obj instanceof Contact && contactId == ((Contact) obj).contactId;
-	}
-	
-	@Override
 	public int hashCode() {
 		
 		return Objects.hashCode(contactId);
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		
+		return obj instanceof Contact && contactId == ((Contact) obj).contactId;
 	}
 	
 	@NotNull
@@ -83,7 +65,8 @@ public class Contact extends DatBoxer implements Identity {
 	public String toString() {
 		
 		StringBuilder sb = new StringBuilder("Contact {");
-		sb.append("contactId=").append(getContactId());
+		sb.append("contactId=").append(getContactId())
+				.append("name=").append(name);
 		
 		for (DataKey i : keySet()) {
 			//noinspection ConstantConditions
@@ -91,5 +74,10 @@ public class Contact extends DatBoxer implements Identity {
 		}
 		
 		return sb.append("}").toString();
+	}
+	
+	public long getContactId() {
+		
+		return contactId;
 	}
 }

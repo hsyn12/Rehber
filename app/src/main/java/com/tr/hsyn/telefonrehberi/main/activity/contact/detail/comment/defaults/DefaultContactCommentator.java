@@ -217,7 +217,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 		
 		if (numbers.size() == 1) {
 			
-			rank = rankMate.getRank(history.size());
+			//rank = rankMate.getRank(history.size());
 		}
 		
 		return com;

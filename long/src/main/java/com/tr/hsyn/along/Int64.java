@@ -4,7 +4,7 @@ package com.tr.hsyn.along;
 import org.jetbrains.annotations.NotNull;
 
 
-public interface Long {
+public interface Int64 {
 	
 	/**
 	 * Yeni bir {@code Long} nesnesi oluşturur.
@@ -13,15 +13,19 @@ public interface Long {
 	 * @return {@code Long} nesnesi
 	 */
 	@NotNull
-	static Long of(long value) {
+	static Int64 of(long value) {
 		
 		return new DInt(value);
+	}
+	
+	default boolean isZero() {
+		
+		return getLong() == 0;
 	}
 	
 	/**
 	 * @return Nesnenin taşıdığı long değer
 	 */
 	long getLong();
-	
 	
 }

@@ -7,7 +7,7 @@ import java.util.Objects;
 /**
  * Double integer, Long.
  */
-public final class DInt implements Long {
+public final class DInt implements Int64 {
 	
 	private final long value;
 	
@@ -22,13 +22,7 @@ public final class DInt implements Long {
 		return value;
 	}
 	
-	@Override
-	public boolean equals(Object obj) {
-		
-		return obj instanceof DInt && value == ((DInt) obj).value;
-	}
-	
-	public boolean equals(Long obj) {
+	public boolean equals(Int64 obj) {
 		
 		return obj != null && value == obj.getLong();
 	}
@@ -37,5 +31,11 @@ public final class DInt implements Long {
 	public int hashCode() {
 		
 		return Objects.hashCode(value);
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		
+		return obj instanceof DInt && value == ((DInt) obj).value;
 	}
 }

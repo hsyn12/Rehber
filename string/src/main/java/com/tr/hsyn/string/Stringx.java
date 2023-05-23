@@ -123,6 +123,20 @@ public final class Stringx {
 		return String.valueOf(str.charAt(0));
 	}
 	
+	/**
+	 * String içindeki tüm boşluk karakterlerini siler. {@code [\r\n\t\f\v]} ve {@code ' '} boşluk.
+	 *
+	 * @param str String
+	 * @return Boşluksuz bitişik bir string. Eğer verilen string {@code null} ise boş string
+	 */
+	@NotNull
+	public static String trimWhiteSpaces(String str) {
+		
+		if (str != null) return str.replaceAll("\\s", "");
+		
+		return "";
+	}
+	
 	@NotNull
 	public static Tester test(@NotNull String text) {
 		
@@ -189,6 +203,74 @@ public final class Stringx {
 		if (word.length() < searchText.length()) return false;
 		
 		return indexOfMatches(word, searchText).length != 0;
+	}
+	
+	/**
+	 * Bir kelimenin içinde başka bir kelimenin geçtiği yerlerin başlangıç ve bitiş index'lerini verir.<br>
+	 * Eşleşme yapılırken boşluklar da hesaplanır.<br>
+	 * Mesela '543493' içinde ' 5 4 3 ' aranıyorsa eşleşecek ve [0,3] dizisi dönecek.<br>
+	 * Mesela '5 4 3 493' içinde '543' aranıyorsa eşleşecek ve [0,6] dizisi dönecek.<br>
+	 * Mesela 'Mulu Acar' içinde 'ua' aranıyorsa eşleşecek ve [4, 7] dizisi dönecek.<br>
+	 * Mesela 'Mulu Acar' içinde 'u   a' aranıyorsa eşleşecek ve yine [4, 7] dizisi dönecek.<br>
+	 * Mesela 'Mulu Acar' içinde 'U' aranıyorsa eşleşecek ve [1, 2, 4, 5] dizisi dönecek.<br><br>
+	 * <p>
+	 * Arama, eşleşme bulunca sonlanmaz, ne kadar eşleşme varsa bulmaya devam eder.
+	 * Dönen eşleşme dizisi, ikili eşler şeklinde düşünülmeli.
+	 * Her bir ikili, eşleşmenin başlama (dahil) ve bitiş (hariç) index'ini bildirir.
+	 *
+	 * @param word       Aramanın yapılacağı kelime
+	 * @param searchText Aranacak kelime
+	 * @return Eşleşme olmazsa boş dizi
+	 */
+	@NotNull
+	public static Integer[] indexOfMatches(String word, String searchText) {
+		
+		return indexOfMatches(word, searchText, true);
+	}
+	
+	/**
+	 * Bir kelimenin içinde başka bir kelimenin geçtiği yerlerin başlangıç ve bitiş index'lerini verir.<br>
+	 * Eşleşme yapılırken boşluklar da hesaplanır.<br>
+	 * Mesela '543493' içinde ' 5 4 3 ' aranıyorsa eşleşecek ve [0,3] dizisi dönecek.<br>
+	 * Mesela '5 4 3 493' içinde '543' aranıyorsa eşleşecek ve [0,6] dizisi dönecek.<br>
+	 * Mesela 'Mulu Acar' içinde 'ua' aranıyorsa eşleşecek ve [4, 7] dizisi dönecek.<br>
+	 * Mesela 'Mulu Acar' içinde 'u   a' aranıyorsa eşleşecek ve yine [4, 7] dizisi dönecek.<br>
+	 * Mesela 'Mulu Acar' içinde 'U' aranıyorsa eşleşecek ve [1, 2, 4, 5] dizisi dönecek.<br><br>
+	 * <p>
+	 * Arama, eşleşme bulunca sonlanmaz, ne kadar eşleşme varsa bulmaya devam eder.
+	 * Dönen eşleşme dizisi, ikili eşler şeklinde düşünülmeli.
+	 * Her bir ikili, eşleşmenin başlama (dahil) ve bitiş (hariç) index'ini bildirir.
+	 *
+	 * @param word       Aramanın yapılacağı kelime
+	 * @param searchText Aranacak kelime
+	 * @param ignoreCase Karakter küçük/büyük duyarlılığı
+	 * @return Eşleşme olmazsa boş dizi
+	 */
+	public static Integer @NotNull [] indexOfMatches(String word, String searchText, boolean ignoreCase) {
+		
+		if (Regex.isNoboe(word) || Regex.isNoboe(searchText)) return new Integer[0];
+		
+		searchText = Regex.removeWhiteSpaces(searchText);
+		
+		var reg = Nina.whiteSpace().zeroOrMore();
+		
+		if (ignoreCase) reg = reg.ignoreCase();
+		
+		for (int i = 0; i < searchText.length(); i++)
+		     reg = reg.with(Nina.whiteSpace().zeroOrMore().with(searchText.charAt(i)));
+		
+		var indexes = reg.findAll(word);
+		
+		Integer[] result = new Integer[indexes.size() * 2];
+		
+		int x = 0;
+		for (var i : indexes) {
+			
+			result[x++] = i.start;
+			result[x++] = i.end;
+		}
+		
+		return result;
 	}
 	
 	/**
@@ -392,74 +474,6 @@ public final class Stringx {
 	}
 	
 	/**
-	 * Bir kelimenin içinde başka bir kelimenin geçtiği yerlerin başlangıç ve bitiş index'lerini verir.<br>
-	 * Eşleşme yapılırken boşluklar da hesaplanır.<br>
-	 * Mesela '543493' içinde ' 5 4 3 ' aranıyorsa eşleşecek ve [0,3] dizisi dönecek.<br>
-	 * Mesela '5 4 3 493' içinde '543' aranıyorsa eşleşecek ve [0,6] dizisi dönecek.<br>
-	 * Mesela 'Mulu Acar' içinde 'ua' aranıyorsa eşleşecek ve [4, 7] dizisi dönecek.<br>
-	 * Mesela 'Mulu Acar' içinde 'u   a' aranıyorsa eşleşecek ve yine [4, 7] dizisi dönecek.<br>
-	 * Mesela 'Mulu Acar' içinde 'U' aranıyorsa eşleşecek ve [1, 2, 4, 5] dizisi dönecek.<br><br>
-	 * <p>
-	 * Arama, eşleşme bulunca sonlanmaz, ne kadar eşleşme varsa bulmaya devam eder.
-	 * Dönen eşleşme dizisi, ikili eşler şeklinde düşünülmeli.
-	 * Her bir ikili, eşleşmenin başlama (dahil) ve bitiş (hariç) index'ini bildirir.
-	 *
-	 * @param word       Aramanın yapılacağı kelime
-	 * @param searchText Aranacak kelime
-	 * @return Eşleşme olmazsa boş dizi
-	 */
-	@NotNull
-	public static Integer[] indexOfMatches(String word, String searchText) {
-		
-		return indexOfMatches(word, searchText, true);
-	}
-	
-	/**
-	 * Bir kelimenin içinde başka bir kelimenin geçtiği yerlerin başlangıç ve bitiş index'lerini verir.<br>
-	 * Eşleşme yapılırken boşluklar da hesaplanır.<br>
-	 * Mesela '543493' içinde ' 5 4 3 ' aranıyorsa eşleşecek ve [0,3] dizisi dönecek.<br>
-	 * Mesela '5 4 3 493' içinde '543' aranıyorsa eşleşecek ve [0,6] dizisi dönecek.<br>
-	 * Mesela 'Mulu Acar' içinde 'ua' aranıyorsa eşleşecek ve [4, 7] dizisi dönecek.<br>
-	 * Mesela 'Mulu Acar' içinde 'u   a' aranıyorsa eşleşecek ve yine [4, 7] dizisi dönecek.<br>
-	 * Mesela 'Mulu Acar' içinde 'U' aranıyorsa eşleşecek ve [1, 2, 4, 5] dizisi dönecek.<br><br>
-	 * <p>
-	 * Arama, eşleşme bulunca sonlanmaz, ne kadar eşleşme varsa bulmaya devam eder.
-	 * Dönen eşleşme dizisi, ikili eşler şeklinde düşünülmeli.
-	 * Her bir ikili, eşleşmenin başlama (dahil) ve bitiş (hariç) index'ini bildirir.
-	 *
-	 * @param word       Aramanın yapılacağı kelime
-	 * @param searchText Aranacak kelime
-	 * @param ignoreCase Karakter küçük/büyük duyarlılığı
-	 * @return Eşleşme olmazsa boş dizi
-	 */
-	public static Integer @NotNull [] indexOfMatches(String word, String searchText, boolean ignoreCase) {
-		
-		if (Regex.isNoboe(word) || Regex.isNoboe(searchText)) return new Integer[0];
-		
-		searchText = Regex.removeWhiteSpaces(searchText);
-		
-		var reg = Nina.whiteSpace().zeroOrMore();
-		
-		if (ignoreCase) reg = reg.ignoreCase();
-		
-		for (int i = 0; i < searchText.length(); i++)
-		     reg = reg.with(Nina.whiteSpace().zeroOrMore().with(searchText.charAt(i)));
-		
-		var indexes = reg.findAll(word);
-		
-		Integer[] result = new Integer[indexes.size() * 2];
-		
-		int x = 0;
-		for (var i : indexes) {
-			
-			result[x++] = i.start;
-			result[x++] = i.end;
-		}
-		
-		return result;
-	}
-	
-	/**
 	 * Verilen string'i, ilk ve son iki karakteri hariç yıldız (*) karakteri ile maskeler.<br>
 	 * Mesela 'ahmet' kelimesi 'ah*et' olur.<br>
 	 * Mesela 'ahmet bey' kelimesi 'ah*** *ey' olur.<br><br>
@@ -523,6 +537,12 @@ public final class Stringx {
 		return stringBuilder.toString();
 	}
 	
+	@NotNull
+	public static String repeat(char c, int count) {
+		
+		return String.valueOf(c).repeat(Math.max(0, count));
+	}
+	
 	/**
 	 * Verilen iki string'i karşılaştırarak birinin diğerinin
 	 * içinde geçip geçmediğini tespit edecek.<br></br>
@@ -564,14 +584,14 @@ public final class Stringx {
 		return true;
 	}
 	
-	public static boolean isBlank(@NotNull String str) {
-		
-		return trimWhiteSpaces(str).isEmpty();
-	}
-	
 	public static boolean isNullOrBlank(String str) {
 		
 		return str == null || isBlank(str);
+	}
+	
+	public static boolean isBlank(@NotNull String str) {
+		
+		return str.isBlank();
 	}
 	
 	@NotNull
@@ -693,12 +713,6 @@ public final class Stringx {
 	}
 	
 	@NotNull
-	public static String repeat(char c, int count) {
-		
-		return String.valueOf(c).repeat(Math.max(0, count));
-	}
-	
-	@NotNull
 	public static String repeat(@NotNull String s, int count) {
 		
 		StringBuilder sb = new StringBuilder();
@@ -707,32 +721,6 @@ public final class Stringx {
 		for (int i = 0; i < count; i++) sb.append(s);
 		
 		return sb.toString();
-	}
-	
-	/**
-	 * String içindeki tüm boşluk karakterlerini siler. {@code [\r\n\t\f\v]} ve {@code ' '} boşluk.
-	 *
-	 * @param str String
-	 * @return Boşluksuz bitişik bir string. Eğer verilen string {@code null} ise boş string
-	 */
-	@NotNull
-	public static String trimWhiteSpaces(String str) {
-		
-		if (str != null) return str.replaceAll("\\s", "");
-		
-		return "";
-	}
-	
-	/**
-	 * String içindeki sayı harici tüm karakterleri siler.
-	 *
-	 * @param str String
-	 * @return Sadece sayılardan oluşan bitişik boşluksuz bir string. Sayı yoksa boş string.
-	 */
-	@NotNull
-	public static String trimNonDigits(@NotNull String str) {
-		
-		return str.replaceAll("[^0-9]", "");
 	}
 	
 	/**
@@ -823,6 +811,18 @@ public final class Stringx {
 		if (s2.contains(s1) || s1.contains(s2))
 			return Math.abs(i1 - i2) <= tolerance;
 		else return false;
+	}
+	
+	/**
+	 * String içindeki sayı harici tüm karakterleri siler.
+	 *
+	 * @param str String
+	 * @return Sadece sayılardan oluşan bitişik boşluksuz bir string. Sayı yoksa boş string.
+	 */
+	@NotNull
+	public static String trimNonDigits(@NotNull String str) {
+		
+		return str.replaceAll("[^0-9]", "");
 	}
 	
 }

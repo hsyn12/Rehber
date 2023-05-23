@@ -49,7 +49,7 @@ public interface CallKey {
 	DataKey LABELS           = DataKey.of(56, "labels");
 	
 	/**
-	 * Verilen kişiden isteden bilgiyi döndürür.
+	 * Verilen kişiden istenen bilgiyi döndürür.
 	 *
 	 * @param contact Kişi
 	 * @param key     Veri anahtarı
@@ -85,6 +85,11 @@ public interface CallKey {
 	static long getContactId(@NotNull Call call) {
 		
 		return call.getLong(CONTACT_ID, 0L);
+	}
+	
+	static void setContactId(@NotNull Call call, long contactId) {
+		
+		call.setData(CONTACT_ID, contactId);
 	}
 	
 	@Nullable

@@ -207,12 +207,21 @@ public class PhoneNumbers {
 		return number.substring(number.length() - size);
 	}
 	
+	/**
+	 * Checks if two numbers are equal.
+	 *
+	 * @param number1 number
+	 * @param number2 number
+	 * @return {@code true} if numbers are equal
+	 */
 	public static boolean equals(@NotNull String number1, @NotNull String number2) {
 		
 		if (number1.equals(number2)) return true;
 		
 		var n1 = formatNumber(number1, N_MIN);
 		var n2 = formatNumber(number2, N_MIN);
+		
+		if (n1.length() != n2.length()) return false;
 		
 		return n1.equals(n2);
 	}

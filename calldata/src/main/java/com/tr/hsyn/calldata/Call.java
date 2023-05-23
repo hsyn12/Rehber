@@ -13,16 +13,16 @@ import java.util.Objects;
  */
 public class Call extends DatBoxer implements CallContact, CallTime, CallDuration, CallType, Serializable, Identity {
 	
-	private final String number;
-	private final int    callType;
-	private final long   time;
-	private final int    duration;
 	//- Sistemden alınacak bilgiler
+	private final String number;
+	private final long   time;
+	private final int    callType;
+	private final int    duration;
 	private       String name;
 	/**
 	 * Extra info
 	 */
-	private       String extra;//- random ve trackType burada olacak
+	private       String extra;
 	//-------------------------------
 	
 	public Call(String name, String number, int callType, long time, int duration) {
