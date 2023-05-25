@@ -8,7 +8,6 @@ import android.view.View;
 import androidx.annotation.NonNull;
 
 import com.tr.hsyn.bungee.Bungee;
-import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.execution.Runny;
 import com.tr.hsyn.key.Key;
@@ -36,15 +35,15 @@ public class ActivityCallList extends ActivityCallHistoryView {
 	/**
 	 * Manager for call log
 	 */
-	private final CallStory          callStory = Blue.getObject(Key.CALL_STORY);
+	private final CallStory                       callStory = Blue.getObject(Key.CALL_STORY);
 	/**
 	 * Call history list of the selected contact
 	 */
-	private       List<Call>         calls;
+	private       List<com.tr.hsyn.calldata.Call> calls;
 	/**
 	 * Adapter for the list
 	 */
-	private       CallHistoryAdapter adapter;
+	private       CallHistoryAdapter              adapter;
 	
 	@Override
 	protected void onCreate() {
@@ -116,7 +115,7 @@ public class ActivityCallList extends ActivityCallHistoryView {
 	private void onDeleted(int index) {
 		
 		//- Silinecek kayıt
-		Call call = calls.get(index);
+		com.tr.hsyn.calldata.Call call = calls.get(index);
 		calls.remove(index);//- Sil
 		adapter.notifyItemRemoved(index);
 		updateSize();
@@ -239,7 +238,7 @@ public class ActivityCallList extends ActivityCallHistoryView {
 			//- Bu bilgiye ihtiyaç duyanlar için bir işaret bırak
 			
 			Over.CallLog.refreshCallLog();
-			Over.CallLog.Calls.Editor.delete(deletedCalls.toArray(new Call[0]));
+			Over.CallLog.Calls.Editor.delete(deletedCalls.toArray(new com.tr.hsyn.calldata.Call[0]));
 		}, false);
 	}
 }

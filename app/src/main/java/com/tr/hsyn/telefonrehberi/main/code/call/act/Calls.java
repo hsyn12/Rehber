@@ -136,9 +136,9 @@ public interface Calls {
 		//- İlk bilgi ACCOUNT_ID
 		//- Sonra random t/f
 		//- track type int
-		//- contact id
+		//- contact id long
 		
-		return String.format("%s;%s;%d;%d", ACCOUNT_ID, call.getBool(CallKey.RANDOM) ? "t" : "f", call.getInt(CallKey.TRACK_TYPE, 0), call.getLong(CallKey.CONTACT_ID, 0));
+		return String.format("%s;%s;%d;%d", ACCOUNT_ID, call.getBool(CallKey.RANDOM) ? "t" : "f", call.getInt(CallKey.TRACK_TYPE), call.getLong(CallKey.CONTACT_ID));
 	}
 	
 	/**

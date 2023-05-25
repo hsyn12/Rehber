@@ -89,43 +89,6 @@ public class ContactSearch extends ActivityView implements OnSearchViewListener,
 		searchView.showSearch();
 	}
 	
-	protected void onItemSelected(int index) {
-		
-		if (gateSelection.enter()) {
-			
-			var selected = adapter.getFilteredContacts().get(index);
-			
-			xlog.d("Selected : %s", selected.getName());
-			
-			Blue.box(Key.SELECTED_CONTACT, selected);
-			openContactDetails();
-		}
-	}
-	
-	protected void openContactDetails() {
-		
-		startActivity(new Intent(this, ContactDetails.class));
-		Bungee.slideRight(this);
-	}
-	
-	protected void updateEmpty() {
-		
-		emptyView.setVisibility(getAdapterCalls().isEmpty() ? View.VISIBLE : View.GONE);
-	}
-	
-	protected List<Contact> getAdapterCalls() {
-		
-		return adapter.getFilteredContacts();
-	}
-	
-	private void setupList() {
-		
-		ContactSwipeCallBack swipeCallBack = new ContactSwipeCallBack(ItemTouchHelper.RIGHT, this, ResourceUtil.getBitmap(this, R.drawable.telephone_call));
-		swipeCallBack.setBgColor(Colors.getPrimaryColor());
-		ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeCallBack);
-		itemTouchHelper.attachToRecyclerView(list);
-	}
-	
 	/**
 	 * Listeyi birden fazla numarası olanlar için güncelle.
 	 * Tüm liste tek numaralı olacak, fazla numarası olanlar her numara için eklenecek.
@@ -160,6 +123,43 @@ public class ContactSearch extends ActivityView implements OnSearchViewListener,
 			xlog.d("Hala birden fazla numarası olanlar var");
 		}*/
 		
+	}
+	
+	protected void onItemSelected(int index) {
+		
+		if (gateSelection.enter()) {
+			
+			var selected = adapter.getFilteredContacts().get(index);
+			
+			xlog.d("Selected : %s", selected.getName());
+			
+			Blue.box(Key.SELECTED_CONTACT, selected);
+			openContactDetails();
+		}
+	}
+	
+	protected void updateEmpty() {
+		
+		emptyView.setVisibility(getAdapterCalls().isEmpty() ? View.VISIBLE : View.GONE);
+	}
+	
+	private void setupList() {
+		
+		ContactSwipeCallBack swipeCallBack = new ContactSwipeCallBack(ItemTouchHelper.RIGHT, this, ResourceUtil.getBitmap(this, R.drawable.telephone_call));
+		swipeCallBack.setBgColor(Colors.getPrimaryColor());
+		ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeCallBack);
+		itemTouchHelper.attachToRecyclerView(list);
+	}
+	
+	protected void openContactDetails() {
+		
+		startActivity(new Intent(this, ContactDetails.class));
+		Bungee.slideRight(this);
+	}
+	
+	protected List<Contact> getAdapterCalls() {
+		
+		return adapter.getFilteredContacts();
 	}
 	
 	@Override

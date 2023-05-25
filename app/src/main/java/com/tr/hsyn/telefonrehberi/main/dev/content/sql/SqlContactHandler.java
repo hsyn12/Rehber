@@ -20,13 +20,6 @@ public class SqlContactHandler implements SQLContentHandler<Contact> {
 	private int contactIdCol;
 	private int nameCol;
 	
-	@Override
-	public void onCreateCursor(@NonNull @NotNull Cursor cursor) {
-		
-		contactIdCol = cursor.getColumnIndex("0");
-		nameCol      = cursor.getColumnIndex("1");
-	}
-	
 	@NonNull
 	@Override
 	public Contact handle(@NonNull Cursor cursor) {
@@ -36,6 +29,13 @@ public class SqlContactHandler implements SQLContentHandler<Contact> {
 				cursor.getString(nameCol),
 				null
 		);
+	}
+	
+	@Override
+	public void onCreateCursor(@NonNull @NotNull Cursor cursor) {
+		
+		contactIdCol = cursor.getColumnIndex("0");
+		nameCol      = cursor.getColumnIndex("1");
 	}
 	
 	@Nullable

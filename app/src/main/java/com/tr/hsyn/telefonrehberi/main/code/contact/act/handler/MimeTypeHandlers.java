@@ -18,16 +18,16 @@ public class MimeTypeHandlers extends MimeTypeHandler {
 	private final Map<String, MimeTypeHandler> handlers = new HashMap<>();
 	private final LinkedList<MimeTypeHandler>  handled  = new LinkedList<>();
 	
-	public MimeTypeHandlers() {
-		
-		super("");
-	}
-	
 	public MimeTypeHandlers(MimeTypeHandler... handlers) {
 		
 		this();
 		
 		Lister.loop(handlers, this::addHandler);
+	}
+	
+	public MimeTypeHandlers() {
+		
+		super("");
 	}
 	
 	public void addHandler(MimeTypeHandler handler) {

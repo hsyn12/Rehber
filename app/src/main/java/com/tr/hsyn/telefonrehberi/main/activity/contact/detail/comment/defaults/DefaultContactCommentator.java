@@ -5,7 +5,6 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
-import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.contactdata.Contact;
@@ -54,23 +53,23 @@ public class DefaultContactCommentator implements ContactCommentator {
 	 * The comment object.
 	 * All generated comments by the commentator will be appended into this object
 	 */
-	protected final Spanner             comment = new Spanner();
+	protected final Spanner                         comment = new Spanner();
 	/**
 	 * The list of all call log calls that also included the calls of the current contact
 	 */
-	protected final List<Call>          calls;
+	protected final List<com.tr.hsyn.calldata.Call> calls;
 	/**
 	 * History of the contact
 	 */
-	protected       History             history;
+	protected       History                         history;
 	/**
 	 * The current contact
 	 */
-	protected       Contact             contact;
+	protected       Contact                         contact;
 	/**
 	 * The comment store
 	 */
-	protected       ContactCommentStore commentStore;
+	protected       ContactCommentStore             commentStore;
 	
 	/**
 	 * Constructs a new {@link DefaultContactCommentator} object with the given comment store.
@@ -78,7 +77,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 	 * @param commentStore the comment store to be used by this commentator
 	 * @param calls        the list of all call log calls that also included the calls of the current contact
 	 */
-	public DefaultContactCommentator(ContactCommentStore commentStore, List<Call> calls) {
+	public DefaultContactCommentator(ContactCommentStore commentStore, List<com.tr.hsyn.calldata.Call> calls) {
 		
 		this.commentStore = commentStore;
 		this.calls        = calls;
@@ -228,13 +227,13 @@ public class DefaultContactCommentator implements ContactCommentator {
 	 */
 	private @NotNull CharSequence commentLastCallType() {
 		
-		Spanner commentAboutLastCallType = new Spanner();
-		Call    lastCall                 = history.getLastCall();
-		int     type                     = lastCall.getCallType();
+		Spanner                   commentAboutLastCallType = new Spanner();
+		com.tr.hsyn.calldata.Call lastCall                 = history.getLastCall();
+		int                       type                     = lastCall.getCallType();
 		
-		int[]      callTypes  = Res.getCallTypes(type);
-		List<Call> typedCalls = history.getCallsByTypes(callTypes);
-		String     typeStr    = Res.getCallType(commentStore.getActivity(), type);
+		int[]                           callTypes  = Res.getCallTypes(type);
+		List<com.tr.hsyn.calldata.Call> typedCalls = history.getCallsByTypes(callTypes);
+		String                          typeStr    = Res.getCallType(commentStore.getActivity(), type);
 		
 		if (typedCalls.size() == 1) {
 			
@@ -288,7 +287,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 	 *
 	 * @param call the call to comment on
 	 */
-	private void commentOnTheSingleCall(@NotNull Call call) {
+	private void commentOnTheSingleCall(@NotNull com.tr.hsyn.calldata.Call call) {
 		
 		Duration             timeBefore = Time.howLongBefore(call.getTime());
 		String               callType   = Res.getCallType(commentStore.getActivity(), call.getCallType());
@@ -340,12 +339,12 @@ public class DefaultContactCommentator implements ContactCommentator {
 	@Override
 	public @NotNull CharSequence commentOnTheLastCall() {
 		
-		Spanner              commentOnTheLastCall = new Spanner();
-		Call                 lastCall             = history.getLastCall();
-		String               callType             = Res.getCallType(commentStore.getActivity(), lastCall.getCallType());
-		Duration             timeBefore           = Time.howLongBefore(lastCall.getTime());
-		ShowCall             showCall             = new ShowCall(commentStore.getActivity(), lastCall);
-		View.OnClickListener listener1            = view -> showCall.show();
+		Spanner                   commentOnTheLastCall = new Spanner();
+		com.tr.hsyn.calldata.Call lastCall             = history.getLastCall();
+		String                    callType             = Res.getCallType(commentStore.getActivity(), lastCall.getCallType());
+		Duration                  timeBefore           = Time.howLongBefore(lastCall.getTime());
+		ShowCall                  showCall             = new ShowCall(commentStore.getActivity(), lastCall);
+		View.OnClickListener      listener1            = view -> showCall.show();
 		
 		if (commentStore.isTurkishLanguage()) {
 			
@@ -385,8 +384,8 @@ public class DefaultContactCommentator implements ContactCommentator {
 	
 	private CharSequence commentLastCallTypeRank() {
 		
-		Spanner rank     = new Spanner();
-		Call    lastCall = history.getLastCall();
+		Spanner                   rank     = new Spanner();
+		com.tr.hsyn.calldata.Call lastCall = history.getLastCall();
 		
 		
 		return rank;
@@ -413,7 +412,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 			String phoneNumber = PhoneNumbers.formatNumber(history.get(0).getNumber(), 10);
 			
 			//- Telefon numarasına karşı, numaraya ait arama kayıtlarından oluşan bir liste
-			List<Group<Call>> groups = CallOver.groupByNumber((x, y) -> Integer.compare(y.size(), x.size()));
+			List<Group<com.tr.hsyn.calldata.Call>> groups = CallOver.groupByNumber((x, y) -> Integer.compare(y.size(), x.size()));
 			
 			//- Arama kayıtlarındaki kişi sayısı
 			int differentPerson = groups.size();
@@ -432,10 +431,10 @@ public class DefaultContactCommentator implements ContactCommentator {
 			//comment.append(Stringx.format("Tüm arama kayıtları %d farklı kişiden oluşmakta. ", differentPerson));
 			
 			//- Bay Sayman. Listedeki elemanları sayacak
-			Counter<Group<Call>> counter = new Counter<>(groups);
+			Counter<Group<com.tr.hsyn.calldata.Call>> counter = new Counter<>(groups);
 			
 			//- en çok kaydı olan eleman
-			Group<Call> winner = groups.get(0);
+			Group<com.tr.hsyn.calldata.Call> winner = groups.get(0);
 			
 			//- Aynı arama kaydı sayısına sahip kişi sayısı
 			//- Yani en çok arama kaydına sahip kaç kişi olduğunu buluyoruz
@@ -498,10 +497,10 @@ public class DefaultContactCommentator implements ContactCommentator {
 		if (history.size() > 1) {
 			
 			//- Kişinin en eski arama kaydı
-			Call   firstCall     = history.getFirstCall();
-			Call   lastCall      = history.getLastCall();
-			var    duration      = Time.toDuration(lastCall.getTime() - firstCall.getTime());
-			Unit[] durationUnits = {Unit.YEAR, Unit.MONTH, Unit.DAY, Unit.HOUR, Unit.MINUTE};
+			com.tr.hsyn.calldata.Call firstCall     = history.getFirstCall();
+			com.tr.hsyn.calldata.Call lastCall      = history.getLastCall();
+			var                       duration      = Time.toDuration(lastCall.getTime() - firstCall.getTime());
+			Unit[]                    durationUnits = {Unit.YEAR, Unit.MONTH, Unit.DAY, Unit.HOUR, Unit.MINUTE};
 			
 			Span[] textSpans = {
 					Spans.bold(),

@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.Size;
 
-import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.calldata.CallType;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
@@ -27,7 +26,7 @@ import java.util.List;
  * @author hsyn 13 Şubat 2022 Pazar 11:38:48
  */
 
-public class CallGenerator implements Generator<Call> {
+public class CallGenerator implements Generator<com.tr.hsyn.calldata.Call> {
 	
 	private final List<Contact> contacts;
 	private final int           maxDuration;
@@ -80,7 +79,7 @@ public class CallGenerator implements Generator<Call> {
 	@Override
 	@Nullable
 	@SuppressLint("DefaultLocale")
-	public Call generate() {
+	public com.tr.hsyn.calldata.Call generate() {
 		
 		Contact      contact;
 		List<String> numbers;
@@ -131,13 +130,13 @@ public class CallGenerator implements Generator<Call> {
 		
 		if (trackType == 1) {
 			
-			if (callType == Call.INCOMING || callType == Call.MISSED || callType == Call.REJECTED) {
+			if (callType == com.tr.hsyn.calldata.Call.INCOMING || callType == com.tr.hsyn.calldata.Call.MISSED || callType == com.tr.hsyn.calldata.Call.REJECTED) {
 				
 				ringingDuration = Randoom.getLong(50_000L);//- En fazla 50 saniye çalmış olsun
 			}
 		}
 		
-		Call call = new Call(contact.getName(), number, callType, date, duration);
+		com.tr.hsyn.calldata.Call call = new com.tr.hsyn.calldata.Call(contact.getName(), number, callType, date, duration);
 		
 		call.setData(CallKey.RINGING_DURATION, ringingDuration);
 		call.setData(CallKey.TRACK_TYPE, trackType);

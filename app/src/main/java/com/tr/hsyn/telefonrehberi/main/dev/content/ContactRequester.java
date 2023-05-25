@@ -46,6 +46,13 @@ public final class ContactRequester implements ContentRequester<Contact> {
 		return ContactsContract.Contacts.CONTENT_URI;
 	}
 	
+	@NotNull
+	@Override
+	public ContentHandler<Contact> getContentHandler() {
+		
+		return contentHandler;
+	}
+	
 	@Nullable
 	@Override
 	public String getSelection() {
@@ -58,12 +65,5 @@ public final class ContactRequester implements ContentRequester<Contact> {
 	public String[] getSelectionArgs() {
 		
 		return selectionArgs;
-	}
-	
-	@NotNull
-	@Override
-	public ContentHandler<Contact> getContentHandler() {
-		
-		return contentHandler;
 	}
 }

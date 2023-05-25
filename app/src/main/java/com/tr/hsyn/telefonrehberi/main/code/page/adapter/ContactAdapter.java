@@ -202,11 +202,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> 
 			setSections(items);
 		}
 		
-		public void setItems(List<String> items) {
-			
-			setSections(items);
-		}
-		
 		private void setSections(List<String> items) {
 			
 			sections = new HashMap<>();
@@ -232,6 +227,11 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> 
 					else sections.put("?", Lister.listOf(n));
 				}
 			}
+		}
+		
+		public void setItems(List<String> items) {
+			
+			setSections(items);
 		}
 		
 		@Override

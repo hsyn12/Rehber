@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.tr.hsyn.bool.Bool;
-import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.use.Use;
@@ -127,7 +126,7 @@ public interface Over {
 		 *
 		 * @return the call logs manager
 		 */
-		static Story<Call> getCallLogManager() {
+		static Story<com.tr.hsyn.calldata.Call> getCallLogManager() {
 			
 			return Blue.getObject(Key.CALL_STORY);
 		}
@@ -209,12 +208,12 @@ public interface Over {
 			}
 			
 			@Nullable
-			static List<Call> getCalls() {
+			static List<com.tr.hsyn.calldata.Call> getCalls() {
 				
 				return Blue.getObject(Key.CALL_LOG);
 			}
 			
-			static void setCalls(List<Call> calls) {
+			static void setCalls(List<com.tr.hsyn.calldata.Call> calls) {
 				
 				Blue.box(Key.CALL_LOG, calls);
 			}
@@ -226,7 +225,7 @@ public interface Over {
 			 */
 			interface Editor {
 				
-				static void add(Call call) {
+				static void add(com.tr.hsyn.calldata.Call call) {
 					
 					Use.ifNotNull(getCalls(), calls -> {
 						
@@ -235,7 +234,7 @@ public interface Over {
 					});
 				}
 				
-				static void set(int index, Call call) {
+				static void set(int index, com.tr.hsyn.calldata.Call call) {
 					
 					Use.ifNotNull(getCalls(), calls -> calls.set(index, call));
 				}
@@ -246,10 +245,10 @@ public interface Over {
 				 * @param calls Ana listeden silinecek kayıtlar
 				 * @return Silinen kayıt sayısı
 				 */
-				static int delete(Call... calls) {
+				static int delete(com.tr.hsyn.calldata.Call... calls) {
 					
-					List<Call> callList = getCalls();
-					int        deleted  = 0;
+					List<com.tr.hsyn.calldata.Call> callList = getCalls();
+					int                             deleted  = 0;
 					
 					if (callList == null || calls == null || calls.length == 0) return deleted;
 					

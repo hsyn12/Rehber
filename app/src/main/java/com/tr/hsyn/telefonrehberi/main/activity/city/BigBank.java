@@ -1,7 +1,6 @@
 package com.tr.hsyn.telefonrehberi.main.activity.city;
 
 
-import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.telefonrehberi.main.code.contact.act.Contacts;
@@ -21,12 +20,12 @@ public abstract class BigBank extends NorthBridge {
 	/**
 	 * Arama kayıtları yöneticisi
 	 */
-	private Story<Call> callStory;
+	private Story<com.tr.hsyn.calldata.Call> callStory;
 	
 	/**
 	 * @return Arama kayıtları yöneticisi
 	 */
-	protected final Story<Call> getCallStory() {
+	protected final Story<com.tr.hsyn.calldata.Call> getCallStory() {
 		
 		return callStory;
 	}
@@ -44,7 +43,7 @@ public abstract class BigBank extends NorthBridge {
 	}
 	
 	@NotNull
-	protected final Loader<Call> getCallLogLoader() {
+	protected final Loader<com.tr.hsyn.calldata.Call> getCallLogLoader() {
 		
 		return callStory::load;
 	}

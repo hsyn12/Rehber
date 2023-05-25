@@ -65,17 +65,17 @@ public interface CallKey {
 	/**
 	 * Verilen kişiye bilgiyi kaydeder yada siler.
 	 *
-	 * @param contact Kişi
-	 * @param key     Veri anahtarı
-	 * @param data    Kaydedilecek bilgi (silmek için {@code null})
-	 * @param <T>     Veri türü
+	 * @param call Arama
+	 * @param key  Veri anahtarı
+	 * @param data Kaydedilecek bilgi (silmek için {@code null})
+	 * @param <T>  Veri türü
 	 * @return Veri kaydedilirse, bu anahtarla kayıtlı olan önceki bilgi döner, ilk defa kaydediliyorsa {@code null} döner.
 	 * 		Veri siliniyorsa silinen veri döner, veri yoksa {@code null} döner.
 	 */
 	@Nullable
-	static <T> T set(@NotNull Contact contact, @NotNull DataKey key, T data) {
+	static <T> T set(@NotNull Call call, @NotNull DataKey key, T data) {
 		
-		return contact.setData(key, data);
+		return call.setData(key, data);
 	}
 	
 	/**

@@ -29,14 +29,14 @@ public abstract class MimeTypeHandler {
 	}
 	
 	@Override
-	public boolean equals(@Nullable Object obj) {
-		
-		return obj instanceof MimeTypeHandler && mimeType.equals(((MimeTypeHandler) obj).mimeType);
-	}
-	
-	@Override
 	public int hashCode() {
 		
 		return mimeType.hashCode();
+	}
+	
+	@Override
+	public boolean equals(@Nullable Object obj) {
+		
+		return obj instanceof MimeTypeHandler && mimeType.equals(((MimeTypeHandler) obj).mimeType);
 	}
 }

@@ -28,5 +28,5 @@
 			app:fastScrollThumbActiveColor="?attr/colorAccent"
 			app:fastScrollThumbInactiveColor="?attr/colorAccent"
 			app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-			tools:listitem="@layout/call" />
+			tools:listitem="@layout/contact" />
 </com.tr.hsyn.xrelativelayout.RelativeLayoutx>

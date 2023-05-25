@@ -35,16 +35,6 @@ public class MainContactContentHandler implements ContentHandler<Contact> {
 	private       int             bigPicCol;
 	private       ContentResolver contentResolver;
 	
-	@Override
-	public void onCreateCursor(@NonNull ContentResolver contentResolver, @NonNull Cursor cursor) {
-		
-		this.contentResolver = contentResolver;
-		contactIdCol         = cursor.getColumnIndex(PROJECTION[0]);
-		nameCol              = cursor.getColumnIndex(PROJECTION[1]);
-		picCol               = cursor.getColumnIndex(PROJECTION[2]);
-		bigPicCol            = cursor.getColumnIndex(PROJECTION[3]);
-	}
-	
 	@NonNull
 	@Override
 	public Contact handle(@NonNull final Cursor cursor) {
@@ -53,6 +43,16 @@ public class MainContactContentHandler implements ContentHandler<Contact> {
 				cursor.getLong(contactIdCol),
 				cursor.getString(nameCol),
 				cursor.getString(picCol));
+	}
+	
+	@Override
+	public void onCreateCursor(@NonNull ContentResolver contentResolver, @NonNull Cursor cursor) {
+		
+		this.contentResolver = contentResolver;
+		contactIdCol         = cursor.getColumnIndex(PROJECTION[0]);
+		nameCol              = cursor.getColumnIndex(PROJECTION[1]);
+		picCol               = cursor.getColumnIndex(PROJECTION[2]);
+		bigPicCol            = cursor.getColumnIndex(PROJECTION[3]);
 	}
 	
 	@Override

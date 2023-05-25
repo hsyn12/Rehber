@@ -10,20 +10,6 @@ import java.util.List;
 
 public interface GenerationArgs {
 	
-	int getCount();
-	
-	long getStart();
-	
-	long getEnd();
-	
-	int getMaxDuration();
-	
-	Integer[] getCallTypes();
-	
-	boolean isTrackFree();
-	
-	List<Contact> getContacts();
-	
 	@NonNull
 	static GenerationArgs newArgs(int count, long start, long end, int maxDuration, Integer[] callTypes, boolean track, List<Contact> contacts) {
 		
@@ -72,5 +58,19 @@ public interface GenerationArgs {
 			}
 		};
 	}
+	
+	int getCount();
+	
+	long getStart();
+	
+	long getEnd();
+	
+	int getMaxDuration();
+	
+	Integer[] getCallTypes();
+	
+	boolean isTrackFree();
+	
+	List<Contact> getContacts();
 	
 }

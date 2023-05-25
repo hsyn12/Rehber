@@ -26,14 +26,6 @@ public abstract class ContactsLoader extends BigBank implements ThreadedWork, UI
 	private long contactsLoadStartTime;
 	
 	/**
-	 * Kişiler veri tabanından alındığında çağrılır.
-	 *
-	 * @param contacts  Kişi listesi
-	 * @param throwable Varsa hata, yoksa {@code null}
-	 */
-	protected abstract void onContactsLoaded(List<Contact> contacts, Throwable throwable);
-	
-	/**
 	 * Kişilerin veri tabanından alınma işlemini başlatır.
 	 */
 	@CallSuper
@@ -44,6 +36,14 @@ public abstract class ContactsLoader extends BigBank implements ThreadedWork, UI
 				.orTimeout(15L, TimeUnit.SECONDS)
 				.whenCompleteAsync(this::onContactsLoaded, getUIThreadExecutor());
 	}
+	
+	/**
+	 * Kişiler veri tabanından alındığında çağrılır.
+	 *
+	 * @param contacts  Kişi listesi
+	 * @param throwable Varsa hata, yoksa {@code null}
+	 */
+	protected abstract void onContactsLoaded(List<Contact> contacts, Throwable throwable);
 	
 	/**
 	 * @return Kişilerin en son yükleme işleminin başlama zamanı. Hiç yükleme yapılmamışsa {@code 0L}.

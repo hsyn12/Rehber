@@ -25,11 +25,6 @@ public abstract class FragmentPageList extends FragmentPageColor implements IHav
 	protected ContactAdapter       adapter;
 	private   ContactSwipeCallBack swipeCallBack;
 	
-	protected void checkEmpty() {
-		
-		emptyView.setVisibility(adapter.getItems().isEmpty() ? View.VISIBLE : View.GONE);
-	}
-	
 	@Override
 	public void onViewCreated(@NonNull @NotNull View view, @Nullable Bundle savedInstanceState) {
 		
@@ -39,6 +34,14 @@ public abstract class FragmentPageList extends FragmentPageColor implements IHav
 		swipeCallBack.setBgColor(colorHolder.getPrimaryColor());
 		ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeCallBack);
 		itemTouchHelper.attachToRecyclerView(recyclerView);
+	}
+	
+	@Override
+	public void changeColor(int color) {
+		
+		super.changeColor(color);
+		
+		swipeCallBack.setBgColor(color);
 	}
 	
 	@Override
@@ -55,12 +58,9 @@ public abstract class FragmentPageList extends FragmentPageColor implements IHav
 		checkEmpty();
 	}
 	
-	@Override
-	public void changeColor(int color) {
+	protected void checkEmpty() {
 		
-		super.changeColor(color);
-		
-		swipeCallBack.setBgColor(color);
+		emptyView.setVisibility(adapter.getItems().isEmpty() ? View.VISIBLE : View.GONE);
 	}
 	
 	@Override

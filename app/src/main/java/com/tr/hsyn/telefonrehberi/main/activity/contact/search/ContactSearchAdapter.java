@@ -139,12 +139,6 @@ public class ContactSearchAdapter extends RecyclerView.Adapter<ContactSearchAdap
 		return "?";
 	}
 	
-	@Override
-	public int getItemCount() {
-		
-		return filteredContacts.size();
-	}
-	
 	private void setHighlight(Holder holder) {
 		
 		if (searchText.isEmpty()) {return;}
@@ -183,6 +177,12 @@ public class ContactSearchAdapter extends RecyclerView.Adapter<ContactSearchAdap
 			holder.number.setText(spanner);
 		}
 		
+	}
+	
+	@Override
+	public int getItemCount() {
+		
+		return filteredContacts.size();
 	}
 	
 	@SuppressLint("NotifyDataSetChanged")

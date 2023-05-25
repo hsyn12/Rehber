@@ -94,6 +94,31 @@ public class DatBoxer implements Objext {
 	}
 	
 	@Override
+	public int getInt(@NotNull DataKey key) {
+		
+		if (key.isReadable()) {
+			
+			Integer data = (Integer) datamap.get(key);
+			
+			return data != null ? data : 0;
+		}
+		
+		return 0;
+	}
+	
+	public long getLong(@NotNull DataKey key) {
+		
+		if (key.isReadable()) {
+			
+			Long data = (Long) datamap.get(key);
+			
+			return data != null ? data : 0L;
+		}
+		
+		return 0L;
+	}
+	
+	@Override
 	public long getLong(@NotNull DataKey key, long defaultValue) {
 		
 		if (key.isReadable()) {

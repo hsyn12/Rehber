@@ -65,6 +65,22 @@ public interface Objext {
 	int getInt(@NotNull DataKey key, int defaultValue);
 	
 	/**
+	 * Returns the int value of the given key.
+	 *
+	 * @param key Key
+	 * @return Int or {@code 0}
+	 */
+	int getInt(@NotNull DataKey key);
+	
+	/**
+	 * Returns the long value of the given key.
+	 *
+	 * @param key Key
+	 * @return Long or {@code 0L}
+	 */
+	long getLong(@NotNull DataKey key);
+	
+	/**
 	 * Long veriler için {@code null} kontrolü yapar.
 	 *
 	 * @param key          Anahtar

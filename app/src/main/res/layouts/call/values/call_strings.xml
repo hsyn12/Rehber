@@ -3,7 +3,7 @@
 
 	<string name="call_logs">Call Logs</string>
 	<string name="call_record">Call Records</string>
-	<string name="call">Call</string>
+	<string name="contact">Call</string>
 
 	<string name="call_type_incoming">Incoming Call</string>
 	<string name="call_type_outgoing">Outgoing Call</string>
@@ -25,7 +25,7 @@
 	<string name="delete_all_calls">Delete All Calls</string>
 	<string name="transition_call">transition_call</string>
 	<string name="empty_call_list">List is empty</string>
-	<string name="no_call_app">No application found to call</string>
+	<string name="no_call_app">No application found to contact</string>
 	<string name="no_app">No application found to perform this action</string>
 	<string name="will_delete">will delete</string>
 	<string name="confirm_delete_action">Confirm Delete Action!!</string>

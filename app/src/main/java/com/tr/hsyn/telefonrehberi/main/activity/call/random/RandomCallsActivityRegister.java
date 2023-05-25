@@ -3,7 +3,6 @@ package com.tr.hsyn.telefonrehberi.main.activity.call.random;
 
 import androidx.annotation.NonNull;
 
-import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.register.Register;
 import com.tr.hsyn.time.Time;
@@ -40,9 +39,6 @@ public abstract class RandomCallsActivityRegister extends RandomCallsActivitySer
 	private         boolean     callTypeMissed;
 	private         boolean     callTypeRejected;
 	
-	@NonNull
-	protected abstract List<Contact> getContacts();
-	
 	@Override
 	protected void onCreate() {
 		
@@ -59,6 +55,53 @@ public abstract class RandomCallsActivityRegister extends RandomCallsActivitySer
 		super.onCreate();
 	}
 	
+	@NonNull
+	private Set<String> _getSelectedContacts() {
+		
+		var selectedContacts = register.getStringSet(SELECTED_CONTACTS, null);
+		
+		if (selectedContacts == null) {
+			
+			selectedContacts = new HashSet<>(getContacts().size());
+			
+			selectedContacts.addAll(getContacts().stream().map(Contact::getContactId).map(String::valueOf).collect(Collectors.toList()));
+		}
+		
+		return selectedContacts;
+	}
+	
+	private boolean getCallType(@NonNull final String key) {
+		
+		return register.getBoolean(key, true);
+	}
+	
+	@NonNull
+	protected abstract List<Contact> getContacts();
+	
+	@NonNull
+	@SuppressWarnings("ConstantConditions")
+	protected final Integer[] getCallTypes() {
+		
+		Map<Boolean, List<Integer>> types = new HashMap<>();
+		
+		types.put(true, new ArrayList<>());
+		types.put(false, new ArrayList<>());
+		
+		types.get(getCallTypeIncomming()).add(com.tr.hsyn.calldata.Call.INCOMING);
+		types.get(getCallTypeOutgoing()).add(com.tr.hsyn.calldata.Call.OUTGOING);
+		types.get(getCallTypeMissed()).add(com.tr.hsyn.calldata.Call.MISSED);
+		types.get(getCallTypeRejected()).add(com.tr.hsyn.calldata.Call.REJECTED);
+		
+		var _types = types.get(true);
+		
+		//- Eğer tüm arama türleri
+		//- seçim dışı bırakılırsa
+		//- tüm arama türleri kullanılsın
+		if (_types.isEmpty()) return types.get(false).toArray(new Integer[0]);
+		
+		return _types.toArray(new Integer[0]);
+	}
+	
 	protected final boolean getCallTypeIncomming() {
 		
 		return callTypeIncomming;
@@ -67,6 +110,11 @@ public abstract class RandomCallsActivityRegister extends RandomCallsActivitySer
 	protected final void setCallTypeIncomming(boolean set) {
 		
 		setCallType(CALL_TYPE_STATE_INCOMMING, callTypeIncomming = set);
+	}
+	
+	protected final void setCallType(@NonNull final String key, boolean set) {
+		
+		register.edit().putBoolean(key, set).apply();
 	}
 	
 	protected final boolean getCallTypeOutgoing() {
@@ -97,35 +145,6 @@ public abstract class RandomCallsActivityRegister extends RandomCallsActivitySer
 	protected final void setCallTypeRejected(boolean set) {
 		
 		setCallType(CALL_TYPE_STATE_REJECTED, callTypeRejected = set);
-	}
-	
-	@NonNull
-	@SuppressWarnings("ConstantConditions")
-	protected final Integer[] getCallTypes() {
-		
-		Map<Boolean, List<Integer>> types = new HashMap<>();
-		
-		types.put(true, new ArrayList<>());
-		types.put(false, new ArrayList<>());
-		
-		types.get(getCallTypeIncomming()).add(Call.INCOMING);
-		types.get(getCallTypeOutgoing()).add(Call.OUTGOING);
-		types.get(getCallTypeMissed()).add(Call.MISSED);
-		types.get(getCallTypeRejected()).add(Call.REJECTED);
-		
-		var _types = types.get(true);
-		
-		//- Eğer tüm arama türleri
-		//- seçim dışı bırakılırsa
-		//- tüm arama türleri kullanılsın
-		if (_types.isEmpty()) return types.get(false).toArray(new Integer[0]);
-		
-		return _types.toArray(new Integer[0]);
-	}
-	
-	protected final void setCallType(@NonNull final String key, boolean set) {
-		
-		register.edit().putBoolean(key, set).apply();
 	}
 	
 	protected final long getDateStart() {
@@ -167,25 +186,5 @@ public abstract class RandomCallsActivityRegister extends RandomCallsActivitySer
 	protected final void setSelectedContacts(@NonNull Set<String> selectedContacts) {
 		
 		register.edit().putStringSet(SELECTED_CONTACTS, selectedContacts).apply();
-	}
-	
-	private boolean getCallType(@NonNull final String key) {
-		
-		return register.getBoolean(key, true);
-	}
-	
-	@NonNull
-	private Set<String> _getSelectedContacts() {
-		
-		var selectedContacts = register.getStringSet(SELECTED_CONTACTS, null);
-		
-		if (selectedContacts == null) {
-			
-			selectedContacts = new HashSet<>(getContacts().size());
-			
-			selectedContacts.addAll(getContacts().stream().map(Contact::getContactId).map(String::valueOf).collect(Collectors.toList()));
-		}
-		
-		return selectedContacts;
 	}
 }

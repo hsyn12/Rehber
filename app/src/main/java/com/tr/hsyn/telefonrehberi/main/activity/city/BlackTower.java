@@ -16,7 +16,6 @@ import androidx.core.view.MenuProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.tr.hsyn.bungee.Bungee;
-import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.execution.Runny;
@@ -185,7 +184,7 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 		
 		if (keepCallSelection.enter()) {
 			
-			Call call = pageCallLog.getItem(index);
+			com.tr.hsyn.calldata.Call call = pageCallLog.getItem(index);
 			
 			xlog.d("Selected : %s", call);
 			
@@ -255,7 +254,7 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 				.show();*/
 	}
 	
-	private void deleteCalls(List<Call> deletedCalls, @NonNull Dialog dialog) {
+	private void deleteCalls(List<com.tr.hsyn.calldata.Call> deletedCalls, @NonNull Dialog dialog) {
 		
 		workOnBackground(() -> {
 			
@@ -336,7 +335,7 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 	}
 	
 	@Override
-	protected void onCallLogLoaded(List<Call> calls, Throwable throwable) {
+	protected void onCallLogLoaded(List<com.tr.hsyn.calldata.Call> calls, Throwable throwable) {
 		
 		super.onCallLogLoaded(calls, throwable);
 	}

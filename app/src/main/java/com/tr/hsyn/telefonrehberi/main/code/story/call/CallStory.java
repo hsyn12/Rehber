@@ -57,8 +57,8 @@ public class CallStory implements Story<Call> {
 		
 		//- Buradan veri tabanı listesi dönmeli
 		
-		List<Call> systemCalls   = loadFromSystem();
-		List<Call> databaseCalls = loadFromDatabase();
+		List<com.tr.hsyn.calldata.Call> systemCalls   = loadFromSystem();
+		List<com.tr.hsyn.calldata.Call> databaseCalls = loadFromDatabase();
 		
 		//xlog.d("Arama kayıtları alındı. Sistemde %d, veri tabanında %d arama kaydı var", systemCalls.size(), databaseCalls.size());
 		
@@ -80,6 +80,8 @@ public class CallStory implements Story<Call> {
 				}
 				
 				systemCalls.sort((x, y) -> Long.compare(y.getTime(), x.getTime()));
+				
+				updateInfo(systemCalls);
 				
 				Runny.run(() -> CallCollection.create(systemCalls), false);
 				return systemCalls;
@@ -151,6 +153,9 @@ public class CallStory implements Story<Call> {
 		//! Hangi diğer ayrıntıları?
 		
 		databaseCalls.sort((x, y) -> Long.compare(y.getTime(), x.getTime()));
+		
+		updateInfo(databaseCalls);
+		
 		Runny.run(() -> CallCollection.create(databaseCalls), false);
 		return databaseCalls;
 	}
@@ -168,7 +173,7 @@ public class CallStory implements Story<Call> {
 	 * @return Tüm sistem kayıtları
 	 */
 	@Override
-	public List<Call> loadFromSystem() {
+	public List<com.tr.hsyn.calldata.Call> loadFromSystem() {
 		
 		return Calls.getCalls(contentResolver);
 	}
@@ -180,7 +185,7 @@ public class CallStory implements Story<Call> {
 	 * @return Başarı durumu
 	 */
 	@Override
-	public boolean addIntoDatabase(Call call) {
+	public boolean addIntoDatabase(com.tr.hsyn.calldata.Call call) {
 		
 		return database.add(call);
 	}
@@ -194,7 +199,7 @@ public class CallStory implements Story<Call> {
 	 * @return Başarı durumu
 	 */
 	@Override
-	public boolean delete(Call call) {
+	public boolean delete(com.tr.hsyn.calldata.Call call) {
 		
 		if (deleteFromSystem(call)) {
 			
@@ -217,13 +222,13 @@ public class CallStory implements Story<Call> {
 	}
 	
 	@Override
-	public boolean deleteFromDatabase(Call item) {
+	public boolean deleteFromDatabase(com.tr.hsyn.calldata.Call item) {
 		
 		return database.delete(item);
 	}
 	
 	@Override
-	public int deleteFromDatabase(List<? extends Call> items) {
+	public int deleteFromDatabase(List<? extends com.tr.hsyn.calldata.Call> items) {
 		
 		return database.delete(items);
 	}
@@ -235,13 +240,13 @@ public class CallStory implements Story<Call> {
 	 * @return Başarı durumu
 	 */
 	@Override
-	public boolean updateFromDatabase(@NonNull Call call) {
+	public boolean updateFromDatabase(@NonNull com.tr.hsyn.calldata.Call call) {
 		
 		return database.update(call, String.valueOf(call.getTime()));
 	}
 	
 	@Override
-	public int updateFromDatabase(@NotNull List<? extends Call> items) {
+	public int updateFromDatabase(@NotNull List<? extends com.tr.hsyn.calldata.Call> items) {
 		
 		return (int) items.stream().filter(this::updateFromDatabase).count();
 	}
@@ -253,7 +258,7 @@ public class CallStory implements Story<Call> {
 	 * @return Başarı durumu
 	 */
 	@Override
-	public boolean updateFromSystem(Call call) {
+	public boolean updateFromSystem(com.tr.hsyn.calldata.Call call) {
 		
 		return Calls.update(contentResolver, call);
 	}
@@ -265,7 +270,7 @@ public class CallStory implements Story<Call> {
 	 * @return Yeni eklenen kaydın adresi
 	 */
 	@Override
-	public boolean addIntoSystem(Call call) {
+	public boolean addIntoSystem(com.tr.hsyn.calldata.Call call) {
 		
 		return Calls.add(contentResolver, call) != null;
 	}
@@ -277,7 +282,7 @@ public class CallStory implements Story<Call> {
 	 * @return Başarılı bir şekilde eklenen kayıt sayısı
 	 */
 	@Override
-	public int addIntoDatabase(List<? extends Call> calls) {
+	public int addIntoDatabase(List<? extends com.tr.hsyn.calldata.Call> calls) {
 		
 		return database.add(calls);
 	}
@@ -289,7 +294,7 @@ public class CallStory implements Story<Call> {
 	 * @return Başarılı bir şekilde eklenen kayıt sayısı
 	 */
 	@Override
-	public int addIntoSystem(List<? extends Call> calls) {
+	public int addIntoSystem(List<? extends com.tr.hsyn.calldata.Call> calls) {
 		
 		return Calls.add(contentResolver, calls);
 	}
@@ -301,7 +306,7 @@ public class CallStory implements Story<Call> {
 	 * @return Başarılı bir şekilde silinen kayıt sayısı
 	 */
 	@Override
-	public int deleteFromSystem(List<? extends Call> calls) {
+	public int deleteFromSystem(List<? extends com.tr.hsyn.calldata.Call> calls) {
 		
 		return Calls.delete(contentResolver, calls);
 	}
@@ -313,13 +318,13 @@ public class CallStory implements Story<Call> {
 	 * @return Başarı durumu
 	 */
 	@Override
-	public boolean deleteFromSystem(@NotNull Call call) {
+	public boolean deleteFromSystem(@NotNull com.tr.hsyn.calldata.Call call) {
 		
 		return Calls.delete(contentResolver, call.getTime());
 	}
 	
 	@Override
-	public int delete(List<? extends Call> items) {
+	public int delete(List<? extends com.tr.hsyn.calldata.Call> items) {
 		
 		int count = deleteFromSystem(items);
 		
@@ -331,7 +336,12 @@ public class CallStory implements Story<Call> {
 		return count;
 	}
 	
-	private void updateInfo(List<Call> calls) {
+	/**
+	 * Updates the calls for its name and contact id.
+	 *
+	 * @param calls Calls to update
+	 */
+	private void updateInfo(@NotNull List<Call> calls) {
 		
 		for (Call call : calls) {
 			
@@ -345,32 +355,39 @@ public class CallStory implements Story<Call> {
 					
 					String name = contact.getName();
 					
-					var isName = Nina.regex("[^0-9+]").find(name).isInvalid();
+					var isName = Nina.regex("[^0-9+]").find(name).isValid();
 					
 					boolean isUpdate = false;
 					
 					if (isName) {
-						
 						isUpdate = true;
 						call.setName(name);
 						xlog.d("Call owner found : %s", name);
 					}
+					else xlog.d("Call owner not found : %s", call.getNumber());
+					
 					
 					if (contact.getContactId() != 0) {
-						
 						isUpdate = true;
 						CallKey.setContactId(call, contact.getId());
+						call.setExtra(Calls.createExtraInfo(call));
 					}
 					
 					if (isUpdate) {
+						boolean systemUpdated   = updateFromSystem(call);
+						boolean databaseUpdated = updateFromDatabase(call);
 						
-						updateFromSystem(call);
-						updateFromDatabase(call);
+						if (systemUpdated && databaseUpdated) {
+							xlog.d("Call updated : %s", call);
+						}
+						else {
+							if (!systemUpdated) xlog.d("Call cannot updated [system] : %s", call);
+							if (!databaseUpdated) xlog.d("Call cannot updated  [database] : %s", call);
+						}
 					}
 				}
 			}
 		}
-		
 	}
 	
 }
