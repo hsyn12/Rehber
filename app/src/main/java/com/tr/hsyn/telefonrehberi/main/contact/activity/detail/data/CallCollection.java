@@ -8,7 +8,6 @@ import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.string.Stringx;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
 import com.tr.hsyn.xbox.Blue;
 
 import org.jetbrains.annotations.NotNull;
@@ -26,6 +25,10 @@ import java.util.stream.Collectors;
 public final class CallCollection {
 	
 	private final List<Call>              calls;
+	/**
+	 * Map object that has a key by phone number and a value as a list of its calls
+	 * that belong to the phone number.
+	 */
 	private final Map<String, List<Call>> numberedCalls;
 	private final List<Call>              incomingCalls;
 	private final List<Call>              outgoingCalls;
@@ -95,23 +98,22 @@ public final class CallCollection {
 				.map(Call::getDuration)
 				.reduce(Integer::sum)
 				.orElse(0);
-		
-		
-		for (var id : numberedCalls.keySet()) {
-			
-			
-		}
-		
-		
 	}
 	
+	/**
+	 * Return the key for the given call.
+	 *
+	 * @param call the call
+	 * @return the key
+	 */
+	@NotNull
 	private String getKey(@NotNull Call call) {
 		
-		var id = CallKey.getContactId(call);
+		/* var id = CallKey.getContactId(call);
 		
-		if (id != 0L) return String.valueOf(id);
+		if (id != 0L) return String.valueOf(id); */
 		
-		return PhoneNumbers.formatNumber(call.getNumber(), 10);
+		return PhoneNumbers.formatNumber(call.getNumber(), PhoneNumbers.N_MIN);
 	}
 	
 	/**

@@ -5,6 +5,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
+import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.contactdata.Contact;
@@ -384,20 +385,11 @@ public class DefaultContactCommentator implements ContactCommentator {
 	
 	private CharSequence commentLastCallTypeRank() {
 		
-		Spanner                   rank     = new Spanner();
-		com.tr.hsyn.calldata.Call lastCall = history.getLastCall();
+		Spanner rank     = new Spanner();
+		Call    lastCall = history.getLastCall();
 		
 		
 		return rank;
-	}
-	
-	/**
-	 * Generates a comment when there is no call history for the contact.
-	 * Appends the generated comment to the {@link #comment} object managed by this commentator.
-	 */
-	private void noHistoryComment() {
-		
-		comment.append("Bu kişi ile hiçbir iletişimin yok. ");
 	}
 	
 	/**

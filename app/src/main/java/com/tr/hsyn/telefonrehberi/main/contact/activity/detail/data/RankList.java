@@ -36,11 +36,22 @@ public class RankList {
 		this.entries = entries;
 	}
 	
+	/**
+	 * Rank map that mapped identifier to a list of {@link CallRank}.
+	 * The first order is 1, and it is having the highest number of calls.
+	 * Maybe there are more than one rank with the same number of calls.
+	 *
+	 * @return the map object that has a key as identifier and a value as a list of {@link CallRank}.
+	 */
 	public Map<Integer, List<CallRank>> getRankMap() {
 		
 		return rankMap;
 	}
 	
+	/**
+	 * Starts the rank process.
+	 * After this, can be called {@link #getRankMap()} to get the rank map.
+	 */
 	public void makeRanks() {
 		
 		rankMap.clear();
@@ -58,24 +69,7 @@ public class RankList {
 			var calls  = rankMap.computeIfAbsent(rank, r -> new ArrayList<>());
 			
 			CallRank callRank = new CallRank(rank, ranked.getKey(), ranked.getValue());
-			
-			long contactId = CallKey.getContactId(ranked.getValue().get(0));
-			
-			if (contactId != 0L) {
-				
-				int index = calls.indexOf(callRank);
-				
-				if (index != -1) {
-					
-					calls.get(index).getCalls().addAll(ranked.getValue());
-				}
-				else {
-					
-					calls.add(callRank);
-				}
-			}
-			else calls.add(callRank);
-			
+			calls.add(callRank);
 			
 			if (i == last) break;
 			
@@ -85,23 +79,53 @@ public class RankList {
 		}
 	}
 	
+	/**
+	 * Make a list that sorted by calls size descending.
+	 * All numbers that belong to the same contact id are put into the same list.
+	 */
 	private void makeRankList() {
 		
+		// phone numbers
 		List<String> keys = new ArrayList<>(entries.keySet());
 		
+		// loop on numbers
 		for (int i = 0; i < keys.size(); i++) {
 			
-			var id    = keys.get(i);
-			var calls = entries.get(id);
+			// get contact id
+			// we need to find the same id in the list and make it one list
+			var id = keys.get(i);
+			// aggregate calls
+			var calls = entries.remove(id);
 			
 			assert calls != null;
 			var contactId = CallKey.getContactId(calls.get(0));
 			
-			if (contactId != 0L) {
+			if (contactId != 0L) {//- Contact id found
 				
-				
+				// loop on the other numbers and find the same id 
+				for (int j = i + 1; j < keys.size(); j++) {
+					
+					var otherId    = keys.get(j);
+					var otherCalls = entries.remove(otherId);
+					
+					assert otherCalls != null;
+					var otherContactId = CallKey.getContactId(otherCalls.get(0));
+					
+					// contactId can not be zero but otherContactId maybe
+					if (contactId == otherContactId) {
+						
+						// that is the same id, put it together
+						calls.addAll(otherCalls);
+						continue;
+					}
+					
+					// put it back in
+					entries.put(otherId, otherCalls);
+				}
 			}
 			
+			// put it back in
+			entries.put(id, calls);
 		}
 		
 		
