@@ -151,14 +151,14 @@ public class CallDatabase extends DBBase<Call> implements DBCalls {
 		return 0;
 	}
 	
-	private String getRandom(String extra) {
+	private boolean getRandom(String extra) {
 		
-		if (extra == null || !extra.startsWith(Calls.ACCOUNT_ID)) return "f";
+		if (extra == null || !extra.startsWith(Calls.ACCOUNT_ID)) return false;
 		
-		try {return extra.split(SEPARATOR)[1];}
+		try {return extra.split(SEPARATOR)[1].equals("t");}
 		catch (Exception ignore) {}
 		
-		return "f";
+		return false;
 	}
 	
 	@Override

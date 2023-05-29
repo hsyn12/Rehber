@@ -5,6 +5,8 @@ import androidx.annotation.Nullable;
 
 import com.tr.hsyn.calldata.Call;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 
@@ -51,5 +53,16 @@ public class CallRank {
 	public boolean equals(@Nullable Object obj) {
 		
 		return obj instanceof CallRank && key.equals(((CallRank) obj).key);
+	}
+	
+	@NotNull
+	@Override
+	public String toString() {
+		
+		return "CallRank{" +
+		       "rank=" + rank +
+		       ", key='" + key + '\'' +
+		       ", calls=" + calls.size() +
+		       '}';
 	}
 }

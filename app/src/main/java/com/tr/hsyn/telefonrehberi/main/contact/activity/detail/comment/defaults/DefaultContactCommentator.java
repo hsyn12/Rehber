@@ -209,16 +209,36 @@ public class DefaultContactCommentator implements ContactCommentator {
 			return com;
 		}
 		
-		var      ranks    = new RankList(collection.getNumberedCalls()).getRankMap();
-		RankMate rankMate = new RankMate(ranks);
-		var      numbers  = ContactKey.getNumbers(contact);
-		int      rank     = -1;
+		var ranks = new RankList(collection.getNumberedCalls());
+		ranks.makeRanks();
 		
-		assert numbers != null;
-		if (numbers.size() == 1) {
+		var      map      = ranks.getRankMap();
+		RankMate rankMate = new RankMate(map);
+		var      numbers  = ContactKey.getNumbers(contact);
+		
+		if (numbers == null) return com;
+		
+		int rank = rankMate.getRank(numbers);
+		
+		
+		if (rank != -1) {
 			
-			rank = rankMate.getRank(numbers.get(0));
+			var callRankList = map.get(rank);
+			assert callRankList != null;
+			int rankCount = callRankList.size();
+			
+			xlog.w("rank=%d, rankCount=%d", rank, rankCount);
+			
+			if (rankCount == 1) {
+				//bu kişi tek başına 3. sırada
+				xlog.d("This contact is in the %d. place alone in the hot list of the call quantity", rank);
+			}
+			else {
+				
+				xlog.d("This contact is in the %d. place in the hot list of the call quantity together with %d person(s)", rankCount);
+			}
 		}
+		
 		
 		return com;
 	}

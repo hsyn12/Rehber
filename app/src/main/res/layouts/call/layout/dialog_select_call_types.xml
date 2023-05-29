@@ -76,7 +76,7 @@
 			android:layout_height="wrap_content"
 			android:layout_below="@id/layout_types"
 			android:layout_marginTop="@dimen/activity_vertical_margin"
-			android:fontFamily="@font/contact"
+			android:fontFamily="@font/call"
 			android:text="@string/call_types_selection_warn"
 			android:textColor="@color/c_dark_orange"
 			android:textSize="12sp"

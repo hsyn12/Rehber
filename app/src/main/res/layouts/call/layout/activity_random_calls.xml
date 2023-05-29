@@ -5,7 +5,7 @@
 		android:id="@+id/layout_settings"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		tools:context=".main.activity.contact.random.RandomCallsActivity">
+		tools:context=".main.call.activity.random.RandomCallsActivity">
 
 	<!-- Toolbar -->
 	<com.google.android.material.appbar.MaterialToolbar

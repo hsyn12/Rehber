@@ -36,6 +36,11 @@ public class RankList {
 		this.entries = entries;
 	}
 	
+	public List<Map.Entry<String, List<Call>>> getRankList() {
+		
+		return rankList;
+	}
+	
 	/**
 	 * Rank map that mapped identifier to a list of {@link CallRank}.
 	 * The first order is 1, and it is having the highest number of calls.
@@ -56,11 +61,11 @@ public class RankList {
 		
 		rankMap.clear();
 		
-		int rank = 1;
-		int size = entries.size();
-		int last = size - 1;
-		
 		if (rankList == null) makeRankList();
+		
+		int rank = 1;
+		int size = rankList.size();
+		int last = size - 1;
 		
 		for (int i = 0; i < size; i++) {
 			
@@ -93,11 +98,12 @@ public class RankList {
 			
 			// get contact id
 			// we need to find the same id in the list and make it one list
-			var id = keys.get(i);
+			var firstKey = keys.get(i);
 			// aggregate calls
-			var calls = entries.remove(id);
+			var calls = entries.remove(firstKey);
 			
-			assert calls != null;
+			if (calls == null) continue;
+			
 			var contactId = CallKey.getContactId(calls.get(0));
 			
 			if (contactId != 0L) {//- Contact id found
@@ -105,10 +111,11 @@ public class RankList {
 				// loop on the other numbers and find the same id 
 				for (int j = i + 1; j < keys.size(); j++) {
 					
-					var otherId    = keys.get(j);
-					var otherCalls = entries.remove(otherId);
+					var secondKey  = keys.get(j);
+					var otherCalls = entries.remove(secondKey);
 					
-					assert otherCalls != null;
+					if (otherCalls == null) continue;
+					
 					var otherContactId = CallKey.getContactId(otherCalls.get(0));
 					
 					// contactId can not be zero but otherContactId maybe
@@ -120,16 +127,37 @@ public class RankList {
 					}
 					
 					// put it back in
-					entries.put(otherId, otherCalls);
+					entries.put(secondKey, otherCalls);
 				}
 			}
 			
 			// put it back in
-			entries.put(id, calls);
+			entries.put(firstKey, calls);
 		}
-		
 		
 		rankList = entries.entrySet().stream().sorted((e1, e2) -> e2.getValue().size() - e1.getValue().size()).collect(Collectors.toList());
 	}
 	
+	public int getRankCount(int rank) {
+		
+		var r = rankMap.get(rank);
+		
+		if (r != null) return r.size();
+		
+		return 0;
+	}
+	
+	@NotNull
+	@Override
+	public String toString() {
+		
+		StringBuilder sb = new StringBuilder("\n");
+		
+		for (Map.Entry<String, List<Call>> entry : rankList) {
+			
+			sb.append(entry.getKey()).append(": ").append(entry.getValue().size()).append("\n");
+		}
+		
+		return sb.toString();
+	}
 }

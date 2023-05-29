@@ -18,6 +18,17 @@ public class RankMate {
 		this.rankMap = rankMap;
 	}
 	
+	public int getRank(@NotNull List<String> numbers) {
+		
+		for (var number : numbers) {
+			
+			var rank = getRank(number);
+			
+			if (rank != -1) return rank;
+		}
+		
+		return -1;
+	}
 	
 	public int getRank(@NotNull String number) {
 		
@@ -33,5 +44,6 @@ public class RankMate {
 		
 		return -1;
 	}
+	
 	
 }

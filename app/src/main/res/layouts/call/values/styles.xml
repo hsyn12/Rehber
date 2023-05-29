@@ -14,12 +14,12 @@
 	<style name="CallLogTextSecondary" parent="BaseText">
 		<item name="android:textSize">13sp</item>
 		<item name="android:textColor">@color/call_log_seconds_item_text_color</item>
-		<item name="android:fontFamily">@font/contact</item>
+		<item name="android:fontFamily">@font/call</item>
 	</style>
 
 	<style name="CallDetailsText" parent="@android:style/TextAppearance.Medium">
 		<item name="android:textSize">15sp</item>
-		<item name="android:fontFamily">@font/contact</item>
+		<item name="android:fontFamily">@font/call</item>
 		<item name="android:maxLines">1</item>
 		<item name="android:focusable">false</item>
 		<item name="android:clickable">false</item>

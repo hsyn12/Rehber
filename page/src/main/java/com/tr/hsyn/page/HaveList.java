@@ -12,30 +12,29 @@ import java.util.List;
  * @param <T> Liste eleman türü
  */
 public interface HaveList<T> {
-
-    /**
-     * @return Liste
-     */
-    @NotNull
-    List<T> getList();
-
-    /**
-     * Listeyi kaydet.
-     *
-     * @param list Liste
-     */
-    void setList(@NotNull List<T> list);
-
-    T getItem(int index);
-
-    default int indexOfItem(T item) {
-
-        return getList().indexOf(item);
-    }
-
-    default int getListSize() {
-
-        return getList().size();
-    }
-
+	
+	T getItem(int index);
+	
+	default int indexOfItem(T item) {
+		
+		return getList().indexOf(item);
+	}
+	
+	/**
+	 * @return Liste
+	 */
+	List<T> getList();
+	
+	/**
+	 * Listeyi kaydet.
+	 *
+	 * @param list Liste
+	 */
+	void setList(@NotNull List<T> list);
+	
+	default int getListSize() {
+		
+		return getList() != null ? getList().size() : 0;
+	}
+	
 }

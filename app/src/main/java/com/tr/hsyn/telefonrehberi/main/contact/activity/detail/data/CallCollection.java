@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.collection.Lister;
+import com.tr.hsyn.keep.Keep;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.string.Stringx;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 /**
  * Collection of the call logs.
  */
+@Keep
 public final class CallCollection {
 	
 	private final List<Call>              calls;

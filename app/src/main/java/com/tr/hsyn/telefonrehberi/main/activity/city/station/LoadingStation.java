@@ -5,6 +5,7 @@ import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.time.Time;
@@ -51,6 +52,21 @@ public abstract class LoadingStation extends CallLogLoader {
 				if (!contactsLoaded) loadContacts();
 			}
 		}
+	}
+	
+	@Override
+	protected void loadCalls() {
+		
+		pageCallLog.showProgress();
+		if (!hasCallLogPermissions()) {
+			
+			if (pageCallLog.isShowTime())
+				askCallLogPermissions();
+			
+			return;
+		}
+		
+		super.loadCalls();
 	}
 	
 	@CallSuper
@@ -105,7 +121,7 @@ public abstract class LoadingStation extends CallLogLoader {
 	
 	@CallSuper
 	@Override
-	protected void onCallLogLoaded(List<com.tr.hsyn.calldata.Call> calls, Throwable throwable) {
+	protected void onCallLogLoaded(List<Call> calls, Throwable throwable) {
 		
 		callsLoaded = true;
 		
@@ -128,52 +144,6 @@ public abstract class LoadingStation extends CallLogLoader {
 				xlog.ex("CallLog could not loaded", throwable);
 			}
 		}
-		
-		pageCallLog.hideProgress();
-	}
-	
-	@Override
-	protected void loadCalls() {
-		
-		if (!hasCallLogPermissions()) {
-			
-			if (pageCallLog.isShowTime())
-				askCallLogPermissions();
-			
-			return;
-		}
-		
-		super.loadCalls();
-	}
-	
-	@CallSuper
-	@Override
-	protected void onGrantContactsPermissions() {
-		
-		xlog.d("Rehber izni onaylandı ✌");
-		loadContacts();
-	}
-	
-	@CallSuper
-	@Override
-	protected void onGrantCallsPermissions() {
-		
-		xlog.d("Arama izni onaylandı ✌");
-		loadCalls();
-	}
-	
-	@Override
-	protected void onDeniedContactsPermissions(@NonNull Map<String, Boolean> result) {
-		
-		super.onDeniedContactsPermissions(result);
-		
-		pageContacts.hideProgress();
-	}
-	
-	@Override
-	protected void onDeniedCallsPermissions(@NonNull Map<String, Boolean> result) {
-		
-		super.onDeniedCallsPermissions(result);
 		
 		pageCallLog.hideProgress();
 	}
@@ -206,6 +176,38 @@ public abstract class LoadingStation extends CallLogLoader {
 				xlog.i("Calls reloaded");
 			}
 		}
+	}
+	
+	@CallSuper
+	@Override
+	protected void onGrantContactsPermissions() {
+		
+		xlog.d("Rehber izni onaylandı ✌");
+		loadContacts();
+	}
+	
+	@Override
+	protected void onDeniedContactsPermissions(@NonNull Map<String, Boolean> result) {
+		
+		super.onDeniedContactsPermissions(result);
+		
+		pageContacts.hideProgress();
+	}
+	
+	@CallSuper
+	@Override
+	protected void onGrantCallsPermissions() {
+		
+		xlog.d("Arama izni onaylandı ✌");
+		loadCalls();
+	}
+	
+	@Override
+	protected void onDeniedCallsPermissions(@NonNull Map<String, Boolean> result) {
+		
+		super.onDeniedCallsPermissions(result);
+		
+		pageCallLog.hideProgress();
 	}
 	
 	
