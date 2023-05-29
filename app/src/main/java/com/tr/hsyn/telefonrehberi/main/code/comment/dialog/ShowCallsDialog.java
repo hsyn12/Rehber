@@ -11,7 +11,7 @@ import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.fastscroller.FastScrollRecyclerView;
 import com.tr.hsyn.telefonrehberi.R;
-import com.tr.hsyn.telefonrehberi.code.Phone;
+import com.tr.hsyn.telefonrehberi.dev.Phone;
 import com.tr.hsyn.xrelativelayout.RelativeLayoutx;
 
 import org.jetbrains.annotations.NotNull;

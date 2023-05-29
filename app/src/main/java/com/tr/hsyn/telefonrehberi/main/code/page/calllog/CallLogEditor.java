@@ -5,7 +5,7 @@ import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.page.ListEditor;
 import com.tr.hsyn.string.Stringx;
-import com.tr.hsyn.telefonrehberi.app.Res;
+import com.tr.hsyn.telefonrehberi.main.data.Res;
 import com.tr.hsyn.xlog.xlog;
 
 import java.util.List;

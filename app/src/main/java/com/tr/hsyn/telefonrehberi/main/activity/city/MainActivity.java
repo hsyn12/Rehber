@@ -1,5 +1,6 @@
 package com.tr.hsyn.telefonrehberi.main.activity.city;
 
+
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.view.View;
@@ -19,11 +20,11 @@ import com.tr.hsyn.message.snack.SnackBarListener;
 import com.tr.hsyn.shower.ShadowWomen;
 import com.tr.hsyn.shower.ShowWomen;
 import com.tr.hsyn.telefonrehberi.R;
+import com.tr.hsyn.telefonrehberi.main.call.MainHeader;
 import com.tr.hsyn.telefonrehberi.main.code.page.Header;
+import com.tr.hsyn.telefonrehberi.main.code.page.PageAdapter;
 import com.tr.hsyn.telefonrehberi.main.code.page.calllog.PageCallLog;
 import com.tr.hsyn.telefonrehberi.main.code.page.contacts.FragmentContacts;
-import com.tr.hsyn.telefonrehberi.main.code.call.act.MainHeader;
-import com.tr.hsyn.telefonrehberi.main.code.page.PageAdapter;
 import com.tr.hsyn.xbox.Blue;
 
 

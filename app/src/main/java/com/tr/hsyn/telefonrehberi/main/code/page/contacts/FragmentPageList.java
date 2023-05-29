@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.page.IHaveProgress;
 import com.tr.hsyn.telefonrehberi.R;
-import com.tr.hsyn.telefonrehberi.code.ResourceUtil;
-import com.tr.hsyn.telefonrehberi.code.android.ui.swipe.ContactSwipeCallBack;
+import com.tr.hsyn.telefonrehberi.dev.ResourceUtil;
+import com.tr.hsyn.telefonrehberi.dev.android.ui.swipe.ContactSwipeCallBack;
 import com.tr.hsyn.telefonrehberi.main.code.page.adapter.ContactAdapter;
 
 import org.jetbrains.annotations.NotNull;

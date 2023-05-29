@@ -22,7 +22,7 @@ import com.tr.hsyn.key.Key;
 import com.tr.hsyn.message.Show;
 import com.tr.hsyn.page.MenuShower;
 import com.tr.hsyn.telefonrehberi.R;
-import com.tr.hsyn.telefonrehberi.main.activity.contact.search.ContactSearch;
+import com.tr.hsyn.telefonrehberi.main.contact.activity.search.ContactSearch;
 import com.tr.hsyn.telefonrehberi.main.dev.menu.MenuEditor;
 import com.tr.hsyn.telefonrehberi.main.dev.menu.MenuManager;
 import com.tr.hsyn.use.Use;

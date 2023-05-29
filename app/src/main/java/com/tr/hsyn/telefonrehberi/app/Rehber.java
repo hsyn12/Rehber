@@ -11,7 +11,7 @@ import com.tr.hsyn.executors.MainExecutor;
 import com.tr.hsyn.keep.Keep;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.message.Show;
-import com.tr.hsyn.telefonrehberi.main.code.database.blue.BlueRegister;
+import com.tr.hsyn.telefonrehberi.main.code.data.BlueRegister;
 import com.tr.hsyn.xbox.Alice;
 import com.tr.hsyn.xbox.Blue;
 import com.tr.hsyn.xbox.Daniel;
@@ -51,15 +51,15 @@ public class Rehber extends Application {
 		MainExecutor.HOLDER.setMainExecutor(new MainExecutor() {
 			
 			@Override
-			public void cancel(Runnable command) {
-				
-				handler.removeCallbacks(command);
-			}
-			
-			@Override
 			public void execute(Runnable command, long delay) {
 				
 				handler.postDelayed(command, delay);
+			}
+			
+			@Override
+			public void cancel(Runnable command) {
+				
+				handler.removeCallbacks(command);
 			}
 			
 			@Override

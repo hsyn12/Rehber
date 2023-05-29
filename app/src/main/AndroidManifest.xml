@@ -56,10 +56,10 @@
 		</activity>
 
 		<activity android:name=".main.activity.color.ColorsActivity" />
-		<activity android:name=".main.activity.contact.detail.ContactDetails" />
+		<activity android:name=".main.contact.activity.detail.ContactDetails" />
 		<activity android:name=".main.activity.contact.backup.CallBackupActivity" />
 		<activity android:name=".main.activity.contact.MostCallsActivity" />
-		<activity android:name=".main.activity.contact.detail.history.ActivityCallList" />
+		<activity android:name=".main.contact.activity.detail.history.ActivityCallList" />
 		<activity android:name=".main.activity.contact.search.CallLogSearch" />
 		<activity android:name=".main.activity.contact.showcalls.ShowCallsActivity" />
 		<activity
@@ -67,7 +67,7 @@
 				android:exported="false" />
 
 		<activity
-				android:name=".main.activity.contact.search.ContactSearch"
+				android:name=".main.contact.activity.search.ContactSearch"
 				android:exported="false" />
 
 		<service

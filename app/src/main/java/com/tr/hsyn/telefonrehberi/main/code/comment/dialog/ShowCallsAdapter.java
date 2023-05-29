@@ -20,7 +20,7 @@ import com.tr.hsyn.files.Files;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
-import com.tr.hsyn.telefonrehberi.main.code.call.cast.CallKey;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
 import com.tr.hsyn.textdrawable.TextDrawable;
 import com.tr.hsyn.time.Time;
 

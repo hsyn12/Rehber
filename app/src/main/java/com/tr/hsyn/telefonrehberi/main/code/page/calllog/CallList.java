@@ -11,9 +11,9 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.page.SwipeListener;
 import com.tr.hsyn.telefonrehberi.R;
+import com.tr.hsyn.telefonrehberi.dev.ResourceUtil;
+import com.tr.hsyn.telefonrehberi.dev.android.ui.swipe.SwipeCallBack;
 import com.tr.hsyn.telefonrehberi.main.code.page.adapter.CallAdapter;
-import com.tr.hsyn.telefonrehberi.code.ResourceUtil;
-import com.tr.hsyn.telefonrehberi.code.android.ui.swipe.SwipeCallBack;
 
 import org.jetbrains.annotations.NotNull;
 

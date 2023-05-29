@@ -4,7 +4,7 @@
 		xmlns:tools="http://schemas.android.com/tools"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		tools:context=".main.activity.contact.detail.history.ActivityCallList">
+		tools:context=".main.contact.activity.detail.history.ActivityCallList">
 
 	<androidx.appcompat.widget.Toolbar
 			android:id="@+id/toolbar_call_history"

@@ -3,9 +3,9 @@ package com.tr.hsyn.telefonrehberi.main.activity.city;
 
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.key.Key;
-import com.tr.hsyn.telefonrehberi.main.code.contact.act.Contacts;
-import com.tr.hsyn.telefonrehberi.main.code.database.call.CallDatabase;
-import com.tr.hsyn.telefonrehberi.main.code.story.call.CallStory;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallDatabase;
+import com.tr.hsyn.telefonrehberi.main.call.story.CallStory;
+import com.tr.hsyn.telefonrehberi.main.contact.data.Contacts;
 import com.tr.hsyn.telefonrehberi.main.dev.Loader;
 import com.tr.hsyn.telefonrehberi.main.dev.Story;
 import com.tr.hsyn.xbox.Blue;

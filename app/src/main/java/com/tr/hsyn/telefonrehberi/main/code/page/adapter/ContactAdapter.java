@@ -24,7 +24,7 @@ import com.tr.hsyn.rsectiondecorator.SectionsAdapterInterface;
 import com.tr.hsyn.selection.ItemIndexListener;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
-import com.tr.hsyn.telefonrehberi.main.code.cast.ItemAdapter;
+import com.tr.hsyn.telefonrehberi.main.cast.ItemAdapter;
 import com.tr.hsyn.textdrawable.TextDrawable;
 
 import java.util.HashMap;
