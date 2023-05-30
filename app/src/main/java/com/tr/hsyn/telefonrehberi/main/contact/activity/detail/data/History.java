@@ -1,7 +1,7 @@
 package com.tr.hsyn.telefonrehberi.main.contact.activity.detail.data;
 
 
-import com.tr.hsyn.collection.Lister;
+import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.telefonrehberi.main.call.data.Res;
 import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
@@ -29,7 +29,7 @@ public interface History {
 	 * @return the history for the given contact
 	 */
 	@NotNull
-	static History of(@NotNull Contact contact, @NotNull List<com.tr.hsyn.calldata.Call> calls) {
+	static History of(@NotNull Contact contact, @NotNull List<Call> calls) {
 		
 		var h = new ContactCallHistory(contact, calls);
 		
@@ -55,7 +55,7 @@ public interface History {
 	 *
 	 * @return the most recent call
 	 */
-	default com.tr.hsyn.calldata.Call getLastCall() {
+	default Call getLastCall() {
 		
 		return getCalls().get(0);
 	}
@@ -65,7 +65,7 @@ public interface History {
 	 *
 	 * @return the calls
 	 */
-	@NotNull List<com.tr.hsyn.calldata.Call> getCalls();
+	@NotNull List<Call> getCalls();
 	
 	/**
 	 * Returns the contact that this history belongs to.
@@ -79,7 +79,7 @@ public interface History {
 	 *
 	 * @return the first call
 	 */
-	default com.tr.hsyn.calldata.Call getFirstCall() {
+	default Call getFirstCall() {
 		
 		return getCalls().get(size() - 1);
 	}
@@ -110,7 +110,7 @@ public interface History {
 	 * @param index the index
 	 * @return the call
 	 */
-	default com.tr.hsyn.calldata.Call get(int index) {
+	default Call get(int index) {
 		
 		return getCalls().get(index);
 	}
@@ -120,7 +120,7 @@ public interface History {
 	 *
 	 * @param comparator the comparator
 	 */
-	default void sort(Comparator<com.tr.hsyn.calldata.Call> comparator) {
+	default void sort(Comparator<Call> comparator) {
 		
 		getCalls().sort(comparator);
 	}
@@ -133,7 +133,7 @@ public interface History {
 	 */
 	default int getDuration(int... types) {
 		
-		return getCallsByTypes(types).stream().mapToInt(com.tr.hsyn.calldata.Call::getDuration).sum();
+		return getCallsByTypes(types).stream().mapToInt(Call::getDuration).sum();
 	}
 	
 	/**
@@ -142,7 +142,7 @@ public interface History {
 	 * @param types the call types
 	 * @return the calls
 	 */
-	default @NotNull List<com.tr.hsyn.calldata.Call> getCallsByTypes(int... types) {
+	default @NotNull List<Call> getCallsByTypes(int... types) {
 		
 		return getCallsByTypes(getCalls(), types);
 	}
@@ -154,16 +154,20 @@ public interface History {
 	 * @param types the call types
 	 * @return the calls
 	 */
-	static @NotNull List<com.tr.hsyn.calldata.Call> getCallsByTypes(List<com.tr.hsyn.calldata.Call> calls, int... types) {
+	static @NotNull List<Call> getCallsByTypes(@NotNull List<Call> calls, int @NotNull ... types) {
 		
-		List<com.tr.hsyn.calldata.Call> _calls = new ArrayList<>();
+		List<Call> _calls = new ArrayList<>();
 		
-		Lister.loop(types, type -> {
+		for (int type : types) {
 			
-			var list = calls.stream().filter(call -> call.getCallType() == type).collect(Collectors.toList());
-			
-			_calls.addAll(list);
-		});
+			for (Call call : calls) {
+				
+				if (type == call.getCallType() && !_calls.contains(call)) {
+					
+					_calls.add(call);
+				}
+			}
+		}
 		
 		return _calls;
 	}
@@ -174,9 +178,9 @@ public interface History {
 	 * @param callType the call type
 	 * @return the calls
 	 */
-	default @NotNull List<com.tr.hsyn.calldata.Call> getCalls(int callType) {
+	default @NotNull List<Call> getCalls(int callType) {
 		
-		Predicate<com.tr.hsyn.calldata.Call> test = call -> call.getCallType() == callType;
+		Predicate<Call> test = call -> call.getCallType() == callType;
 		return getCalls(test);
 	}
 	
@@ -186,7 +190,7 @@ public interface History {
 	 * @param predicate the predicate
 	 * @return the calls
 	 */
-	default @NotNull List<com.tr.hsyn.calldata.Call> getCalls(@NotNull Predicate<com.tr.hsyn.calldata.Call> predicate) {
+	default @NotNull List<Call> getCalls(@NotNull Predicate<Call> predicate) {
 		
 		return getCalls().stream().filter(predicate).collect(Collectors.toList());
 	}

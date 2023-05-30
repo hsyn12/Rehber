@@ -6,9 +6,11 @@
 		android:layout_height="match_parent">
 
 	<androidx.recyclerview.widget.RecyclerView
+			xmlns:tools="http://schemas.android.com/tools"
 			android:id="@+id/most_call_list"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+			app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+			tools:listitem="@layout/most_calls_item_view" />
 
 </com.tr.hsyn.xrelativelayout.RelativeLayoutx>

@@ -21,12 +21,13 @@ import com.tr.hsyn.telefonrehberi.dev.android.dialog.ShowCall;
 import com.tr.hsyn.telefonrehberi.main.call.Group;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallOver;
 import com.tr.hsyn.telefonrehberi.main.call.data.Res;
+import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostCallDialog;
+import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostCallItemViewData;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.ShowCallsDialog;
 import com.tr.hsyn.telefonrehberi.main.contact.activity.detail.comment.ContactCommentStore;
 import com.tr.hsyn.telefonrehberi.main.contact.activity.detail.comment.ContactCommentator;
-import com.tr.hsyn.telefonrehberi.main.contact.activity.detail.comment.dialog.MostCallDialog;
-import com.tr.hsyn.telefonrehberi.main.contact.activity.detail.comment.dialog.MostCallItemViewData;
 import com.tr.hsyn.telefonrehberi.main.contact.activity.detail.data.CallCollection;
+import com.tr.hsyn.telefonrehberi.main.contact.activity.detail.data.CallRank;
 import com.tr.hsyn.telefonrehberi.main.contact.activity.detail.data.History;
 import com.tr.hsyn.telefonrehberi.main.contact.activity.detail.data.RankList;
 import com.tr.hsyn.telefonrehberi.main.contact.activity.detail.data.RankMate;
@@ -41,7 +42,10 @@ import com.tr.hsyn.xlog.xlog;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -220,25 +224,43 @@ public class DefaultContactCommentator implements ContactCommentator {
 		
 		int rank = rankMate.getRank(numbers);
 		
-		
 		if (rank != -1) {
 			
 			var callRankList = map.get(rank);
 			assert callRankList != null;
 			int rankCount = callRankList.size();
+			var mostList  = createMostCallItemList(map);
+			var dialog    = new MostCallDialog(commentStore.getActivity(), mostList);
 			
 			xlog.w("rank=%d, rankCount=%d", rank, rankCount);
 			
-			if (rankCount == 1) {
-				//bu kişi tek başına 3. sırada
-				xlog.d("This contact is in the %d. place alone in the hot list of the call quantity", rank);
+			if (isTurkishLanguage()) {
+				
+				com.append("Ve ")
+						.append("en fazla arama", getClickSpans(view -> dialog.show()))
+						.append(" kaydına sahip kişiler listesinde ");
+				
+				if (rankCount <= 1) com.append("tek başına ");
+				else com.append(fmt("%d kişi ile birlikte ", rankCount));
+				
+				com.append(fmt("%d. sırada. ", rank));
 			}
 			else {
 				
-				xlog.d("This contact is in the %d. place in the hot list of the call quantity together with %d person(s)", rankCount);
+				com.append(fmt("And in the %d. place ", rank));
+				
+				var hotList = new Spanner().append("the hot list", getClickSpans(view -> dialog.show()));
+				
+				if (rankCount == 1) com.append("alone ");
+				else com.append(fmt("together with %d contact(s) ", rankCount));
+				
+				com.append("in ")
+						.append(hotList)
+						.append(" of the call quantity. ");
 			}
+			
+			
 		}
-		
 		
 		return com;
 	}
@@ -252,9 +274,9 @@ public class DefaultContactCommentator implements ContactCommentator {
 		com.tr.hsyn.calldata.Call lastCall                 = history.getLastCall();
 		int                       type                     = lastCall.getCallType();
 		
-		int[]                           callTypes  = Res.getCallTypes(type);
-		List<com.tr.hsyn.calldata.Call> typedCalls = history.getCallsByTypes(callTypes);
-		String                          typeStr    = Res.getCallType(commentStore.getActivity(), type);
+		int[]      callTypes  = Res.getCallTypes(type);
+		List<Call> typedCalls = history.getCallsByTypes(callTypes);
+		String     typeStr    = Res.getCallType(commentStore.getActivity(), type);
 		
 		if (typedCalls.size() == 1) {
 			
@@ -341,6 +363,28 @@ public class DefaultContactCommentator implements ContactCommentator {
 			
 		}
 		
+	}
+	
+	@NotNull
+	private List<MostCallItemViewData> createMostCallItemList(@NotNull Map<Integer, List<CallRank>> map) {
+		
+		List<MostCallItemViewData> list = new ArrayList<>();
+		
+		for (var rankList : map.values()) {
+			
+			for (CallRank callRank : rankList) {
+				
+				var call  = callRank.getCalls().get(0);
+				var n     = call.getName();
+				var name  = (n != null && !n.isBlank()) ? n : call.getNumber();
+				var size  = callRank.getCalls().size();
+				var order = callRank.getRank();
+				list.add(new MostCallItemViewData(name, size, order));
+			}
+		}
+		
+		list.sort(Comparator.comparingInt(MostCallItemViewData::getCallSize).reversed());
+		return list;
 	}
 	
 	/**

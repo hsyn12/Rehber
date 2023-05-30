@@ -1,4 +1,4 @@
-package com.tr.hsyn.telefonrehberi.main.contact.activity.detail.comment.dialog;
+package com.tr.hsyn.telefonrehberi.main.code.comment.dialog;
 
 
 import android.annotation.SuppressLint;
@@ -16,11 +16,12 @@ import java.util.List;
 
 public class MostCallDialog {
 	
+	private final AlertDialog dialog;
+	
 	@SuppressLint("InflateParams")
 	public MostCallDialog(Activity activity, List<MostCallItemViewData> mostCallItemViewDataList) {
 		
 		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-		
 		builder.setCancelable(true);
 		
 		RelativeLayoutx view = (RelativeLayoutx) activity.getLayoutInflater().inflate(R.layout.most_call_dialog, null, false);
@@ -31,10 +32,17 @@ public class MostCallDialog {
 		
 		builder.setView(view);
 		
-		AlertDialog dialog = builder.create();
+		dialog = builder.create();
 		
-		dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimationBounce;
+		var window = dialog.getWindow();
+		
+		if (window != null)
+			window.getAttributes().windowAnimations = R.style.DialogAnimationBounce;
+	}
+	
+	public void show() {
 		
 		dialog.show();
 	}
+	
 }

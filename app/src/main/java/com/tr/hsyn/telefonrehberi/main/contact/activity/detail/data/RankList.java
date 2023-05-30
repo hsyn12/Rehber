@@ -138,15 +138,6 @@ public class RankList {
 		rankList = entries.entrySet().stream().sorted((e1, e2) -> e2.getValue().size() - e1.getValue().size()).collect(Collectors.toList());
 	}
 	
-	public int getRankCount(int rank) {
-		
-		var r = rankMap.get(rank);
-		
-		if (r != null) return r.size();
-		
-		return 0;
-	}
-	
 	@NotNull
 	@Override
 	public String toString() {

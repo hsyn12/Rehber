@@ -3,8 +3,11 @@ package com.tr.hsyn.telefonrehberi.main.code.comment;
 
 import android.view.View;
 
+import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.text.Span;
 import com.tr.hsyn.text.Spans;
+
+import org.jetbrains.annotations.NotNull;
 
 
 /**
@@ -55,5 +58,10 @@ public interface CommentEditor extends CommentStore {
 	default int getClickColor() {
 		
 		return getActivity().getColor(com.tr.hsyn.rescolors.R.color.orange_500);
+	}
+	
+	default @NotNull String fmt(String text, Object... args) {
+		
+		return Stringx.format(text, args);
 	}
 }

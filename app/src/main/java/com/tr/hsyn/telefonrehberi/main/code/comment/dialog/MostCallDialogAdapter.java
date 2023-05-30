@@ -1,4 +1,4 @@
-package com.tr.hsyn.telefonrehberi.main.contact.activity.detail.comment.dialog;
+package com.tr.hsyn.telefonrehberi.main.code.comment.dialog;
 
 
 import android.view.LayoutInflater;
@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,22 +29,22 @@ public class MostCallDialogAdapter extends RecyclerView.Adapter<MostCallDialogAd
 		this.mostCallItemViewDataList = mostCallItemViewDataList;
 	}
 	
-	@NonNull
 	@NotNull
 	@Override
-	public Holder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
+	public Holder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
 		
 		return new Holder(LayoutInflater.from(parent.getContext()).inflate(R.layout.most_calls_item_view, parent, false));
 	}
 	
 	@Override
-	public void onBindViewHolder(@NonNull @NotNull Holder holder, int position) {
+	public void onBindViewHolder(@NotNull Holder holder, int position) {
 		
 		var item  = mostCallItemViewDataList.get(position);
 		int color = Colors.COLOR_GENERATOR.getRandomColor();
+		int order = item.getOrder();
 		
 		holder.name.setText(item.getName());
-		holder.count.setImageDrawable(TextDrawable.builder().buildRound(String.valueOf(position + 1), color));
+		holder.count.setImageDrawable(TextDrawable.builder().buildRound(String.valueOf(order != 0 ? order : position + 1), color));
 		holder.txtType.setText(String.format(Locale.getDefault(), "%d %s", item.getCallSize(), holder.itemView.getContext().getString(R.string.call_record)));
 	}
 	
@@ -57,12 +56,11 @@ public class MostCallDialogAdapter extends RecyclerView.Adapter<MostCallDialogAd
 	
 	public static final class Holder extends RecyclerView.ViewHolder {
 		
-		TextView name;
-		TextView txtType;
-		
+		TextView  name;
+		TextView  txtType;
 		ImageView count;
 		
-		public Holder(@NonNull @NotNull View itemView) {
+		public Holder(@NotNull View itemView) {
 			
 			super(itemView);
 			
