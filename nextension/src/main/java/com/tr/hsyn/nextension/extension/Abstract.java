@@ -10,6 +10,19 @@ import java.util.Locale;
 
 public class Abstract implements WordExtension {
 	
+	public static void main(String[] args) {
+		
+		String[] words = {"gün", "ay", "yıl", "dakika", "saat", "saniye", "ağaç", "aracı", "siyah"};
+		
+		WordExtension ext = new Abstract();
+		
+		
+		for (String word : words) {
+			System.out.println(word + " " + ext.getExt(word));
+		}
+		
+	}
+	
 	@Override
 	public @NotNull String getExt(@NotNull String word) {
 		
