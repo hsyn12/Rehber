@@ -43,13 +43,15 @@ public class Abstract implements WordExtension {
 			}
 		}
 		else if (WordExtension.isConsonantHard(lastChar) && WordExtension.isVowelThin(charMate))
-			return resources.getString("abs_thin");
+			if (charMate == 'ü' || charMate == 'ö') return resources.getString("abs_thin_ou");
+			else return resources.getString("abs_thin");
 		else if (WordExtension.isConsonantHard(lastChar) && WordExtension.isVowelThick(charMate))
-			return resources.getString("abs_thick");
+			if (charMate == 'u' || charMate == 'o') return resources.getString("abs_thick_ou");
+			else return resources.getString("abs_thick");
 		else if (WordExtension.isConsonantSoft(lastChar) && WordExtension.isVowelThick(charMate))
-			return resources.getString("abs_thick");
+			if (charMate == 'u' || charMate == 'o') return resources.getString("abs_thick_ou");
+			else return resources.getString("abs_thick");
 		else if (WordExtension.isConsonantSoft(lastChar) && WordExtension.isVowelThin(charMate)) {
-			
 			if (charMate == 'ü' || charMate == 'ö') return resources.getString("abs_thin_ou");
 			return resources.getString("abs_thin");
 		}
