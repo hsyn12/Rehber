@@ -1,4 +1,4 @@
-package com.tr.hsyn.telefonrehberi.main.contact.activity.detail.history;
+package com.tr.hsyn.telefonrehberi.main.call.activity.history;
 
 
 import android.graphics.drawable.Drawable;

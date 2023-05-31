@@ -1,4 +1,4 @@
-package com.tr.hsyn.telefonrehberi.main.contact.activity.detail.data;
+package com.tr.hsyn.telefonrehberi.main.contact.comment;
 
 
 import com.tr.hsyn.calldata.Call;

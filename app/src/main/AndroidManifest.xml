@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest
+		xmlns:android="http://schemas.android.com/apk/res/android"
 		xmlns:tools="http://schemas.android.com/tools">
 
 	<uses-feature
@@ -59,7 +60,7 @@
 		<activity android:name=".main.contact.activity.detail.ContactDetails" />
 		<activity android:name=".main.activity.contact.backup.CallBackupActivity" />
 		<activity android:name=".main.activity.contact.MostCallsActivity" />
-		<activity android:name=".main.contact.activity.detail.history.ActivityCallList" />
+		<activity android:name=".main.call.activity.history.ActivityCallList" />
 		<activity android:name=".main.activity.contact.search.CallLogSearch" />
 		<activity android:name=".main.activity.contact.showcalls.ShowCallsActivity" />
 		<activity

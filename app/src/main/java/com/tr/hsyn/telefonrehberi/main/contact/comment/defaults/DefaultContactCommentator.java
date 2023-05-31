@@ -1,4 +1,4 @@
-package com.tr.hsyn.telefonrehberi.main.contact.activity.detail.comment.defaults;
+package com.tr.hsyn.telefonrehberi.main.contact.comment.defaults;
 
 
 import android.view.View;
@@ -6,36 +6,32 @@ import android.view.View;
 import androidx.annotation.NonNull;
 
 import com.tr.hsyn.calldata.Call;
-import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.contactdata.Contact;
-import com.tr.hsyn.counter.Counter;
 import com.tr.hsyn.daytimes.DayTime;
 import com.tr.hsyn.nextension.Extension;
-import com.tr.hsyn.nextension.NumberExtension;
 import com.tr.hsyn.nextension.WordExtension;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.dev.android.dialog.ShowCall;
-import com.tr.hsyn.telefonrehberi.main.call.Group;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallOver;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallCollection;
 import com.tr.hsyn.telefonrehberi.main.call.data.Res;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostCallDialog;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostCallItemViewData;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.ShowCallsDialog;
-import com.tr.hsyn.telefonrehberi.main.contact.activity.detail.comment.ContactCommentStore;
-import com.tr.hsyn.telefonrehberi.main.contact.activity.detail.comment.ContactCommentator;
-import com.tr.hsyn.telefonrehberi.main.contact.activity.detail.data.CallCollection;
-import com.tr.hsyn.telefonrehberi.main.contact.activity.detail.data.CallRank;
-import com.tr.hsyn.telefonrehberi.main.contact.activity.detail.data.History;
-import com.tr.hsyn.telefonrehberi.main.contact.activity.detail.data.RankList;
-import com.tr.hsyn.telefonrehberi.main.contact.activity.detail.data.RankMate;
+import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
+import com.tr.hsyn.telefonrehberi.main.contact.comment.RankList;
+import com.tr.hsyn.telefonrehberi.main.contact.comment.RankMate;
+import com.tr.hsyn.telefonrehberi.main.contact.comment.commentator.ContactCommentStore;
+import com.tr.hsyn.telefonrehberi.main.contact.comment.commentator.ContactCommentator;
 import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
+import com.tr.hsyn.telefonrehberi.main.contact.data.History;
 import com.tr.hsyn.text.Span;
 import com.tr.hsyn.text.Spanner;
 import com.tr.hsyn.text.Spans;
 import com.tr.hsyn.time.Duration;
+import com.tr.hsyn.time.DurationGroup;
 import com.tr.hsyn.time.Time;
 import com.tr.hsyn.time.Unit;
 import com.tr.hsyn.xlog.xlog;
@@ -58,34 +54,28 @@ public class DefaultContactCommentator implements ContactCommentator {
 	 * The comment object.
 	 * All generated comments by the commentator will be appended into this object
 	 */
-	protected final Spanner                         comment = new Spanner();
+	protected final Spanner             comment = new Spanner();
 	/**
-	 * The list of all call log calls that also included the calls of the current contact
+	 * The history that contains the all calls of the current contact
 	 */
-	protected final List<com.tr.hsyn.calldata.Call> calls;
-	/**
-	 * History of the contact
-	 */
-	protected       History                         history;
+	protected       History             history;
 	/**
 	 * The current contact
 	 */
-	protected       Contact                         contact;
+	protected       Contact             contact;
 	/**
 	 * The comment store
 	 */
-	protected       ContactCommentStore             commentStore;
+	protected       ContactCommentStore commentStore;
 	
 	/**
 	 * Constructs a new {@link DefaultContactCommentator} object with the given comment store.
 	 *
 	 * @param commentStore the comment store to be used by this commentator
-	 * @param calls        the list of all call log calls that also included the calls of the current contact
 	 */
-	public DefaultContactCommentator(ContactCommentStore commentStore, List<com.tr.hsyn.calldata.Call> calls) {
+	public DefaultContactCommentator(ContactCommentStore commentStore) {
 		
 		this.commentStore = commentStore;
-		this.calls        = calls;
 	}
 	
 	/**
@@ -144,6 +134,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 		this.comment.append(commentMostQuantity());
 		this.comment.append(commentOnTheLastCall());
 		this.comment.append(commentLastCallType());
+		this.comment.append(firstLastCallComment());
 	}
 	
 	/**
@@ -258,8 +249,6 @@ public class DefaultContactCommentator implements ContactCommentator {
 						.append(hotList)
 						.append(" of the call quantity. ");
 			}
-			
-			
 		}
 		
 		return com;
@@ -326,6 +315,39 @@ public class DefaultContactCommentator implements ContactCommentator {
 	}
 	
 	/**
+	 * Generates a comment about the first and last call made to the contact.
+	 * Appends the generated comment to the Comment object managed by this commentator.
+	 */
+	private @NotNull CharSequence firstLastCallComment() {
+		
+		var comment = new Spanner();
+		
+		if (history.size() > 1) {
+			
+			//- Kişinin en eski arama kaydı
+			Call          firstCall     = history.getFirstCall();
+			Call          lastCall      = history.getLastCall();
+			long          estimatedTime = lastCall.getTime() - firstCall.getTime();
+			DurationGroup duration      = Time.toDuration(estimatedTime);
+			Unit[]        durationUnits = {Unit.YEAR, Unit.MONTH, Unit.DAY, Unit.HOUR, Unit.MINUTE};
+			
+			Span[] textSpans = {
+					Spans.bold(),
+					Spans.foreground(Colors.lighter(Colors.getPrimaryColor(), 0.35f))
+			};
+			
+			comment.append("\n")
+					.append("Kişinin ilk arama kaydı ile son arama kaydı arasında geçen zaman tam olarak ")
+					.append(Stringx.format("%s. ", DayTime.toString(commentStore.getActivity(), duration, durationUnits)), textSpans);
+			
+			comment.append(fmt("Yani bu kişiyle kabaca %s kadar bir iletişim geçmişiniz var. ", duration.getDurations().get(0), WordExtension.getWordExt(duration.getDurations().get(0).toString(), Extension.TYPE_TO)));
+			xlog.d("Kişiye ait ilk arama kaydının tarihi : %s [%d]", Time.toString(firstCall.getTime()), firstCall.getTime());
+		}
+		
+		return comment;
+	}
+	
+	/**
 	 * Appends a comment about the given call to the {@link #comment} object.
 	 *
 	 * @param call the call to comment on
@@ -365,6 +387,12 @@ public class DefaultContactCommentator implements ContactCommentator {
 		
 	}
 	
+	/**
+	 * Creates a list of most call items.
+	 *
+	 * @param map the map of call ranks
+	 * @return the list of most call items
+	 */
 	@NotNull
 	private List<MostCallItemViewData> createMostCallItemList(@NotNull Map<Integer, List<CallRank>> map) {
 		
@@ -454,127 +482,6 @@ public class DefaultContactCommentator implements ContactCommentator {
 		
 		
 		return rank;
-	}
-	
-	/**
-	 * Generates a comment about the contact's most frequent contacts based on their call history.
-	 * Appends the generated comment to the Comment object managed by this commentator.
-	 */
-	private void mostCallComments() {
-		
-		if (calls != null) {
-			
-			//- Telefon numarası bir anahtar gibi kullanılacak
-			String phoneNumber = PhoneNumbers.formatNumber(history.get(0).getNumber(), 10);
-			
-			//- Telefon numarasına karşı, numaraya ait arama kayıtlarından oluşan bir liste
-			List<Group<com.tr.hsyn.calldata.Call>> groups = CallOver.groupByNumber((x, y) -> Integer.compare(y.size(), x.size()));
-			
-			//- Arama kayıtlarındaki kişi sayısı
-			int differentPerson = groups.size();
-			
-			//todo Arama kayıtlarını oluşturan kişi sayısı çok düşükse
-			// yapılacak inceleme pek kayda değer olmayabilir.
-			
-			//- Bu kişinin arama kayıtları, tüm arama kayıtlarının yüzde kaçı oluyor?
-			int percent = (history.size() * 100) / calls.size();
-			
-			if (percent > 0)
-				comment.append(Stringx.format("Bu kayıtlar, tüm arama kayıtlarının yüzde %d'%s oluyor. ", percent, NumberExtension.getNumberExt(percent, NumberExtension.TYPE_DAY)));
-			
-			//todo yüzde değeri 1'e ulaşmıyorsa ne olacak
-			
-			//comment.append(Stringx.format("Tüm arama kayıtları %d farklı kişiden oluşmakta. ", differentPerson));
-			
-			//- Bay Sayman. Listedeki elemanları sayacak
-			Counter<Group<com.tr.hsyn.calldata.Call>> counter = new Counter<>(groups);
-			
-			//- en çok kaydı olan eleman
-			Group<com.tr.hsyn.calldata.Call> winner = groups.get(0);
-			
-			//- Aynı arama kaydı sayısına sahip kişi sayısı
-			//- Yani en çok arama kaydına sahip kaç kişi olduğunu buluyoruz
-			long count = counter.count(winner, Group::size);
-			
-			//- Bu kişi en çok arama kaydına sahip kişi mi?
-			if (PhoneNumbers.equalsOrContains(phoneNumber, winner.getValue().getNumber())) {
-				
-				var viewData = Lister.map(groups, e -> {
-					
-					var name = e.getValue().getName();
-					
-					if (name == null) name = e.getValue().getNumber();
-					
-					return new MostCallItemViewData(name, e.size());
-				});
-				View.OnClickListener clickListener = v -> new MostCallDialog(commentStore.getActivity(), viewData);
-				
-				int color = getColor(com.tr.hsyn.rescolors.R.color.orange_500);
-				
-				if (count == 1) {
-					
-					comment.append(commentStore.thisContact())
-							.append(" ")
-							.append(commentStore.theMostCallLog(), Spans.click(clickListener, color))
-							.append(" ")
-							.append(commentStore.contactHas())
-							.append(". ");
-					
-					xlog.d("Bu kişi en fazla arama kaydına sahip kişi : %s", groups);
-				}
-				else {
-					
-					comment.append(commentStore.thisContact())
-							.append(" ")
-							.append(commentStore.theMostCallLog(), Spans.click(clickListener, color))
-							.append(" ")
-							.append(commentStore.hasOneOfThem((int) count))
-							.append(". ");
-					
-					xlog.d("Bu kişi en fazla arama kaydına sahip %d kişiden biri : %s", count, groups);
-				}
-			}
-		}
-		else {
-			
-			comment.append("Arama kayıtları alınamadı");
-		}
-		
-		
-		xlog.i("Most comments completed");
-	}
-	
-	/**
-	 * Generates a comment about the first and last call made to the contact.
-	 * Appends the generated comment to the Comment object managed by this commentator.
-	 */
-	private void addFirstLastCallComment() {
-		
-		if (history.size() > 1) {
-			
-			//- Kişinin en eski arama kaydı
-			com.tr.hsyn.calldata.Call firstCall     = history.getFirstCall();
-			com.tr.hsyn.calldata.Call lastCall      = history.getLastCall();
-			var                       duration      = Time.toDuration(lastCall.getTime() - firstCall.getTime());
-			Unit[]                    durationUnits = {Unit.YEAR, Unit.MONTH, Unit.DAY, Unit.HOUR, Unit.MINUTE};
-			
-			Span[] textSpans = {
-					Spans.bold(),
-					Spans.foreground(Colors.getPrimaryColor())
-			};
-			
-			comment.append("İlk arama kaydının tarihi ")
-					.append(Stringx.format("%s. ", Time.toString(firstCall.getTime())), textSpans)
-					.append("Son arama kaydı ise ")
-					.append(Stringx.format("%s. ", Time.toString(lastCall.getTime())), textSpans);
-			
-			comment.append("Bu iki tarih arasında geçen zaman tam olarak ")
-					.append(Stringx.format("%s. ", DayTime.toString(commentStore.getActivity(), duration, durationUnits)), textSpans);
-			
-			xlog.d("Kişiye ait ilk arama kaydının tarihi : %s [%d]", Time.toString(firstCall.getTime()), firstCall.getTime());
-			
-			
-		}
 	}
 	
 	

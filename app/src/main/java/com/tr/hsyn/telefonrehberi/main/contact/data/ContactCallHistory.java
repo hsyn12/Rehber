@@ -1,4 +1,4 @@
-package com.tr.hsyn.telefonrehberi.main.contact.activity.detail.data;
+package com.tr.hsyn.telefonrehberi.main.contact.data;
 
 
 import android.annotation.SuppressLint;

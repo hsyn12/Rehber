@@ -15,10 +15,10 @@ public interface ColorRegisters extends Database<ColorRegister> {
 		
 		var holder = RegistersHolder.colorRegistersHolder.get();
 		
-		if (holder.get() == null)
-			holder.set(new Colorabi(context));
+		if (holder.getValue() == null)
+			holder.setValue(new Colorabi(context));
 		
 		//noinspection ConstantConditions
-		return holder.get();
+		return holder.getValue();
 	}
 }

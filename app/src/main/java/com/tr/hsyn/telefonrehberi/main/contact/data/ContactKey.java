@@ -6,7 +6,6 @@ import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.contactdata.ContactDat;
 import com.tr.hsyn.datakey.DataKey;
 import com.tr.hsyn.label.Label;
-import com.tr.hsyn.telefonrehberi.main.contact.activity.detail.data.History;
 import com.tr.hsyn.time.Time;
 
 import org.jetbrains.annotations.NotNull;

@@ -42,16 +42,16 @@ public interface Rehber {
 		
 		static ColorHolder getColorHolder() {
 			
-			if (_colorHolder.get() == null) throw new RuntimeException("init not called");
+			if (_colorHolder.getValue() == null) throw new RuntimeException("init not called");
 			
-			return _colorHolder.get();
+			return _colorHolder.getValue();
 		}
 		
 		static void init(@NonNull final Context context) {
 			
 			int pColor = ColorSelection.getSelected(context);
 			
-			_colorHolder.set(ColorHolder.newHolder(
+			_colorHolder.setValue(ColorHolder.newHolder(
 					pColor,
 					0,
 					getRipple(context, pColor)
@@ -223,7 +223,7 @@ public interface Rehber {
 					.edit().putInt(KEY_PRIMARY_COLOR, color)
 					.apply();
 			
-			Color._colorHolder.set(ColorHolder.newHolder(
+			Color._colorHolder.setValue(ColorHolder.newHolder(
 					color,
 					Color.getColorHolder().getPrimaryColor(),
 					Color.getRipple(context, color)));

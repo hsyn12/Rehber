@@ -1,10 +1,9 @@
-package com.tr.hsyn.telefonrehberi.main.contact.activity.detail.data;
+package com.tr.hsyn.telefonrehberi.main.call.data;
 
 
 import androidx.annotation.NonNull;
 
 import com.tr.hsyn.calldata.Call;
-import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.keep.Keep;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
@@ -57,6 +56,11 @@ public final class CallCollection {
 		return collection;
 	}
 	
+	/**
+	 * Creates a new empty call collection.
+	 *
+	 * @return the call collection
+	 */
 	@NotNull
 	public static CallCollection createEmpty() {
 		
@@ -82,14 +86,19 @@ public final class CallCollection {
 		outgoingDuration = 0;
 	}
 	
+	/**
+	 * Creates a new call collection.
+	 *
+	 * @param calls the calls
+	 */
 	private CallCollection(@NotNull List<Call> calls) {
 		
 		this.calls    = calls;
 		numberedCalls = calls.stream().collect(Collectors.groupingBy(this::getKey));
-		incomingCalls = getCallsByTypes(Call.INCOMING, Call.INCOMING_WIFI);
-		outgoingCalls = getCallsByTypes(Call.OUTGOING, Call.OUTGOING_WIFI);
-		missedCalls   = getCalls(Call.MISSED);
-		rejectedCalls = getCalls(Call.REJECTED);
+		incomingCalls = getCallsByType(Call.INCOMING, Call.INCOMING_WIFI);
+		outgoingCalls = getCallsByType(Call.OUTGOING, Call.OUTGOING_WIFI);
+		missedCalls   = getCallsByType(Call.MISSED);
+		rejectedCalls = getCallsByType(Call.REJECTED);
 		
 		incomingDuration = getIncomingCalls().stream()
 				.map(Call::getDuration)
@@ -125,28 +134,15 @@ public final class CallCollection {
 	 * @return calls
 	 */
 	@NonNull
-	public List<Call> getCallsByTypes(int... callTypes) {
+	public List<Call> getCallsByType(int @NotNull ... callTypes) {
 		
 		List<Call> _calls = new ArrayList<>();
 		
-		Lister.loop(callTypes, type -> _calls.addAll(getCalls(type)));
+		for (int callType : callTypes)
+			for (Call call : calls)
+				if (callType == call.getCallType() && !_calls.contains(call)) _calls.add(call);
 		
 		return _calls;
-	}
-	
-	/**
-	 * Returns the object that mapped phone number against its calls.
-	 *
-	 * @return the object that mapped phone number against its calls
-	 */
-	public Map<String, List<Call>> getNumberedCalls() {
-		
-		return numberedCalls;
-	}
-	
-	public List<Call> getCalls() {
-		
-		return calls;
 	}
 	
 	/**
@@ -165,6 +161,24 @@ public final class CallCollection {
 	public List<Call> getOutgoingCalls() {
 		
 		return outgoingCalls;
+	}
+	
+	/**
+	 * Returns the object that mapped phone number against its calls.
+	 *
+	 * @return the object that mapped phone number against its calls
+	 */
+	public Map<String, List<Call>> getNumberedCalls() {
+		
+		return numberedCalls;
+	}
+	
+	/**
+	 * @return all call log calls
+	 */
+	public List<Call> getCalls() {
+		
+		return calls;
 	}
 	
 	/**
@@ -218,21 +232,8 @@ public final class CallCollection {
 				return missedCalls.size();
 			case Call.REJECTED:
 				return rejectedCalls.size();
-			default: return getCalls(callType).size();
+			default: return getCallsByType(callType).size();
 		}
-	}
-	
-	/**
-	 * Returns all calls with the given call type.
-	 *
-	 * @param callType call type
-	 * @return calls
-	 */
-	@NotNull
-	private List<Call> getCalls(int callType) {
-		
-		Predicate<Call> typePredicate = call -> call.getCallType() == callType;
-		return getCalls(typePredicate);
 	}
 	
 	/**
@@ -267,6 +268,9 @@ public final class CallCollection {
 		//return numberedCalls.getOrDefault(PhoneNumbers.formatNumber(number, 10), new ArrayList<>(0));
 	}
 	
+	/**
+	 * @return {@code true} if the collection is empty or <code>null</code>
+	 */
 	public boolean isEmpty() {
 		
 		return calls == null || calls.isEmpty();

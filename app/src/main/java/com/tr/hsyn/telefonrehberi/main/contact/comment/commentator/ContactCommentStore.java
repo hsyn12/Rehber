@@ -1,4 +1,4 @@
-package com.tr.hsyn.telefonrehberi.main.contact.activity.detail.comment;
+package com.tr.hsyn.telefonrehberi.main.contact.comment.commentator;
 
 
 import android.app.Activity;
@@ -7,7 +7,7 @@ import com.tr.hsyn.calldata.CallType;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.code.comment.CommentStore;
 import com.tr.hsyn.telefonrehberi.main.code.comment.Moody;
-import com.tr.hsyn.telefonrehberi.main.contact.activity.detail.comment.defaults.DefaultContactCommentStore;
+import com.tr.hsyn.telefonrehberi.main.contact.comment.defaults.DefaultContactCommentStore;
 import com.tr.hsyn.xlog.xlog;
 
 import org.jetbrains.annotations.NotNull;

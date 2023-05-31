@@ -1,10 +1,10 @@
-package com.tr.hsyn.telefonrehberi.main.contact.activity.detail.comment.defaults;
+package com.tr.hsyn.telefonrehberi.main.contact.comment.defaults;
 
 
 import android.app.Activity;
 
 import com.tr.hsyn.telefonrehberi.R;
-import com.tr.hsyn.telefonrehberi.main.contact.activity.detail.comment.ContactCommentStore;
+import com.tr.hsyn.telefonrehberi.main.contact.comment.commentator.ContactCommentStore;
 
 import org.jetbrains.annotations.NotNull;
 

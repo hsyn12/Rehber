@@ -207,6 +207,11 @@ public interface Over {
 				Blue.box(Key.CALL_LOG_UPDATED, state.getObject());
 			}
 			
+			/**
+			 * @return all call log calls
+			 * @deprecated Use {@link com.tr.hsyn.telefonrehberi.main.call.data.CallCollection}
+			 */
+			@Deprecated
 			@Nullable
 			static List<com.tr.hsyn.calldata.Call> getCalls() {
 				

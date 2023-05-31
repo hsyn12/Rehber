@@ -1,13 +1,13 @@
-package com.tr.hsyn.telefonrehberi.main.contact.activity.detail.comment;
+package com.tr.hsyn.telefonrehberi.main.contact.comment.commentator;
 
 
 import android.app.Activity;
 
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.key.Key;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallCollection;
 import com.tr.hsyn.telefonrehberi.main.code.comment.CommentEditor;
 import com.tr.hsyn.telefonrehberi.main.code.comment.Commentator;
-import com.tr.hsyn.telefonrehberi.main.contact.activity.detail.data.CallCollection;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
 import com.tr.hsyn.xbox.Blue;
 

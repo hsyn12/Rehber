@@ -1,10 +1,9 @@
-package com.tr.hsyn.telefonrehberi.main.contact.activity.detail.data;
+package com.tr.hsyn.telefonrehberi.main.contact.data;
 
 
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.telefonrehberi.main.call.data.Res;
-import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
 
 import org.jetbrains.annotations.NotNull;
 

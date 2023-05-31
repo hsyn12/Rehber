@@ -10,6 +10,6 @@ public interface IHaveTitle {
 	
 	default CharSequence getTitle() {
 		
-		return titleHolder.get();
+		return titleHolder.getValue();
 	}
 }
