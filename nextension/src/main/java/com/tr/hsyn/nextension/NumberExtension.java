@@ -22,13 +22,9 @@ public interface NumberExtension {
 	ResourceBundle resources = WordExtension.resources;
 	
 	/**
-	 * Gün bildiren ek türü (1'i, 2'si, 24'i, 29'u vb)
+	 * Gün bildiren ek türü (1'i, 2'si, 24'ü, 29'u vb)
 	 */
-	int TYPE_DAY      = 3000;
-	/**
-	 * -lik -lık -lük -luk
-	 */
-	int TYPE_ABSTRACT = 4000;
+	int TYPE_DAY = 3000;
 	
 	/**
 	 * @param number Sayı
@@ -108,7 +104,7 @@ public interface NumberExtension {
 			case Extension.TYPE_IN_TO: return new AccusativeNumber();
 			case Extension.TYPE_AT: return new LocativeNumber();
 			case NumberExtension.TYPE_DAY: return new DayNumber();
-			case NumberExtension.TYPE_ABSTRACT: return new AbstractNumber();
+			case Extension.TYPE_ABSTRACT: return new AbstractNumber();
 			
 			default: throw new IllegalArgumentException("There is no extension class for type : " + type);
 		}

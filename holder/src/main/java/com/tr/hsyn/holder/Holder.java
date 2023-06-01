@@ -38,6 +38,14 @@ public interface Holder<T> {
 	}
 	
 	/**
+	 * @return {@code true} if the object is null
+	 */
+	default boolean isNull() {
+		
+		return getValue() == null;
+	}
+	
+	/**
 	 * Gets the value.
 	 *
 	 * @return the value

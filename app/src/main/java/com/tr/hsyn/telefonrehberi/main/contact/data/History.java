@@ -3,7 +3,13 @@ package com.tr.hsyn.telefonrehberi.main.contact.data;
 
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.contactdata.Contact;
+import com.tr.hsyn.holder.Holder;
+import com.tr.hsyn.key.Key;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallCollection;
 import com.tr.hsyn.telefonrehberi.main.call.data.Res;
+import com.tr.hsyn.time.DurationGroup;
+import com.tr.hsyn.time.Time;
+import com.tr.hsyn.xbox.Blue;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -20,6 +26,47 @@ import java.util.stream.Collectors;
  * And this class makes it easy to manage it.
  */
 public interface History {
+	
+	static Holder<CallCollection> CALL_COLLECTION = Holder.newHolder();
+	
+	/**
+	 * Returns the history of the given contact.
+	 *
+	 * @param contact the contact
+	 * @return the history
+	 */
+	static History getHistory(@NotNull Contact contact) {
+		
+		CallCollection collection = null;
+		
+		if (CALL_COLLECTION.isNull()) {
+			
+			collection = Blue.getObject(Key.CALL_COLLECTION);
+			CALL_COLLECTION.setValue(collection);
+		}
+		
+		if (collection == null) return ofEmpty(contact);
+		
+		var numbers = ContactKey.getNumbers(contact);
+		
+		if (numbers == null || numbers.isEmpty()) return ofEmpty(contact);
+		
+		var calls = collection.getCallsByNumbers(numbers);
+		
+		return of(contact, calls);
+	}
+	
+	/**
+	 * Creates a new empty history for the given contact.
+	 *
+	 * @param contact the contact to be used by this history
+	 * @return the history for the given contact
+	 */
+	@NotNull
+	static History ofEmpty(@NotNull Contact contact) {
+		
+		return new ContactCallHistory(contact, new ArrayList<>(0));
+	}
 	
 	/**
 	 * Creates a new history for the given contact.
@@ -38,25 +85,21 @@ public interface History {
 	}
 	
 	/**
-	 * Creates a new empty history for the given contact.
+	 * Returns the contact that this history belongs to.
 	 *
-	 * @param contact the contact to be used by this history
-	 * @return the history for the given contact
+	 * @return the contact
 	 */
-	@NotNull
-	static History ofEmpty(@NotNull Contact contact) {
-		
-		return new ContactCallHistory(contact, new ArrayList<>(0));
-	}
+	@NotNull Contact getContact();
 	
 	/**
-	 * Returns the most recent call.
+	 * Returns the call at the given index
 	 *
-	 * @return the most recent call
+	 * @param index the index
+	 * @return the call
 	 */
-	default Call getLastCall() {
+	default Call get(int index) {
 		
-		return getCalls().get(0);
+		return getCalls().get(index);
 	}
 	
 	/**
@@ -67,20 +110,21 @@ public interface History {
 	@NotNull List<Call> getCalls();
 	
 	/**
-	 * Returns the contact that this history belongs to.
+	 * Returns the duration of the call history.
 	 *
-	 * @return the contact
+	 * @return the {@link DurationGroup}
 	 */
-	@NotNull Contact getContact();
-	
-	/**
-	 * Returns the oldest call.
-	 *
-	 * @return the first call
-	 */
-	default Call getFirstCall() {
+	default DurationGroup getHistoryDuration() {
 		
-		return getCalls().get(size() - 1);
+		if (size() > 1) {
+			
+			Call firstCall     = getFirstCall();
+			Call lastCall      = getLastCall();
+			long estimatedTime = lastCall.getTime() - firstCall.getTime();
+			return Time.toDuration(estimatedTime);
+		}
+		
+		return DurationGroup.EMPTY;
 	}
 	
 	/**
@@ -94,24 +138,23 @@ public interface History {
 	}
 	
 	/**
-	 * Returns whether the call history is empty.
+	 * Returns the oldest call.
 	 *
-	 * @return {@code true} if the call history is empty
+	 * @return the first call
 	 */
-	default boolean isEmpty() {
+	default Call getFirstCall() {
 		
-		return getCalls().isEmpty();
+		return getCalls().get(size() - 1);
 	}
 	
 	/**
-	 * Returns the call at the given index
+	 * Returns the most recent call.
 	 *
-	 * @param index the index
-	 * @return the call
+	 * @return the most recent call
 	 */
-	default Call get(int index) {
+	default Call getLastCall() {
 		
-		return getCalls().get(index);
+		return getCalls().get(0);
 	}
 	
 	/**
@@ -210,5 +253,15 @@ public interface History {
 		}
 		
 		return (int) getCalls().stream().filter(call -> call.getCallType() == callType || call.getCallType() == types[1]).count();
+	}
+	
+	/**
+	 * Returns whether the call history is empty.
+	 *
+	 * @return {@code true} if the call history is empty
+	 */
+	default boolean isEmpty() {
+		
+		return getCalls().isEmpty();
 	}
 }

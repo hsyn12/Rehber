@@ -40,6 +40,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -324,11 +325,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 		
 		if (history.size() > 1) {
 			
-			//- Kişinin en eski arama kaydı
-			Call          firstCall     = history.getFirstCall();
-			Call          lastCall      = history.getLastCall();
-			long          estimatedTime = lastCall.getTime() - firstCall.getTime();
-			DurationGroup duration      = Time.toDuration(estimatedTime);
+			DurationGroup duration      = history.getHistoryDuration();
 			Unit[]        durationUnits = {Unit.YEAR, Unit.MONTH, Unit.DAY, Unit.HOUR, Unit.MINUTE};
 			
 			Span[] textSpans = {
@@ -340,8 +337,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 					.append("Kişinin ilk arama kaydı ile son arama kaydı arasında geçen zaman tam olarak ")
 					.append(Stringx.format("%s. ", DayTime.toString(commentStore.getActivity(), duration, durationUnits)), textSpans);
 			
-			comment.append(fmt("Yani bu kişiyle kabaca %s%s kadar bir iletişim geçmişiniz var. ", duration.getDurations().get(0), WordExtension.getWordExt(duration.getDurations().get(0).toString(), Extension.TYPE_ABSTRACT)));
-			xlog.d("Kişiye ait ilk arama kaydının tarihi : %s [%d]", Time.toString(firstCall.getTime()), firstCall.getTime());
+			comment.append(fmt("Yani bu kişiyle kabaca %s%s bir iletişim geçmişiniz var. ", duration.getDurations().get(0), WordExtension.getWordExt(duration.getDurations().get(0).toString(), Extension.TYPE_ABSTRACT)));
 		}
 		
 		return comment;
@@ -473,6 +469,47 @@ public class DefaultContactCommentator implements ContactCommentator {
 		}
 		
 		return commentOnTheLastCall;
+	}
+	
+	/**
+	 * Returns a comment about the duration of the history.
+	 *
+	 * @param duration the history duration of the current contact
+	 * @return comment
+	 */
+	@NotNull
+	private CharSequence mostHistoryDurationComment(@NotNull DurationGroup duration) {
+		
+		var                      comment   = new Spanner();
+		Map<Long, DurationGroup> durations = new HashMap<>();
+		
+		var contacts = getContacts();
+		
+		if (contacts == null || contacts.isEmpty())
+			return comment;
+		
+		for (Contact contact : contacts) {
+			
+			History history = ContactKey.getHistory(contact);
+			
+			if (history == null || history.isEmpty()) {
+				
+				history = History.getHistory(contact);
+			}
+			
+			if (history.isEmpty()) continue;
+			
+			var historyDuration = history.getHistoryDuration();
+			
+			if (!historyDuration.isEmpty()) {
+				
+				durations.put(contact.getContactId(), historyDuration);
+			}
+			
+		}
+		
+		
+		return comment;
 	}
 	
 	private CharSequence commentLastCallTypeRank() {

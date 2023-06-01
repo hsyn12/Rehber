@@ -157,5 +157,15 @@ public interface ContactKey {
 		contact.setData(DELETED_DATE, Time.now());
 	}
 	
+	@Nullable
+	static History getHistory(@NotNull Contact contact) {
+		
+		return contact.getData(HISTORY);
+	}
+	
+	static void setHistory(@NotNull Contact contact, History history) {
+		
+		contact.setData(HISTORY, history);
+	}
 	
 }
