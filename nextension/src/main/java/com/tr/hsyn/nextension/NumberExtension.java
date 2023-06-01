@@ -2,6 +2,7 @@ package com.tr.hsyn.nextension;
 
 
 import com.tr.hsyn.nextension.extension.AblativeNumber;
+import com.tr.hsyn.nextension.extension.AbstractNumber;
 import com.tr.hsyn.nextension.extension.AccusativeNumber;
 import com.tr.hsyn.nextension.extension.DativeNumber;
 import com.tr.hsyn.nextension.extension.DayNumber;
@@ -23,7 +24,11 @@ public interface NumberExtension {
 	/**
 	 * Gün bildiren ek türü (1'i, 2'si, 24'i, 29'u vb)
 	 */
-	int TYPE_DAY = 3000;
+	int TYPE_DAY      = 3000;
+	/**
+	 * -lik -lık -lük -luk
+	 */
+	int TYPE_ABSTRACT = 4000;
 	
 	/**
 	 * @param number Sayı
@@ -51,7 +56,7 @@ public interface NumberExtension {
 	 * Sayının sonundaki sıfırları sayar.
 	 *
 	 * @param number Sayı
-	 * @return Sondaki sifır adedi
+	 * @return Sondaki sıfır adedi
 	 */
 	static int countLastZero(@NotNull String number) {
 		
@@ -79,6 +84,14 @@ public interface NumberExtension {
 	}
 	
 	/**
+	 * Sayının sonuna eklenecek uygun eki döndürür.
+	 *
+	 * @param number Sayı
+	 * @return Sayının eki
+	 */
+	@NotNull String getExt(long number);
+	
+	/**
 	 * Ekin türüne göre uygun eklenti nesnesi oluşturur.
 	 *
 	 * @param type Ek türü (mesela {@link Extension#TYPE_AT})
@@ -95,16 +108,23 @@ public interface NumberExtension {
 			case Extension.TYPE_IN_TO: return new AccusativeNumber();
 			case Extension.TYPE_AT: return new LocativeNumber();
 			case NumberExtension.TYPE_DAY: return new DayNumber();
+			case NumberExtension.TYPE_ABSTRACT: return new AbstractNumber();
 			
 			default: throw new IllegalArgumentException("There is no extension class for type : " + type);
 		}
 	}
 	
 	/**
-	 * Sayının sonuna eklenecek uygun eki döndürür.
-	 *
-	 * @param number Sayı
-	 * @return Sayının eki
+	 * @param number number
+	 * @return {@code true} if all {@code number} is zero except the first one
 	 */
-	@NotNull String getExt(long number);
+	static boolean isLastZeroAll(@NotNull String number) {
+		
+		if (number.length() <= 1) return false;
+		
+		for (int i = 1; i < number.length(); i++)
+			if (number.charAt(i) != '0')
+				return false;
+		return true;
+	}
 }

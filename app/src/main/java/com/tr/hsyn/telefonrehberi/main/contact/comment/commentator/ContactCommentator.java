@@ -87,7 +87,6 @@ public interface ContactCommentator extends Commentator<Contact>, CommentEditor 
 	
 	/**
 	 * Returns the {@link CallCollection} object.
-	 * This object is used to analize the calls of the all call logs.
 	 *
 	 * @return {@link CallCollection} object
 	 */

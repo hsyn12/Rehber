@@ -68,17 +68,9 @@ public class ContactDetailsAbout extends ContactDetailsMenu {
 		// The contact must have one call at least
 		if (history != null && history.size() > 0) {
 			
-			Runny.run(this::setStatistics, false);
-			
 			reComment = true;
 			setupCommentViews();
 		}
-	}
-	
-	private void setStatistics() {
-		
-		//var callGroups = CallOver.groupByNumber();
-		
 	}
 	
 	/**

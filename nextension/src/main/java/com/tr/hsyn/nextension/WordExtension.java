@@ -2,6 +2,7 @@ package com.tr.hsyn.nextension;
 
 
 import com.tr.hsyn.nextension.extension.Ablative;
+import com.tr.hsyn.nextension.extension.Abstract;
 import com.tr.hsyn.nextension.extension.Accusative;
 import com.tr.hsyn.nextension.extension.Dative;
 import com.tr.hsyn.nextension.extension.Locative;
@@ -135,6 +136,14 @@ public interface WordExtension {
 	}
 	
 	/**
+	 * Kelimeye uygun eki döndürür.
+	 *
+	 * @param word Kelime
+	 * @return Kelimenin eki
+	 */
+	@NotNull String getExt(@NotNull String word);
+	
+	/**
 	 * Ekin türüne göre uygun eklenti nesnesi oluşturur.
 	 *
 	 * @param type Ek türü (mesela {@link Extension#TYPE_AT})
@@ -150,18 +159,11 @@ public interface WordExtension {
 			case Extension.TYPE_POSS: return new Possessive();
 			case Extension.TYPE_IN_TO: return new Accusative();
 			case Extension.TYPE_AT: return new Locative();
+			case Extension.TYPE_ABSTRACT: return new Abstract();
 			
 			default: throw new IllegalArgumentException("There is no extension class for type : " + type);
 		}
 	}
-	
-	/**
-	 * Kelimeye uygun eki döndürür.
-	 *
-	 * @param word Kelime
-	 * @return Kelimenin eki
-	 */
-	@NotNull String getExt(@NotNull String word);
 	
 	/**
 	 * Bir karakterin kalın ünlülerden biri olup olmadığını test eder.<br>

@@ -340,7 +340,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 					.append("Kişinin ilk arama kaydı ile son arama kaydı arasında geçen zaman tam olarak ")
 					.append(Stringx.format("%s. ", DayTime.toString(commentStore.getActivity(), duration, durationUnits)), textSpans);
 			
-			comment.append(fmt("Yani bu kişiyle kabaca %s kadar bir iletişim geçmişiniz var. ", duration.getDurations().get(0), WordExtension.getWordExt(duration.getDurations().get(0).toString(), Extension.TYPE_TO)));
+			comment.append(fmt("Yani bu kişiyle kabaca %s%s kadar bir iletişim geçmişiniz var. ", duration.getDurations().get(0), WordExtension.getWordExt(duration.getDurations().get(0).toString(), Extension.TYPE_ABSTRACT)));
 			xlog.d("Kişiye ait ilk arama kaydının tarihi : %s [%d]", Time.toString(firstCall.getTime()), firstCall.getTime());
 		}
 		
