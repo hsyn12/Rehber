@@ -30,6 +30,7 @@ import java.util.List;
  */
 public interface ContactCommentator extends Commentator<Contact>, CommentEditor {
 	
+	
 	/**
 	 * Returns a list of all contacts.
 	 *

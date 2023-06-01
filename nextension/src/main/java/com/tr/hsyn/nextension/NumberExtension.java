@@ -90,7 +90,7 @@ public interface NumberExtension {
 	/**
 	 * Ekin türüne göre uygun eklenti nesnesi oluşturur.
 	 *
-	 * @param type Ek türü (mesela {@link Extension#TYPE_AT})
+	 * @param type Ek türü (mesela {@link Extension#TYPE_LOCATIVE})
 	 * @return {@link NumberExtension} nesnesi
 	 */
 	@NotNull
@@ -98,11 +98,11 @@ public interface NumberExtension {
 		
 		switch (type) {
 			
-			case Extension.TYPE_FROM: return new AblativeNumber();
-			case Extension.TYPE_TO: return new DativeNumber();
-			case Extension.TYPE_POSS: return new PossessiveNumber();
-			case Extension.TYPE_IN_TO: return new AccusativeNumber();
-			case Extension.TYPE_AT: return new LocativeNumber();
+			case Extension.TYPE_ABLATIVE: return new AblativeNumber();
+			case Extension.TYPE_DATIVE: return new DativeNumber();
+			case Extension.TYPE_POSSESSIVE: return new PossessiveNumber();
+			case Extension.TYPE_ACCUSATIVE: return new AccusativeNumber();
+			case Extension.TYPE_LOCATIVE: return new LocativeNumber();
 			case NumberExtension.TYPE_DAY: return new DayNumber();
 			case Extension.TYPE_ABSTRACT: return new AbstractNumber();
 			

@@ -37,9 +37,9 @@ public interface History {
 	 */
 	static History getHistory(@NotNull Contact contact) {
 		
-		CallCollection collection = null;
+		CallCollection collection = CALL_COLLECTION.getValue();
 		
-		if (CALL_COLLECTION.isNull()) {
+		if (collection == null) {
 			
 			collection = Blue.getObject(Key.CALL_COLLECTION);
 			CALL_COLLECTION.setValue(collection);

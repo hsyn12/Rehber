@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:tools="http://schemas.android.com/tools" tools:lang="en">
 
-	<string name="year">yıl</string>
-	<string name="month">ay</string>
-	<string name="day">gün</string>
-	<string name="hour">saat</string>
-	<string name="minute">dakika</string>
-	<string name="second">saniye</string>
-	<string name="millisecond">milisaniye</string>
+	<string name="year">year</string>
+	<string name="month">month</string>
+	<string name="day">day</string>
+	<string name="hour">hour</string>
+	<string name="minute">minute</string>
+	<string name="second">second</string>
+	<string name="millisecond">millisecond</string>
 
 </resources>

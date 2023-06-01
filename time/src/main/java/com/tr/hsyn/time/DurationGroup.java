@@ -196,12 +196,33 @@ public class DurationGroup implements Comparable<DurationGroup> {
 	}
 	
 	@Override
-	public String toString() {return this.durations.toString();}
+	public String toString() {
+		
+		var sb = new StringBuilder();
+		
+		for (Duration duration : durations) {
+			sb.append(duration.getValue())
+					.append(" ")
+					.append(duration.getUnit()).append(" ");
+		}
+		
+		
+		return sb.toString().trim();
+	}
 	
 	@Override
 	public int compareTo(@NotNull DurationGroup durationGroup) {
 		
-		return toLocalDateTime().compareTo(durationGroup.toLocalDateTime());
+		var comp = Long.compare(year.getValue(), durationGroup.year.getValue());
+		
+		if (comp == 0L) comp = Long.compare(month.getValue(), durationGroup.month.getValue());
+		if (comp == 0L) comp = Long.compare(day.getValue(), durationGroup.day.getValue());
+		if (comp == 0L) comp = Long.compare(hour.getValue(), durationGroup.hour.getValue());
+		if (comp == 0L) comp = Long.compare(minute.getValue(), durationGroup.minute.getValue());
+		if (comp == 0L) comp = Long.compare(second.getValue(), durationGroup.second.getValue());
+		if (comp == 0L) comp = Long.compare(mlSecond.getValue(), durationGroup.mlSecond.getValue());
+		
+		return comp;
 	}
 	
 	/**

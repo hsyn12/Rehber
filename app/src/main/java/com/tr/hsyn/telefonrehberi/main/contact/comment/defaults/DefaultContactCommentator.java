@@ -39,6 +39,7 @@ import com.tr.hsyn.xlog.xlog;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -169,7 +170,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 		// We have two language resources forever, I think
 		if (commentStore.isTurkishLanguage()) {
 			
-			var extension = WordExtension.getWordExt(name, Extension.TYPE_TO);
+			var extension = WordExtension.getWordExt(name, Extension.TYPE_DATIVE);
 			
 			quantityComment.append(Stringx.format("'%s %s ", extension, getString(R.string.word_has)))
 					.append(Stringx.format("%s", getString(R.string.word_calls, history.size())), getClickSpans(listener))
@@ -332,16 +333,29 @@ public class DefaultContactCommentator implements ContactCommentator {
 					Spans.bold(),
 					Spans.foreground(Colors.lighter(Colors.getPrimaryColor(), 0.35f))
 			};
+			comment.append("\n");
+			if (isTurkishLanguage()) {
+				
+				comment.append("Kişinin ilk arama kaydı ile son arama kaydı arasında geçen zaman tam olarak ")
+						.append(Stringx.format("%s. ", DayTime.toString(commentStore.getActivity(), duration, durationUnits)), textSpans);
+				
+				comment.append(fmt("Yani bu kişiyle kabaca %s%s bir iletişim geçmişiniz var. ", duration.getDurations().get(0), WordExtension.getWordExt(duration.getDurations().get(0).toString(), Extension.TYPE_ABSTRACT)));
+			}
+			else {
+				
+				comment.append("The exact time elapsed between the contact's first call record and the last call record is ")
+						.append(Stringx.format("%s. ", DayTime.toString(commentStore.getActivity(), duration, durationUnits)), textSpans);
+				
+				comment.append(fmt("So you have roughly %s%s of contact history with this person. ", duration.getDurations().get(0), duration.getDurations().get(0).getValue() > 1 ? "s" : ""));
+			}
 			
-			comment.append("\n")
-					.append("Kişinin ilk arama kaydı ile son arama kaydı arasında geçen zaman tam olarak ")
-					.append(Stringx.format("%s. ", DayTime.toString(commentStore.getActivity(), duration, durationUnits)), textSpans);
 			
-			comment.append(fmt("Yani bu kişiyle kabaca %s%s bir iletişim geçmişiniz var. ", duration.getDurations().get(0), WordExtension.getWordExt(duration.getDurations().get(0).toString(), Extension.TYPE_ABSTRACT)));
+			comment.append(mostHistoryDurationComment(duration));
 		}
 		
 		return comment;
 	}
+	
 	
 	/**
 	 * Appends a comment about the given call to the {@link #comment} object.
@@ -412,6 +426,69 @@ public class DefaultContactCommentator implements ContactCommentator {
 	}
 	
 	/**
+	 * Returns a comment about the duration of the history.
+	 *
+	 * @param duration the history duration of the current contact
+	 * @return comment
+	 */
+	@NotNull
+	private CharSequence mostHistoryDurationComment(@NotNull DurationGroup duration) {
+		
+		var                      comment   = new Spanner();
+		Map<Long, DurationGroup> durations = new HashMap<>();
+		
+		var contacts = getContacts();
+		
+		if (contacts == null || contacts.isEmpty())
+			return comment;
+		
+		//? put the all durations into the map
+		for (Contact contact : contacts) {
+			
+			History history = ContactKey.getHistory(contact);
+			
+			if (history == null || history.isEmpty())
+				history = History.getHistory(contact);
+			
+			if (history.isEmpty()) {
+				
+				//xlog.d("%s has no history", contact.getName());
+				continue;
+			}
+			
+			var historyDuration = history.getHistoryDuration();
+			
+			if (!historyDuration.isEmpty())
+				durations.put(contact.getContactId(), historyDuration);
+		}
+		
+		List<Map.Entry<Long, DurationGroup>> list = new ArrayList<>(durations.entrySet());
+		
+		list.sort(Map.Entry.comparingByValue());
+		Collections.reverse(list);
+		
+		if (list.size() > 3) {
+			
+			var haveMostDuration = list.get(0);
+			var first            = haveMostDuration.getKey();
+			var mostDuration     = haveMostDuration.getValue();
+			
+			if (this.contact.getContactId() == first) {
+				
+				comment.append("This is the contact that have the most history duration. ");
+			}
+			else {
+				
+				comment.append(fmt("The contact that have the most history duration has ", mostDuration))
+						.append(fmt("%s", mostDuration), Spans.foreground(getTextColor()))
+						.append(" history duration. ");
+			}
+		}
+		
+		return comment;
+	}
+	
+	/**
 	 * Returns the current contact being commented on.
 	 *
 	 * @return the current contact
@@ -469,47 +546,6 @@ public class DefaultContactCommentator implements ContactCommentator {
 		}
 		
 		return commentOnTheLastCall;
-	}
-	
-	/**
-	 * Returns a comment about the duration of the history.
-	 *
-	 * @param duration the history duration of the current contact
-	 * @return comment
-	 */
-	@NotNull
-	private CharSequence mostHistoryDurationComment(@NotNull DurationGroup duration) {
-		
-		var                      comment   = new Spanner();
-		Map<Long, DurationGroup> durations = new HashMap<>();
-		
-		var contacts = getContacts();
-		
-		if (contacts == null || contacts.isEmpty())
-			return comment;
-		
-		for (Contact contact : contacts) {
-			
-			History history = ContactKey.getHistory(contact);
-			
-			if (history == null || history.isEmpty()) {
-				
-				history = History.getHistory(contact);
-			}
-			
-			if (history.isEmpty()) continue;
-			
-			var historyDuration = history.getHistoryDuration();
-			
-			if (!historyDuration.isEmpty()) {
-				
-				durations.put(contact.getContactId(), historyDuration);
-			}
-			
-		}
-		
-		
-		return comment;
 	}
 	
 	private CharSequence commentLastCallTypeRank() {

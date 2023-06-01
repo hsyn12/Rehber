@@ -6,6 +6,7 @@ import com.tr.hsyn.nextension.extension.Abstract;
 import com.tr.hsyn.nextension.extension.Accusative;
 import com.tr.hsyn.nextension.extension.Dative;
 import com.tr.hsyn.nextension.extension.Locative;
+import com.tr.hsyn.nextension.extension.Plural;
 import com.tr.hsyn.nextension.extension.Possessive;
 
 import org.jetbrains.annotations.NotNull;
@@ -15,6 +16,9 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 
+/**
+ *
+ */
 public interface WordExtension {
 	
 	ResourceBundle resources = ResourceBundle.getBundle("strings");
@@ -73,7 +77,7 @@ public interface WordExtension {
 	/**
 	 * Kelimeye uygun son eklentiyi döndürür.<br><br>
 	 * <p>
-	 * what = {@link Extension#TYPE_IN_TO} için örnekler<br>
+	 * what = {@link Extension#TYPE_ACCUSATIVE} için örnekler<br>
 	 *
 	 *
 	 *    <ul>
@@ -87,7 +91,7 @@ public interface WordExtension {
 	 *       <li>Ütü     --> Ütü'yü</li>
 	 *    </ul>
 	 *
-	 * <p>what = {@link Extension#TYPE_TO} için örnekler<br>
+	 * <p>what = {@link Extension#TYPE_DATIVE} için örnekler<br>
 	 *
 	 * <ul>
 	 *    <li>Ağaç    --> Ağaç'a</li>
@@ -100,7 +104,7 @@ public interface WordExtension {
 	 *    <li>Ütü     --> Ütü'ye</li>
 	 * </ul>
 	 * <p>
-	 * what = {@link Extension#TYPE_FROM} için örnekler<br>
+	 * what = {@link Extension#TYPE_ABLATIVE} için örnekler<br>
 	 *
 	 * <ul>
 	 *    <li>Ağaç    --> Ağaç'tan</li>
@@ -113,7 +117,7 @@ public interface WordExtension {
 	 *    <li>Ütü     --> Ütü'den</li>
 	 * </ul>
 	 *
-	 * <p>what = {@link Extension#TYPE_POSS} için örnekler<br>
+	 * <p>what = {@link Extension#TYPE_POSSESSIVE} için örnekler<br>
 	 *
 	 * <ul>
 	 *    <li>Ağaç    --> Ağaç'ın</li>
@@ -146,7 +150,7 @@ public interface WordExtension {
 	/**
 	 * Ekin türüne göre uygun eklenti nesnesi oluşturur.
 	 *
-	 * @param type Ek türü (mesela {@link Extension#TYPE_AT})
+	 * @param type Ek türü (mesela {@link Extension#TYPE_LOCATIVE})
 	 * @return {@link WordExtension} nesnesi
 	 */
 	@NotNull
@@ -154,12 +158,13 @@ public interface WordExtension {
 		
 		switch (type) {
 			
-			case Extension.TYPE_FROM: return new Ablative();
-			case Extension.TYPE_TO: return new Dative();
-			case Extension.TYPE_POSS: return new Possessive();
-			case Extension.TYPE_IN_TO: return new Accusative();
-			case Extension.TYPE_AT: return new Locative();
+			case Extension.TYPE_ABLATIVE: return new Ablative();
+			case Extension.TYPE_DATIVE: return new Dative();
+			case Extension.TYPE_POSSESSIVE: return new Possessive();
+			case Extension.TYPE_ACCUSATIVE: return new Accusative();
+			case Extension.TYPE_LOCATIVE: return new Locative();
 			case Extension.TYPE_ABSTRACT: return new Abstract();
+			case Extension.TYPE_PLURAL: return new Plural();
 			
 			default: throw new IllegalArgumentException("There is no extension class for type : " + type);
 		}

@@ -1,21 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="tr">
+<resources xmlns:tools="http://schemas.android.com/tools" tools:lang="en">
 
-	<string name="clock">saat</string>
-
-	<!-- Günün zamanları  -->
-	<string name="morning">sabah</string>
-	<string name="cockcrow">sabahın körü</string>
-	<string name="toward_noon">öğlene doğru</string>
-	<string name="noon">öğlen</string>
-	<string name="after_noon">öğleden sonra</string>
-	<string name="toward_evening">akşam üstü</string>
-	<string name="evening">akşam</string>
-	<string name="night">gece</string>
-	<string name="middle_night">gece yarısı</string>
-	<string name="after_middle_night">gece yarısından sonra</string>
-	<string name="toward_morning">sabaha karşı</string>
-	<!-- Günün zamanları  -->
-
-
+	<string name="clock">clock</string>
+	<!-- Day Times  -->
+	<string name="morning">morning</string>
+	<string name="cockcrow">cockcrow</string>
+	<string name="toward_noon">towards noon</string>
+	<string name="noon">noon</string>
+	<string name="after_noon">afternoon</string>
+	<string name="toward_evening">towards evening</string>
+	<string name="evening">evening</string>
+	<string name="night">night</string>
+	<string name="middle_night">middle night</string>
+	<string name="after_middle_night">after middle night</string>
+	<string name="toward_morning">towards morning</string>
+	<!-- Day Times  -->
 </resources>

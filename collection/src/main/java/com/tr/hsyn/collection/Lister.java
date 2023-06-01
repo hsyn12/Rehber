@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 @SuppressWarnings("ForLoopReplaceableByForEach")
 public final class Lister {
 	
+	
 	/**
 	 * Verilen liste elemanlarıyla yeni bir liste oluşturur.
 	 *

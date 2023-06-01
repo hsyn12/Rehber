@@ -3,6 +3,8 @@ package com.tr.hsyn.telefonrehberi.main.code.comment;
 
 import android.view.View;
 
+import com.tr.hsyn.nextension.Extension;
+import com.tr.hsyn.nextension.WordExtension;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.text.Span;
 import com.tr.hsyn.text.Spans;
@@ -16,6 +18,23 @@ import org.jetbrains.annotations.NotNull;
  * Text color, underline and clickable text, etc.
  */
 public interface CommentEditor extends CommentStore {
+	
+	
+	/**
+	 * Returns the plural form of the given word based on the count.
+	 *
+	 * @param word  the word to make plural
+	 * @param count the count
+	 * @return the plural form of the word
+	 */
+	@NotNull
+	static String makePlural(@NotNull String word, int count) {
+		
+		if (count > 1)
+			return word + WordExtension.getWordExt(word, Extension.TYPE_PLURAL);
+		
+		return word;
+	}
 	
 	/**
 	 * Returns the color associated with the given resource ID.
