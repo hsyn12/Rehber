@@ -2,46 +2,63 @@ package com.tr.hsyn.time;
 
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Range;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 /**
- * Birden fazla {@link Duration} nesnesinin kullanılabilmesini sağlar.<br>
- * Bir {@linkplain DurationGroup} nesnesinde her zaman birimi sadece <u>bir kez</u> kullanılabilir.<br>
- * Bu sınıf ile belirtilen süre takvim zamanına çevrilebilir.
+ * Allows multiple {@link Duration} objects to be used.<br>
+ * Each time unit can only be used <u>once</u> in a {@linkplain DurationGroup} object.<br>
+ * Duration specified with this class can be converted to calendar time.
  *
  * @see Unit
  * @see Duration
  */
 public class DurationGroup implements Comparable<DurationGroup> {
 	
-	public static final DurationGroup EMPTY = new DurationGroup(new ArrayList<>(0));
+	/**
+	 * Empty {@link DurationGroup} consists of {@link Duration} objects with value of zero
+	 */
+	public static final DurationGroup  EMPTY = new DurationGroup(new ArrayList<>(0));
+	private final       Duration       year;
+	private final       Duration       month;
+	private final       Duration       day;
+	private final       Duration       hour;
+	private final       Duration       minute;
+	private final       Duration       second;
+	private final       Duration       mlSecond;
+	private final       List<Duration> durations;
 	
-	private final Duration       year;
-	private final Duration       month;
-	private final Duration       day;
-	private final Duration       hour;
-	private final Duration       minute;
-	private final Duration       second;
-	private final Duration       mlSecond;
-	private final List<Duration> durations;
-	
+	/**
+	 * Creates a {@link DurationGroup} builder
+	 *
+	 * @return {@link DurationGroup} builder
+	 */
 	@NotNull
 	public static Builder builder() {return new Builder();}
 	
+	/**
+	 * Creates a {@link DurationGroup} builder
+	 *
+	 * @param object {@link DurationGroup}
+	 * @return {@link DurationGroup} builder
+	 */
 	@NotNull
 	public static Builder builder(@NotNull DurationGroup object) {return new Builder(object);}
 	
+	/**
+	 * Creates a new {@link DurationGroup}
+	 *
+	 * @param durations list of durations
+	 */
 	DurationGroup(@NotNull List<Duration> durations) {
 		
-		this.durations = getNotZeroDurations(durations);
+		durations.sort(Comparator.comparing(Duration::getUnit));
+		this.durations = durations;
 		year           = getDuration(Unit.YEAR);
 		month          = getDuration(Unit.MONTH);
 		day            = getDuration(Unit.DAY);
@@ -51,18 +68,23 @@ public class DurationGroup implements Comparable<DurationGroup> {
 		mlSecond       = getDuration(Unit.MILLISECOND);
 	}
 	
-	@NotNull
-	private List<Duration> getNotZeroDurations(@NotNull List<Duration> durations) {
-		
-		return durations.stream().filter(Duration::isNotZero).sorted(Comparator.comparing(Duration::getUnit)).collect(Collectors.toCollection(LinkedList::new));
-	}
-	
+	/**
+	 * Returns the duration of the specified time unit
+	 *
+	 * @param timeUnit Unit of time
+	 * @return {@link Duration}
+	 */
 	@NotNull
 	public Duration getDuration(Unit timeUnit) {
 		
 		return durations.stream().filter(d -> d.getUnit().equals(timeUnit)).findFirst().orElse(Duration.ofZero(timeUnit));
 	}
 	
+	/**
+	 * Creates a new {@link DurationGroup}
+	 *
+	 * @param builder {@link Builder}
+	 */
 	DurationGroup(@NotNull Builder builder) {
 		
 		year      = builder.year;
@@ -72,25 +94,49 @@ public class DurationGroup implements Comparable<DurationGroup> {
 		minute    = builder.minute;
 		second    = builder.second;
 		mlSecond  = builder.mlSecond;
-		durations = getNotZeroDurations();
+		durations = builder.durations;
 	}
 	
+	/**
+	 * Picks the specified units from this {@link DurationGroup}
+	 * and creates new {@link DurationGroup} with the picked ones.
+	 *
+	 * @param units units to pick from
+	 * @return new {@link DurationGroup}
+	 */
 	@NotNull
-	private LinkedList<Duration> getNotZeroDurations() {
+	public DurationGroup pickFrom(Unit @NotNull ... units) {
 		
-		LinkedList<Duration> result = new LinkedList<>();
+		List<Duration> durations = new ArrayList<>(this.durations);
 		
-		if (year.isNotZero()) result.add(year);
-		if (month.isNotZero()) result.add(month);
-		if (day.isNotZero()) result.add(day);
-		if (hour.isNotZero()) result.add(hour);
-		if (minute.isNotZero()) result.add(minute);
-		if (second.isNotZero()) result.add(second);
-		if (mlSecond.isNotZero()) result.add(mlSecond);
+		for (Unit unit : units)
+			durations.removeIf(d -> d.getUnit().equals(unit));
 		
-		return result;
+		return new DurationGroup(durations);
 	}
 	
+	/**
+	 * Normally the biggest unit is {@link Unit#YEAR}.
+	 * But if its value is zero, then the biggest unit is {@link Unit#MONTH}.
+	 * If its value is zero, then the biggest unit is {@link Unit#DAY} ... and so forth.
+	 * İf all duration's value of this {@link DurationGroup} is zero,
+	 * then the biggest unit is {@link Unit#YEAR} with value of zero.
+	 *
+	 * @return the biggest unit
+	 */
+	public Duration getBiggestUnit() {
+		
+		for (Duration duration : durations) {
+			
+			if (duration.isNotZero()) return duration;
+		}
+		
+		return Duration.ofYear(0L);
+	}
+	
+	/**
+	 * @return {@code true} if all duration's value of this {@link DurationGroup} is zero
+	 */
 	public boolean isEmpty() {
 		
 		for (Duration duration : durations)
@@ -98,51 +144,83 @@ public class DurationGroup implements Comparable<DurationGroup> {
 		return true;
 	}
 	
+	/**
+	 * @return duration of year
+	 */
 	public Duration getYear() {
 		
 		return year;
 	}
 	
+	/**
+	 * @return duration of month
+	 */
 	public Duration getMonth() {
 		
 		return month;
 	}
 	
+	/**
+	 * @return duration of day
+	 */
 	public Duration getDay() {
 		
 		return day;
 	}
 	
+	/**
+	 * @return duration of hour
+	 */
 	public Duration getHour() {
 		
 		return hour;
 	}
 	
+	/**
+	 * @return duration of minute
+	 */
 	public Duration getMinute() {
 		
 		return minute;
 	}
 	
+	/**
+	 * @return duration of second
+	 */
 	public Duration getSecond() {
 		
 		return second;
 	}
 	
+	/**
+	 * @return duration of millisecond
+	 */
 	public Duration getMilliSecond() {
 		
 		return mlSecond;
 	}
 	
+	/**
+	 * @return duration list
+	 */
 	public List<Duration> getDurations() {
 		
 		return durations;
 	}
 	
 	/**
-	 * Bir zaman biriminin kullanılıp kullanılmadığını bildirir.
+	 * @return first duration in the duration list
+	 */
+	public Duration getFirstDuration() {
+		
+		return durations.get(0);
+	}
+	
+	/**
+	 * Checks if this {@link DurationGroup} contains the specified time unit.
 	 *
 	 * @param timeUnit Zaman birimi
-	 * @return Belirtilen zaman birimi kullanılmış ve sıfırdan farklı bir değer verilmişse {@code true}, aksi halde {@code false}
+	 * @return {@code true} if the unit exists and its value is not zero
 	 */
 	public boolean exists(@NotNull Unit timeUnit) {
 		
@@ -150,11 +228,11 @@ public class DurationGroup implements Comparable<DurationGroup> {
 	}
 	
 	/**
-	 * Bildirilen sürenin takvimdeki karşılığını döndürür.
-	 * Negatif değerli süreler takvimde geriye doğru ilerler,
-	 * pozitif değerler ileri doğru ilerler.
+	 * Converts this {@link DurationGroup} to calendar time.
+	 * Negative-valued durations move backwards in the calendar,
+	 * positive values move forwards in the calendar.
 	 *
-	 * @param date Hesaplamanın başlatılacağı başlangıç zamanı.
+	 * @param date {@link LocalDateTime} as starting point for calculation
 	 * @return LocalDateTime
 	 */
 	public LocalDateTime toLocalDateTime(@NotNull LocalDateTime date) {
@@ -195,6 +273,12 @@ public class DurationGroup implements Comparable<DurationGroup> {
 		return date;
 	}
 	
+	/**
+	 * Returns a string representation of this {@link DurationGroup}.<br>
+	 * Default format is <code>'value unit value unit ...'</code>
+	 *
+	 * @return a string representation
+	 */
 	@Override
 	public String toString() {
 		
@@ -210,6 +294,13 @@ public class DurationGroup implements Comparable<DurationGroup> {
 		return sb.toString().trim();
 	}
 	
+	/**
+	 * Compares this {@link DurationGroup} with another {@link DurationGroup}
+	 *
+	 * @param durationGroup {@link DurationGroup}
+	 * @return -1, 0 or 1 if this {@link DurationGroup} is less than,
+	 * 		equal to or greater than the specified {@link DurationGroup}
+	 */
 	@Override
 	public int compareTo(@NotNull DurationGroup durationGroup) {
 		
@@ -226,10 +317,10 @@ public class DurationGroup implements Comparable<DurationGroup> {
 	}
 	
 	/**
-	 * Sürenin takvimdeki karşılığını döndürür.
-	 * Negatif değerli süreler takvimde geriye doğru ilerler,
-	 * pozitif değerler ileri doğru ilerler.<br>
-	 * Hesaplamanın yapılacağı başlangıç zamanı şimdiki zaman olarak seçilir.
+	 * Returns the calendar equivalent of the durations.
+	 * Negative-valued durations move backwards in the calendar,
+	 * positive values move forward.<br>
+	 * The start time for the calculation is selected as the present time.
 	 *
 	 * @return LocalDateTime
 	 */
@@ -273,16 +364,21 @@ public class DurationGroup implements Comparable<DurationGroup> {
 		return date;
 	}
 	
+	/**
+	 * Builder class for {@link DurationGroup}.
+	 * Can be used to construct a {@link DurationGroup} unit by unit.
+	 */
 	@SuppressWarnings("UnusedReturnValue")
 	public static final class Builder {
 		
-		private Duration year     = Duration.ofYear(0);
-		private Duration month    = Duration.ofMonth(0);
-		private Duration day      = Duration.ofDay(0);
-		private Duration hour     = Duration.ofHour(0);
-		private Duration minute   = Duration.ofMinute(0);
-		private Duration second   = Duration.ofSecond(0);
-		private Duration mlSecond = Duration.ofMillisecond(0);
+		private final LinkedList<Duration> durations = new LinkedList<>();
+		private       Duration             year      = Duration.ofYear(0);
+		private       Duration             month     = Duration.ofMonth(0);
+		private       Duration             day       = Duration.ofDay(0);
+		private       Duration             hour      = Duration.ofHour(0);
+		private       Duration             minute    = Duration.ofMinute(0);
+		private       Duration             second    = Duration.ofSecond(0);
+		private       Duration             mlSecond  = Duration.ofMillisecond(0);
 		
 		private Builder() {// Use static builder() method
 		}
@@ -297,52 +393,112 @@ public class DurationGroup implements Comparable<DurationGroup> {
 			mlSecond = object.mlSecond;
 		}
 		
+		/**
+		 * Sets the year
+		 *
+		 * @param year year
+		 * @return {@link Builder} object for chaining
+		 */
 		public Builder year(long year) {
 			
 			this.year = Duration.ofYear(year);
 			return this;
 		}
 		
-		public Builder month(@Range(from = 0, to = Long.MAX_VALUE) long month) {
+		/**
+		 * Sets the month
+		 *
+		 * @param month month
+		 * @return {@link Builder} object for chaining
+		 */
+		public Builder month(long month) {
 			
 			this.month = Duration.ofMonth(month);
 			return this;
 		}
 		
-		public Builder day(@Range(from = 0, to = Long.MAX_VALUE) long day) {
+		/**
+		 * Sets the day
+		 *
+		 * @param day day
+		 * @return {@link Builder} object for chaining
+		 */
+		public Builder day(long day) {
 			
 			this.day = Duration.ofDay(day);
 			return this;
 		}
 		
-		public Builder hour(@Range(from = 0, to = Long.MAX_VALUE) long hour) {
+		/**
+		 * Sets the hour
+		 *
+		 * @param hour hour
+		 * @return {@link Builder} object for chaining
+		 */
+		public Builder hour(long hour) {
 			
 			this.hour = Duration.ofHour(hour);
 			return this;
 		}
 		
-		public Builder minute(@Range(from = 0, to = Long.MAX_VALUE) long minute) {
+		/**
+		 * Sets the minute
+		 *
+		 * @param minute minute
+		 * @return {@link Builder} object for chaining
+		 */
+		public Builder minute(long minute) {
 			
 			this.minute = Duration.ofMinute(minute);
 			return this;
 		}
 		
-		public Builder second(@Range(from = 0, to = Long.MAX_VALUE) long second) {
+		/**
+		 * Sets the second
+		 *
+		 * @param second second
+		 * @return {@link Builder} object for chaining
+		 */
+		public Builder second(long second) {
 			
 			this.second = Duration.ofSecond(second);
 			return this;
 		}
 		
-		public Builder milliSecond(@Range(from = 0, to = Long.MAX_VALUE) long mlSecond) {
+		/**
+		 * Sets the millisecond
+		 *
+		 * @param mlSecond millisecond
+		 * @return {@link Builder} object for chaining
+		 */
+		public Builder milliSecond(long mlSecond) {
 			
 			this.mlSecond = Duration.ofMillisecond(mlSecond);
 			return this;
 		}
 		
+		/**
+		 * Builds the {@link DurationGroup}
+		 *
+		 * @return {@link DurationGroup}
+		 */
 		@NotNull
 		public DurationGroup build() {
 			
+			setDurationList();
 			return new DurationGroup(this);
+		}
+		
+		private void setDurationList() {
+			
+			//LinkedList<Duration> durations = new LinkedList<>();
+			durations.add(year);
+			durations.add(month);
+			durations.add(day);
+			durations.add(hour);
+			durations.add(minute);
+			durations.add(second);
+			durations.add(mlSecond);
 		}
 	}
 }

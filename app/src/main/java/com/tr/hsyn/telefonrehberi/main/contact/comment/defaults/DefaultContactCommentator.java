@@ -333,22 +333,24 @@ public class DefaultContactCommentator implements ContactCommentator {
 					Spans.bold(),
 					Spans.foreground(Colors.lighter(Colors.getPrimaryColor(), 0.35f))
 			};
+			
 			comment.append("\n");
+			
 			if (isTurkishLanguage()) {
 				
 				comment.append("Kişinin ilk arama kaydı ile son arama kaydı arasında geçen zaman tam olarak ")
 						.append(Stringx.format("%s. ", DayTime.toString(commentStore.getActivity(), duration, durationUnits)), textSpans);
 				
-				comment.append(fmt("Yani bu kişiyle kabaca %s%s bir iletişim geçmişiniz var. ", duration.getDurations().get(0), WordExtension.getWordExt(duration.getDurations().get(0).toString(), Extension.TYPE_ABSTRACT)));
+				comment.append(fmt("Yani bu kişiyle kabaca %s%s bir iletişim geçmişiniz var. ", duration.getFirstDuration(), WordExtension.getWordExt(duration.getFirstDuration().toString(), Extension.TYPE_ABSTRACT)));
 			}
 			else {
 				
 				comment.append("The exact time elapsed between the contact's first call record and the last call record is ")
 						.append(Stringx.format("%s. ", DayTime.toString(commentStore.getActivity(), duration, durationUnits)), textSpans);
 				
-				comment.append(fmt("So you have roughly %s%s of contact history with this person. ", duration.getDurations().get(0), duration.getDurations().get(0).getValue() > 1 ? "s" : ""));
+				Duration roughly = duration.getFirstDuration();
+				comment.append(fmt("So you have roughly %s%s of contact history with this person. ", roughly, makePlural(roughly.toString(), roughly.getValue())));
 			}
-			
 			
 			comment.append(mostHistoryDurationComment(duration));
 		}
@@ -356,13 +358,12 @@ public class DefaultContactCommentator implements ContactCommentator {
 		return comment;
 	}
 	
-	
 	/**
 	 * Appends a comment about the given call to the {@link #comment} object.
 	 *
 	 * @param call the call to comment on
 	 */
-	private void commentOnTheSingleCall(@NotNull com.tr.hsyn.calldata.Call call) {
+	private void commentOnTheSingleCall(@NotNull Call call) {
 		
 		Duration             timeBefore = Time.howLongBefore(call.getTime());
 		String               callType   = Res.getCallType(commentStore.getActivity(), call.getCallType());

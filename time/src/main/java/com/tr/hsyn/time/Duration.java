@@ -8,19 +8,18 @@ import java.util.Objects;
 
 
 /**
- * Bir <b><i>süre</i></b> belirtmeyi sağlar.<br>
- * Süreler, belirli zaman birimleriyle gösterilir ({@link Unit}).<br><br>
+ * Allows specifying a <b><i>duration<i></b>.<br>
+ * Durations are shown in specific units ({@link Unit}).<br><br>
  * <pre>
- *    var duration = Duration.of(Unit.MINUTE, 1981); // 1981 dakikalık bir süre
- *    //var duration = Duration.ofMinute(1981);// Yukarıdaki ile aynı
+ *    var duration = Duration.of(Unit.MINUTE, 1981); // 1981 minutes duration
+ *    //var duration = Duration.ofMinute(1981);// same as above
  * </pre>
  * <p>
- * Süre belirtirken herhangi bir kısıtlama yoktur,
- * yukarıda belirtilen dakika, olduğu gibi kaydedilir.
- * Yani zaman olarak işlem görmez,
- * çünkü eğer zaman olarak işlem görseydi,
- * dakika değeri en fazla {@code 59} olabilirdi.<br>
- * Yine de bir <b>süre</b> tam olarak zaman karşılığına çevrilebilir.<br><br>
+ * There are no restrictions when specifying the duration,
+ * the aforementioned minute is saved as it is.
+ * So it is not treated as time, because if it were treated as time,
+ * the minute value could be at most {@code 59}.<br>
+ * However, a <b>duration</b> can be converted to an exact time equivalent.<br><br>
  *
  * <pre>
  * var duration = Duration.ofMinute(1981);
@@ -61,7 +60,7 @@ public class Duration {
 	}
 	
 	/**
-	 * Sürenin tam olarak ne kadar zaman ettiğini döndürür.
+	 * Returns exactly how long the duration is.
 	 *
 	 * <pre>
 	 * var duration = Duration.ofMinute(1981);
@@ -90,7 +89,7 @@ public class Duration {
 	}
 	
 	/**
-	 * @return Sürenin zaman olarak milisaniye değeri
+	 * @return time in milliseconds
 	 */
 	public long toMilliseconds() {
 		
@@ -213,7 +212,7 @@ public class Duration {
 	}
 	
 	/**
-	 * @return Returns {@code true} if Duration is not empty, {@code false} otherwise
+	 * @return Returns {@code true} if <code>Duration</code> value is not zero, {@code false} otherwise
 	 */
 	public boolean isNotZero() {
 		

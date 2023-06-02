@@ -3,8 +3,6 @@ package com.tr.hsyn.telefonrehberi.main.code.comment;
 
 import android.view.View;
 
-import com.tr.hsyn.nextension.Extension;
-import com.tr.hsyn.nextension.WordExtension;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.text.Span;
 import com.tr.hsyn.text.Spans;
@@ -21,19 +19,18 @@ public interface CommentEditor extends CommentStore {
 	
 	
 	/**
-	 * Returns the plural form of the given word based on the count.
+	 * Returns the plural form of the given word based on the count for only english.
 	 *
 	 * @param word  the word to make plural
 	 * @param count the count
 	 * @return the plural form of the word
 	 */
 	@NotNull
-	static String makePlural(@NotNull String word, int count) {
+	default String makePlural(@NotNull String word, long count) {
 		
-		if (count > 1)
-			return word + WordExtension.getWordExt(word, Extension.TYPE_PLURAL);
+		if (isTurkishLanguage() || count < 2) return word;
 		
-		return word;
+		return word + "s";
 	}
 	
 	/**
