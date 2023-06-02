@@ -116,6 +116,66 @@ public class DefaultContactCommentator implements ContactCommentator {
 	}
 	
 	/**
+	 * Returns the current contact being commented on.
+	 *
+	 * @return the current contact
+	 */
+	@Override
+	public Contact getContact() {
+		
+		return contact;
+	}
+	
+	/**
+	 * @inheritDoc
+	 */
+	@Override
+	public @NotNull CharSequence commentOnTheLastCall() {
+		
+		Spanner                   commentOnTheLastCall = new Spanner();
+		com.tr.hsyn.calldata.Call lastCall             = history.getLastCall();
+		String                    callType             = Res.getCallType(commentStore.getActivity(), lastCall.getCallType());
+		Duration                  timeBefore           = Time.howLongBefore(lastCall.getTime());
+		ShowCall                  showCall             = new ShowCall(commentStore.getActivity(), lastCall);
+		View.OnClickListener      listener1            = view -> showCall.show();
+		
+		if (commentStore.isTurkishLanguage()) {
+			
+			// bu arama 3 gün önce olan bir cevapsız çağrı
+			commentOnTheLastCall.append(getString(R.string.word_the_last_call), getClickSpans(listener1))
+					.append(" ")
+					.append(getString(R.string.word_date_before, timeBefore.getValue(), timeBefore.getUnit()))
+					.append(" ")
+					.append(getString(R.string.word_happened))
+					.append(" ")
+					.append(getString(R.string.word_a))
+					.append(" ")
+					.append(Stringx.format("%s", callType.toLowerCase()), Spans.bold())
+					.append(". ");
+		}
+		else {
+			
+			// this call is from 3 days ago
+			commentOnTheLastCall.append(getString(R.string.word_the_last_call), getClickSpans(listener1))
+					.append(" ")
+					.append(getString(R.string.word_is))
+					.append(" ")
+					.append(Stringx.format("%s", (callType.toLowerCase().charAt(0) == 'o' || callType.toLowerCase().charAt(0) == 'i') ? "an " : "a "))
+					.append(Stringx.format("%s", callType.toLowerCase()), Spans.bold())
+					.append(" ")
+					.append(getString(R.string.word_from))
+					.append(" ")
+					.append(getString(R.string.word_date_unit, timeBefore.getValue(), timeBefore.getUnit()))
+					.append(Stringx.format("%s", timeBefore.getValue() > 1 ? "s " : " "))
+					.append(getString(R.string.word_is_ago))
+					.append(". ");
+			
+		}
+		
+		return commentOnTheLastCall;
+	}
+	
+	/**
 	 * Generates comments based on the call history of the current contact.
 	 * Invokes private methods to generate individual comments.
 	 * This is the first method called by the commentator in {@link #commentOn(Contact)} method.
@@ -327,8 +387,8 @@ public class DefaultContactCommentator implements ContactCommentator {
 		if (history.size() > 1) {
 			
 			DurationGroup duration      = history.getHistoryDuration();
-			Unit[]        durationUnits = {Unit.YEAR, Unit.MONTH, Unit.DAY, Unit.HOUR, Unit.MINUTE};
-			
+			Unit[]        durationUnits = {Unit.YEAR, Unit.MONTH, Unit.DAY, Unit.HOUR};
+			Duration      longest       = duration.getBiggestByUnit();
 			Span[] textSpans = {
 					Spans.bold(),
 					Spans.foreground(Colors.lighter(Colors.getPrimaryColor(), 0.35f))
@@ -341,15 +401,33 @@ public class DefaultContactCommentator implements ContactCommentator {
 				comment.append("Kişinin ilk arama kaydı ile son arama kaydı arasında geçen zaman tam olarak ")
 						.append(Stringx.format("%s. ", DayTime.toString(commentStore.getActivity(), duration, durationUnits)), textSpans);
 				
-				comment.append(fmt("Yani bu kişiyle kabaca %s%s bir iletişim geçmişiniz var. ", duration.getFirstDuration(), WordExtension.getWordExt(duration.getFirstDuration().toString(), Extension.TYPE_ABSTRACT)));
+				if (longest.isNotZero()) {
+					
+					if (longest.isGreaterByUnit(Unit.HOUR)) {
+						
+						comment.append(fmt("Yani bu kişiyle kabaca %s%s bir iletişim geçmişiniz var. ", longest, WordExtension.getWordExt(longest.toString(), Extension.TYPE_ABSTRACT)));
+						
+					}
+					else {
+						
+						//- The call history duration is less than 1-day.
+						String msg = fmt("Yani bu kişiyle aranızda bir iletişim geçmişi olduğu söylenemez. ");
+						comment.append(msg);
+					}
+				}
+				else {
+					
+					String msg = fmt("Bu kişi ile aranızda bir görüşme geçmişi yok. ");
+					comment.append(msg);
+				}
 			}
 			else {
 				
 				comment.append("The exact time elapsed between the contact's first call record and the last call record is ")
 						.append(Stringx.format("%s. ", DayTime.toString(commentStore.getActivity(), duration, durationUnits)), textSpans);
 				
-				Duration roughly = duration.getFirstDuration();
-				comment.append(fmt("So you have roughly %s%s of contact history with this person. ", roughly, makePlural(roughly.toString(), roughly.getValue())));
+				
+				comment.append(fmt("So you have roughly %s%s of contact history with this person. ", longest, makePlural(longest.toString(), longest.getValue())));
 			}
 			
 			comment.append(mostHistoryDurationComment(duration));
@@ -487,66 +565,6 @@ public class DefaultContactCommentator implements ContactCommentator {
 		}
 		
 		return comment;
-	}
-	
-	/**
-	 * Returns the current contact being commented on.
-	 *
-	 * @return the current contact
-	 */
-	@Override
-	public Contact getContact() {
-		
-		return contact;
-	}
-	
-	/**
-	 * @inheritDoc
-	 */
-	@Override
-	public @NotNull CharSequence commentOnTheLastCall() {
-		
-		Spanner                   commentOnTheLastCall = new Spanner();
-		com.tr.hsyn.calldata.Call lastCall             = history.getLastCall();
-		String                    callType             = Res.getCallType(commentStore.getActivity(), lastCall.getCallType());
-		Duration                  timeBefore           = Time.howLongBefore(lastCall.getTime());
-		ShowCall                  showCall             = new ShowCall(commentStore.getActivity(), lastCall);
-		View.OnClickListener      listener1            = view -> showCall.show();
-		
-		if (commentStore.isTurkishLanguage()) {
-			
-			// bu arama 3 gün önce olan bir cevapsız çağrı
-			commentOnTheLastCall.append(getString(R.string.word_the_last_call), getClickSpans(listener1))
-					.append(" ")
-					.append(getString(R.string.word_date_before, timeBefore.getValue(), timeBefore.getUnit()))
-					.append(" ")
-					.append(getString(R.string.word_happened))
-					.append(" ")
-					.append(getString(R.string.word_a))
-					.append(" ")
-					.append(Stringx.format("%s", callType.toLowerCase()), Spans.bold())
-					.append(". ");
-		}
-		else {
-			
-			// this call is from 3 days ago
-			commentOnTheLastCall.append(getString(R.string.word_the_last_call), getClickSpans(listener1))
-					.append(" ")
-					.append(getString(R.string.word_is))
-					.append(" ")
-					.append(Stringx.format("%s", (callType.toLowerCase().charAt(0) == 'o' || callType.toLowerCase().charAt(0) == 'i') ? "an " : "a "))
-					.append(Stringx.format("%s", callType.toLowerCase()), Spans.bold())
-					.append(" ")
-					.append(getString(R.string.word_from))
-					.append(" ")
-					.append(getString(R.string.word_date_unit, timeBefore.getValue(), timeBefore.getUnit()))
-					.append(Stringx.format("%s", timeBefore.getValue() > 1 ? "s " : " "))
-					.append(getString(R.string.word_is_ago))
-					.append(". ");
-			
-		}
-		
-		return commentOnTheLastCall;
 	}
 	
 	private CharSequence commentLastCallTypeRank() {

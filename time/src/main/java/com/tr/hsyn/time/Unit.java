@@ -57,4 +57,36 @@ public enum Unit {
 			default: return "";
 		}
 	}
+	
+	/**
+	 * Compares this {@link Unit} with the given {@link Unit}.
+	 *
+	 * @param other {@link Unit}
+	 * @return {@code true} if this {@link Unit} is greater than the given {@link Unit}.<br>
+	 * 		Unit order is: {@link #YEAR}, {@link #MONTH}, {@link #DAY},
+	 *      {@link #HOUR}, {@link #MINUTE},
+	 *      {@link #SECOND}, {@link #MILLISECOND}.
+	 * 		So, the greatest unit is {@link #YEAR},
+	 * 		the least unit is {@link #MILLISECOND}.
+	 */
+	public boolean isGreaterByUnit(@NotNull Unit other) {
+		
+		return this.ordinal() < other.ordinal();
+	}
+	
+	/**
+	 * Compares this {@link Unit} with the given {@link Unit}.
+	 *
+	 * @param other {@link Unit}
+	 * @return {@code true} if this {@link Unit} is less than the given {@link Unit}.<br>
+	 * 		Unit order is: {@link #YEAR}, {@link #MONTH}, {@link #DAY},
+	 *      {@link #HOUR}, {@link #MINUTE},
+	 *      {@link #SECOND}, {@link #MILLISECOND}.
+	 * 		So, the greatest unit is {@link #YEAR},
+	 * 		the least unit is {@link #MILLISECOND}.
+	 */
+	public boolean isLessByUnit(@NotNull Unit other) {
+		
+		return this.ordinal() > other.ordinal();
+	}
 }

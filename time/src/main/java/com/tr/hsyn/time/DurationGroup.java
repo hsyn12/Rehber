@@ -34,23 +34,6 @@ public class DurationGroup implements Comparable<DurationGroup> {
 	private final       List<Duration> durations;
 	
 	/**
-	 * Creates a {@link DurationGroup} builder
-	 *
-	 * @return {@link DurationGroup} builder
-	 */
-	@NotNull
-	public static Builder builder() {return new Builder();}
-	
-	/**
-	 * Creates a {@link DurationGroup} builder
-	 *
-	 * @param object {@link DurationGroup}
-	 * @return {@link DurationGroup} builder
-	 */
-	@NotNull
-	public static Builder builder(@NotNull DurationGroup object) {return new Builder(object);}
-	
-	/**
 	 * Creates a new {@link DurationGroup}
 	 *
 	 * @param durations list of durations
@@ -66,18 +49,6 @@ public class DurationGroup implements Comparable<DurationGroup> {
 		minute         = getDuration(Unit.MINUTE);
 		second         = getDuration(Unit.SECOND);
 		mlSecond       = getDuration(Unit.MILLISECOND);
-	}
-	
-	/**
-	 * Returns the duration of the specified time unit
-	 *
-	 * @param timeUnit Unit of time
-	 * @return {@link Duration}
-	 */
-	@NotNull
-	public Duration getDuration(Unit timeUnit) {
-		
-		return durations.stream().filter(d -> d.getUnit().equals(timeUnit)).findFirst().orElse(Duration.ofZero(timeUnit));
 	}
 	
 	/**
@@ -98,6 +69,18 @@ public class DurationGroup implements Comparable<DurationGroup> {
 	}
 	
 	/**
+	 * Returns the duration of the specified time unit
+	 *
+	 * @param timeUnit Unit of time
+	 * @return {@link Duration}
+	 */
+	@NotNull
+	public Duration getDuration(Unit timeUnit) {
+		
+		return durations.stream().filter(d -> d.getUnit().equals(timeUnit)).findFirst().orElse(Duration.ofZero(timeUnit));
+	}
+	
+	/**
 	 * Picks the specified units from this {@link DurationGroup}
 	 * and creates new {@link DurationGroup} with the picked ones.
 	 *
@@ -110,7 +93,7 @@ public class DurationGroup implements Comparable<DurationGroup> {
 		List<Duration> durations = new ArrayList<>(this.durations);
 		
 		for (Unit unit : units)
-			durations.removeIf(d -> d.getUnit().equals(unit));
+			durations.removeIf(d -> !d.getUnit().equals(unit));
 		
 		return new DurationGroup(durations);
 	}
@@ -124,7 +107,7 @@ public class DurationGroup implements Comparable<DurationGroup> {
 	 *
 	 * @return the biggest unit
 	 */
-	public Duration getBiggestUnit() {
+	public Duration getBiggestByUnit() {
 		
 		for (Duration duration : durations) {
 			
@@ -363,6 +346,23 @@ public class DurationGroup implements Comparable<DurationGroup> {
 		
 		return date;
 	}
+	
+	/**
+	 * Creates a {@link DurationGroup} builder
+	 *
+	 * @return {@link DurationGroup} builder
+	 */
+	@NotNull
+	public static Builder builder() {return new Builder();}
+	
+	/**
+	 * Creates a {@link DurationGroup} builder
+	 *
+	 * @param object {@link DurationGroup}
+	 * @return {@link DurationGroup} builder
+	 */
+	@NotNull
+	public static Builder builder(@NotNull DurationGroup object) {return new Builder(object);}
 	
 	/**
 	 * Builder class for {@link DurationGroup}.
