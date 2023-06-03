@@ -69,15 +69,17 @@ public class DefaultContactCommentator implements ContactCommentator {
 	 * The comment store
 	 */
 	protected       ContactCommentStore commentStore;
+	protected       boolean             isTurkish;
 	
 	/**
 	 * Constructs a new {@link DefaultContactCommentator} object with the given comment store.
 	 *
 	 * @param commentStore the comment store to be used by this commentator
 	 */
-	public DefaultContactCommentator(ContactCommentStore commentStore) {
+	public DefaultContactCommentator(@NotNull ContactCommentStore commentStore) {
 		
 		this.commentStore = commentStore;
+		isTurkish         = commentStore.isTurkishLanguage();
 	}
 	
 	/**
@@ -378,7 +380,8 @@ public class DefaultContactCommentator implements ContactCommentator {
 	
 	/**
 	 * Generates a comment about the first and last call made to the contact.
-	 * Appends the generated comment to the Comment object managed by this commentator.
+	 *
+	 * @return comment about first and last call
 	 */
 	private @NotNull CharSequence firstLastCallComment() {
 		
@@ -386,9 +389,10 @@ public class DefaultContactCommentator implements ContactCommentator {
 		
 		if (history.size() > 1) {
 			
-			DurationGroup duration      = history.getHistoryDuration();
-			Unit[]        durationUnits = {Unit.YEAR, Unit.MONTH, Unit.DAY, Unit.HOUR};
-			Duration      longest       = duration.getBiggestByUnit();
+			DurationGroup duration                  = history.getHistoryDuration();
+			Unit[]        durationUnits             = {Unit.YEAR, Unit.MONTH, Unit.DAY, Unit.HOUR};
+			Duration      longest                   = duration.getBiggestByUnit();
+			boolean       isDurationGreaterThanHour = longest.isGreaterByUnit(Unit.HOUR);
 			Span[] textSpans = {
 					Spans.bold(),
 					Spans.foreground(Colors.lighter(Colors.getPrimaryColor(), 0.35f))
@@ -396,38 +400,46 @@ public class DefaultContactCommentator implements ContactCommentator {
 			
 			comment.append("\n");
 			
-			if (isTurkishLanguage()) {
+			if (longest.isNotZero()) {
 				
-				comment.append("Kişinin ilk arama kaydı ile son arama kaydı arasında geçen zaman tam olarak ")
-						.append(Stringx.format("%s. ", DayTime.toString(commentStore.getActivity(), duration, durationUnits)), textSpans);
-				
-				if (longest.isNotZero()) {
+				if (isTurkish) {
 					
-					if (longest.isGreaterByUnit(Unit.HOUR)) {
+					comment.append("Kişinin ilk arama kaydı ile son arama kaydı arasında geçen zaman tam olarak ")
+							.append(Stringx.format("%s. ", DayTime.toString(commentStore.getActivity(), duration, durationUnits)), textSpans);
+					
+					if (isDurationGreaterThanHour) {
 						
 						comment.append(fmt("Yani bu kişiyle kabaca %s%s bir iletişim geçmişiniz var. ", longest, WordExtension.getWordExt(longest.toString(), Extension.TYPE_ABSTRACT)));
-						
 					}
 					else {
 						
 						//- The call history duration is less than 1-day.
-						String msg = fmt("Yani bu kişiyle aranızda bir iletişim geçmişi olduğu söylenemez. ");
+						String msg = fmt("Yani bu kişiyle aranızda bir iletişim geçmişi olduğu pek söylenemez. ");
 						comment.append(msg);
 					}
 				}
 				else {
 					
-					String msg = fmt("Bu kişi ile aranızda bir görüşme geçmişi yok. ");
-					comment.append(msg);
+					comment.append("The exact time elapsed between the contact's first call record and the last call record is ")
+							.append(Stringx.format("%s. ", DayTime.toString(commentStore.getActivity(), duration, durationUnits)), textSpans);
+					
+					if (isDurationGreaterThanHour) {
+						comment.append(fmt("So you have roughly %s%s of contact history with this person. ", longest, makePlural(longest.toString(), longest.getValue())));
+					}
+					else {
+						
+						//- The call history duration is less than 1-day.
+						String msg = fmt("So, it cannot be said that there is a communication history between you and this person. ");
+						comment.append(msg);
+					}
 				}
 			}
 			else {
 				
-				comment.append("The exact time elapsed between the contact's first call record and the last call record is ")
-						.append(Stringx.format("%s. ", DayTime.toString(commentStore.getActivity(), duration, durationUnits)), textSpans);
-				
-				
-				comment.append(fmt("So you have roughly %s%s of contact history with this person. ", longest, makePlural(longest.toString(), longest.getValue())));
+				String msg;
+				if (isTurkish) msg = fmt("Bu kişi ile aranızda bir görüşme geçmişi yok. ");
+				else msg = fmt("There is no communication history between you and this person. ");
+				comment.append(msg);
 			}
 			
 			comment.append(mostHistoryDurationComment(duration));
@@ -546,7 +558,13 @@ public class DefaultContactCommentator implements ContactCommentator {
 		list.sort(Map.Entry.comparingByValue());
 		Collections.reverse(list);
 		
-		if (list.size() > 3) {
+		//-------------------------------------------------------
+		int contactCount = contacts.size();
+		int historyCount = list.size();
+		
+		comment.append(getHistoryCountComment(contactCount, historyCount));
+		
+		if (historyCount > 3) {
 			
 			var haveMostDuration = list.get(0);
 			var first            = haveMostDuration.getKey();
@@ -565,6 +583,14 @@ public class DefaultContactCommentator implements ContactCommentator {
 		}
 		
 		return comment;
+	}
+	
+	private CharSequence getHistoryCountComment(int contactCount, int historyCount) {
+		
+		if (contactCount == historyCount)
+			return "Rehberde bulunan herkesle bir iletişim geçmişiniz var. ";
+		
+		return fmt("Rehberde bulunan %d kişi içinden %d kişi ile aranızda bir iletişim geçmişi var. ", contactCount, historyCount);
 	}
 	
 	private CharSequence commentLastCallTypeRank() {
