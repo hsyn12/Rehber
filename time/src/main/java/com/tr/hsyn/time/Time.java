@@ -129,6 +129,80 @@ public class Time implements TimeMillis {
 	
 	private Time(int day, int month, int year) {this(day, month, year, 0, 0);}
 	
+	@NotNull
+	@Override
+	public String toString() {
+		
+		return dateTime.format(DateTimeFormatter.ofPattern(DEFAULT_DATE_TIME_PATTERN));
+	}
+	
+	@NotNull
+	public String toString(@Nullable String pattern) {
+		
+		return pattern != null ? dateTime.format(DateTimeFormatter.ofPattern(DEFAULT_DATE_TIME_PATTERN)) : toString();
+	}
+	
+	/**
+	 * @return LocalDateTime
+	 */
+	public LocalDateTime getDateTime() {
+		
+		return dateTime;
+	}
+	
+	public long getMillis() {
+		
+		return millis;
+	}
+	
+	/**
+	 * @return {@link DayOfWeek}
+	 */
+	public DayOfWeek getDayOfWeek() {
+		
+		return dateTime.getDayOfWeek();
+	}
+	
+	/**
+	 * @return Name of the day
+	 */
+	public String getDayName() {
+		
+		return dayName;
+	}
+	
+	/**
+	 * @return DayOfMonth [1-31]
+	 */
+	public int getDayOfMonth() {
+		
+		return dateTime.getDayOfMonth();
+	}
+	
+	/**
+	 * @return Year
+	 */
+	public int getYear() {
+		
+		return dateTime.getYear();
+	}
+	
+	/**
+	 * @return {@link Month}
+	 */
+	public Month getMonth() {
+		
+		return dateTime.getMonth();
+	}
+	
+	/**
+	 * @return MonthValue [1-12]
+	 */
+	public int getMonthValue() {
+		
+		return dateTime.getMonthValue();
+	}
+	
 	/**
 	 * Zamanı string'e çevirir.
 	 *
@@ -502,76 +576,76 @@ public class Time implements TimeMillis {
 	}
 	
 	/**
-	 * Verilen milisaniyelerin tam olarak ne kadar süre ettiğini döndürür.
+	 * Returns exactly how long the given milliseconds are.
 	 * <br><br>
 	 *
 	 * <pre>
 	 * var myBirthDay = Pointer.at(12, 4, 1981, 23, 30);
 	 * var p = currentMillis() - myBirthDay;
 	 * System.out.printf("%s", toDuration(p));
-	 * output : [Duration{type=YEAR, value=40}, Duration{type=MONTH, value=9}, Duration{type=DAY, value=6}, Duration{type=HOUR, value=17}, Duration{type=MINUTE, value=3}, Duration{type=SECOND, value=8}, Duration{type=MLSECOND, value=568}]
-	 * Yani doğum günümden bu güne kadar geçen milisaniyeler 40 yıl 9 ay 3 hafta 6 gün 17 saat 3 dakika 8 saniye 568 milisaniye ediyor
+	 * output : [Duration{type=YEAR, value=40}, Duration{type=MONTH, value=9}, Duration{type=DAY, value=6}, Duration{type=HOUR, value=17}, Duration{type=MINUTE, value=3}, Duration{type=SECOND, value=8}, Duration{type=MILLISECOND, value=568}]
+	 * So the milliseconds from my birthday to this day are 40 years 9 months 3 weeks 6 days 17 hours 3 minutes 8 seconds 568 milliseconds
 	 * </pre>
 	 *
 	 * <p>
-	 * Bu metot ayrıca negatif değerlerle de çalışılabilir.
+	 * This method can also work with negative values.
 	 *
-	 * @param duration Süre
-	 * @return Sürenin ne kadar zaman ettiğini bildiren {@link Duration} nesneleri listesi
+	 * @param duration duration
+	 * @return List of {@link Duration} objects declaring how long the duration is
 	 */
 	@NotNull
 	public static DurationGroup toDuration(long duration) {
 		
 		var durationBuilder = DurationGroup.builder();
-		var isNagative      = duration < 0L;
+		var isNegative      = duration < 0L;
 		duration = Math.abs(duration);
 		
 		while (true) {
 			
 			if (duration >= YEAR) {
 				long year = duration / YEAR;
-				if (isNagative) year = -year;
+				if (isNegative) year = -year;
 				durationBuilder.year(year);
 				//durations.add(Duration.of(Unit.YEAR, duration / YEAR));
 				duration %= YEAR;
 			}
 			else if (duration >= MONTH) {
 				long month = duration / MONTH;
-				if (isNagative) month = -month;
+				if (isNegative) month = -month;
 				durationBuilder.month(month);
 				//durations.add(Duration.of(Unit.MONTH, duration / MONTH));
 				duration %= MONTH;
 			}
 			else if (duration >= DAY) {
 				long day = duration / DAY;
-				if (isNagative) day = -day;
+				if (isNegative) day = -day;
 				durationBuilder.day(day);
 				duration %= DAY;
 			}
 			else if (duration >= HOUR) {
 				long hour = duration / HOUR;
-				if (isNagative) hour = -hour;
+				if (isNegative) hour = -hour;
 				durationBuilder.hour(hour);
 				duration %= HOUR;
 			}
 			else if (duration >= MINUTE) {
 				
 				long minute = duration / MINUTE;
-				if (isNagative) minute = -minute;
+				if (isNegative) minute = -minute;
 				durationBuilder.minute(minute);
 				duration %= MINUTE;
 			}
 			else {
 				
 				long second = duration / SECOND;
-				if (isNagative) second = -second;
+				if (isNegative) second = -second;
 				durationBuilder.second(second);
 				duration %= SECOND;
 				break;
 			}
 		}
 		
-		if (isNagative) duration = -duration;
+		if (isNegative) duration = -duration;
 		durationBuilder.milliSecond(duration);
 		//durations.add(Duration.of(Unit.MILLISECOND, duration));
 		return durationBuilder.build();
@@ -589,80 +663,6 @@ public class Time implements TimeMillis {
 	private static String format(String msg, Object... args) {
 		
 		return String.format(Locale.getDefault(), msg, args);
-	}
-	
-	@NotNull
-	@Override
-	public String toString() {
-		
-		return dateTime.format(DateTimeFormatter.ofPattern(DEFAULT_DATE_TIME_PATTERN));
-	}
-	
-	@NotNull
-	public String toString(@Nullable String pattern) {
-		
-		return pattern != null ? dateTime.format(DateTimeFormatter.ofPattern(DEFAULT_DATE_TIME_PATTERN)) : toString();
-	}
-	
-	/**
-	 * @return LocalDateTime
-	 */
-	public LocalDateTime getDateTime() {
-		
-		return dateTime;
-	}
-	
-	public long getMillis() {
-		
-		return millis;
-	}
-	
-	/**
-	 * @return {@link DayOfWeek}
-	 */
-	public DayOfWeek getDayOfWeek() {
-		
-		return dateTime.getDayOfWeek();
-	}
-	
-	/**
-	 * @return Name of the day
-	 */
-	public String getDayName() {
-		
-		return dayName;
-	}
-	
-	/**
-	 * @return DayOfMonth [1-31]
-	 */
-	public int getDayOfMonth() {
-		
-		return dateTime.getDayOfMonth();
-	}
-	
-	/**
-	 * @return Year
-	 */
-	public int getYear() {
-		
-		return dateTime.getYear();
-	}
-	
-	/**
-	 * @return {@link Month}
-	 */
-	public Month getMonth() {
-		
-		return dateTime.getMonth();
-	}
-	
-	/**
-	 * @return MonthValue [1-12]
-	 */
-	public int getMonthValue() {
-		
-		return dateTime.getMonthValue();
 	}
 	
 }

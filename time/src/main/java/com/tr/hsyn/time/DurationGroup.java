@@ -75,9 +75,25 @@ public class DurationGroup implements Comparable<DurationGroup> {
 	 * @return {@link Duration}
 	 */
 	@NotNull
-	public Duration getDuration(Unit timeUnit) {
+	public Duration getDuration(@NotNull Unit timeUnit) {
 		
 		return durations.stream().filter(d -> d.getUnit().equals(timeUnit)).findFirst().orElse(Duration.ofZero(timeUnit));
+	}
+	
+	/**
+	 * Returns the total {@link Duration} of this {@link DurationGroup} as specified unit
+	 *
+	 * @param unit Unit of duration
+	 * @return {@link Duration}
+	 */
+	public Duration getTotalDurationAs(@NotNull Unit unit) {
+		
+		long total = 0L;
+		
+		for (Duration duration : durations)
+			total += duration.getValueAs(unit).getValue();
+		
+		return Duration.of(unit, total);
 	}
 	
 	/**

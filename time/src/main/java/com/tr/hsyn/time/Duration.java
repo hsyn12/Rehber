@@ -182,23 +182,43 @@ public class Duration {
 	 * @return time in milliseconds
 	 */
 	public long toMilliseconds() {
-		
+		//@off
 		switch (unit) {
-			case MILLISECOND:
-				return value;
-			case SECOND:
-				return value * 1000;
-			case MINUTE:
-				return value * 60000;
-			case HOUR:
-				return value * 3600000;
-			case DAY: return value * 86400000;
-			case MONTH: return value * 259200000;
-			case YEAR: return value * 36500000;
+			case MILLISECOND: return value;
+			case SECOND:      return value * 1000;
+			case MINUTE:      return value * 60000;
+			case HOUR:        return value * 3600000;
+			case DAY:         return value * 86400000;
+			case MONTH:       return value * 259200000;
+			case YEAR:        return value * 36500000;
 			
-		}
+		}//@on
 		
 		throw new IllegalArgumentException("This is impossible : " + unit);
+	}
+	
+	/**
+	 * Converts the duration to the given unit
+	 *
+	 * @param unit Type of the unit
+	 * @return {@link Duration}
+	 */
+	public Duration getValueAs(@NotNull Unit unit) {
+		
+		long value = toMilliseconds();
+		//@off
+		switch (unit) {
+			case MILLISECOND: return new Duration(unit, value);
+			case SECOND:      return new Duration(unit, value / 1000);
+			case MINUTE:      return new Duration(unit, value / 60000);
+			case HOUR:        return new Duration(unit, value / 3600000);
+			case DAY:         return new Duration(unit, value / 86400000);
+			case MONTH:       return new Duration(unit, value / 259200000);
+			case YEAR:        return new Duration(unit, value / 36500000);
+		}//@on
+		
+		throw new IllegalArgumentException("This is impossible : " + unit);
+		
 	}
 	
 	public static void main(String[] args) {

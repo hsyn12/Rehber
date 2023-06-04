@@ -525,7 +525,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 	@NotNull
 	private CharSequence mostHistoryDurationComment(@NotNull DurationGroup duration) {
 		
-		// region prepare all contacts history
+		// region prepare all contacts history and duration list
 		var                      comment   = new Spanner();
 		Map<Long, DurationGroup> durations = new HashMap<>();
 		
@@ -554,33 +554,37 @@ public class DefaultContactCommentator implements ContactCommentator {
 				durations.put(contact.getContactId(), historyDuration);
 		}
 		
-		List<Map.Entry<Long, DurationGroup>> list = new ArrayList<>(durations.entrySet());
+		//- The list that has durations of all contacts
+		List<Map.Entry<Long, DurationGroup>> durationList = new ArrayList<>(durations.entrySet());
 		
-		list.sort(Map.Entry.comparingByValue());
-		Collections.reverse(list);
+		//- Comparing by value makes the list in ascending order 
+		durationList.sort(Map.Entry.comparingByValue());
+		Collections.reverse(durationList);// descending order
 		
 		// endregion
 		
 		//! --------------------------------------------------------------
 		int contactCount = contacts.size();
-		int historyCount = list.size();
+		int historyCount = durationList.size();
 		
 		comment.append(getHistoryCountComment(contactCount, historyCount));
 		
+		//- at least 3 history duration
 		if (historyCount > 3) {
 			
-			Map.Entry<Long, DurationGroup> haveMostDuration = list.get(0);
-			Long                           first            = haveMostDuration.getKey();
-			DurationGroup                  mostDuration     = haveMostDuration.getValue();
+			Map.Entry<Long, DurationGroup> firstItem      = durationList.get(0);
+			Long                           firstContactId = firstItem.getKey();
+			DurationGroup                  firstDuration  = firstItem.getValue();
 			
-			if (this.contact.getContactId() == first) {
+			
+			if (this.contact.getContactId() == firstContactId) {
 				
-				comment.append("This is the contact that have the most history duration. ");
+				comment.append("This contact is the contact that have the most history duration. ");
 			}
 			else {
 				
 				comment.append("The contact that have the most history duration has ")
-						.append(fmt("%s", mostDuration), Spans.foreground(getTextColor()))
+						.append(fmt("%s", firstDuration), Spans.foreground(getTextColor()))
 						.append(" history duration. ");
 			}
 		}
@@ -588,6 +592,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 		return comment;
 	}
 	
+	@NotNull
 	private CharSequence getHistoryCountComment(int contactCount, int historyCount) {
 		
 		if (contactCount == historyCount)
