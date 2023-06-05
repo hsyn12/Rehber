@@ -68,6 +68,9 @@ public enum Unit {
 	 *      {@link #SECOND}, {@link #MILLISECOND}.
 	 * 		So, the greatest unit is {@link #YEAR},
 	 * 		the least unit is {@link #MILLISECOND}.
+	 * 		But {@link #ordinal()} returns reversed order,
+	 * 		so <code>YEAR.ordinal()</code> returns {@code 0},
+	 * 		<code>MONTH.ordinal()</code> returns {@code 1} etc.
 	 */
 	public boolean isGreaterByUnit(@NotNull Unit other) {
 		
@@ -84,6 +87,9 @@ public enum Unit {
 	 *      {@link #SECOND}, {@link #MILLISECOND}.
 	 * 		So, the greatest unit is {@link #YEAR},
 	 * 		the least unit is {@link #MILLISECOND}.
+	 * 		But {@link #ordinal()} returns reversed order,
+	 * 		so <code>YEAR.ordinal()</code> returns {@code 0},
+	 * 		<code>MONTH.ordinal()</code> returns {@code 1} etc.
 	 */
 	public boolean isLessByUnit(@NotNull Unit other) {
 		

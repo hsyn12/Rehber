@@ -144,12 +144,6 @@ public class DayTime {
 		return "";
 	}
 	
-	
-	public interface DayPart {
-		
-		int VERY_MORNING = 0, MORNING = 1, TOWARD_NOON = 2, NOON = 3, AFTER_NOON = 4, TOWARD_NIGHT = 5, NIGHT = 6, MIDDLE_NIGHT = 7, AFTER_NIGHT = 8, TOWARD_MORNING = 9;
-	}
-	
 	/**
 	 * Verilen zaman grubunun tüm zaman birimleri dahil edilerek string bir nesne döndürür.
 	 *
@@ -247,5 +241,10 @@ public class DayTime {
 		}
 		
 		return String.join(" ", list);
+	}
+	
+	public interface DayPart {
+		
+		int VERY_MORNING = 0, MORNING = 1, TOWARD_NOON = 2, NOON = 3, AFTER_NOON = 4, TOWARD_NIGHT = 5, NIGHT = 6, MIDDLE_NIGHT = 7, AFTER_NIGHT = 8, TOWARD_MORNING = 9;
 	}
 }

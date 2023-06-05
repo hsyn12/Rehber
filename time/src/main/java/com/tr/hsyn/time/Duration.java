@@ -24,10 +24,11 @@ import java.util.Objects;
  * <pre>
  * var duration = Duration.ofMinute(1981);
  * System.out.println(duration.toTimeDuration());
- * // [Duration{type=DAY, value=1}, Duration{type=HOUR, value=9}, Duration{type=MINUTE, value=1}]
+ * // [Duration{type=day, value=1}, Duration{type=hour, value=9}, Duration{type=minute, value=1}]
  * </pre>
  *
  * @see Unit
+ * @see DurationGroup
  */
 public class Duration {
 	
@@ -53,7 +54,7 @@ public class Duration {
 	}
 	
 	/**
-	 * @return Returns {@code true} if Duration is empty, {@code false} otherwise
+	 * @return {@code true} if duration value is zero, {@code false} otherwise
 	 */
 	public boolean isZero() {
 		
@@ -61,7 +62,7 @@ public class Duration {
 	}
 	
 	/**
-	 * @return Returns {@code true} if <code>Duration</code> value is not zero, {@code false} otherwise
+	 * @return {@code true} if duration value is not zero, {@code false} otherwise
 	 */
 	public boolean isNotZero() {
 		
@@ -69,13 +70,48 @@ public class Duration {
 	}
 	
 	/**
-	 * Süreye ekleme yapar.<br>
-	 * Verilen süre negatif ise çıkarma yapmış olur.
+	 * Adds {@code value} to this {@link Duration}.
+	 * İf the given value is negative, made subtract.
 	 *
-	 * @param value Süreye eklenecek değer
-	 * @return Yeni bir {@link Duration} nesnesi
+	 * <pre>
+	 *     var duration = Duration.of(Unit.MINUTE, 5);
+	 *     var duration2 = Duration.ofMinute(-1);
+	 *     var duration3 = duration.plus(duration2); // Duration{type=minute, value=4}
+	 *     var duration4 = duration.plus(-1L); // Duration{type=minute, value=4}
+	 * </pre>
+	 *
+	 * @param value Amount of the time
+	 * @return new {@link Duration}
 	 */
 	public Duration plus(long value) {
+		
+		return new Duration(this.unit, this.value + value);
+	}
+	
+	/**
+	 * Adds {@code Duration} to this {@link Duration}.
+	 * İf the given duration is negative, made subtract.
+	 * İf the given {@linkplain Duration} has a different {@linkplain Unit},
+	 * it is converted to this {@linkplain Duration} unit.
+	 * So returned {@link Duration} unit will be same as this {@linkplain Duration} unit.
+	 *
+	 * <pre>
+	 *     var duration = Duration.of(Unit.MINUTE, 5);
+	 *     var duration2 = Duration.ofMinute(-1);
+	 *     var duration3 = duration.plus(duration2); // Duration{type=minute, value=4}
+	 *     var duration4 = duration.plus(-1L); // Duration{type=minute, value=4}
+	 * </pre>
+	 *
+	 * @param other Other {@linkplain Duration} object to add
+	 * @return new {@link Duration}
+	 */
+	public Duration plus(@NotNull Duration other) {
+		
+		if (isDifferent(other)) {
+			
+			var d = other.getValueAs(this.unit);
+			return new Duration(this.unit, this.value + d.getValue());
+		}
 		
 		return new Duration(this.unit, this.value + value);
 	}
@@ -87,10 +123,10 @@ public class Duration {
 	}
 	
 	/**
-	 * Checks whether this Duration is equal to other {@link Duration}.
+	 * Checks whether this <code>Duration</code> is equal to other {@link Duration}.
 	 *
 	 * @param o Other {@linkplain Duration} object
-	 * @return Returns {@code true} if {@link Unit} and {@link #value} are equal
+	 * @return {@code true} if {@link Unit} and {@link #value} are equal
 	 */
 	@Override
 	public boolean equals(Object o) {
@@ -102,11 +138,26 @@ public class Duration {
 	@Override
 	public String toString() {
 		
-		return value + " " + unit;
+		return toString("Duration{type=%2$s, value=%1$d}");
 	}
 	
 	/**
-	 * @return Type of the unit
+	 * Returns formatted {@linkplain String} representation of this {@linkplain Duration}.
+	 *
+	 * @param formatted Formatted {@linkplain String} representation.
+	 *                  For example: <code>"%d %s"</code>.
+	 *                  The first parameter is the value, the second parameter is the unit.
+	 *                  But can be changed the order of the parameters like this <code>"%2$s %1$d"</code> (as known).
+	 * @return Formatted {@linkplain String} representation
+	 */
+	@NotNull
+	public String toString(@NotNull String formatted) {
+		
+		return String.format(formatted, value, unit);
+	}
+	
+	/**
+	 * @return the unit of this {@linkplain Duration}
 	 */
 	public Unit getUnit() {
 		
@@ -114,7 +165,7 @@ public class Duration {
 	}
 	
 	/**
-	 * @return Amount of the time
+	 * @return duration value of this {@linkplain Duration}
 	 */
 	public long getValue() {
 		
@@ -123,7 +174,7 @@ public class Duration {
 	
 	/**
 	 * @param other Other {@linkplain Duration} object
-	 * @return {@code true} if this <code>Duration</code> is different from other {@link Duration}.
+	 * @return {@code true} if this <code>Duration</code> is not equal to other {@link Duration}.
 	 */
 	public boolean isDifferent(@NotNull Duration other) {
 		
@@ -131,21 +182,37 @@ public class Duration {
 	}
 	
 	/**
-	 * Checks whether this <code>Duration</code> is different from given {@link Unit} by unit.
+	 * Checks whether this <code>Duration</code> unit is different
+	 * from given <code>Duration</code> {@link Unit}.
 	 *
 	 * @param other Other {@linkplain Unit}
-	 * @return {@code true} if this <code>Duration</code> is different from given {@link Unit} by unit
+	 * @return {@code true} if this <code>Duration</code> unit is different
+	 * 		from given {@link Unit} by unit
 	 */
 	public boolean isDifferentByUnit(@NotNull Unit other) {
 		
 		return !unit.equals(other);
 	}
 	
+	/**
+	 * Determines whether this <code>Duration</code> unit is greater than given {@link Unit}.
+	 *
+	 * @param other Other {@linkplain Unit}
+	 * @return {@code true} if this <code>Duration</code> unit is greater than given {@link Unit}
+	 * @see Unit#isGreaterByUnit(Unit)
+	 */
 	public boolean isGreaterByUnit(@NotNull Unit other) {
 		
 		return unit.isGreaterByUnit(other);
 	}
 	
+	/**
+	 * Determines whether this <code>Duration</code> unit is less than given {@link Unit}.
+	 *
+	 * @param other Other {@linkplain Unit}
+	 * @return {@code true} if this <code>Duration</code> unit is less than given {@link Unit}
+	 * @see Unit#isLessByUnit(Unit)
+	 */
 	public boolean isLessByUnit(@NotNull Unit other) {
 		
 		return unit.isLessByUnit(other);
@@ -163,12 +230,12 @@ public class Duration {
 	}
 	
 	/**
-	 * Returns exactly how long the duration is.
+	 * Returns exactly how long the duration is as date format.
 	 *
 	 * <pre>
 	 * var duration = Duration.ofMinute(1981);
 	 * System.out.println(duration.toTimeDuration());
-	 * // [Duration{type=DAY, value=1}, Duration{type=HOUR, value=9}, Duration{type=MINUTE, value=1}]
+	 * // [Duration{type=day, value=1}, Duration{type=hour, value=9}, Duration{type=minute, value=1}]
 	 * </pre>
 	 *
 	 * @return {@link DurationGroup}
@@ -179,7 +246,7 @@ public class Duration {
 	}
 	
 	/**
-	 * @return time in milliseconds
+	 * @return as milliseconds of this {@linkplain Duration}
 	 */
 	public long toMilliseconds() {
 		//@off
@@ -223,10 +290,10 @@ public class Duration {
 	
 	public static void main(String[] args) {
 		
-		var duration = Duration.ofMinute(1981);
-		var times    = duration.toTimeDuration();
-		System.out.println(duration.toTimeDuration());
-		System.out.println(Time.ToString(times.toLocalDateTime()));
+		var duration  = Duration.of(Unit.MINUTE, 5);
+		var duration2 = Duration.ofMinute(-1);
+		var duration3 = duration.plus(duration2); // Duration{type=minute, value=4}
+		System.out.println(duration3.toString());
 	}
 	
 	/**
