@@ -37,7 +37,7 @@ public class Duration {
 	 */
 	private final Unit unit;
 	/**
-	 * Time amount
+	 * Value of time
 	 */
 	private final long value;
 	
@@ -199,11 +199,11 @@ public class Duration {
 	 *
 	 * @param other Other {@linkplain Unit}
 	 * @return {@code true} if this <code>Duration</code> unit is greater than given {@link Unit}
-	 * @see Unit#isGreaterByUnit(Unit)
+	 * @see Unit#isGreaterThan(Unit)
 	 */
 	public boolean isGreaterByUnit(@NotNull Unit other) {
 		
-		return unit.isGreaterByUnit(other);
+		return unit.isGreaterThan(other);
 	}
 	
 	/**
@@ -211,11 +211,11 @@ public class Duration {
 	 *
 	 * @param other Other {@linkplain Unit}
 	 * @return {@code true} if this <code>Duration</code> unit is less than given {@link Unit}
-	 * @see Unit#isLessByUnit(Unit)
+	 * @see Unit#isLessThan(Unit)
 	 */
 	public boolean isLessByUnit(@NotNull Unit other) {
 		
-		return unit.isLessByUnit(other);
+		return unit.isLessThan(other);
 	}
 	
 	/**

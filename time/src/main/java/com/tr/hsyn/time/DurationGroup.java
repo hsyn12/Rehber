@@ -208,17 +208,9 @@ public class DurationGroup implements Comparable<DurationGroup> {
 	}
 	
 	/**
-	 * @return first duration in the duration list
-	 */
-	public Duration getFirstDuration() {
-		
-		return durations.get(0);
-	}
-	
-	/**
 	 * Checks if this {@link DurationGroup} contains the specified time unit.
 	 *
-	 * @param timeUnit Zaman birimi
+	 * @param timeUnit time unit to check
 	 * @return {@code true} if the unit exists and its value is not zero
 	 */
 	public boolean exists(@NotNull Unit timeUnit) {
@@ -274,7 +266,6 @@ public class DurationGroup implements Comparable<DurationGroup> {
 	
 	/**
 	 * Returns a string representation of this {@link DurationGroup}.<br>
-	 * Default format is <code>'value unit value unit ...'</code>
 	 *
 	 * @return a string representation
 	 */

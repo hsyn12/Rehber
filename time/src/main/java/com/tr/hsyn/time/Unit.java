@@ -72,7 +72,7 @@ public enum Unit {
 	 * 		so <code>YEAR.ordinal()</code> returns {@code 0},
 	 * 		<code>MONTH.ordinal()</code> returns {@code 1} etc.
 	 */
-	public boolean isGreaterByUnit(@NotNull Unit other) {
+	public boolean isGreaterThan(@NotNull Unit other) {
 		
 		return this.ordinal() < other.ordinal();
 	}
@@ -91,7 +91,7 @@ public enum Unit {
 	 * 		so <code>YEAR.ordinal()</code> returns {@code 0},
 	 * 		<code>MONTH.ordinal()</code> returns {@code 1} etc.
 	 */
-	public boolean isLessByUnit(@NotNull Unit other) {
+	public boolean isLessThan(@NotNull Unit other) {
 		
 		return this.ordinal() > other.ordinal();
 	}
