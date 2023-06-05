@@ -107,7 +107,7 @@ public class Duration {
 	 */
 	public Duration plus(@NotNull Duration other) {
 		
-		if (isDifferent(other)) {
+		if (isDifferentByUnit(other)) {
 			
 			var d = other.getValueAs(this.unit);
 			return new Duration(this.unit, this.value + d.getValue());
@@ -157,7 +157,7 @@ public class Duration {
 	}
 	
 	/**
-	 * @return the unit of this {@linkplain Duration}
+	 * @return the unit of this {@linkplain Duration} object
 	 */
 	public Unit getUnit() {
 		
@@ -165,7 +165,7 @@ public class Duration {
 	}
 	
 	/**
-	 * @return duration value of this {@linkplain Duration}
+	 * @return duration value of this {@linkplain Duration} object
 	 */
 	public long getValue() {
 		
@@ -173,8 +173,11 @@ public class Duration {
 	}
 	
 	/**
+	 * Determines whether this <code>Duration</code> is different from other {@linkplain Duration} by unit and value.
+	 *
 	 * @param other Other {@linkplain Duration} object
 	 * @return {@code true} if this <code>Duration</code> is not equal to other {@link Duration}.
+	 * 		Equality is determined by {@link #equals(Object)}.
 	 */
 	public boolean isDifferent(@NotNull Duration other) {
 		
@@ -192,6 +195,17 @@ public class Duration {
 	public boolean isDifferentByUnit(@NotNull Unit other) {
 		
 		return !unit.equals(other);
+	}
+	
+	/**
+	 * Determines whether this <code>Duration</code> unit is different from given <code>Duration</code> unit.
+	 *
+	 * @param other Other {@linkplain Duration} object
+	 * @return {@code true} if this <code>Duration</code> unit is different from given {@link Duration} unit
+	 */
+	public boolean isDifferentByUnit(@NotNull Duration other) {
+		
+		return isDifferentByUnit(other.getUnit());
 	}
 	
 	/**
@@ -285,7 +299,6 @@ public class Duration {
 		}//@on
 		
 		throw new IllegalArgumentException("This is impossible : " + unit);
-		
 	}
 	
 	public static void main(String[] args) {

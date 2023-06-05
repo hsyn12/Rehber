@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,60 +18,53 @@ import com.tr.hsyn.textdrawable.TextDrawable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Locale;
 
 
-public class MostCallDialogAdapter extends RecyclerView.Adapter<MostCallDialogAdapter.Holder> {
+public class MostDurationAdapter extends RecyclerView.Adapter<MostDurationAdapter.Holder> {
 	
-	private final List<MostCallItemViewData> mostCallItemViewDataList;
+	private final List<MostDurationData> mostDurationDataList;
 	
-	public MostCallDialogAdapter(List<MostCallItemViewData> mostCallItemViewDataList) {
-		
-		this.mostCallItemViewDataList = mostCallItemViewDataList;
-	}
+	public MostDurationAdapter(List<MostDurationData> mostDurationDataList) {this.mostDurationDataList = mostDurationDataList;}
 	
-	@NotNull
+	@NonNull
 	@Override
-	public Holder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
+	public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 		
 		return new Holder(LayoutInflater.from(parent.getContext()).inflate(R.layout.most_calls_item_view, parent, false));
 	}
 	
 	@Override
-	public void onBindViewHolder(@NotNull Holder holder, int position) {
+	public void onBindViewHolder(@NonNull Holder holder, int position) {
 		
-		var item  = mostCallItemViewDataList.get(position);
 		int color = Colors.COLOR_GENERATOR.getRandomColor();
-		int order = item.getOrder();
-		
+		var item  = mostDurationDataList.get(position);
 		holder.name.setText(item.getName());
-		
-		holder.count.setImageDrawable(TextDrawable.builder().buildRound(String.valueOf(order != 0 ? order : position + 1), color));
-		holder.txtType.setText(String.format(Locale.getDefault(), "%d %s", item.getCallSize(), holder.itemView.getContext().getString(R.string.call_record)));
+		holder.text.setText(item.getText());
+		holder.order.setImageDrawable(TextDrawable.builder().buildRound(String.valueOf(item.getOrder()), color));
 	}
 	
 	@Override
 	public int getItemCount() {
 		
-		return mostCallItemViewDataList.size();
+		return mostDurationDataList.size();
 	}
 	
 	public static final class Holder extends RecyclerView.ViewHolder {
 		
 		TextView  name;
-		TextView  txtType;
-		ImageView count;
+		TextView  text;
+		ImageView order;
 		
 		public Holder(@NotNull View itemView) {
 			
 			super(itemView);
 			
-			txtType = itemView.findViewById(R.id.most_calls_item_text_type);
+			text = itemView.findViewById(R.id.most_calls_item_text_type);
 			ImageView type = itemView.findViewById(R.id.most_calls_item_img_type);
 			name  = itemView.findViewById(R.id.most_calls_item_text_name);
-			count = itemView.findViewById(R.id.most_calls_item_img_order_number);
+			order = itemView.findViewById(R.id.most_calls_item_img_order_number);
 			
-			type.setImageDrawable(AppCompatResources.getDrawable(name.getContext(), R.drawable.all_calls));
+			type.setImageDrawable(AppCompatResources.getDrawable(name.getContext(), com.tr.hsyn.resarrowdrawable.R.drawable.clock));
 			itemView.setBackgroundResource(Colors.getRipple());
 		}
 	}

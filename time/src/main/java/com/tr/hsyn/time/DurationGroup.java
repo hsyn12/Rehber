@@ -40,15 +40,15 @@ public class DurationGroup implements Comparable<DurationGroup> {
 	 */
 	DurationGroup(@NotNull List<Duration> durations) {
 		
-		durations.sort(Comparator.comparing(Duration::getUnit));
 		this.durations = durations;
-		year           = getDuration(Unit.YEAR);
-		month          = getDuration(Unit.MONTH);
-		day            = getDuration(Unit.DAY);
-		hour           = getDuration(Unit.HOUR);
-		minute         = getDuration(Unit.MINUTE);
-		second         = getDuration(Unit.SECOND);
-		mlSecond       = getDuration(Unit.MILLISECOND);
+		this.durations.sort(Comparator.comparing(Duration::getUnit));
+		year     = getDuration(Unit.YEAR);
+		month    = getDuration(Unit.MONTH);
+		day      = getDuration(Unit.DAY);
+		hour     = getDuration(Unit.HOUR);
+		minute   = getDuration(Unit.MINUTE);
+		second   = getDuration(Unit.SECOND);
+		mlSecond = getDuration(Unit.MILLISECOND);
 	}
 	
 	/**
@@ -71,13 +71,13 @@ public class DurationGroup implements Comparable<DurationGroup> {
 	/**
 	 * Returns the duration of the specified time unit
 	 *
-	 * @param timeUnit Unit of time
+	 * @param unit Unit of time
 	 * @return {@link Duration}
 	 */
 	@NotNull
-	public Duration getDuration(@NotNull Unit timeUnit) {
+	public Duration getDuration(@NotNull Unit unit) {
 		
-		return durations.stream().filter(d -> d.getUnit().equals(timeUnit)).findFirst().orElse(Duration.ofZero(timeUnit));
+		return durations.stream().filter(duration -> duration.getUnit().equals(unit)).findFirst().orElse(Duration.ofZero(unit));
 	}
 	
 	/**
@@ -106,10 +106,12 @@ public class DurationGroup implements Comparable<DurationGroup> {
 	@NotNull
 	public DurationGroup pickFrom(Unit @NotNull ... units) {
 		
-		List<Duration> durations = new ArrayList<>(this.durations);
+		List<Duration> durations = new ArrayList<>(units.length);
 		
 		for (Unit unit : units)
-			durations.removeIf(d -> !d.getUnit().equals(unit));
+			for (Duration duration : this.durations)
+				if (duration.getUnit().equals(unit))
+					durations.add(duration);
 		
 		return new DurationGroup(durations);
 	}
@@ -123,7 +125,7 @@ public class DurationGroup implements Comparable<DurationGroup> {
 	 *
 	 * @return the biggest unit
 	 */
-	public Duration getBiggestByUnit() {
+	public Duration getGreatestUnit() {
 		
 		for (Duration duration : durations) {
 			
@@ -275,13 +277,21 @@ public class DurationGroup implements Comparable<DurationGroup> {
 		var sb = new StringBuilder();
 		
 		for (Duration duration : durations) {
-			sb.append(duration.getValue())
-					.append(" ")
-					.append(duration.getUnit()).append(" ");
+			
+			if (duration.isNotZero())
+				sb.append(duration.getValue())
+						.append(" ")
+						.append(duration.getUnit()).append(" ");
 		}
 		
 		
 		return sb.toString().trim();
+	}
+	
+	public String toString(Unit... units) {
+		
+		var durations = pickFrom(units);
+		return durations.toString();
 	}
 	
 	/**

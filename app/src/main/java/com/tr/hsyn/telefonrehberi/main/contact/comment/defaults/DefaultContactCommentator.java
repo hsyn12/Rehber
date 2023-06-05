@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.contactdata.Contact;
-import com.tr.hsyn.daytimes.DayTime;
 import com.tr.hsyn.nextension.Extension;
 import com.tr.hsyn.nextension.WordExtension;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
@@ -19,6 +18,8 @@ import com.tr.hsyn.telefonrehberi.main.call.data.CallCollection;
 import com.tr.hsyn.telefonrehberi.main.call.data.Res;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostCallDialog;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostCallItemViewData;
+import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationData;
+import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationDialog;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.ShowCallsDialog;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.RankList;
@@ -391,7 +392,8 @@ public class DefaultContactCommentator implements ContactCommentator {
 			
 			DurationGroup duration                  = history.getHistoryDuration();
 			Unit[]        durationUnits             = {Unit.YEAR, Unit.MONTH, Unit.DAY, Unit.HOUR};
-			Duration      longest                   = duration.getBiggestByUnit();
+			Duration      longest                   = duration.getGreatestUnit();
+			var           durationString            = getDurationString(duration, durationUnits);
 			boolean       isDurationGreaterThanHour = longest.isGreaterByUnit(Unit.HOUR);
 			Span[] textSpans = {
 					Spans.bold(),
@@ -400,16 +402,17 @@ public class DefaultContactCommentator implements ContactCommentator {
 			
 			comment.append("\n");
 			
+			
 			if (longest.isNotZero()) {
 				
 				if (isTurkish) {
 					
 					comment.append("Kişinin ilk arama kaydı ile son arama kaydı arasında geçen zaman tam olarak ")
-							.append(Stringx.format("%s. ", DayTime.toString(commentStore.getActivity(), duration, durationUnits)), textSpans);
+							.append(durationString, textSpans);
 					
 					if (isDurationGreaterThanHour) {
 						
-						comment.append(fmt("Yani bu kişiyle kabaca %s%s bir iletişim geçmişiniz var. ", longest, WordExtension.getWordExt(longest.toString(), Extension.TYPE_ABSTRACT)));
+						comment.append(fmt("Yani bu kişiyle kabaca %s%s bir iletişim geçmişiniz var. ", longest.toString("%d %s"), WordExtension.getWordExt(longest.toString(), Extension.TYPE_ABSTRACT)));
 					}
 					else {
 						
@@ -421,10 +424,11 @@ public class DefaultContactCommentator implements ContactCommentator {
 				else {
 					
 					comment.append("The exact time elapsed between the contact's first call record and the last call record is ")
-							.append(Stringx.format("%s. ", DayTime.toString(commentStore.getActivity(), duration, durationUnits)), textSpans);
+							.append(durationString, textSpans)
+							.append(". ");
 					
 					if (isDurationGreaterThanHour) {
-						comment.append(fmt("So you have roughly %s%s of contact history with this person. ", longest, makePlural(longest.toString(), longest.getValue())));
+						comment.append(fmt("So you have roughly %s of contact history with this person. ", makePlural(longest.toString("%d %s"), longest.getValue())));
 					}
 					else {
 						
@@ -526,8 +530,8 @@ public class DefaultContactCommentator implements ContactCommentator {
 	private CharSequence mostHistoryDurationComment(@NotNull DurationGroup duration) {
 		
 		// region prepare all contacts history and duration list
-		var                      comment   = new Spanner();
-		Map<Long, DurationGroup> durations = new HashMap<>();
+		var                         comment   = new Spanner();
+		Map<Contact, DurationGroup> durations = new HashMap<>();
 		
 		var contacts = getContacts();
 		
@@ -551,11 +555,11 @@ public class DefaultContactCommentator implements ContactCommentator {
 			var historyDuration = history.getHistoryDuration();
 			
 			if (!historyDuration.isEmpty())
-				durations.put(contact.getContactId(), historyDuration);
+				durations.put(contact, historyDuration);
 		}
 		
 		//- The list that has durations of all contacts
-		List<Map.Entry<Long, DurationGroup>> durationList = new ArrayList<>(durations.entrySet());
+		List<Map.Entry<Contact, DurationGroup>> durationList = new ArrayList<>(durations.entrySet());
 		
 		//- Comparing by value makes the list in ascending order 
 		durationList.sort(Map.Entry.comparingByValue());
@@ -572,18 +576,36 @@ public class DefaultContactCommentator implements ContactCommentator {
 		//- at least 3 history duration
 		if (historyCount > 3) {
 			
-			Map.Entry<Long, DurationGroup> firstItem      = durationList.get(0);
-			Long                           firstContactId = firstItem.getKey();
-			DurationGroup                  firstDuration  = firstItem.getValue();
+			//- winner item
+			Map.Entry<Contact, DurationGroup> firstItem      = durationList.get(0);
+			long                              firstContactId = firstItem.getKey().getContactId();
+			DurationGroup                     firstDuration  = firstItem.getValue();
+			
+			var                  mostDurationDataList = createMostDurationList(durationList);
+			var                  dialog               = new MostDurationDialog(commentStore.getActivity(), mostDurationDataList);
+			View.OnClickListener listener             = view -> dialog.show();
+			boolean              isWinner             = firstContactId == this.contact.getContactId();
 			
 			
-			if (this.contact.getContactId() == firstContactId) {
+			if (isTurkish) {
 				
-				comment.append("This contact is the contact that have the most history duration. ");
+				comment.append("En uzun arama geçmişine sahip kişiler")
+						.append(" listesine bakılırsa ");
+				
+				if (isWinner) {
+					
+					comment.append("bu kişi en uzun arama geçmişine sahip kişi olduğundan dolayı senin için önemli bir kişi olduğu söylenebilir. ");
+				}
+				
 			}
 			else {
 				
-				comment.append("The contact that have the most history duration has ")
+				comment.append("There is a list called ")
+						.append("the most history duration", getClickSpans(listener))
+						.append(" that consists of all contacts in your contacts that contacted you. ");
+				
+				if (isWinner) comment.append("And this contact is the contact that have the most history duration according to that list. ");
+				else comment.append("The contact that have the most history duration has ")
 						.append(fmt("%s", firstDuration), Spans.foreground(getTextColor()))
 						.append(" history duration. ");
 			}
@@ -593,12 +615,56 @@ public class DefaultContactCommentator implements ContactCommentator {
 	}
 	
 	@NotNull
+	private List<MostDurationData> createMostDurationList(@NotNull List<Map.Entry<Contact, DurationGroup>> durationList) {
+		
+		List<MostDurationData> list = new ArrayList<>();
+		
+		int order = 1;
+		for (var entry : durationList) {
+			
+			var contact        = entry.getKey();
+			var duration       = entry.getValue();
+			var durationString = getDurationString(duration, Unit.YEAR, Unit.MONTH, Unit.DAY, Unit.HOUR);
+			list.add(new MostDurationData(contact.getName(), durationString, order++));
+		}
+		
+		return list;
+	}
+	
+	/**
+	 * Returns a string of the duration of the history.
+	 *
+	 * @param duration the history duration
+	 * @param units    the units of the duration of the history to display (year, month, day, hour)
+	 * @return the string
+	 */
+	@NotNull
+	private String getDurationString(@NotNull DurationGroup duration, Unit @NotNull ... units) {
+		
+		var sb        = new StringBuilder();
+		var durations = duration.pickFrom(units);
+		
+		for (var _duration : durations.getDurations()) {
+			
+			if (_duration.isNotZero())
+				sb.append(makePlural(_duration.toString("%d %s"), _duration.getValue())).append(" ");
+		}
+		
+		return sb.toString().trim();
+	}
+	
+	@NotNull
 	private CharSequence getHistoryCountComment(int contactCount, int historyCount) {
 		
 		if (contactCount == historyCount)
-			return "Rehberde bulunan herkesle bir iletişim geçmişiniz var. ";
+			if (isTurkish) return "Rehberde bulunan herkesle bir iletişim geçmişiniz var. ";
+			else
+				return "You have a contact history with everyone in the contacts. ";
 		
-		return fmt("Rehberde bulunan %d kişi içinden %d kişi ile aranızda bir iletişim geçmişi var. ", contactCount, historyCount);
+		if (isTurkish)
+			return fmt("Rehberde bulunan %d kişi içinden %d kişi ile aranızda bir iletişim geçmişi var. ", contactCount, historyCount);
+		else
+			return fmt("There is a communication history between you and %d people out of %d people in your contacts. ", historyCount, contactCount);
 	}
 	
 	private CharSequence commentLastCallTypeRank() {
