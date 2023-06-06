@@ -9,8 +9,17 @@
  * What are the default topics?
  * <p>
  * <p>
- * - Number of call logs<br>
- * The number of call records of all contacts in the contacts is calculated and the people with the highest number of records are evaluated.<br>
+ * <h3> - The number of call logs</h3>
+ * <p>
+ * > The number of call records of all contacts in the contacts is calculated and the people with the highest number of records are evaluated.<br>
+ * <p>
+ * <p>
+ * <h3> - The duration of call history</h3>
+ * <p>
+ * > The duration of call history of all contacts is calculated and the people with the highest duration of call history are evaluated.<br>
+ * Duration of call history is not the taken duration between the end of the call and the start of the call.<br>
+ * This is the taken duration between the first and the last call made
+ * in the call logs which belongs to the contacts.<br>
  *
  * <p>
  */

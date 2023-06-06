@@ -554,7 +554,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 			
 			var historyDuration = history.getHistoryDuration();
 			
-			if (!historyDuration.isEmpty())
+			if (!historyDuration.isZero())
 				durations.put(contact, historyDuration);
 		}
 		

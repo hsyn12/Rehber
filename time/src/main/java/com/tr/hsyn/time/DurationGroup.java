@@ -7,7 +7,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -42,15 +41,23 @@ public class DurationGroup implements Comparable<DurationGroup> {
 	 */
 	DurationGroup(@NotNull List<Duration> durations) {
 		
-		this.durations = durations;
-		this.durations.sort(Comparator.comparing(Duration::getUnit));
-		year     = getDuration(Unit.YEAR);
-		month    = getDuration(Unit.MONTH);
-		day      = getDuration(Unit.DAY);
-		hour     = getDuration(Unit.HOUR);
-		minute   = getDuration(Unit.MINUTE);
-		second   = getDuration(Unit.SECOND);
-		mlSecond = getDuration(Unit.MILLISECOND);
+		//durations.sort(Comparator.comparing(Duration::getUnit));
+		this.durations = new ArrayList<>(7);
+		year           = getDuration(Unit.YEAR, durations);
+		month          = getDuration(Unit.MONTH, durations);
+		day            = getDuration(Unit.DAY, durations);
+		hour           = getDuration(Unit.HOUR, durations);
+		minute         = getDuration(Unit.MINUTE, durations);
+		second         = getDuration(Unit.SECOND, durations);
+		mlSecond       = getDuration(Unit.MILLISECOND, durations);
+		
+		this.durations.add(year);
+		this.durations.add(month);
+		this.durations.add(day);
+		this.durations.add(hour);
+		this.durations.add(minute);
+		this.durations.add(second);
+		this.durations.add(mlSecond);
 	}
 	
 	/**
@@ -79,10 +86,39 @@ public class DurationGroup implements Comparable<DurationGroup> {
 	@NotNull
 	public Duration getDuration(@NotNull Unit unit) {
 		
+		return durations.get(unit.ordinal());
+	}
+	
+	@NotNull
+	private Duration getDuration(@NotNull Unit unit, @NotNull List<Duration> durations) {
+		
 		return durations.stream().filter(duration -> duration.getUnit().equals(unit)).findFirst().orElse(Duration.ofZero(unit));
 	}
 	
-	public DurationGroup plus(@NotNull Duration duration) {
+	/**
+	 * Adds the given {@link Duration} to this {@link DurationGroup}.
+	 * Adding a duration is adding the value to the existing duration.<br><br>
+	 *
+	 * <pre>
+	 * var dg = DurationGroup.builder()
+	 * 	.year(1)
+	 * 	.month(2)
+	 * 	.day(3)
+	 * 	.hour(4)
+	 * 	.minute(5)
+	 * 	.second(6)
+	 * 	.milliSecond(7)
+	 * 	.build();
+	 *
+	 * 	System.out.println(dg); // Y1M2D3H4M5S6M7
+	 * 	dg = dg.addDuration(Duration.ofYear(2)); // returns a new object, not the existing one
+	 * 	System.out.println(dg); // Y3M2D3H4M5S6M7
+	 * </pre>
+	 *
+	 * @param duration {@link Duration}
+	 * @return new {@link DurationGroup}
+	 */
+	public DurationGroup addDuration(@NotNull Duration duration) {
 		
 		Duration thisDuration = durations.get(duration.getUnit().ordinal());
 		
@@ -98,6 +134,29 @@ public class DurationGroup implements Comparable<DurationGroup> {
 		
 	}
 	
+	/**
+	 * Sets the duration of this {@link DurationGroup}.
+	 * Setting a duration is replacing the existing duration.<br><br>
+	 *
+	 * <pre>
+	 * var dg = DurationGroup.builder()
+	 * 	.year(1)
+	 * 	.month(2)
+	 * 	.day(3)
+	 * 	.hour(4)
+	 * 	.minute(5)
+	 * 	.second(6)
+	 * 	.milliSecond(7)
+	 * 	.build();
+	 *
+	 * 	System.out.println(dg); // Y1M2D3H4M5S6M7
+	 * 	dg = dg.setDuration(Duration.ofYear(2)); // returns a new object, not the existing one
+	 * 	System.out.println(dg); // Y2M2D3H4M5S6M7
+	 * </pre>
+	 *
+	 * @param duration {@link Duration}
+	 * @return new {@link DurationGroup}
+	 */
 	public DurationGroup setDuration(@NotNull Duration duration) {
 		
 		var newDurations = Lister.listOf(durations);
@@ -106,7 +165,7 @@ public class DurationGroup implements Comparable<DurationGroup> {
 	}
 	
 	/**
-	 * Returns the total {@link Duration} of this {@link DurationGroup} as specified unit
+	 * Returns the total {@link Duration} of this {@link DurationGroup} as specified unit.
 	 *
 	 * @param unit Unit of duration
 	 * @return {@link Duration}
@@ -134,9 +193,7 @@ public class DurationGroup implements Comparable<DurationGroup> {
 		List<Duration> durations = new ArrayList<>(units.length);
 		
 		for (Unit unit : units)
-			for (Duration duration : this.durations)
-				if (duration.getUnit().equals(unit))
-					durations.add(duration);
+			durations.add(this.durations.get(unit.ordinal()));
 		
 		return new DurationGroup(durations);
 	}
@@ -163,12 +220,25 @@ public class DurationGroup implements Comparable<DurationGroup> {
 	/**
 	 * @return {@code true} if all duration's value of this {@link DurationGroup} is zero
 	 */
-	public boolean isEmpty() {
+	public boolean isZero() {
 		
 		for (Duration duration : durations)
 			if (duration.isNotZero()) return false;
 		return true;
 	}
+	
+	/**
+	 * Determines if a {@link Unit} value is zero in this {@link DurationGroup}.
+	 *
+	 * @param unit unit
+	 * @return {@code true} if given unit is zero in this {@link DurationGroup}
+	 */
+	public boolean isZeroByUnit(@NotNull Unit unit) {
+		
+		return getDuration(unit).isZero();
+	}
+	
+	//region GETTERS
 	
 	/**
 	 * @return duration of year
@@ -225,6 +295,7 @@ public class DurationGroup implements Comparable<DurationGroup> {
 		
 		return mlSecond;
 	}
+	//endregion
 	
 	/**
 	 * @return duration list
@@ -237,12 +308,12 @@ public class DurationGroup implements Comparable<DurationGroup> {
 	/**
 	 * Checks if this {@link DurationGroup} contains the specified time unit.
 	 *
-	 * @param timeUnit time unit to check
+	 * @param unit time unit to check
 	 * @return {@code true} if the unit exists and its value is not zero
 	 */
-	public boolean exists(@NotNull Unit timeUnit) {
+	public boolean isNotZeroByUnit(@NotNull Unit unit) {
 		
-		return durations.stream().anyMatch(duration -> duration.getUnit().equals(timeUnit) && duration.isNotZero());
+		return getDuration(unit).isNotZero();
 	}
 	
 	/**
@@ -359,35 +430,15 @@ public class DurationGroup implements Comparable<DurationGroup> {
 		
 		for (var duration : durations) {
 			
-			switch (duration.getUnit()) {
-				case YEAR:
-					date = date.plusYears(duration.getValue());
-					break;
-				
-				case MONTH:
-					date = date.plusMonths(duration.getValue());
-					break;
-				
-				case DAY:
-					date = date.plusDays(duration.getValue());
-					break;
-				
-				case HOUR:
-					date = date.plusHours(duration.getValue());
-					break;
-				
-				case MINUTE:
-					date = date.plusMinutes(duration.getValue());
-					break;
-				
-				case SECOND:
-					date = date.plusSeconds(duration.getValue());
-					break;
-				
-				case MILLISECOND:
-					date = date.plusSeconds(duration.getValue() * 1000);
-					break;
-			}
+			date = switch (duration.getUnit()) {
+				case YEAR -> date.plusYears(duration.getValue());
+				case MONTH -> date.plusMonths(duration.getValue());
+				case DAY -> date.plusDays(duration.getValue());
+				case HOUR -> date.plusHours(duration.getValue());
+				case MINUTE -> date.plusMinutes(duration.getValue());
+				case SECOND -> date.plusSeconds(duration.getValue());
+				case MILLISECOND -> date.plusSeconds(duration.getValue() * 1000);
+			};
 		}
 		
 		return date;
@@ -423,7 +474,9 @@ public class DurationGroup implements Comparable<DurationGroup> {
 				.build();
 		
 		System.out.println(dg);
-		System.out.println(dg.toString("%2$d month %3$d day"));
+		dg = dg.setDuration(Duration.ofYear(2));
+		System.out.println(dg);
+		
 	}
 	
 	/**

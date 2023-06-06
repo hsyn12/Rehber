@@ -264,18 +264,16 @@ public class Duration {
 	 */
 	public long toMilliseconds() {
 		//@off
-		switch (unit) {
-			case MILLISECOND: return value;
-			case SECOND:      return value * 1000;
-			case MINUTE:      return value * 60000;
-			case HOUR:        return value * 3600000;
-			case DAY:         return value * 86400000;
-			case MONTH:       return value * 259200000;
-			case YEAR:        return value * 36500000;
-			
-		}//@on
+		return switch (unit) {
+			case MILLISECOND -> value;
+			case SECOND -> value * 1000;
+			case MINUTE -> value * 60000;
+			case HOUR -> value * 3600000;
+			case DAY -> value * 86400000;
+			case MONTH -> value * 259200000;
+			case YEAR -> value * 36500000;
+		};//@on
 		
-		throw new IllegalArgumentException("This is impossible : " + unit);
 	}
 	
 	/**
@@ -288,17 +286,16 @@ public class Duration {
 		
 		long value = toMilliseconds();
 		//@off
-		switch (unit) {
-			case MILLISECOND: return new Duration(unit, value);
-			case SECOND:      return new Duration(unit, value / 1000);
-			case MINUTE:      return new Duration(unit, value / 60000);
-			case HOUR:        return new Duration(unit, value / 3600000);
-			case DAY:         return new Duration(unit, value / 86400000);
-			case MONTH:       return new Duration(unit, value / 259200000);
-			case YEAR:        return new Duration(unit, value / 36500000);
-		}//@on
+		return switch (unit) {
+			case MILLISECOND -> new Duration(unit, value);
+			case SECOND -> new Duration(unit, value / 1000);
+			case MINUTE -> new Duration(unit, value / 60000);
+			case HOUR -> new Duration(unit, value / 3600000);
+			case DAY -> new Duration(unit, value / 86400000);
+			case MONTH -> new Duration(unit, value / 259200000);
+			case YEAR -> new Duration(unit, value / 36500000);
+		};//@on
 		
-		throw new IllegalArgumentException("This is impossible : " + unit);
 	}
 	
 	public static void main(String[] args) {
