@@ -12,15 +12,22 @@
  * <h3> - The number of call logs</h3>
  * <p>
  * > The number of call records of all contacts in the contacts is calculated and the people with the highest number of records are evaluated.<br>
+ * This topic can be divided into subtopics,
+ * for example, the most incoming calls and the most outgoing calls are valuable subtopics.<br>
+ * Also the most missed calls and the most rejected calls are valuable subtopics too.<br>
  * <p>
  * <p>
  * <h3> - The duration of call history</h3>
  * <p>
  * > The duration of call history of all contacts is calculated and the people with the highest duration of call history are evaluated.<br>
  * Duration of call history is not the taken duration between the end of the call and the start of the call.<br>
- * This is the taken duration between the first and the last call made
+ * Duration of call history is the taken duration between the first call and the last call made
  * in the call logs which belongs to the contacts.<br>
- *
+ * ------------------------------------------------------------------------------------------------------------<br>
+ * <p>
+ * <p>
+ * <p>
+ * According to topics, commenting on a contact needs to all contacts and all call logs.<br>
  * <p>
  */
 package com.tr.hsyn.telefonrehberi.main.contact.comment.defaults;

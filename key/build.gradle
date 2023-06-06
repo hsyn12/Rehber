@@ -6,11 +6,11 @@ dependencies {
 
 	implementation project(path: ':identity')
 	implementation project(path: ':entity')
-    implementation project(path: ':atom')
-    compileOnly "org.jetbrains:annotations:${rootProject.annotations}"
+	implementation project(path: ':atom')
+	compileOnly "org.jetbrains:annotations:${rootProject.annotations}"
 }
 
 java {
-	sourceCompatibility = JavaVersion.VERSION_11
-	targetCompatibility = JavaVersion.VERSION_11
+	sourceCompatibility = rootProject.ext.java_version
+	targetCompatibility = rootProject.ext.java_version
 }

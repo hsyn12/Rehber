@@ -16,6 +16,7 @@ import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.dev.android.dialog.ShowCall;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallCollection;
 import com.tr.hsyn.telefonrehberi.main.call.data.Res;
+import com.tr.hsyn.telefonrehberi.main.call.data.hotlist.HotListByQuantity;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostCallDialog;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostCallItemViewData;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationData;
@@ -55,11 +56,11 @@ public class DefaultContactCommentator implements ContactCommentator {
 	
 	/**
 	 * The comment object.
-	 * All generated comments by the commentator will be appended into this object
+	 * All generated comments by the commentator appends into this object.
 	 */
 	protected final Spanner             comment = new Spanner();
 	/**
-	 * The history that contains the all calls of the current contact
+	 * The history that has the all calls of the current contact.
 	 */
 	protected       History             history;
 	/**
@@ -71,20 +72,23 @@ public class DefaultContactCommentator implements ContactCommentator {
 	 */
 	protected       ContactCommentStore commentStore;
 	protected       boolean             isTurkish;
+	protected       CallCollection      callCollection;
+	protected       HotListByQuantity   hotListByQuantity;
 	
 	/**
 	 * Constructs a new {@link DefaultContactCommentator} object with the given comment store.
 	 *
-	 * @param commentStore the comment store to be used by this commentator
+	 * @param commentStore the comment store to use by this commentator
 	 */
 	public DefaultContactCommentator(@NotNull ContactCommentStore commentStore) {
 		
 		this.commentStore = commentStore;
 		isTurkish         = commentStore.isTurkishLanguage();
+		callCollection    = getCallCollection();
 	}
 	
 	/**
-	 * Returns the comment store being used by this commentator.
+	 * Returns the comment store used by this commentator.
 	 *
 	 * @return the comment store
 	 */
@@ -106,9 +110,10 @@ public class DefaultContactCommentator implements ContactCommentator {
 	public @NotNull CharSequence commentOn(@NotNull Contact contact) {
 		
 		this.contact = contact;
+		//todo history 
 		this.history = contact.getData(ContactKey.HISTORY);
 		
-		//if history null or empty, no need to go any further
+		//if history null or empty, no need to go any further.
 		if (history != null) {
 			if (history.isEmpty()) comment.append(commentStore.noHistory());
 			else commentOnContact();
@@ -119,7 +124,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 	}
 	
 	/**
-	 * Returns the current contact being commented on.
+	 * Returns the current contact commenting on.
 	 *
 	 * @return the current contact
 	 */
@@ -179,31 +184,35 @@ public class DefaultContactCommentator implements ContactCommentator {
 	}
 	
 	/**
-	 * Generates comments based on the call history of the current contact.
-	 * Invokes private methods to generate individual comments.
+	 * Generates the comments based on the call history of the current contact.
+	 * Invokes private methods to generate person comments.
 	 * This is the first method called by the commentator in {@link #commentOn(Contact)} method.
 	 */
 	private void commentOnContact() {
 		
-		// Here we start to generate the comment.
-		// Call history is not 'null' and not empty at this point
+		if (callCollection == null) return;
+		hotListByQuantity = callCollection.getHotListByQuantity();
+		
+		// Here start to generate the comment.
+		// Call history is not 'null' and not empty at this point.
 		
 		xlog.d("Accessed the call history [contact='%s', size=%d]", contact.getName(), history.size());
 		
 		if (history.size() == 1) {
 			commentOnSingleCall();
-			return;
+		}
+		else {
+			this.comment.append(commentQuantity());
+			this.comment.append(commentMostQuantity());
+			this.comment.append(commentOnTheLastCall());
+			this.comment.append(commentLastCallType());
+			this.comment.append(firstLastCallComment());
 		}
 		
-		this.comment.append(commentQuantity());
-		this.comment.append(commentMostQuantity());
-		this.comment.append(commentOnTheLastCall());
-		this.comment.append(commentLastCallType());
-		this.comment.append(firstLastCallComment());
 	}
 	
 	/**
-	 * Appends a comment about the single call to the {@link #comment} object
+	 * Appends a comment about the single call to the {@link #comment} object that
 	 * managed by this commentator.
 	 */
 	private void commentOnSingleCall() {
@@ -219,19 +228,19 @@ public class DefaultContactCommentator implements ContactCommentator {
 	@NonNull
 	private CharSequence commentQuantity() {
 		
-		// Now, we are sure that the call history size has been more than one.
+		// Now, certainly the call history size is more than one.
 		// The call history of the current contact has two calls at least.
 		
-		// We want to inform the user about the quantity of the call history.
-		// For example, 'The contact has 2 calls'
+		// Inform the user about the quantity of the call history.
+		// For example, 'The contact has 2 calls'.
 		
 		Spanner              quantityComment = new Spanner();
 		String               name            = contact.getName() != null && !PhoneNumbers.isPhoneNumber(contact.getName()) ? contact.getName() : Stringx.toTitle(getString(R.string.word_contact));
 		View.OnClickListener listener        = view -> new ShowCallsDialog(commentStore.getActivity(), history.getCalls()).show();
 		quantityComment.append(name, Spans.bold(), Spans.foreground(getTextColor()));
 		
-		// We have two language resources forever, I think
-		if (commentStore.isTurkishLanguage()) {
+		// Have two language resources forever, think so.
+		if (isTurkish) {
 			
 			var extension = WordExtension.getWordExt(name, Extension.TYPE_DATIVE);
 			
@@ -272,9 +281,9 @@ public class DefaultContactCommentator implements ContactCommentator {
 		var ranks = new RankList(collection.getNumberedCalls());
 		ranks.makeRanks();
 		
-		var      map      = ranks.getRankMap();
-		RankMate rankMate = new RankMate(map);
-		var      numbers  = ContactKey.getNumbers(contact);
+		Map<Integer, List<CallRank>> map      = ranks.getRankMap();
+		RankMate                     rankMate = new RankMate(map);
+		var                          numbers  = ContactKey.getNumbers(contact);
 		
 		if (numbers == null) return com;
 		
@@ -393,7 +402,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 			DurationGroup duration                  = history.getHistoryDuration();
 			Unit[]        durationUnits             = {Unit.YEAR, Unit.MONTH, Unit.DAY, Unit.HOUR};
 			Duration      longest                   = duration.getGreatestUnit();
-			var           durationString            = getDurationString(duration, durationUnits);
+			String        durationString            = getDurationString(duration, durationUnits);
 			boolean       isDurationGreaterThanHour = longest.isGreaterByUnit(Unit.HOUR);
 			Span[] textSpans = {
 					Spans.bold(),
@@ -401,7 +410,6 @@ public class DefaultContactCommentator implements ContactCommentator {
 			};
 			
 			comment.append("\n");
-			
 			
 			if (longest.isNotZero()) {
 				
@@ -416,7 +424,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 					}
 					else {
 						
-						//- The call history duration is less than 1-day.
+						//+ The call history duration is less than 1-day.
 						String msg = fmt("Yani bu kişiyle aranızda bir iletişim geçmişi olduğu pek söylenemez. ");
 						comment.append(msg);
 					}
@@ -432,7 +440,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 					}
 					else {
 						
-						//- The call history duration is less than 1-day.
+						//+ The call history duration is less than 1-day.
 						String msg = fmt("So, it cannot be said that there is a communication history between you and this person. ");
 						comment.append(msg);
 					}
@@ -529,7 +537,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 	@NotNull
 	private CharSequence mostHistoryDurationComment(@NotNull DurationGroup duration) {
 		
-		// region prepare all contacts history and duration list
+		// region prepares all contacts history, and the duration list
 		var                         comment   = new Spanner();
 		Map<Contact, DurationGroup> durations = new HashMap<>();
 		
@@ -558,10 +566,10 @@ public class DefaultContactCommentator implements ContactCommentator {
 				durations.put(contact, historyDuration);
 		}
 		
-		//- The list that has durations of all contacts
+		//+ The list that has durations of all contacts
 		List<Map.Entry<Contact, DurationGroup>> durationList = new ArrayList<>(durations.entrySet());
 		
-		//- Comparing by value makes the list in ascending order 
+		//+ Comparing by value makes the list in ascending order 
 		durationList.sort(Map.Entry.comparingByValue());
 		Collections.reverse(durationList);// descending order
 		
@@ -573,10 +581,10 @@ public class DefaultContactCommentator implements ContactCommentator {
 		
 		comment.append(getHistoryCountComment(contactCount, historyCount));
 		
-		//- at least 3 history duration
+		//+ at least 3 history duration
 		if (historyCount > 3) {
 			
-			//- winner item
+			//+ winner item
 			Map.Entry<Contact, DurationGroup> firstItem      = durationList.get(0);
 			long                              firstContactId = firstItem.getKey().getContactId();
 			DurationGroup                     firstDuration  = firstItem.getValue();
@@ -632,10 +640,10 @@ public class DefaultContactCommentator implements ContactCommentator {
 	}
 	
 	/**
-	 * Returns a string of the duration of the history.
+	 * Returns the duration of the history as a string.
 	 *
 	 * @param duration the history duration
-	 * @param units    the units of the duration of the history to display (year, month, day, hour)
+	 * @param units    the units during the history to display
 	 * @return the string
 	 */
 	@NotNull

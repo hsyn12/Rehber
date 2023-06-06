@@ -46,4 +46,23 @@ public class Mapper {
 		
 	}
 	
+	public static <K, V> void toStr(@NotNull Map<K, V> map, Function<K, String> mapper, Function<V, String> valueMapper) {
+		
+		var keys = map.keySet();
+		
+		for (var key : keys) {
+			
+			xlog.d("%s : %s", mapper.apply(key), valueMapper.apply(map.get(key)));
+		}
+	}
+	
+	public static <K, V> void toStr(@NotNull Map<K, V> map, Function<V, String> valueMapper) {
+		
+		var keys = map.keySet();
+		
+		for (var key : keys) {
+			
+			xlog.d("%s : %s", key, valueMapper.apply(map.get(key)));
+		}
+	}
 }

@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Map;
 
 
+/**
+ * Provides finding rank for call log calls
+ */
 public class RankMate {
 	
 	private final Map<Integer, List<CallRank>> rankMap;
@@ -18,6 +21,12 @@ public class RankMate {
 		this.rankMap = rankMap;
 	}
 	
+	/**
+	 * Looking for the rank by phone numbers.
+	 *
+	 * @param numbers the numbers
+	 * @return the rank or -1
+	 */
 	public int getRank(@NotNull List<String> numbers) {
 		
 		for (var number : numbers) {
@@ -30,6 +39,12 @@ public class RankMate {
 		return -1;
 	}
 	
+	/**
+	 * Looking for the rank by phone number.
+	 *
+	 * @param number the number
+	 * @return the rank or -1
+	 */
 	public int getRank(@NotNull String number) {
 		
 		var _number = PhoneNumbers.formatNumber(number, PhoneNumbers.N_MIN);

@@ -1,13 +1,13 @@
 plugins {
-    id 'java-library'
+	id 'java-library'
 }
 
 dependencies {
 
-    implementation project(':reflection')
+	implementation project(':reflection')
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+	sourceCompatibility = rootProject.ext.java_version
+	targetCompatibility = rootProject.ext.java_version
 }

@@ -1,18 +1,18 @@
 plugins {
-    id 'java-library'
+	id 'java-library'
 }
 
 dependencies {
 
-    //noinspection AnnotationProcessorOnCompilePath
-    implementation 'com.google.auto.service:auto-service:1.0.1'
-    annotationProcessor 'com.google.auto.service:auto-service:1.0.1'
-    //implementation 'com.squareup:javapoet:1.13.0'
+	//noinspection AnnotationProcessorOnCompilePath
+	implementation 'com.google.auto.service:auto-service:1.0.1'
+	annotationProcessor 'com.google.auto.service:auto-service:1.0.1'
+	//implementation 'com.squareup:javapoet:1.13.0'
 
-    implementation project(path: ':warnerlabel')
+	implementation project(path: ':warnerlabel')
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+	sourceCompatibility = rootProject.ext.java_version
+	targetCompatibility = rootProject.ext.java_version
 }

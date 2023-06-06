@@ -21,13 +21,13 @@ public class RankList {
 	private final Map<String, List<Call>>             entries;
 	/**
 	 * The object that has key as a rank and value as a list of {@link CallRank}.
-	 * The first rank is 1,
-	 * and it is having the highest number of calls.
-	 * But maybe there are more than one rank with the same number of calls.
+	 * The Ranking starts from 1,
+	 * and it has the highest number of calls.
+	 * Maybe there are more than one rank with the same number of calls.
 	 */
 	private final Map<Integer, List<CallRank>>        rankMap = new HashMap<>();
 	/**
-	 * The list of entry that identifier and its calls with sorted by calls size descending
+	 * The list of entry that identifier and its calls with sorted by calls size descending.
 	 */
 	private       List<Map.Entry<String, List<Call>>> rankList;
 	
@@ -43,7 +43,7 @@ public class RankList {
 	
 	/**
 	 * Rank map that mapped identifier to a list of {@link CallRank}.
-	 * The first order is 1, and it is having the highest number of calls.
+	 * The first order is 1, and it has the highest number of calls.
 	 * Maybe there are more than one rank with the same number of calls.
 	 *
 	 * @return the map object that has a key as identifier and a value as a list of {@link CallRank}.
@@ -55,9 +55,9 @@ public class RankList {
 	
 	/**
 	 * Starts the rank process.
-	 * After this, can be called {@link #getRankMap()} to get the rank map.
+	 * After this, call {@link #getRankMap()} to get the rank map.
 	 */
-	public void makeRanks() {
+	public RankList makeRanks() {
 		
 		rankMap.clear();
 		
@@ -82,11 +82,13 @@ public class RankList {
 			
 			if (ranked.getValue().size() > next.getValue().size()) rank++;
 		}
+		
+		return this;
 	}
 	
 	/**
 	 * Make a list that sorted by calls size descending.
-	 * All numbers that belong to the same contact id are put into the same list.
+	 * Puts all numbers that belong to the same contact ID into the same list.
 	 */
 	private void makeRankList() {
 		
@@ -96,19 +98,19 @@ public class RankList {
 		// loop on numbers
 		for (int i = 0; i < keys.size(); i++) {
 			
-			// get contact id
-			// we need to find the same id in the list and make it one list
+			// Get contact ID.
+			// Needs to find the same ID in the list and make it one list.
 			var firstKey = keys.get(i);
-			// aggregate calls
+			// aggregated calls
 			var calls = entries.remove(firstKey);
 			
 			if (calls == null) continue;
 			
 			var contactId = CallKey.getContactId(calls.get(0));
 			
-			if (contactId != 0L) {//- Contact id found
+			if (contactId != 0L) {//+ Contact ID found
 				
-				// loop on the other numbers and find the same id 
+				// loop on the other numbers and find the same ID 
 				for (int j = i + 1; j < keys.size(); j++) {
 					
 					var secondKey  = keys.get(j);
@@ -118,10 +120,10 @@ public class RankList {
 					
 					var otherContactId = CallKey.getContactId(otherCalls.get(0));
 					
-					// contactId can not be zero but otherContactId maybe
+					// contactId cannot be zero but otherContactId maybe
 					if (contactId == otherContactId) {
 						
-						// that is the same id, put it together
+						// that is the same ID, put it together
 						calls.addAll(otherCalls);
 						continue;
 					}
@@ -135,6 +137,7 @@ public class RankList {
 			entries.put(firstKey, calls);
 		}
 		
+		// sort
 		rankList = entries.entrySet().stream().sorted((e1, e2) -> e2.getValue().size() - e1.getValue().size()).collect(Collectors.toList());
 	}
 	
