@@ -5,6 +5,7 @@ plugins {
 dependencies {
 
 	implementation project(path: ':random')
+	implementation project(path: ':collection')
 	compileOnly "org.jetbrains:annotations:${rootProject.annotations}"
 }
 

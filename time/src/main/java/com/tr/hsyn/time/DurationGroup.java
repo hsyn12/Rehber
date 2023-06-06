@@ -1,6 +1,8 @@
 package com.tr.hsyn.time;
 
 
+import com.tr.hsyn.collection.Lister;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
@@ -78,6 +80,29 @@ public class DurationGroup implements Comparable<DurationGroup> {
 	public Duration getDuration(@NotNull Unit unit) {
 		
 		return durations.stream().filter(duration -> duration.getUnit().equals(unit)).findFirst().orElse(Duration.ofZero(unit));
+	}
+	
+	public DurationGroup plus(@NotNull Duration duration) {
+		
+		Duration thisDuration = durations.get(duration.getUnit().ordinal());
+		
+		return switch (duration.getUnit()) {
+			case MILLISECOND -> setDuration(Duration.of(Unit.MILLISECOND, thisDuration.getValue() + duration.getValue()));
+			case SECOND -> setDuration(Duration.of(Unit.SECOND, thisDuration.getValue() + duration.getValue()));
+			case MINUTE -> setDuration(Duration.of(Unit.MINUTE, thisDuration.getValue() + duration.getValue()));
+			case HOUR -> setDuration(Duration.of(Unit.HOUR, thisDuration.getValue() + duration.getValue()));
+			case DAY -> setDuration(Duration.of(Unit.DAY, thisDuration.getValue() + duration.getValue()));
+			case MONTH -> setDuration(Duration.of(Unit.MONTH, thisDuration.getValue() + duration.getValue()));
+			case YEAR -> setDuration(Duration.of(Unit.YEAR, thisDuration.getValue() + duration.getValue()));
+		};
+		
+	}
+	
+	public DurationGroup setDuration(@NotNull Duration duration) {
+		
+		var newDurations = Lister.listOf(durations);
+		newDurations.set(duration.getUnit().ordinal(), duration);
+		return new DurationGroup(newDurations);
 	}
 	
 	/**
@@ -233,33 +258,13 @@ public class DurationGroup implements Comparable<DurationGroup> {
 		for (var duration : durations) {
 			
 			switch (duration.getUnit()) {
-				case YEAR:
-					date = date.plusYears(duration.getValue());
-					break;
-				
-				case MONTH:
-					date = date.plusMonths(duration.getValue());
-					break;
-				
-				case DAY:
-					date = date.plusDays(duration.getValue());
-					break;
-				
-				case HOUR:
-					date = date.plusHours(duration.getValue());
-					break;
-				
-				case MINUTE:
-					date = date.plusMinutes(duration.getValue());
-					break;
-				
-				case SECOND:
-					date = date.plusSeconds(duration.getValue());
-					break;
-				
-				case MILLISECOND:
-					date = date.plusSeconds(duration.getValue() * 1000);
-					break;
+				case YEAR -> date = date.plusYears(duration.getValue());
+				case MONTH -> date = date.plusMonths(duration.getValue());
+				case DAY -> date = date.plusDays(duration.getValue());
+				case HOUR -> date = date.plusHours(duration.getValue());
+				case MINUTE -> date = date.plusMinutes(duration.getValue());
+				case SECOND -> date = date.plusSeconds(duration.getValue());
+				case MILLISECOND -> date = date.plusSeconds(duration.getValue() * 1000);
 			}
 		}
 		
@@ -271,21 +276,45 @@ public class DurationGroup implements Comparable<DurationGroup> {
 	 *
 	 * @return a string representation
 	 */
+	@SuppressWarnings("DefaultLocale")
 	@Override
 	public String toString() {
 		
-		var sb = new StringBuilder();
+		return String.format("Y%dM%dD%dH%dM%dS%dM%d", year.getValue(), month.getValue(), day.getValue(), hour.getValue(), minute.getValue(), second.getValue(), mlSecond.getValue());
+	}
+	
+	/**
+	 * Returns a string representation of this {@link DurationGroup}.<br>
+	 * Formatted string is: <br>
+	 * <code>Y{year}M{month}D{day}H{hour}M{minute}S{second}M{millisecond}</code> respectively.<br>
+	 * The order starts from <code>1</code>
+	 * and increments by <code>1</code> until it reaches <code>7</code>.<br>
+	 * And can write like this {@code month} and {@code day} <br>
+	 * {@code '%2$d months %3$d days'} as formatted string.
+	 *
+	 * <p>
+	 * <p>
+	 * <pre>
+	 * var dg = DurationGroup.builder()
+	 * 	.year(1)
+	 * 	.month(2)
+	 * 	.day(3)
+	 * 	.hour(4)
+	 * 	.minute(5)
+	 * 	.second(6)
+	 * 	.milliSecond(7)
+	 * 	.build();
+	 *
+	 * 	System.out.println(dg); // Y1M2D3H4M5S6M7
+	 * 	System.out.println(dg.toString("%2$d months %3$d days")); // 2 month 3 day
+	 * </pre>
+	 *
+	 * @param formatted formatted string
+	 * @return a string representation
+	 */
+	public String toString(String formatted) {
 		
-		for (Duration duration : durations) {
-			
-			if (duration.isNotZero())
-				sb.append(duration.getValue())
-						.append(" ")
-						.append(duration.getUnit()).append(" ");
-		}
-		
-		
-		return sb.toString().trim();
+		return String.format(formatted, year.getValue(), month.getValue(), day.getValue(), hour.getValue(), minute.getValue(), second.getValue());
 	}
 	
 	public String toString(Unit... units) {
@@ -380,6 +409,22 @@ public class DurationGroup implements Comparable<DurationGroup> {
 	 */
 	@NotNull
 	public static Builder builder(@NotNull DurationGroup object) {return new Builder(object);}
+	
+	public static void main(String[] args) {
+		
+		var dg = DurationGroup.builder()
+				.year(1)
+				.month(2)
+				.day(3)
+				.hour(4)
+				.minute(5)
+				.second(6)
+				.milliSecond(7)
+				.build();
+		
+		System.out.println(dg);
+		System.out.println(dg.toString("%2$d month %3$d day"));
+	}
 	
 	/**
 	 * Builder class for {@link DurationGroup}.
