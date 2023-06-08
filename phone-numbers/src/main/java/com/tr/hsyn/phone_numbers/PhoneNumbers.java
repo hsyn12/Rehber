@@ -44,7 +44,7 @@ public class PhoneNumbers {
 		
 		if (!isPhoneNumber(_number)) return _number;
 		
-		var number = Stringx.trimWhiteSpaces(_number);
+		@NotNull String number = Stringx.trimWhiteSpaces(_number);
 		
 		if (number.length() == 11) {
 			
@@ -99,7 +99,7 @@ public class PhoneNumbers {
 		
 		number = getRealNumber(number);
 		
-		if (number.isBlank()) return false;
+		if (number.trim().isEmpty()) return false;
 		
 		return getNumberType(number) != 0;
 	}
@@ -144,7 +144,7 @@ public class PhoneNumbers {
 		
 		if (numbers == null || number == null) return false;
 		
-		for (var n : numbers) {
+		for (String n : numbers) {
 			
 			if (equalsOrContains(n, number)) return true;
 		}
@@ -172,8 +172,8 @@ public class PhoneNumbers {
 		
 		if (number1.equals(number2)) return true;
 		
-		var n1 = formatNumber(number1, 10);
-		var n2 = formatNumber(number2, 10);
+		@NotNull String n1 = formatNumber(number1, 10);
+		@NotNull String n2 = formatNumber(number2, 10);
 		
 		if (n1.equals(n2)) return true;
 		
@@ -218,8 +218,8 @@ public class PhoneNumbers {
 		
 		if (number1.equals(number2)) return true;
 		
-		var n1 = formatNumber(number1, N_MIN);
-		var n2 = formatNumber(number2, N_MIN);
+		@NotNull String n1 = formatNumber(number1, N_MIN);
+		@NotNull String n2 = formatNumber(number2, N_MIN);
 		
 		if (n1.length() != n2.length()) return false;
 		

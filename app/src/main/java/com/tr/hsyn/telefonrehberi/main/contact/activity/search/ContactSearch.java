@@ -103,11 +103,11 @@ public class ContactSearch extends ActivityView implements OnSearchViewListener,
 			if (numbers != null && numbers.size() > 1) {
 				
 				//- Adamımız
-				var contact = contacts.remove(i);
+				Contact contact = contacts.remove(i);
 				
-				for (var number : numbers) {
+				for (String number : numbers) {
 					
-					var _contact = new Contact(contact);
+					Contact _contact = new Contact(contact);
 					
 					ContactKey.setNumbers(_contact, Lister.listOf(number));
 					contacts.add(i++, _contact);
@@ -129,7 +129,7 @@ public class ContactSearch extends ActivityView implements OnSearchViewListener,
 		
 		if (gateSelection.enter()) {
 			
-			var selected = adapter.getFilteredContacts().get(index);
+			Contact selected = adapter.getFilteredContacts().get(index);
 			
 			xlog.d("Selected : %s", selected.getName());
 			
@@ -174,14 +174,6 @@ public class ContactSearch extends ActivityView implements OnSearchViewListener,
 	}
 	
 	@Override
-	public void onBackPressed() {
-		
-		super.onBackPressed();
-		
-		Bungee.zoomFast(this);
-	}
-	
-	@Override
 	public boolean onQueryTextSubmit(String query) {
 		
 		return true;
@@ -197,6 +189,14 @@ public class ContactSearch extends ActivityView implements OnSearchViewListener,
 		gateFilter.enter(this::filter);
 	}
 	
+	@Override
+	public void onBackPressed() {
+		
+		super.onBackPressed();
+		
+		Bungee.zoomFast(this);
+	}
+	
 	private void filter() {
 		
 		adapter.onTextChanged(searchText);
@@ -207,7 +207,7 @@ public class ContactSearch extends ActivityView implements OnSearchViewListener,
 		
 		adapter.notifyItemChanged(index);
 		
-		var contact = getAdapterCalls().get(index);
+		Contact contact = getAdapterCalls().get(index);
 		
 		xlog.d("Swiped : %s", contact.getName());
 		

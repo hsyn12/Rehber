@@ -210,6 +210,12 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> im
 		setHightlight(holder);
 	}
 	
+	@Override
+	public int getItemCount() {
+		
+		return filteredCalls.size();
+	}
+	
 	private int getTypeIcon(int type) {
 		
 		return Calls.getCallTypeIcon(type);
@@ -218,7 +224,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> im
 	@NonNull
 	private String getLeter(String str) {
 		
-		var l = Stringx.getFirstChar(str);
+		@NotNull String l = Stringx.getFirstChar(str);
 		
 		if (l.isEmpty()) return "?";
 		
@@ -268,12 +274,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> im
 		
 	}
 	
-	@Override
-	public int getItemCount() {
-		
-		return filteredCalls.size();
-	}
-	
 	public Call get(int index) {
 		
 		return filteredCalls.get(index);
@@ -301,7 +301,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> im
 				if (onAction != null) onAction.onItemIndex(getAdapterPosition());
 			});
 			
-			var root = itemView.findViewById(R.id.call_item);
+			View root = itemView.findViewById(R.id.call_item);
 			
 			root.setBackgroundResource(Colors.getRipple());
 			

@@ -26,7 +26,7 @@ public abstract class CallLogEvents extends CallLogEditor {
 			return;
 		}
 		
-		var i = new Intent(getContext(), RandomCallsActivity.class);
+		Intent i = new Intent(getContext(), RandomCallsActivity.class);
 		startActivity(i);
 		Bungee.slideRight(getContext());
 	}

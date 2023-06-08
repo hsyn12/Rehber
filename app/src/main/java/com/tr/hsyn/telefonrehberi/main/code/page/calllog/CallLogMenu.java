@@ -80,6 +80,27 @@ public abstract class CallLogMenu extends CallLogTitle implements MenuProvider, 
 	}
 	
 	@Override
+	public void showTime(boolean showTime) {
+		
+		super.showTime(showTime);
+		
+		if (getAdapter() != null) {
+			
+			if (!showTime && getAdapter().isSelectionMode()) {
+				
+				cancelSelection();
+			}
+			else {
+				
+				//var menu = menuManager.getMenu();
+				
+				menuManager.setVisible(R.id.menu_call_filter, showTime);
+				menuManager.setVisible(R.id.menu_search_call, showTime);
+			}
+		}
+	}
+	
+	@Override
 	public void onPrepareMenu(@NonNull Menu menu) {
 		
 		if (menuPrepared++ == 0) {
@@ -93,7 +114,7 @@ public abstract class CallLogMenu extends CallLogTitle implements MenuProvider, 
 			return;
 		}
 		
-		var b = isShowTime();
+		boolean b = isShowTime();
 		
 		menu.findItem(R.id.menu_call_filter).setVisible(b);
 		menu.findItem(R.id.menu_random_calls_activity).setVisible(b);
@@ -198,9 +219,9 @@ public abstract class CallLogMenu extends CallLogTitle implements MenuProvider, 
 			//- Menüye eleman ekleyen herkes elemanlarını ikinci bir emre kadar çekmeli.
 			
 			//- Ana listeyi değiştirmiyoruz, yeni bir liste oluşturuyoruz
-			var list = Lister.listOf(menuManager.getMenuItemResourceIds());
+			java.util.@NotNull List<Integer> list = Lister.listOf(menuManager.getMenuItemResourceIds());
 			//- Bunlar seçim modu aktif oluşca iş yapacak menü elemanları
-			var selectionMenuItems = Lister.listOf(
+			java.util.@NotNull List<Integer> selectionMenuItems = Lister.listOf(
 					R.id.call_log_menu_delete_all,
 					R.id.call_log_menu_select_all
 			);
@@ -227,7 +248,7 @@ public abstract class CallLogMenu extends CallLogTitle implements MenuProvider, 
 			getAdapter().cancelSelection();
 			updateSubTitle();
 			
-			var visible = isShowTime();
+			boolean visible = isShowTime();
 			
 			menuManager.setVisible(menuManager.getMenuItemResourceIds(), visible);
 			
@@ -247,34 +268,13 @@ public abstract class CallLogMenu extends CallLogTitle implements MenuProvider, 
 	
 	private void loopAdapterHolders(Consumer<CallAdapter.Holder> consumer) {
 		
-		var count = recyclerView.getChildCount();
+		int count = recyclerView.getChildCount();
 		
 		for (int i = 0; i < count; i++) {
 			
 			CallAdapter.Holder holder = (CallAdapter.Holder) recyclerView.getChildViewHolder(recyclerView.getChildAt(i));
 			
 			consumer.accept(holder);
-		}
-	}
-	
-	@Override
-	public void showTime(boolean showTime) {
-		
-		super.showTime(showTime);
-		
-		if (getAdapter() != null) {
-			
-			if (!showTime && getAdapter().isSelectionMode()) {
-				
-				cancelSelection();
-			}
-			else {
-				
-				//var menu = menuManager.getMenu();
-				
-				menuManager.setVisible(R.id.menu_call_filter, showTime);
-				menuManager.setVisible(R.id.menu_search_call, showTime);
-			}
 		}
 	}
 	

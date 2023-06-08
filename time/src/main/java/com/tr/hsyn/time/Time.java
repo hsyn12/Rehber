@@ -403,7 +403,7 @@ public class Time implements TimeMillis {
 	 * @param duration Süre (milisaniye)
 	 * @return Zaman bilgisi
 	 */
-	@Deprecated(forRemoval = true)
+	@Deprecated
 	@NotNull
 	public static Duration howLongTime(long duration) {
 		
@@ -474,7 +474,7 @@ public class Time implements TimeMillis {
 	 * @param longSupplier Süre (milisaniye)
 	 * @return Zaman bilgisi
 	 */
-	@Deprecated(forRemoval = true)
+	@Deprecated
 	@NotNull
 	public static Duration howLongTime(@NotNull Supplier<Long> longSupplier) {
 		
@@ -529,8 +529,8 @@ public class Time implements TimeMillis {
 	@NotNull
 	public static Duration howLongBefore(long aDate) {
 		
-		var now  = Time.time().dateTime;
-		var date = LocalDateTime.ofInstant(Instant.ofEpochMilli(aDate), com.tr.hsyn.time.Date.DEFAULT_ZONE_OFFSET);
+		LocalDateTime now  = Time.time().dateTime;
+		LocalDateTime date = LocalDateTime.ofInstant(Instant.ofEpochMilli(aDate), com.tr.hsyn.time.Date.DEFAULT_ZONE_OFFSET);
 		
 		if (date.isAfter(now)) {
 			
@@ -596,8 +596,8 @@ public class Time implements TimeMillis {
 	@NotNull
 	public static DurationGroup toDuration(long duration) {
 		
-		var durationBuilder = DurationGroup.builder();
-		var isNegative      = duration < 0L;
+		DurationGroup.@NotNull Builder durationBuilder = DurationGroup.builder();
+		boolean                        isNegative      = duration < 0L;
 		duration = Math.abs(duration);
 		
 		while (true) {

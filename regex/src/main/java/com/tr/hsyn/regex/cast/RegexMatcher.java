@@ -11,11 +11,6 @@ import java.util.regex.Pattern;
 
 public interface RegexMatcher extends Text {
 	
-	static @NotNull Matcher createMatcher(@NotNull String regex, @NotNull String text) {
-		
-		return Pattern.compile(regex).matcher(text);
-	}
-	
 	/**
 	 * Returns matcher by specified text
 	 *
@@ -61,13 +56,13 @@ public interface RegexMatcher extends Text {
 	 */
 	default List<String> matchesOf(@NotNull CharSequence text, int limit) {
 		
-		int          count   = 0;
-		var          matcher = createMatcher(text);
-		List<String> list    = new ArrayList<>();
+		int              count   = 0;
+		@NotNull Matcher matcher = createMatcher(text);
+		List<String>     list    = new ArrayList<>();
 		
 		while (matcher.find()) {
 			
-			var group = matcher.group();
+			String group = matcher.group();
 			
 			if (group != null) {
 				
@@ -104,7 +99,7 @@ public interface RegexMatcher extends Text {
 		try {
 			while (matcher.find()) {
 				
-				var group = matcher.group(groupName);
+				String group = matcher.group(groupName);
 				
 				if (group != null) {
 					
@@ -118,6 +113,11 @@ public interface RegexMatcher extends Text {
 		catch (Exception ignored) {}
 		
 		return list;
+	}
+	
+	static @NotNull Matcher createMatcher(@NotNull String regex, @NotNull String text) {
+		
+		return Pattern.compile(regex).matcher(text);
 	}
 	
 }

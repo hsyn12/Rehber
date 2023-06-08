@@ -20,9 +20,6 @@ import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.dev.Phone;
 import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
-import com.tr.hsyn.telefonrehberi.main.contact.data.Contacts;
-import com.tr.hsyn.telefonrehberi.main.contact.data.handler.MimeTypeHandlers;
-import com.tr.hsyn.telefonrehberi.main.contact.data.handler.NumberHandler;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
 import com.tr.hsyn.textdrawable.TextDrawable;
 import com.tr.hsyn.treadedwork.ThreadedWork;
@@ -80,8 +77,8 @@ public abstract class ContactDetailsHeadWay extends ContactDetailsView implement
 	 */
 	private void setImage() {
 		
-		var font  = ResourcesCompat.getFont(this, com.tr.hsyn.resfont.R.font.nunito_regular);
-		int color = Colors.getPrimaryColor();
+		android.graphics.Typeface font  = ResourcesCompat.getFont(this, com.tr.hsyn.resfont.R.font.nunito_regular);
+		int                       color = Colors.getPrimaryColor();
 		
 		collapsingToolbarLayout.setContentScrimColor(color);
 		collapsingToolbarLayout.setCollapsedTitleTypeface(font);
@@ -98,7 +95,7 @@ public abstract class ContactDetailsHeadWay extends ContactDetailsView implement
 			
 			final int fontSize = 256;
 			
-			var drawable = TextDrawable.builder().beginConfig().useFont(font).fontSize(fontSize).endConfig().buildRect(Stringx.toUpper(Stringx.getFirstChar(contact.getName())), color);
+			TextDrawable drawable = TextDrawable.builder().beginConfig().useFont(font).fontSize(fontSize).endConfig().buildRect(Stringx.toUpper(Stringx.getFirstChar(contact.getName())), color);
 			
 			image.setImageDrawable(drawable);
 		}
@@ -113,7 +110,7 @@ public abstract class ContactDetailsHeadWay extends ContactDetailsView implement
 		
 		if (phoneNumbers != null && !phoneNumbers.isEmpty()) {
 			
-			for (var number : phoneNumbers) {
+			for (String number : phoneNumbers) {
 				
 				View view = getLayoutInflater().inflate(R.layout.number_item, numbersLayout, false);
 				
@@ -127,7 +124,7 @@ public abstract class ContactDetailsHeadWay extends ContactDetailsView implement
 				ImageView iconCall    = view.findViewById(R.id.contact_details_icon_call);
 				
 				final float factor = .2f;
-				var         color  = Colors.lighter(Colors.getPrimaryColor(), factor);
+				int         color  = Colors.lighter(Colors.getPrimaryColor(), factor);
 				
 				Colors.setTintDrawable(iconMessage.getDrawable(), color);
 				Colors.setTintDrawable(iconCall.getDrawable(), color);
@@ -206,34 +203,6 @@ public abstract class ContactDetailsHeadWay extends ContactDetailsView implement
 	}
 	
 	/**
-	 * Sets the details of the contact and calls {@link #prepare()} method.
-	 */
-	@Deprecated(forRemoval = true)
-	private void setDetails() {
-		
-		boolean detailsApplied = contact.getBool(ContactKey.DETAILS_APPLIED);
-		
-		if (!detailsApplied) {
-			
-			workOnBackground(() -> {
-				
-				MimeTypeHandlers handlers = new MimeTypeHandlers(new NumberHandler());
-				
-				Contacts.setContactDetails(getContentResolver(), contact, handlers);
-				
-				if (contact.getPic() != null) {
-					
-					contact.setData(ContactKey.BIG_PIC, Contacts.getBigPic(getContentResolver(), contact.getContactId()));
-				}
-				
-				workOnMain(this::prepare);
-				
-			});
-		}
-		else prepare();
-	}
-	
-	/**
 	 * Listener for the email view click event.
 	 *
 	 * @param view email view
@@ -254,7 +223,7 @@ public abstract class ContactDetailsHeadWay extends ContactDetailsView implement
 	 */
 	private void sendEmailIntent(String email) {
 		
-		var    uri = Uri.parse("mailto:" + email).buildUpon().build();
+		Uri    uri = Uri.parse("mailto:" + email).buildUpon().build();
 		Intent i   = new Intent(Intent.ACTION_SENDTO, uri);
 		
 		try {

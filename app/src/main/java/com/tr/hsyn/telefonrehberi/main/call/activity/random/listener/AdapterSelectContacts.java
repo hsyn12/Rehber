@@ -44,7 +44,7 @@ public class AdapterSelectContacts extends RecyclerView.Adapter<AdapterSelectCon
 			
 			for (int i = 0; i < contacts.size(); i++) {
 				
-				var c = contacts.get(i);
+				Contact c = contacts.get(i);
 				
 				if (!selectedIndexes.contains(String.valueOf(c.getContactId()))) {
 					
@@ -57,7 +57,7 @@ public class AdapterSelectContacts extends RecyclerView.Adapter<AdapterSelectCon
 			
 			for (int i = 0; i < contacts.size(); ) {
 				
-				var c = contacts.get(i);
+				Contact c = contacts.get(i);
 				
 				if (selectedIndexes.contains(String.valueOf(c.getContactId()))) {
 					
@@ -92,12 +92,12 @@ public class AdapterSelectContacts extends RecyclerView.Adapter<AdapterSelectCon
 	@Override
 	public void onBindViewHolder(@NonNull Holder holder, int position) {
 		
-		var contact = contacts.get(position);
+		Contact contact = contacts.get(position);
 		
 		holder.name.setText(contact.getName());
 		holder.selected.setChecked(selectedIndexes.contains(String.valueOf(contact.getContactId())));
 		
-		var img = TextDrawable.builder()
+		TextDrawable img = TextDrawable.builder()
 				.beginConfig()
 				.useFont(ResourcesCompat.getFont(holder.itemView.getContext(), com.tr.hsyn.resfont.R.font.z))
 				.endConfig()

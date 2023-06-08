@@ -59,7 +59,7 @@ public class Colorabi extends DBBase<ColorRegister> implements ColorRegisters {
 	@Override
 	public @NotNull Values contentValuesOf(@NonNull ColorRegister colorData) {
 		
-		var value = new Values();
+		Values value = new Values();
 		
 		value.put(NAME, colorData.getName());
 		value.put(COLOR, colorData.getColor());
@@ -76,16 +76,23 @@ public class Colorabi extends DBBase<ColorRegister> implements ColorRegisters {
 		
 		@NonNull
 		@Override
-		public String getTableName() {
+		public String getDatabaseName() {
 			
-			return "xyz_Color";
+			return "xyz_Colors";
 		}
 		
 		@NonNull
 		@Override
-		public String getDatabaseName() {
+		public String getPrimaryKey() {
+			//- Hiçbir seçim aynı anda gerçekleşemeyeceği için güvenli
+			return TIME_SELECTED;
+		}
+		
+		@NonNull
+		@Override
+		public String getTableName() {
 			
-			return "xyz_Colors";
+			return "xyz_Color";
 		}
 		
 		@NonNull
@@ -101,13 +108,6 @@ public class Colorabi extends DBBase<ColorRegister> implements ColorRegisters {
 					new Number(TIME_SELECTED).primaryKey(),
 					new Number(TIME_UNSELECTED).defaultValue(0L)
 			};
-		}
-		
-		@NonNull
-		@Override
-		public String getPrimaryKey() {
-			//- Hiçbir seçim aynı anda gerçekleşemeyeceği için güvenli
-			return TIME_SELECTED;
 		}
 	}
 }

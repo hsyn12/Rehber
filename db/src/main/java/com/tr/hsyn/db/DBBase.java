@@ -65,9 +65,9 @@ public abstract class DBBase<T extends Identity> extends DBOperator<T> {
 	@Nullable
 	public String getString(long primaryValue, @NonNull String columnName) {
 		
-		var primaryKey = databaseInterface.getPrimaryKey();
+		@org.jetbrains.annotations.NotNull String primaryKey = databaseInterface.getPrimaryKey();
 		
-		var cursor = getReadableDatabase().query(
+		Cursor cursor = getReadableDatabase().query(
 				databaseInterface.getTableName(),
 				null,
 				String.format("%s=?", primaryKey),
@@ -101,6 +101,32 @@ public abstract class DBBase<T extends Identity> extends DBOperator<T> {
 		return find(primaryValue, this::createObject);
 	}
 	
+	@Override
+	@NonNull
+	public List<T> queryAll() {
+		
+		return query(this::createObject, null, null, null);
+	}
+	
+	@Override
+	public List<T> queryAll(String selection, String sortOrder) {
+		
+		return query(this::createObject, selection, null, sortOrder);
+	}
+	
+	@Override
+	public List<T> queryAll(String selection) {
+		
+		return query(this::createObject, selection, null, null);
+	}
+	
+	@NonNull
+	@Override
+	public List<T> queryAll(String selection, String[] selectionArgs, String sortOrder) {
+		
+		return query(this::createObject, selection, selectionArgs, sortOrder);
+	}
+	
 	@Nullable
 	public T find(long primaryValue, @NonNull Function<? super Cursor, ? extends T> func) {
 		
@@ -131,32 +157,6 @@ public abstract class DBBase<T extends Identity> extends DBOperator<T> {
 		
 		cursor.close();
 		return item;
-	}
-	
-	@Override
-	@NonNull
-	public List<T> queryAll() {
-		
-		return query(this::createObject, null, null, null);
-	}
-	
-	@Override
-	public List<T> queryAll(String selection) {
-		
-		return query(this::createObject, selection, null, null);
-	}
-	
-	@Override
-	public List<T> queryAll(String selection, String sortOrder) {
-		
-		return query(this::createObject, selection, null, sortOrder);
-	}
-	
-	@NonNull
-	@Override
-	public List<T> queryAll(String selection, String[] selectionArgs, String sortOrder) {
-		
-		return query(this::createObject, selection, selectionArgs, sortOrder);
 	}
 	
 }

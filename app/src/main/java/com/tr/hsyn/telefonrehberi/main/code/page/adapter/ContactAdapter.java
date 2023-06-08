@@ -118,7 +118,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> 
 	@NonNull
 	private String getLetter(String str) {
 		
-		var l = Stringx.getFirstChar(str);
+		@org.jetbrains.annotations.NotNull String l = Stringx.getFirstChar(str);
 		
 		if (l.isEmpty()) return "?";
 		
@@ -206,7 +206,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> 
 			
 			sections = new HashMap<>();
 			
-			for (var n : items) {
+			for (String n : items) {
 				
 				String m = Stringx.trimWhiteSpaces(n);
 				
@@ -214,14 +214,14 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> 
 					
 					String L = String.valueOf(Stringx.toUpper(m).charAt(0));
 					
-					var list = sections.get(L);
+					List<String> list = sections.get(L);
 					
 					if (list != null) list.add(n);
 					else sections.put(L, Lister.listOf(n));
 				}
 				else {
 					
-					var list = sections.get("?");
+					List<String> list = sections.get("?");
 					
 					if (list != null) list.add(n);
 					else sections.put("?", Lister.listOf(n));
@@ -250,9 +250,9 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> 
 		@Override
 		public int getItemCountForSection(int sectionIndex) {
 			
-			var key = Lister.listOf(sections.keySet()).get(sectionIndex);
+			String key = Lister.listOf(sections.keySet()).get(sectionIndex);
 			
-			var sec = sections.get(key);
+			List<String> sec = sections.get(key);
 			
 			return sec != null ? sec.size() : 0;
 		}

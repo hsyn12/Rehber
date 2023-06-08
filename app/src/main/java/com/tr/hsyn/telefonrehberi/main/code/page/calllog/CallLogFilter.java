@@ -67,6 +67,20 @@ public abstract class CallLogFilter extends CallList implements Filter, HaveCall
 		
 	}
 	
+	@Override
+	protected void listenBackPress() {
+		
+		// This callback will only be called when MyFragment is at least Started.
+		
+		requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+	}
+	
+	@Override
+	protected void dontListenBackPress() {
+		
+		callback.remove();
+	}
+	
 	protected void onFilterSelected(int index) {
 		
 		setFilter(index);
@@ -107,7 +121,7 @@ public abstract class CallLogFilter extends CallList implements Filter, HaveCall
 		adapter = new CallAdapter(getList(), this, colorHolder, this::onCallAction, this::onLongClickItem, this::onItemSelectionChange);
 		recyclerView.setAdapter(adapter);
 		
-		var titleCallLog = getString(R.string.call_logs);
+		String titleCallLog = getString(R.string.call_logs);
 		
 		setTitle(titleCallLog);
 		checkEmpty();
@@ -168,7 +182,7 @@ public abstract class CallLogFilter extends CallList implements Filter, HaveCall
 			adapter = new CallAdapter(filteredCalls, this, colorHolder, this::onCallAction, this::onLongClickItem, this::onItemSelectionChange);
 			recyclerView.setAdapter(adapter);
 			
-			var f = filters[filter];
+			String f = filters[filter];
 			
 			if (f == null) {
 				
@@ -187,20 +201,6 @@ public abstract class CallLogFilter extends CallList implements Filter, HaveCall
 		}
 		
 		hideProgress();
-	}
-	
-	@Override
-	protected void listenBackPress() {
-		
-		// This callback will only be called when MyFragment is at least Started.
-		
-		requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
-	}
-	
-	@Override
-	protected void dontListenBackPress() {
-		
-		callback.remove();
 	}
 	
 	@Override

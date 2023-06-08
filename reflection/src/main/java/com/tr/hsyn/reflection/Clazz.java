@@ -145,7 +145,7 @@ public final class Clazz {
 	@Nullable
 	public static <T> Method findMethod(@NotNull Object clazzs, @NotNull String methodName, @Nullable Class<?>... parameterTypes) {
 		
-		var clazz = clazzs.getClass();
+		Class<?> clazz = clazzs.getClass();
 		
 		do {
 			
@@ -174,7 +174,7 @@ public final class Clazz {
 	@Nullable
 	public static <T> Method findMethodThis(@NotNull Object clazzs, @NotNull String methodName, @Nullable Class<?>... parameterTypes) {
 		
-		var clazz = clazzs.getClass();
+		Class<?> clazz = clazzs.getClass();
 		
 		try {return clazz.getDeclaredMethod(methodName, parameterTypes);}
 		catch (NoSuchMethodException ignored) {}
@@ -201,7 +201,7 @@ public final class Clazz {
 		List<Method> methods = new LinkedList<>();
 		
 		do {
-			var _methods = clazz.getDeclaredMethods();
+			Method[] _methods = clazz.getDeclaredMethods();
 			methods.addAll(Arrays.stream(_methods).filter(m -> m.getAnnotation(annotationClazz) != null).collect(Collectors.toList()));
 			clazz = clazz.getSuperclass();
 		} while (clazz != null && clazz != Object.class);
@@ -224,7 +224,7 @@ public final class Clazz {
 	 */
 	public static <A extends Annotation, T> List<Method> getMethodsAnnotatedThis(@NotNull Class<T> clazz, @NotNull Class<A> annotationClazz) {
 		
-		var _methods = clazz.getDeclaredMethods();
+		Method[] _methods = clazz.getDeclaredMethods();
 		
 		return Arrays.stream(_methods).filter(m -> m.getAnnotation(annotationClazz) != null).collect(Collectors.toCollection(LinkedList::new));
 	}
@@ -321,7 +321,7 @@ public final class Clazz {
 		
 		if (args.length == 0) return new Class<?>[0];
 		
-		var types = new Class<?>[args.length];
+		Class<?>[] types = new Class<?>[args.length];
 		
 		for (int i = 0; i < args.length; i++) types[i] = args[i].getClass();
 		
@@ -332,11 +332,11 @@ public final class Clazz {
 		
 		//int modifiers = Modifier.FINAL | Modifier.PUBLIC | Modifier.STATIC;
 		
-		var c = getDeclaredFields(Clazz.class);
+		List<Field> c = getDeclaredFields(Clazz.class);
 		
 		for (int i = 0; i < c.size(); i++) {
 			
-			var f = c.get(i);
+			Field f = c.get(i);
 			
 			System.out.printf("%s - %s\n", f.getName(), f.getType().getCanonicalName());
 		}
@@ -348,7 +348,7 @@ public final class Clazz {
 		
 		try {
 			
-			var field = clazz.getDeclaredField(fieldName);
+			Field field = clazz.getDeclaredField(fieldName);
 			
 			field.setAccessible(true);
 			return field.getInt(null);
@@ -364,7 +364,7 @@ public final class Clazz {
 		
 		try {
 			
-			var field = o.getClass().getDeclaredField(fieldName);
+			Field field = o.getClass().getDeclaredField(fieldName);
 			
 			field.setAccessible(true);
 			

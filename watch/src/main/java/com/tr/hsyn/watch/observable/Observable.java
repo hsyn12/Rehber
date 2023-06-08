@@ -71,7 +71,7 @@ public interface Observable<T> {
 	@NotNull
 	static <T> Observable<T> create(T initValue) {
 		
-		var o = new Observe<T>();
+		Observe<T> o = new Observe<T>();
 		o.initValue(initValue);
 		return o;
 	}

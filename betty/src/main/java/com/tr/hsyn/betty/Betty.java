@@ -93,7 +93,7 @@ public class Betty<R> extends Bet<R> {
 		List<Long> list = new ArrayList<>();
 		Runnable runnable = () -> {
 			
-			var l = Collections.max(list);
+			Long l = Collections.max(list);
 			
 			System.out.printf("Max element : %d\n", l);
 		};

@@ -3,7 +3,6 @@ package com.tr.hsyn.telefonrehberi.main.contact.data.handler;
 
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.contactdata.Contact;
-import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
 import com.tr.hsyn.xlog.xlog;
 
 import org.jetbrains.annotations.NotNull;
@@ -61,7 +60,5 @@ public class MimeTypeHandlers extends MimeTypeHandler {
 			
 			handler.applyResult(contact);
 		}
-		
-		contact.setData(ContactKey.DETAILS_APPLIED, true);
 	}
 }

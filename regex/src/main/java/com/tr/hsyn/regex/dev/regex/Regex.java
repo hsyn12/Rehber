@@ -358,7 +358,7 @@ public interface Regex {
 		if (ignoreCase) regex.with(Modifier.modify().ignoreCase());
 		
 		if (ignoreSpaces) {
-			for (var c : what.toCharArray()) regex.whiteSpace().with("*?").with(c);
+			for (char c : what.toCharArray()) regex.whiteSpace().with("*?").with(c);
 		}
 		
 		return regex.existIn(text);
@@ -374,7 +374,7 @@ public interface Regex {
 	 */
 	static @NotNull String stringAfterLast(@NotNull String text, @NotNull String after) {
 		
-		var index = text.lastIndexOf(after);
+		int index = text.lastIndexOf(after);
 		
 		if (index != -1) return text.substring(index + 1);
 		
@@ -390,7 +390,7 @@ public interface Regex {
 	 */
 	static @NotNull String stringAfterFirst(@NotNull String text, @NotNull String after) {
 		
-		var index = text.indexOf(after);
+		int index = text.indexOf(after);
 		
 		if (index != -1) return text.substring(index + 1);
 		
@@ -406,7 +406,7 @@ public interface Regex {
 	 */
 	static @NotNull String stringBeforeLast(@NotNull String text, @NotNull String before) {
 		
-		var index = text.lastIndexOf(before);
+		int index = text.lastIndexOf(before);
 		
 		if (index != -1) return text.substring(0, index);
 		
@@ -422,7 +422,7 @@ public interface Regex {
 	 */
 	static @NotNull String stringBeforeFirst(@NotNull String text, @NotNull String before) {
 		
-		var index = text.indexOf(before);
+		int index = text.indexOf(before);
 		
 		if (index != -1) return text.substring(0, index);
 		
@@ -443,7 +443,7 @@ public interface Regex {
 		
 		if (isNoboe(str)) return list;
 		
-		for (var index : indices) list.add(str.substring(index.start, index.end));
+		for (Index index : indices) list.add(str.substring(index.start, index.end));
 		
 		return list;
 	}
@@ -482,7 +482,7 @@ public interface Regex {
 			char c = chars[i];
 			
 			//- Karakterin sınıfı
-			var clazz = getCharacterClass(c);
+			String clazz = getCharacterClass(c);
 			
 			//- İlk döngü burayı daima atlayacak çünkü lastCharacterClass boş
 			if (lastCharacterClass.equals(clazz)) {
@@ -505,7 +505,7 @@ public interface Regex {
 					continue;
 				}
 				
-				var r = regex.getText();
+				@NotNull String r = regex.getText();
 				
 				if (!Quanta.isQuantifier(r.charAt(r.length() - 1))) regex.oneOrMore();
 			}
@@ -609,7 +609,7 @@ public interface Regex {
 		char[] chars = sequence.toCharArray();
 		
 		for (char c : chars) {
-			var clazz = CharacterSet.getCharecterSet(c, specific, moreSpecific);
+			String clazz = CharacterSet.getCharecterSet(c, specific, moreSpecific);
 			
 			int code = CharacterSet.getCharacterCode(clazz);
 			

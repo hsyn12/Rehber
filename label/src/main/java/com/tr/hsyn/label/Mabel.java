@@ -22,7 +22,7 @@ public interface Mabel extends Labeled, Labeller {
 		
 		if (getLabels() == null) setLabels(new HashSet<>());
 		
-		var labels = getLabels();
+		java.util.@org.jetbrains.annotations.Nullable Set<Label> labels = getLabels();
 		
 		labels.add(label);
 		return this;
@@ -37,7 +37,7 @@ public interface Mabel extends Labeled, Labeller {
 		
 		if (getLabels() == null) setLabels(new HashSet<>());
 		
-		var _labels = getLabels();
+		java.util.@org.jetbrains.annotations.Nullable Set<Label> _labels = getLabels();
 		
 		_labels.addAll(Arrays.asList(labels));
 	}
@@ -49,7 +49,7 @@ public interface Mabel extends Labeled, Labeller {
 	 */
 	default boolean removeLabel(@NotNull final Label label) {
 		
-		var labels = getLabels();
+		java.util.@org.jetbrains.annotations.Nullable Set<Label> labels = getLabels();
 		
 		if (labels != null)
 			return labels.remove(label);
@@ -65,7 +65,7 @@ public interface Mabel extends Labeled, Labeller {
 	 */
 	default boolean hasLabel(@NotNull final Label label) {
 		
-		var labels = getLabels();
+		java.util.@org.jetbrains.annotations.Nullable Set<Label> labels = getLabels();
 		
 		if (labels != null)
 			return labels.contains(label);
@@ -81,7 +81,7 @@ public interface Mabel extends Labeled, Labeller {
 	 */
 	default boolean hasLabel(@NotNull final String labelName) {
 		
-		var labels = getLabels();
+		java.util.@org.jetbrains.annotations.Nullable Set<Label> labels = getLabels();
 		
 		if (labels != null)
 			return labels.stream().anyMatch(l -> l.getName().equals(labelName));
@@ -97,7 +97,7 @@ public interface Mabel extends Labeled, Labeller {
 	 */
 	default boolean hasLabel(int labelId) {
 		
-		var labels = getLabels();
+		java.util.@org.jetbrains.annotations.Nullable Set<Label> labels = getLabels();
 		
 		if (labels != null)
 			return labels.stream().anyMatch(l -> l.getId() == labelId);

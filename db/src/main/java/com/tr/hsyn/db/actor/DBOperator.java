@@ -43,56 +43,17 @@ public abstract class DBOperator<T extends Identity> extends SQLiteOpenHelper im
 		this.context           = context;
 	}
 	
-	@NonNull
-	public static ContentValues convertFrom(@NonNull Values values) {
-		
-		ContentValues  valuesCopy = new ContentValues();
-		Value<String>  strings    = values.getValue(Values.TYPE_STRING);
-		Value<Integer> ints       = values.getValue(Values.TYPE_INT);
-		Value<Long>    longs      = values.getValue(Values.TYPE_LONG);
-		Value<Boolean> bools      = values.getValue(Values.TYPE_BOOL);
-		
-		if (strings != null) {
-			
-			for (var key : strings.keySet()) {
-				
-				valuesCopy.put(key, strings.get(key));
-			}
-		}
-		
-		if (ints != null) {
-			
-			for (var key : ints.keySet()) {
-				
-				valuesCopy.put(key, ints.get(key));
-			}
-		}
-		
-		if (longs != null) {
-			
-			for (var key : longs.keySet()) {
-				
-				valuesCopy.put(key, longs.get(key));
-			}
-		}
-		
-		if (bools != null) {
-			
-			for (var key : bools.keySet()) {
-				
-				valuesCopy.put(key, bools.get(key));
-			}
-		}
-		
-		return valuesCopy;
-	}
-	
 	@Override
 	public void onCreate(@NotNull SQLiteDatabase sqLiteDatabase) {
 		
-		var table = databaseInterface.getCreateTableQuery();
+		@NotNull String table = databaseInterface.getCreateTableQuery();
 		xlog.i("Creating table : %s", table);
 		sqLiteDatabase.execSQL(table);
+	}
+	
+	@Override
+	public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+		
 	}
 	
 	@Override
@@ -103,21 +64,16 @@ public abstract class DBOperator<T extends Identity> extends SQLiteOpenHelper im
 	}
 	
 	@Override
-	public long getRawCount() {
-		
-		return getReadableDatabase().compileStatement("select count(*) from " + databaseInterface.getTableName()).simpleQueryForLong();
-	}
-	
-	@Override
 	public long getSizeInBytes() {
 		
-		var file = context.getDatabasePath(databaseInterface.getDatabaseName());
+		java.io.File file = context.getDatabasePath(databaseInterface.getDatabaseName());
 		return (file != null) ? file.length() : -1;
 	}
 	
 	@Override
-	public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+	public long getRawCount() {
 		
+		return getReadableDatabase().compileStatement("select count(*) from " + databaseInterface.getTableName()).simpleQueryForLong();
 	}
 	
 	@NonNull
@@ -167,5 +123,49 @@ public abstract class DBOperator<T extends Identity> extends SQLiteOpenHelper im
 	public void setTransactionSuccessful() {
 		
 		getWritableDatabase().setTransactionSuccessful();
+	}
+	
+	@NonNull
+	public static ContentValues convertFrom(@NonNull Values values) {
+		
+		ContentValues  valuesCopy = new ContentValues();
+		Value<String>  strings    = values.getValue(Values.TYPE_STRING);
+		Value<Integer> ints       = values.getValue(Values.TYPE_INT);
+		Value<Long>    longs      = values.getValue(Values.TYPE_LONG);
+		Value<Boolean> bools      = values.getValue(Values.TYPE_BOOL);
+		
+		if (strings != null) {
+			
+			for (String key : strings.keySet()) {
+				
+				valuesCopy.put(key, strings.get(key));
+			}
+		}
+		
+		if (ints != null) {
+			
+			for (String key : ints.keySet()) {
+				
+				valuesCopy.put(key, ints.get(key));
+			}
+		}
+		
+		if (longs != null) {
+			
+			for (String key : longs.keySet()) {
+				
+				valuesCopy.put(key, longs.get(key));
+			}
+		}
+		
+		if (bools != null) {
+			
+			for (String key : bools.keySet()) {
+				
+				valuesCopy.put(key, bools.get(key));
+			}
+		}
+		
+		return valuesCopy;
 	}
 }

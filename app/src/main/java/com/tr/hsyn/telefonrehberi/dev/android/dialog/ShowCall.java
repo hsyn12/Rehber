@@ -64,7 +64,7 @@ public class ShowCall {
 		ImageView type            = view.findViewById(R.id.type);
 		ImageView image           = view.findViewById(R.id.image);
 		
-		var root = view.findViewById(R.id.call_item);
+		View root = view.findViewById(R.id.call_item);
 		root.setBackgroundResource(Colors.getRipple());
 		
 		
@@ -103,7 +103,7 @@ public class ShowCall {
 	@NonNull
 	private String getLetter(String str) {
 		
-		var l = Stringx.getFirstChar(str);
+		@NotNull String l = Stringx.getFirstChar(str);
 		
 		if (l.isEmpty()) return "?";
 		

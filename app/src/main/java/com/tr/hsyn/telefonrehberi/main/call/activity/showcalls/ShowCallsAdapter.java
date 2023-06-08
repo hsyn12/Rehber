@@ -116,7 +116,7 @@ public class ShowCallsAdapter extends FastAdapter<Call> {
 	@NonNull
 	private String getLeter(String str) {
 		
-		var l = Stringx.getFirstChar(str);
+		@org.jetbrains.annotations.NotNull String l = Stringx.getFirstChar(str);
 		
 		if (l.isEmpty()) return "?";
 		

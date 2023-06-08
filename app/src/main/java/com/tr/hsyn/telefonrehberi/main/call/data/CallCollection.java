@@ -4,11 +4,14 @@ package com.tr.hsyn.telefonrehberi.main.call.data;
 import androidx.annotation.NonNull;
 
 import com.tr.hsyn.calldata.Call;
+import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.keep.Keep;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.main.call.data.hotlist.HotListByQuantity;
+import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
+import com.tr.hsyn.telefonrehberi.main.contact.data.History;
 import com.tr.hsyn.xbox.Blue;
 
 import org.jetbrains.annotations.NotNull;
@@ -26,6 +29,9 @@ import java.util.stream.Collectors;
 @Keep
 public final class CallCollection {
 	
+	/**
+	 * All call log calls
+	 */
 	private final List<Call>              calls;
 	/**
 	 * Map object that has a key by phone number, and a value as a list of its calls
@@ -55,7 +61,6 @@ public final class CallCollection {
 		outgoingDuration  = 0;
 		hotListByQuantity = null;
 	}
-	
 	
 	/**
 	 * Creates a new call collection.
@@ -87,6 +92,12 @@ public final class CallCollection {
 	public HotListByQuantity getHotListByQuantity() {
 		
 		return hotListByQuantity;
+	}
+	
+	@NotNull
+	public History getHistoryOf(@NotNull Contact contact) {
+		
+		return History.of(contact, getCallsByNumbers(ContactKey.getNumbers(contact)));
 	}
 	
 	/**
@@ -183,13 +194,15 @@ public final class CallCollection {
 	 */
 	public int getCallSize(int callType) {
 		
-		return switch (callType) {
-			case Call.INCOMING, Call.INCOMING_WIFI -> incomingCalls.size();
-			case Call.OUTGOING, Call.OUTGOING_WIFI -> outgoingCalls.size();
-			case Call.MISSED -> missedCalls.size();
-			case Call.REJECTED -> rejectedCalls.size();
-			default -> getCallsByType(callType).size();
-		};
+		switch (callType) {
+			case Call.INCOMING:
+			case Call.INCOMING_WIFI: return incomingCalls.size();
+			case Call.OUTGOING:
+			case Call.OUTGOING_WIFI: return outgoingCalls.size();
+			case Call.MISSED: return missedCalls.size();
+			case Call.REJECTED: return rejectedCalls.size();
+			default: return getCallsByType(callType).size();
+		}
 	}
 	
 	/**
@@ -217,7 +230,7 @@ public final class CallCollection {
 		
 		if (numbers == null || isEmpty()) return calls;
 		
-		for (var number : numbers) calls.addAll(getCallsByNumber(number));
+		for (String number : numbers) calls.addAll(getCallsByNumber(number));
 		
 		return calls;
 	}
@@ -228,7 +241,7 @@ public final class CallCollection {
 		
 		if (numbers == null || isEmpty()) return calls;
 		
-		for (var number : numbers) calls.addAll(getCallsByNumber(number, callList));
+		for (String number : numbers) calls.addAll(getCallsByNumber(number, callList));
 		
 		return calls;
 	}
@@ -260,7 +273,7 @@ public final class CallCollection {
 		
 		if (Stringx.isNoboe(phoneNumber) || isEmpty()) return new ArrayList<>(0);
 		
-		var _phoneNumber = PhoneNumbers.formatNumber(phoneNumber, 10);
+		@NotNull String _phoneNumber = PhoneNumbers.formatNumber(phoneNumber, 10);
 		return callList.stream().filter(c -> c.getNumber().equals(_phoneNumber)).collect(Collectors.toList());
 	}
 	
@@ -293,7 +306,7 @@ public final class CallCollection {
 	@NotNull
 	public static CallCollection create(@NotNull List<Call> calls) {
 		
-		var collection = new CallCollection(calls);
+		CallCollection collection = new CallCollection(calls);
 		
 		Blue.box(Key.CALL_COLLECTION, collection);
 		
@@ -308,7 +321,7 @@ public final class CallCollection {
 	@NotNull
 	public static CallCollection createEmpty() {
 		
-		var collection = new CallCollection();
+		CallCollection collection = new CallCollection();
 		
 		Blue.box(Key.CALL_COLLECTION, collection);
 		

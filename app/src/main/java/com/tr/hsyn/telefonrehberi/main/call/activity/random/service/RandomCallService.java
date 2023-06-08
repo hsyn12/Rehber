@@ -135,24 +135,6 @@ public class RandomCallService extends Service implements GenerationService {
 	 */
 	private              Consumer<Integer>                       onMissionCompleted;
 	
-	/**
-	 * Listen to the service running state
-	 *
-	 * @param listener listener
-	 */
-	public static void listenRunning(@Nullable Observer<Boolean> listener) {
-		
-		running.setObserver(listener);
-	}
-	
-	/**
-	 * @return <code>true</code> if the service is running
-	 */
-	public static boolean isRunning() {
-		
-		return running.get();
-	}
-	
 	@Override
 	public void onCreate() {
 		
@@ -164,9 +146,9 @@ public class RandomCallService extends Service implements GenerationService {
 		openActivityIntent  = new Intent(this, RandomCallsActivity.class);
 		stopIntent.setAction(ACTION_STOP_GENERATION);
 		
-		var channel = notifications.createNewChannel("RandomCalls", CHANNEL_ID);
+		android.app.NotificationChannel channel = notifications.createNewChannel("RandomCalls", CHANNEL_ID);
 		
-		var channelState = notifications.isChannelEnable(channel);
+		boolean channelState = notifications.isChannelEnable(channel);
 		
 		xlog.d("'%s' channel state : %s", channel.getName(), channelState);
 		
@@ -179,7 +161,7 @@ public class RandomCallService extends Service implements GenerationService {
 		
 		if (intent != null) {
 			
-			var action = intent.getAction();
+			String action = intent.getAction();
 			
 			if (ACTION_STOP_GENERATION.equals(action)) {
 				
@@ -281,7 +263,7 @@ public class RandomCallService extends Service implements GenerationService {
 					});
 				}
 				
-				var listener = progressListener.get();
+				ProgressListener<Call> listener = progressListener.get();
 				
 				if (listener != null) {
 					
@@ -455,6 +437,24 @@ public class RandomCallService extends Service implements GenerationService {
 	private void stopFore() {
 		
 		stopForeground(true);
+	}
+	
+	/**
+	 * Listen to the service running state
+	 *
+	 * @param listener listener
+	 */
+	public static void listenRunning(@Nullable Observer<Boolean> listener) {
+		
+		running.setObserver(listener);
+	}
+	
+	/**
+	 * @return <code>true</code> if the service is running
+	 */
+	public static boolean isRunning() {
+		
+		return running.get();
 	}
 	
 	public static final class StateMessages {

@@ -11,6 +11,22 @@ import java.util.List;
 import java.util.Map;
 
 
+/**
+ * Provides some get ranked lists according to the number of calls by using all call log calls.<br>
+ *
+ * <ul>
+ *    <li>{@link #getMostCalls()} returns a map object that ranked by calls size in all calls.</li>
+ *    <li>{@link #getMostIncomingCalls()} returns a map object that ranked by calls size in incoming calls.</li>
+ *    <li>{@link #getMostOutgoingCalls()} returns a map object that ranked by calls size in outgoing calls.</li>
+ *    <li>{@link #getMostMissedCalls()} returns a map object that ranked by calls size in missed calls.</li>
+ *    <li>{@link #getMostRejectedCalls()} returns a map object that ranked by calls size in rejected calls.</li>
+ * </ul>
+ *
+ * <p>
+ * <p>
+ *  The ranking is based on the number of calls and ranks start from 1.
+ *  So the first rank is 1, and it has the highest number of calls.
+ */
 public class HotListByQuantity {
 	
 	/**
@@ -46,7 +62,7 @@ public class HotListByQuantity {
 	public HotListByQuantity(@NotNull CallCollection callCollection) {
 		
 		this.callCollection = callCollection;
-		mostCalls           = new RankList(callCollection.getNumberedCalls()).makeRanks().getRankMap();
+		mostCalls           = new RankList(callCollection.getNumberedCalls()).makeQuantityRanks().getRankMap();
 		mostIncomingCalls   = makeMostIncomingCalls();
 		mostOutgoingCalls   = makeMostOutgoingCalls();
 		mostMissedCalls     = makeMostMissedCalls();
@@ -126,10 +142,10 @@ public class HotListByQuantity {
 	 */
 	private Map<Integer, List<CallRank>> makeMostIncomingCalls() {
 		
-		var incomingCalls = callCollection.getIncomingCalls();
-		var numberedCalls = CallCollection.makeNumberedCalls(incomingCalls);
-		var rankList      = new RankList(numberedCalls);
-		return rankList.makeRanks().getRankMap();
+		List<com.tr.hsyn.calldata.Call>              incomingCalls = callCollection.getIncomingCalls();
+		Map<String, List<com.tr.hsyn.calldata.Call>> numberedCalls = CallCollection.makeNumberedCalls(incomingCalls);
+		RankList                                     rankList      = new RankList(numberedCalls);
+		return rankList.makeQuantityRanks().getRankMap();
 	}
 	
 	/**
@@ -139,10 +155,10 @@ public class HotListByQuantity {
 	 */
 	private Map<Integer, List<CallRank>> makeMostOutgoingCalls() {
 		
-		var outgoingCalls = callCollection.getOutgoingCalls();
-		var numberedCalls = CallCollection.makeNumberedCalls(outgoingCalls);
-		var rankList      = new RankList(numberedCalls);
-		return rankList.makeRanks().getRankMap();
+		List<com.tr.hsyn.calldata.Call>              outgoingCalls = callCollection.getOutgoingCalls();
+		Map<String, List<com.tr.hsyn.calldata.Call>> numberedCalls = CallCollection.makeNumberedCalls(outgoingCalls);
+		RankList                                     rankList      = new RankList(numberedCalls);
+		return rankList.makeQuantityRanks().getRankMap();
 	}
 	
 	/**
@@ -152,10 +168,10 @@ public class HotListByQuantity {
 	 */
 	private Map<Integer, List<CallRank>> makeMostMissedCalls() {
 		
-		var missedCalls   = callCollection.getMissedCalls();
-		var numberedCalls = CallCollection.makeNumberedCalls(missedCalls);
-		var rankList      = new RankList(numberedCalls);
-		return rankList.makeRanks().getRankMap();
+		List<com.tr.hsyn.calldata.Call>              missedCalls   = callCollection.getMissedCalls();
+		Map<String, List<com.tr.hsyn.calldata.Call>> numberedCalls = CallCollection.makeNumberedCalls(missedCalls);
+		RankList                                     rankList      = new RankList(numberedCalls);
+		return rankList.makeQuantityRanks().getRankMap();
 	}
 	
 	/**
@@ -165,10 +181,10 @@ public class HotListByQuantity {
 	 */
 	private Map<Integer, List<CallRank>> makeMostRejectedCalls() {
 		
-		var rejectedCalls = callCollection.getRejectedCalls();
-		var numberedCalls = CallCollection.makeNumberedCalls(rejectedCalls);
-		var rankList      = new RankList(numberedCalls);
-		return rankList.makeRanks().getRankMap();
+		List<com.tr.hsyn.calldata.Call>              rejectedCalls = callCollection.getRejectedCalls();
+		Map<String, List<com.tr.hsyn.calldata.Call>> numberedCalls = CallCollection.makeNumberedCalls(rejectedCalls);
+		RankList                                     rankList      = new RankList(numberedCalls);
+		return rankList.makeQuantityRanks().getRankMap();
 	}
 	
 }

@@ -97,7 +97,7 @@ public class DocumentRegister implements Register {
 			throw new IllegalArgumentException(String.format("Ana dizine erişim yok [%s]", mainDirectory));
 		}
 		
-		var dir = mainDirectory.findFile(directoryName);
+		DocumentFile dir = mainDirectory.findFile(directoryName);
 		
 		if (dir == null) dir = mainDirectory.createDirectory(directoryName);
 		
@@ -113,11 +113,11 @@ public class DocumentRegister implements Register {
 	@Override
 	public <T> void write(@NonNull String key, @NonNull T object) {
 		
-		var file = getFile(key);
+		DocumentFile file = getFile(key);
 		
 		try {
 			if (file == null) throw new AssertionError();
-			try (var writer = new FileWriter(File.getFileDescriptorW(resolver, file.getUri()))) {
+			try (FileWriter writer = new FileWriter(File.getFileDescriptorW(resolver, file.getUri()))) {
 				
 				Register.GSON.toJson(object, writer);
 				
@@ -132,12 +132,12 @@ public class DocumentRegister implements Register {
 	@Override
 	public <T> void write(@NonNull String key, @NonNull List<T> objectList) {
 		
-		var file = getFile(key);
+		DocumentFile file = getFile(key);
 		
 		try {
 			
 			if (file == null) throw new AssertionError();
-			try (var writer = new FileWriter(File.getFileDescriptorW(resolver, file.getUri()))) {
+			try (FileWriter writer = new FileWriter(File.getFileDescriptorW(resolver, file.getUri()))) {
 				
 				Register.GSON.toJson(objectList, writer);
 				
@@ -153,9 +153,9 @@ public class DocumentRegister implements Register {
 	@Override
 	public <T> T read(@NonNull String key, @NonNull Class<T> clazz) {
 		
-		var file = getFile(key);
+		DocumentFile file = getFile(key);
 		
-		try (var reader = new FileReader(File.getFileDescriptor(resolver, file.getUri()))) {
+		try (FileReader reader = new FileReader(File.getFileDescriptor(resolver, file.getUri()))) {
 			
 			return Register.GSON.fromJson(reader, clazz);
 		}
@@ -170,9 +170,9 @@ public class DocumentRegister implements Register {
 	@Override
 	public <T> List<T> readList(@NonNull String key, @NonNull Class<T> clazz) {
 		
-		var file = getFile(key);
+		DocumentFile file = getFile(key);
 		
-		try (var reader = new FileReader(File.getFileDescriptor(resolver, file.getUri()))) {
+		try (FileReader reader = new FileReader(File.getFileDescriptor(resolver, file.getUri()))) {
 			
 			return Register.GSON.fromJson(reader, Register.getTypeOfList(clazz));
 		}
@@ -193,7 +193,7 @@ public class DocumentRegister implements Register {
 	@Override
 	public List<String> getKeys() {
 		
-		var files = directory.listFiles();
+		DocumentFile[] files = directory.listFiles();
 		
 		//noinspection ConstantConditions
 		if (files == null) return new ArrayList<>(0);
@@ -204,7 +204,7 @@ public class DocumentRegister implements Register {
 	@Override
 	public boolean delete(@NonNull String key) {
 		
-		var file = getFile(key);
+		DocumentFile file = getFile(key);
 		
 		if (file != null) return file.delete();
 		
@@ -221,7 +221,7 @@ public class DocumentRegister implements Register {
 	 */
 	private DocumentFile getFile(@NonNull String key) {
 		
-		var file = directory.findFile(key);
+		DocumentFile file = directory.findFile(key);
 		
 		if (file != null) return file;
 		

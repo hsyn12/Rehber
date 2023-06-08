@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -27,7 +28,7 @@ public class RankList {
 	 */
 	private final Map<Integer, List<CallRank>>        rankMap = new HashMap<>();
 	/**
-	 * The list of entry that identifier and its calls with sorted by calls size descending.
+	 * The list of entry that identifier and its calls.
 	 */
 	private       List<Map.Entry<String, List<Call>>> rankList;
 	
@@ -57,11 +58,12 @@ public class RankList {
 	 * Starts the rank process.
 	 * After this, call {@link #getRankMap()} to get the rank map.
 	 */
-	public RankList makeRanks() {
+	public RankList makeQuantityRanks() {
 		
 		rankMap.clear();
+		mergeSameCalls();
 		
-		if (rankList == null) makeRankList();
+		if (rankList == null) makeRankListByQuantity();
 		
 		int rank = 1;
 		int size = rankList.size();
@@ -87,10 +89,75 @@ public class RankList {
 	}
 	
 	/**
+	 * Makes the rank list by call duration and sets the rank map object.
+	 *
+	 * @return this {@link RankList} object
+	 */
+	public RankList makeDurationRanks() {
+		
+		rankMap.clear();
+		mergeSameCalls();
+		
+		Set<String>    keys      = entries.keySet();
+		List<CallRank> callRanks = new ArrayList<>();
+		
+		//_ create call rank objects
+		for (var key : keys) {
+			
+			var calls = entries.get(key);
+			
+			if (calls == null) continue;
+			
+			var callRank = new CallRank(key, calls);
+			
+			long incomingDuration = 0L;
+			long outgoingDuration = 0L;
+			
+			for (var call : calls) {
+				
+				if (call.isIncoming()) incomingDuration += call.getDuration();
+				else if (call.isOutgoing()) outgoingDuration += call.getDuration();
+			}
+			
+			callRank.setIncomingDuration(incomingDuration);
+			callRank.setOutgoingDuration(outgoingDuration);
+			
+			callRanks.add(callRank);
+		}
+		
+		//_ sort by duration descending
+		callRanks.sort((c1, c2) -> Long.compare(c2.getDuration(), c1.getDuration()));
+		
+		int rank = 1;
+		int size = callRanks.size();
+		int last = size - 1;
+		//_ set ranks
+		for (int i = 0; i < size; i++) {
+			
+			var callRank = callRanks.get(i);
+			var ranks    = rankMap.computeIfAbsent(rank, r -> new ArrayList<>());
+			ranks.add(callRank);
+			
+			if (i == last) break;
+			
+			var next = callRanks.get(i + 1);
+			if (callRank.getDuration() > next.getDuration()) rank++;
+		}
+		
+		return this;
+	}
+	
+	/**
 	 * Make a list that sorted by calls size descending.
 	 * Puts all numbers that belong to the same contact ID into the same list.
 	 */
-	private void makeRankList() {
+	private void makeRankListByQuantity() {
+		
+		// sort
+		rankList = entries.entrySet().stream().sorted((e1, e2) -> e2.getValue().size() - e1.getValue().size()).collect(Collectors.toList());
+	}
+	
+	private void mergeSameCalls() {
 		
 		// phone numbers
 		List<String> keys = new ArrayList<>(entries.keySet());
@@ -136,9 +203,6 @@ public class RankList {
 			// put it back in
 			entries.put(firstKey, calls);
 		}
-		
-		// sort
-		rankList = entries.entrySet().stream().sorted((e1, e2) -> e2.getValue().size() - e1.getValue().size()).collect(Collectors.toList());
 	}
 	
 	@NotNull
@@ -149,7 +213,7 @@ public class RankList {
 		
 		for (Map.Entry<String, List<Call>> entry : rankList) {
 			
-			sb.append(entry.getKey()).append(": ").append(entry.getValue().size()).append("\n");
+			sb.append(entry.getKey()).append(" : ").append(entry.getValue().size()).append("\n");
 		}
 		
 		return sb.toString();

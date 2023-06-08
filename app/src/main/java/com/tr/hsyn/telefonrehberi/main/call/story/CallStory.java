@@ -68,7 +68,7 @@ public class CallStory implements Story<Call> {
 				
 				xlog.d("Veri tabanında arama kaydı yok ancak sistemde %d arama var. Sanırım bu ilk yükleme", systemCalls.size());
 				
-				var success = database.add(systemCalls);
+				int success = database.add(systemCalls);
 				
 				if (success == systemCalls.size()) {
 					
@@ -113,8 +113,8 @@ public class CallStory implements Story<Call> {
 				
 				//xlog.d("Arama kayıtları değişiklikleri kontrol ediliyor");
 				
-				var deletedCalls = Lister.difference(databaseCalls, systemCalls);
-				var newCalls     = Lister.difference(systemCalls, databaseCalls);
+				@NotNull List<Call> deletedCalls = Lister.difference(databaseCalls, systemCalls);
+				@NotNull List<Call> newCalls     = Lister.difference(systemCalls, databaseCalls);
 				
 				if (deletedCalls.isEmpty() && newCalls.isEmpty()) {
 					
@@ -354,7 +354,7 @@ public class CallStory implements Story<Call> {
 					
 					String name = contact.getName();
 					
-					var isName = Nina.regex("[^0-9+]").find(name).isValid();
+					boolean isName = Nina.regex("[^0-9+]").find(name).isValid();
 					
 					boolean isUpdate = false;
 					

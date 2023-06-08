@@ -37,17 +37,17 @@ import java.util.Map;
 
 
 /**
- * This class's duty is to take the call log
+ * This class has duty is to take the call log
  * and show the call history of the selected contact in a new activity.
  * So, it needs to have {@link Manifest.permission#READ_CALL_LOG} permission.
  * It can request the permission to access the call log if needed
- * (the permission if not has been taken before,
+ * (the permission if not taken before,
  * it requests {@link PermissionHolder#CALL_LOG_PERMISSIONS}).
- * If permissions are requested,
- * permission results are sent to the subclasses which interested ones.<br>
+ * If permissions get requested,
+ * permission results get sent to the subclasses, which interested ones.<br>
  *
  * <p>
- * So, this is the class which is responsible for taking the call history.
+ * So, this is the class, which is responsible for taking the call history.
  * Therefore,
  * classes who are subclasses of this class can request the call history
  * or can request the permissions through it.
@@ -56,7 +56,9 @@ import java.util.Map;
  */
 public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implements PermissionHolder {
 	
-	/** Request code for call log permissions */
+	/**
+	 * The request code for call log permissions
+	 */
 	protected final int            RC_CALL_LOG     = 45;
 	/** Gate for accessing the history data */
 	private final   Gate           gateHistory     = DigiGate.newGate(1000L, this::hideProgress);
@@ -64,19 +66,19 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	private final   Gate           gateShowHistory = AutoGate.newGate(1000L);
 	protected       CallCollection callCollection;
 	protected       History        history;
-	/** Flag indicating whether the view for the contact history has been added to the UI. */
+	/** Flag indicating whether the view for the contact history added to the UI. */
 	private         boolean        historyViewAdded;
-	/** Flag indicating whether we need to show the history (after receiving call log permissions). */
+	/** Flag indicating whether it needs to show the history, after receiving call log permissions. */
 	private         boolean        isNewHistory    = true;
-	/** Flag indicating whether call log permissions have been requested. */
+	/** Flag indicating whether call log permissions get requested. */
 	private         boolean        needShowHistory;
-	/** Flag indicating whether a new history needs to be loaded. */
+	/** Flag indicating whether a new history needs to get loaded. */
 	private         boolean        isPermissionsRequested;
 	
 	/**
 	 * @inheritDoc Prepares this activity for display by loading the call history for the
 	 * 		contact associated with this activity.
-	 * 		This method is called only one time by the superclass while the activity has been settings up.
+	 * 		This method gets called only one time by the superclass while the activity has been settings up.
 	 * 		So this method is the starting point for this class and for subclasses.
 	 */
 	@Override
@@ -84,7 +86,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 		//! This call must be first.
 		super.prepare();
 		
-		//- If no any phone numbers, then no history
+		//_ If no any phone numbers, then no history
 		
 		if (Lister.exist(phoneNumbers)) {
 			
@@ -94,8 +96,8 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	
 	/**
 	 * Start to load the call history for the contact associated with this activity.
-	 * This method is called when the activity is first created,
-	 * and when the user touched the show history view (if a need be).
+	 * This method gets called when the activity first created,
+	 * and when the user touched the show history view if a need be.
 	 */
 	private void setHistory() {
 		
@@ -129,25 +131,29 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	}
 	
 	/**
-	 * Handles cases where call log permissions have been granted.
-	 * Override this method to perform custom actions when permissions are granted.
+	 * Handles cases where call log permissions granted.
+	 * Override this method to perform custom actions when permissions get granted.
 	 *
 	 * @see #requestCallPermissions()
 	 */
-	protected void onCallPermissionsGrant() {}
+	protected void onCallPermissionsGrant() {
+		
+	}
 	
 	/**
-	 * Handles cases where call log permissions have been denied.
-	 * Override this method to perform custom actions when permissions are denied.
+	 * Handles cases where call log permissions denied.
+	 * Override this method to perform custom actions when permissions get denied.
 	 *
 	 * @see #requestCallPermissions()
 	 */
-	protected void onCallPermissionsDenied() {}
+	protected void onCallPermissionsDenied() {
+		
+	}
 	
 	/**
 	 * Callback method called when the history each load.
 	 * Override this method to perform custom actions when the history loaded
-	 * (or at the first loading).
+	 * or at the first loading.
 	 */
 	protected void onHistoryLoad() {
 		
@@ -202,13 +208,13 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 		
 		List<Call> calls = callCollection.getCallsByNumbers(phoneNumbers);
 		calls.sort((x, y) -> Long.compare(y.getTime(), x.getTime()));
-		//- This is the 'call history' of the selected contact
+		//_ This is the 'call history' of the selected contact
 		return History.of(contact, calls);
 	}
 	
 	/**
 	 * Adds the view for showing the contact history.
-	 * If the user touches this view, the history is shown by starting new activity.
+	 * If the user touches this view, the history gets shown by starting new activity.
 	 * That is the view that starts the action.
 	 *
 	 * @param history The call history for the contact.
@@ -306,7 +312,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 				
 				if (!history.isEmpty()) {
 					
-					showCalls(history.getCalls());
+					showCalls(history.calls());
 				}
 				else {
 					
@@ -339,7 +345,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	}
 	
 	/**
-	 * Callback method called when a permission request is made.
+	 * Callback method called when a permission requested.
 	 * Overrides the method from {@link PermissionHolder}.
 	 *
 	 * @param requestCode The request code for the permission request.
@@ -353,7 +359,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 		if (requestCode == RC_CALL_LOG) {
 			
 			//- Arama kayıtları izinleri var mı
-			var grant = result.values().stream().allMatch(Boolean::booleanValue);
+			boolean grant = result.values().stream().allMatch(Boolean::booleanValue);
 			
 			if (grant) {
 				

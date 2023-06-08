@@ -26,7 +26,7 @@ public abstract class CallBackupActivitySelection extends CallBackupActivityLoad
 		
 		if (gateSelect.enter()) {
 			
-			var options = getResources().getStringArray(R.array.backup_options);
+			String[] options = getResources().getStringArray(R.array.backup_options);
 			
 			DialogBackupOptions dialog =
 					new DialogBackupOptions(

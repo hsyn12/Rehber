@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -77,19 +78,19 @@ public final class Stringx {
 	@NotNull
 	public static String joinToString(int[] collection) {
 		
-		return Joiner.on(',').join(List.of(collection));
+		return Joiner.on(',').join(Collections.singletonList(collection));
 	}
 	
 	@NotNull
 	public static String joinToString(long[] collection) {
 		
-		return Joiner.on(',').join(List.of(collection));
+		return Joiner.on(',').join(Collections.singletonList(collection));
 	}
 	
 	@NotNull
 	public static String joinToString(int[] collection, @NotNull String delimiter) {
 		
-		return Joiner.on(delimiter).join(List.of(collection));
+		return Joiner.on(delimiter).join(Collections.singletonList(collection));
 	}
 	
 	@NotNull
@@ -154,7 +155,7 @@ public final class Stringx {
 		
 		StringBuilder builder = new StringBuilder(text);
 		
-		var c = text.charAt(0);
+		char c = text.charAt(0);
 		
 		if (c == 'i') c = 'İ';
 		else c = Character.toUpperCase(c);
@@ -252,19 +253,19 @@ public final class Stringx {
 		
 		searchText = Regex.removeWhiteSpaces(searchText);
 		
-		var reg = Nina.whiteSpace().zeroOrMore();
+		com.tr.hsyn.regex.cast.@NotNull RegexBuilder reg = Nina.whiteSpace().zeroOrMore();
 		
 		if (ignoreCase) reg = reg.ignoreCase();
 		
 		for (int i = 0; i < searchText.length(); i++)
 		     reg = reg.with(Nina.whiteSpace().zeroOrMore().with(searchText.charAt(i)));
 		
-		var indexes = reg.findAll(word);
+		List<com.tr.hsyn.regex.cast.Index> indexes = reg.findAll(word);
 		
 		Integer[] result = new Integer[indexes.size() * 2];
 		
 		int x = 0;
-		for (var i : indexes) {
+		for (com.tr.hsyn.regex.cast.Index i : indexes) {
 			
 			result[x++] = i.start;
 			result[x++] = i.end;
@@ -309,7 +310,7 @@ public final class Stringx {
 		
 		searchText = Regex.removeWhiteSpaces(searchText);
 		
-		var reg = Nina.regex().whiteSpace().zeroOrMore().lazy();
+		com.tr.hsyn.regex.cast.@NotNull RegexBuilder reg = Nina.regex().whiteSpace().zeroOrMore().lazy();
 		
 		if (ignoreCase) reg.with(Modifier.modify().ignoreCase());
 		
@@ -540,7 +541,12 @@ public final class Stringx {
 	@NotNull
 	public static String repeat(char c, int count) {
 		
-		return String.valueOf(c).repeat(Math.max(0, count));
+		StringBuilder sb = new StringBuilder();
+		
+		for (int i = 0; i < count; i++)
+		     sb.append(c);
+		
+		return sb.toString();
 	}
 	
 	/**
@@ -591,13 +597,13 @@ public final class Stringx {
 	
 	public static boolean isBlank(@NotNull String str) {
 		
-		return str.isBlank();
+		return str.trim().isEmpty();
 	}
 	
 	@NotNull
 	public static String toUpper(@NotNull String str) {
 		
-		var chars = str.toCharArray();
+		char[] chars = str.toCharArray();
 		
 		for (int i = 0; i < chars.length; i++) {
 			
@@ -622,7 +628,7 @@ public final class Stringx {
 	@NotNull
 	public static String toLower(@NotNull String str) {
 		
-		var chars = str.toCharArray();
+		char[] chars = str.toCharArray();
 		
 		for (int i = 0; i < chars.length; i++) {
 			
@@ -799,7 +805,7 @@ public final class Stringx {
 		s1 = Stringx.trimNonDigits(s1);
 		s2 = Stringx.trimNonDigits(s2);
 		
-		if (s1.isBlank() || s2.isBlank()) return false;
+		if (isBlank(s1) || isBlank(s2)) return false;
 		
 		if (s1.equals(s2)) return true;
 		

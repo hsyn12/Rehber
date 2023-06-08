@@ -58,7 +58,7 @@ public enum Runny {
 		
 		if (methodOwner != null) {
 			
-			var method = Clazz.findMethod(methodOwner.getClass(), methodName, args);
+			Method method = Clazz.findMethod(methodOwner.getClass(), methodName, args);
 			
 			if (method != null) run(methodOwner, method, args);
 		}

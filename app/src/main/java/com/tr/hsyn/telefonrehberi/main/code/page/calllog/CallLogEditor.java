@@ -22,7 +22,7 @@ public abstract class CallLogEditor extends CallLogColor implements ListEditor<C
 	@Override
 	public Call deleteItem(int index) {
 		
-		var deleted = getItem(index);
+		Call deleted = getItem(index);
 		
 		getAdapter().getItems().remove(index);
 		getAdapter().notifyItemRemoved(index);
@@ -51,13 +51,13 @@ public abstract class CallLogEditor extends CallLogColor implements ListEditor<C
 	@Override
 	public List<Call> deleteAllItems() {
 		
-		var deletedCalls = Lister.listOf(getAdapter().getItems());
+		@org.jetbrains.annotations.NotNull List<Call> deletedCalls = Lister.listOf(getAdapter().getItems());
 		getAdapter().clearItems();
 		
 		//- Filtreleme durumuna göre silinen elemanları ana listeden de çıkaralım
 		if (Res.Calls.FILTER_ALL != filter) {
 			
-			var count = Lister.removeItems(getList(), deletedCalls);
+			int count = Lister.removeItems(getList(), deletedCalls);
 			
 			if (count == deletedCalls.size()) {
 				

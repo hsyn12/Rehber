@@ -49,8 +49,8 @@ public interface OCreator<R> {
 		
 		final List<R> list = new ArrayList<>();
 		
-		var function = getObjectFunction();
-		var cursor   = getCursor();
+		Function<Cursor, ? extends R> function = getObjectFunction();
+		Cursor                        cursor   = getCursor();
 		
 		while (cursor.moveToNext()) list.add(function.apply(cursor));
 		

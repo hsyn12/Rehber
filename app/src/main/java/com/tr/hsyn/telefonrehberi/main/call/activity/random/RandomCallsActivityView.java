@@ -81,6 +81,24 @@ public abstract class RandomCallsActivityView extends ActivityView {
 		editTextGenerationCount.setOnClickListener(this::onClickEditTextGeneration);
 	}
 	
+	@Override
+	protected boolean hasToolbar() {
+		
+		return true;
+	}
+	
+	@Override
+	protected int getToolbarResourceId() {
+		
+		return R.id.toolbar_random_calls;
+	}
+	
+	@Override
+	protected Runnable getNavigationClickListener() {
+		
+		return this::onBackPressed;
+	}
+	
 	/**
 	 * @return the number of generations
 	 */
@@ -102,24 +120,6 @@ public abstract class RandomCallsActivityView extends ActivityView {
 	 */
 	protected void onClickEditTextGeneration(View view) {
 		//- Pass
-	}
-	
-	@Override
-	protected boolean hasToolbar() {
-		
-		return true;
-	}
-	
-	@Override
-	protected int getToolbarResourceId() {
-		
-		return R.id.toolbar_random_calls;
-	}
-	
-	@Override
-	protected Runnable getNavigationClickListener() {
-		
-		return this::onBackPressed;
 	}
 	
 	/**
@@ -163,7 +163,7 @@ public abstract class RandomCallsActivityView extends ActivityView {
 						this,
 						(view, year, month, dayOfMonth) -> {
 							
-							var c = Calendar.getInstance();
+							Calendar c = Calendar.getInstance();
 							c.set(year, month, dayOfMonth);
 							
 							onSelect.accept(c);

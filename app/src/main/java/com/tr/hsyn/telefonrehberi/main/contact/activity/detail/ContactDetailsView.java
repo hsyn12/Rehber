@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.widget.NestedScrollView;
 
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -56,10 +57,10 @@ public abstract class ContactDetailsView extends ActivityView {
 		collapsingToolbarLayout = findView(R.id.collapsing_toolbar);
 		progressBar             = findView(R.id.progress_contact_details);
 		
-		int primaryColor    = Colors.getPrimaryColor();
-		int backgroundColor = Colors.lighter(primaryColor, 0.91f);
-		var scrollView      = findView(R.id.contact_details_nested_scroll_view);
-		var main            = findView(R.id.coordinator);
+		int              primaryColor    = Colors.getPrimaryColor();
+		int              backgroundColor = Colors.lighter(primaryColor, 0.91f);
+		NestedScrollView scrollView      = findView(R.id.contact_details_nested_scroll_view);
+		View             main            = findView(R.id.coordinator);
 		
 		scrollView.setBackgroundColor(backgroundColor);
 		main.setBackgroundColor(backgroundColor);

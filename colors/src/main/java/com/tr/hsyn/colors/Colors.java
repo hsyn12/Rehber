@@ -370,7 +370,7 @@ public class Colors {
 	
 	public static int getBackgroundColor(@NonNull View view) {
 		
-		var d = view.getBackground();
+		Drawable d = view.getBackground();
 		
 		if (d instanceof ColorDrawable) {
 			

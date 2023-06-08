@@ -65,7 +65,7 @@ public class MostCallsActivity extends ActivityView {
 					
 					filter();
 					
-					var ranks = makeRank();
+					List<Group<Call>> ranks = makeRank();
 					
 					if (ranks != null) return makeItemData(ranks);
 					
@@ -195,7 +195,7 @@ public class MostCallsActivity extends ActivityView {
 	@NotNull
 	private MostCallsItemData createItemData(@NotNull Group<Call> group) {
 		
-		var rank = TextDrawable.builder()
+		TextDrawable rank = TextDrawable.builder()
 				.buildRound(String.valueOf(group.getRank()), Colors.COLOR_GENERATOR.getRandomColor());
 		
 		String txt;
@@ -214,7 +214,7 @@ public class MostCallsActivity extends ActivityView {
 	
 	private void onClickItem(int index) {
 		
-		var item = data.get(index);
+		MostCallsItemData item = data.get(index);
 		
 		xlog.d(item);
 		

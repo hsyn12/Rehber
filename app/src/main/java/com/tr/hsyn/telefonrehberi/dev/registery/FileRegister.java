@@ -53,7 +53,7 @@ public class FileRegister implements Register {
 	@Override
 	public <T> void write(@NonNull String key, @NonNull T object) {
 		
-		try (var writer = new FileWriter(getFile(key))) {
+		try (FileWriter writer = new FileWriter(getFile(key))) {
 			
 			Register.GSON.toJson(object, writer);
 			
@@ -67,7 +67,7 @@ public class FileRegister implements Register {
 	@Override
 	public <T> void write(@NonNull String key, @NonNull List<T> objectList) {
 		
-		try (var writer = new FileWriter(getFile(key))) {
+		try (FileWriter writer = new FileWriter(getFile(key))) {
 			
 			Register.GSON.toJson(objectList, writer);
 			
@@ -82,7 +82,7 @@ public class FileRegister implements Register {
 	@Override
 	public <T> T read(@NonNull String key, @NonNull Class<T> clazz) {
 		
-		try (var reader = new FileReader(getFile(key))) {
+		try (FileReader reader = new FileReader(getFile(key))) {
 			
 			return Register.GSON.fromJson(reader, clazz);
 		}
@@ -97,7 +97,7 @@ public class FileRegister implements Register {
 	@Override
 	public <T> List<T> readList(@NonNull String key, @NonNull Class<T> clazz) {
 		
-		try (var reader = new FileReader(getFile(key))) {
+		try (FileReader reader = new FileReader(getFile(key))) {
 			
 			return Register.GSON.fromJson(reader, Register.getTypeOfList(clazz));
 		}
@@ -118,7 +118,7 @@ public class FileRegister implements Register {
 	@Override
 	public List<String> getKeys() {
 		
-		var list = mainDirectory.list();
+		String[] list = mainDirectory.list();
 		
 		if (list != null) return Arrays.asList(list);
 		

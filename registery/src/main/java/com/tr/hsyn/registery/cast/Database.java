@@ -86,8 +86,8 @@ public interface Database<T extends Identity> extends SimpleDatabase {
 	
 	default int delete(@NotNull List<? extends T> items) {
 		
-		var ids        = items.stream().map(T::getId).map(String::valueOf).collect(Collectors.toList());
-		var primaryKey = getDatabaseInterface().getPrimaryKey();
+		List<String>    ids        = items.stream().map(T::getId).map(String::valueOf).collect(Collectors.toList());
+		@NotNull String primaryKey = getDatabaseInterface().getPrimaryKey();
 		return delete(getDatabaseInterface().getTableName(), createSelection(primaryKey, ids), null);
 	}
 	
@@ -165,7 +165,7 @@ public interface Database<T extends Identity> extends SimpleDatabase {
 	 */
 	default boolean update(@NotNull T item, @NotNull String primaryValue) {
 		
-		var key = getDatabaseInterface().getPrimaryKey();
+		@NotNull String key = getDatabaseInterface().getPrimaryKey();
 		
 		return update(contentValuesOf(item), createSelection(key), createArg(primaryValue));
 	}
@@ -219,9 +219,9 @@ public interface Database<T extends Identity> extends SimpleDatabase {
 			
 			beginTransaction();
 			
-			for (var item : items) {
+			for (T item : items) {
 				
-				var i = insert(getDatabaseInterface().getTableName(), null, valuesFunction.apply(item));
+				long i = insert(getDatabaseInterface().getTableName(), null, valuesFunction.apply(item));
 				
 				if (i != -1) count++;
 			}

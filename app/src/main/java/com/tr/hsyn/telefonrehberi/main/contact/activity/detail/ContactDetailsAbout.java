@@ -136,7 +136,7 @@ public class ContactDetailsAbout extends ContactDetailsMenu {
 				
 				Runny.run(() -> {
 					
-					var comment = commentator.commentOn(contact);
+					@NotNull CharSequence comment = commentator.commentOn(contact);
 					onCommentReady(comment);
 				}, true);
 			}, false);
@@ -145,33 +145,6 @@ public class ContactDetailsAbout extends ContactDetailsMenu {
 			
 			animateAboutView();
 		}
-	}
-	
-	/**
-	 * Creates a new instance of a {@link ContactCommentator}
-	 * based on the current mood of the application.
-	 *
-	 * @param activity the activity object
-	 * @return a new instance of a {@link ContactCommentator}
-	 */
-	private static @NotNull ContactCommentator createCommentator(@NotNull Activity activity) {
-		
-		Moody moody = Moody.getMood();
-		var   store = ContactCommentStore.createCommentStore(activity, moody);
-		
-		switch (moody) {
-			
-			case DEFAULT:
-				
-				var commentator = new DefaultContactCommentator(store);
-				xlog.d("Default Commentator");
-				return commentator;
-			case HAPPY:
-				xlog.d("Not yet happy");
-		}
-		
-		xlog.d("Wrong moody : %d", moody.ordinal());
-		return new DefaultContactCommentator(store);
 	}
 	
 	/**
@@ -209,6 +182,33 @@ public class ContactDetailsAbout extends ContactDetailsMenu {
 			
 			ViewAnimator.on(findView(view_about_content, R.id.expand_indicator)).rotation(0, 180).duration(500).start();
 		}
+	}
+	
+	/**
+	 * Creates a new instance of a {@link ContactCommentator}
+	 * based on the current mood of the application.
+	 *
+	 * @param activity the activity object
+	 * @return a new instance of a {@link ContactCommentator}
+	 */
+	private static @NotNull ContactCommentator createCommentator(@NotNull Activity activity) {
+		
+		Moody                        moody = Moody.getMood();
+		@NotNull ContactCommentStore store = ContactCommentStore.createCommentStore(activity, moody);
+		
+		switch (moody) {
+			
+			case DEFAULT:
+				
+				DefaultContactCommentator commentator = new DefaultContactCommentator(store);
+				xlog.d("Default Commentator");
+				return commentator;
+			case HAPPY:
+				xlog.d("Not yet happy");
+		}
+		
+		xlog.d("Wrong moody : %d", moody.ordinal());
+		return new DefaultContactCommentator(store);
 	}
 	
 }

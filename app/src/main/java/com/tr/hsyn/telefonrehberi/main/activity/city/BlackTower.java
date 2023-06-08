@@ -65,8 +65,8 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 	 */
 	private final   ActivityResultLauncher<Intent> colorChangeCallBack  = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), c -> {
 		
-		var result = c.getResultCode();
-		var data   = c.getData();
+		int    result = c.getResultCode();
+		Intent data   = c.getData();
 		
 		if (result == RESULT_OK) {
 			
@@ -196,7 +196,7 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 	@CallSuper
 	protected void onContactSwipe(int index) {
 		
-		var contact = pageContacts.getItem(index);
+		Contact contact = pageContacts.getItem(index);
 		
 		xlog.d("Swipe : %s", contact);
 	}
@@ -205,7 +205,7 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 	protected void onCallSwipe(int index) {
 		
 		
-		var call = pageCallLog.getItem(index);
+		Call call = pageCallLog.getItem(index);
 		pageCallLog.deleteItem(index);
 		String number = Stringx.overWrite(call.getNumber());
 		
@@ -226,7 +226,7 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 			
 			//todo Aramayı gerçekleştir
 			
-			var call = pageCallLog.getItem(index);
+			Call call = pageCallLog.getItem(index);
 			xlog.d("Call action : %s", Stringx.overWrite(call.getNumber()));
 		}
 		
@@ -305,7 +305,7 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 			
 			case R.id.main_menu_colors:
 				
-				var intent = new Intent(this, ColorsActivity.class);
+				Intent intent = new Intent(this, ColorsActivity.class);
 				
 				colorChangeCallBack.launch(intent);
 				

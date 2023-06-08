@@ -65,7 +65,7 @@ public class BlueRegister extends DBBase<Visitor> {
 	@Override
 	public @NotNull Values contentValuesOf(@NotNull Visitor item) {
 		
-		var v = new Values();
+		Values v = new Values();
 		v.put(TIME_ENTER, item.getTimeEnter());
 		v.put(TIME_EXIT, item.getTimeExit());
 		v.put(NAME, item.getKey().getName());

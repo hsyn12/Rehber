@@ -42,7 +42,7 @@ public class ContactDetailsMenu extends CallSummary {
 			
 			if (c.getData() != null && c.getData().getData() != null) {
 				
-				var data = c.getData().getData();
+				android.net.Uri data = c.getData().getData();
 				
 				SystemContacts.testUri(data, this);
 			}

@@ -13,23 +13,6 @@ import java.util.Locale;
  */
 public class Accusative implements WordExtension {
 	
-	public static void main(String[] args) {
-		
-		String[] names = {
-				
-				"Tahta", "Kalem", "Ev", "Otel", "Ayak", "Kale", "Pencere",
-				"Dümen", "Telefon", "Çiçek", "Çarşaf", "Keşiş", "İn", "İç", "Dolu", "Gül"
-		};
-		
-		var ext = new Accusative();
-		
-		for (var name : names) {
-			
-			System.out.printf("%s-%s\n", name, ext.getExt(name));
-		}
-		
-	}
-	
 	@Override
 	public @NotNull String getExt(@NotNull String word) {
 		
@@ -74,6 +57,23 @@ public class Accusative implements WordExtension {
 			return resources.getString("into_soft_thin");
 		}
 		else return "";
+		
+	}
+	
+	public static void main(String[] args) {
+		
+		String[] names = {
+				
+				"Tahta", "Kalem", "Ev", "Otel", "Ayak", "Kale", "Pencere",
+				"Dümen", "Telefon", "Çiçek", "Çarşaf", "Keşiş", "İn", "İç", "Dolu", "Gül"
+		};
+		
+		Accusative ext = new Accusative();
+		
+		for (String name : names) {
+			
+			System.out.printf("%s-%s\n", name, ext.getExt(name));
+		}
 		
 	}
 }

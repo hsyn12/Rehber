@@ -33,6 +33,28 @@ public class Label extends Atom {
 		super(id, name);
 	}
 	
+	@Override
+	public @NotNull String toString() {
+		
+		return String.format(Locale.getDefault(), "%d:%s", getId(), getName());
+	}
+	
+	/**
+	 * @return Etiket geçerli bir etiket ise {@code true}, değilse {@code false}
+	 */
+	public boolean isValid() {
+		
+		return !this.equals(INVALID_LABEL);
+	}
+	
+	/**
+	 * @return Etiket geçersiz ise {@code true}, geçerli ise {@code false}
+	 */
+	public boolean isInValid() {
+		
+		return this.equals(INVALID_LABEL);
+	}
+	
 	@NotNull
 	public static Label newLabel(long id, @NotNull String name) {
 		
@@ -57,34 +79,12 @@ public class Label extends Atom {
 		
 		try {
 			
-			var parts = label.split(":");
+			String[] parts = label.split(":");
 			
 			return newLabel(Integer.parseInt(parts[0]), parts[1]);
 		}
 		catch (Exception ignore) {}
 		
 		return Label.newLabel(-1, "-");
-	}
-	
-	@Override
-	public @NotNull String toString() {
-		
-		return String.format(Locale.getDefault(), "%d:%s", getId(), getName());
-	}
-	
-	/**
-	 * @return Etiket geçerli bir etiket ise {@code true}, değilse {@code false}
-	 */
-	public boolean isValid() {
-		
-		return !this.equals(INVALID_LABEL);
-	}
-	
-	/**
-	 * @return Etiket geçersiz ise {@code true}, geçerli ise {@code false}
-	 */
-	public boolean isInValid() {
-		
-		return this.equals(INVALID_LABEL);
 	}
 }

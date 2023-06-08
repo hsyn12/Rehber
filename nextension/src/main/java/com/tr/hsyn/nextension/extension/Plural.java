@@ -13,20 +13,6 @@ import java.util.Locale;
  */
 public class Plural implements WordExtension {
 	
-	public static void main(String[] args) {
-		
-		String[] words = {
-				
-				"kapı", "pencere", "kırmızı", "mavi", "siyah", "sarı"
-		};
-		
-		var plural = new Plural();
-		
-		for (String word : words) {
-			System.out.println(word + ": " + plural.getExt(word));
-		}
-	}
-	
 	@Override
 	public @NotNull String getExt(@NotNull String word) {
 		
@@ -50,5 +36,19 @@ public class Plural implements WordExtension {
 		}
 		
 		return resources.getString("plu_thick");
+	}
+	
+	public static void main(String[] args) {
+		
+		String[] words = {
+				
+				"kapı", "pencere", "kırmızı", "mavi", "siyah", "sarı"
+		};
+		
+		Plural plural = new Plural();
+		
+		for (String word : words) {
+			System.out.println(word + ": " + plural.getExt(word));
+		}
 	}
 }

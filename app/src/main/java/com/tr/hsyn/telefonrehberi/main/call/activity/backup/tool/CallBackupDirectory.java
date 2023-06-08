@@ -78,6 +78,12 @@ public class CallBackupDirectory implements BackupDirectory<Call> {
 		return new CallBackup(name, time, calls.size());
 	}
 	
+	@Override
+	public final void override(@NonNull final String name, List<Call> calls) {
+		
+		book.write(name, calls);
+	}
+	
 	/**
 	 * Verilen isimle kaydedilmiş yedeği siler.<br><br>
 	 *
@@ -90,22 +96,6 @@ public class CallBackupDirectory implements BackupDirectory<Call> {
 		book.delete(name);
 	}
 	
-	@Override
-	public final void override(@NonNull final String name, List<Call> calls) {
-		
-		book.write(name, calls);
-	}
-	
-	/**
-	 * @return Kayıtlı tüm yedeklerin isimleri
-	 */
-	@NonNull
-	@WorkerThread
-	private List<String> _getBackups() {
-		
-		return book.getKeys();
-	}
-	
 	/**
 	 * @return Kayıtlı tüm yedeklerin listesi
 	 */
@@ -114,7 +104,7 @@ public class CallBackupDirectory implements BackupDirectory<Call> {
 	@WorkerThread
 	public final List<Backup<Call>> getBackups() {
 		
-		var                backups     = _getBackups();
+		List<String>       backups     = _getBackups();
 		List<Backup<Call>> callBackups = new ArrayList<>(backups.size());
 		
 		for (String backup : backups) {
@@ -123,7 +113,7 @@ public class CallBackupDirectory implements BackupDirectory<Call> {
 			
 			if (calls == null) continue;
 			
-			var bDate = Long.parseLong(backup.substring(2));
+			long bDate = Long.parseLong(backup.substring(2));
 			
 			Backup<Call> callBackup = new CallBackup(backup, bDate, calls.size());
 			
@@ -144,6 +134,16 @@ public class CallBackupDirectory implements BackupDirectory<Call> {
 	public List<Call> getItems(String name) {
 		
 		return book.readList(name, Call.class, new ArrayList<>(0));
+	}
+	
+	/**
+	 * @return Kayıtlı tüm yedeklerin isimleri
+	 */
+	@NonNull
+	@WorkerThread
+	private List<String> _getBackups() {
+		
+		return book.getKeys();
 	}
 	
 }

@@ -11,7 +11,7 @@ import com.tr.hsyn.reflection.Clazz;
  *
  * @author hsyn 31 Mayıs 2022 Salı 19:10
  */
-@Deprecated(forRemoval = true)
+@Deprecated
 public class Key {
 	
 	/**
@@ -88,7 +88,7 @@ public class Key {
 	 */
 	public static String getName(int code) {
 		
-		var fields = Clazz.getDeclaredFields(Key.class);
+		java.util.List<java.lang.reflect.Field> fields = Clazz.getDeclaredFields(Key.class);
 		
 		for (int i = 0; i < fields.size(); i++) {
 			

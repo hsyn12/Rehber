@@ -157,7 +157,7 @@ public class DayTime {
 		LinkedList<String> list = new LinkedList<>();
 		String             str;
 		
-		for (var part : durationGroup.getDurations()) {
+		for (com.tr.hsyn.time.Duration part : durationGroup.getDurations()) {
 			
 			str = part.getValue() + " ";
 			
@@ -190,11 +190,11 @@ public class DayTime {
 	@NotNull
 	public static String toString(@NotNull Context context, @NotNull DurationGroup durationGroup, Unit... units) {
 		
-		var                _units = Arrays.asList(units);
-		LinkedList<String> list   = new LinkedList<>();
-		String             str;
+		java.util.List<Unit> _units = Arrays.asList(units);
+		LinkedList<String>   list   = new LinkedList<>();
+		String               str;
 		
-		for (var part : durationGroup.getDurations()) {
+		for (com.tr.hsyn.time.Duration part : durationGroup.getDurations()) {
 			
 			str = part.getValue() + " ";
 			

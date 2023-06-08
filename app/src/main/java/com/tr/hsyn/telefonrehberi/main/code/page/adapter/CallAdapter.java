@@ -165,8 +165,8 @@ public class CallAdapter extends RecyclerView.Adapter<CallAdapter.Holder> implem
 		
 		super.onViewAttachedToWindow(holder);
 		
-		var selection = holder.selection;
-		var action    = holder.action;
+		CheckBox  selection = holder.selection;
+		ImageView action    = holder.action;
 		
 		if (selectionMode) {
 			
@@ -190,7 +190,7 @@ public class CallAdapter extends RecyclerView.Adapter<CallAdapter.Holder> implem
 	@NonNull
 	private String getLetter(String str) {
 		
-		var l = Stringx.getFirstChar(str);
+		@NotNull String l = Stringx.getFirstChar(str);
 		
 		if (l.isEmpty()) return "?";
 		
@@ -270,7 +270,7 @@ public class CallAdapter extends RecyclerView.Adapter<CallAdapter.Holder> implem
 				if (onAction != null) onAction.onItemIndex(getAdapterPosition());
 			});
 			
-			var root = itemView.findViewById(R.id.call_item);
+			View root = itemView.findViewById(R.id.call_item);
 			root.setBackgroundResource(themeInfo.getRipple());
 			root.setOnClickListener(v -> onSelected(getAdapterPosition()));
 			root.setOnLongClickListener(this::onLongClick);
@@ -280,11 +280,11 @@ public class CallAdapter extends RecyclerView.Adapter<CallAdapter.Holder> implem
 			
 			xlog.w("Selection mode : %s", selectionMode);
 			
-			var call = calls.get(getAdapterPosition());
+			Call call = calls.get(getAdapterPosition());
 			
 			if (selectionMode) {
 				
-				var check = !selection.isChecked();
+				boolean check = !selection.isChecked();
 				selection.setChecked(check);
 				makeSelection(call, check);
 			}
@@ -300,11 +300,11 @@ public class CallAdapter extends RecyclerView.Adapter<CallAdapter.Holder> implem
 			xlog.w("Selection mode : %s", selectionMode);
 			
 			
-			var call = calls.get(getAdapterPosition());
+			Call call = calls.get(getAdapterPosition());
 			
 			if (selectionMode) {
 				
-				var check = !selection.isChecked();
+				boolean check = !selection.isChecked();
 				selection.setChecked(check);
 				makeSelection(call, check);
 			}

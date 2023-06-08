@@ -118,7 +118,7 @@ public class WordGenerator {
 	 */
 	public void exclude(@NotNull String chars) {
 		
-		for (var c : chars.toCharArray())
+		for (char c : chars.toCharArray())
 			excludedCharacters.add(c);
 		
 	}

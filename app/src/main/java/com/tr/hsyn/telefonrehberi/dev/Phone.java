@@ -54,8 +54,8 @@ public enum Phone {
 	
 	public static void openAppSettings(Context context) {
 		
-		var i = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-		                   Uri.parse("package:" + BuildConfig.APPLICATION_ID));
+		Intent i = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+		                      Uri.parse("package:" + BuildConfig.APPLICATION_ID));
 		
 		gotoAppSettings = true;
 		context.startActivity(i);
@@ -366,7 +366,7 @@ public enum Phone {
 	
 	public static @NotNull Point getDisplaySize() {
 		
-		var metrics = Resources.getSystem().getDisplayMetrics();
+		android.util.DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
 		
 		return new Point((int) pxToDp(metrics.widthPixels), (int) pxToDp(metrics.heightPixels));
 	}

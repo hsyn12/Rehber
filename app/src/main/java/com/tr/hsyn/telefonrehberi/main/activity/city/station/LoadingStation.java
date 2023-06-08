@@ -71,6 +71,35 @@ public abstract class LoadingStation extends CallLogLoader {
 	
 	@CallSuper
 	@Override
+	protected void onCallLogLoaded(List<Call> calls, Throwable throwable) {
+		
+		callsLoaded = true;
+		
+		if (throwable == null) {
+			
+			long loadTime = Time.now() - getLastContactsLoadingStartTime();
+			
+			pageCallLog.setList(calls);
+			Blue.box(Key.CALL_LOG, calls);
+			xlog.d("CallLog Loaded [size=%d, loadTime=%dms]", calls.size(), loadTime);
+		}
+		else {
+			
+			if (throwable instanceof TimeoutException) {
+				
+				xlog.wx("CallLog could not loaded with defined duration");
+			}
+			else {
+				
+				xlog.ex("CallLog could not loaded", throwable);
+			}
+		}
+		
+		pageCallLog.hideProgress();
+	}
+	
+	@CallSuper
+	@Override
 	protected void loadContacts() {
 		
 		pageContacts.showProgress();
@@ -97,7 +126,7 @@ public abstract class LoadingStation extends CallLogLoader {
 		
 		if (throwable == null) {
 			
-			var loadTime = Time.now() - getLastContactsLoadingStartTime();
+			long loadTime = Time.now() - getLastContactsLoadingStartTime();
 			
 			pageContacts.setList(contacts);
 			xlog.d("Contacts Loaded [size=%d, loadTime=%dms]", contacts.size(), loadTime);
@@ -117,35 +146,6 @@ public abstract class LoadingStation extends CallLogLoader {
 		}
 		
 		pageContacts.hideProgress();
-	}
-	
-	@CallSuper
-	@Override
-	protected void onCallLogLoaded(List<Call> calls, Throwable throwable) {
-		
-		callsLoaded = true;
-		
-		if (throwable == null) {
-			
-			var loadTime = Time.now() - getLastContactsLoadingStartTime();
-			
-			pageCallLog.setList(calls);
-			Blue.box(Key.CALL_LOG, calls);
-			xlog.d("CallLog Loaded [size=%d, loadTime=%dms]", calls.size(), loadTime);
-		}
-		else {
-			
-			if (throwable instanceof TimeoutException) {
-				
-				xlog.wx("CallLog could not loaded with defined duration");
-			}
-			else {
-				
-				xlog.ex("CallLog could not loaded", throwable);
-			}
-		}
-		
-		pageCallLog.hideProgress();
 	}
 	
 	@CallSuper

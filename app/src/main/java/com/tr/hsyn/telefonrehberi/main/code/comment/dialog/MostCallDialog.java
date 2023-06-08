@@ -34,7 +34,7 @@ public class MostCallDialog {
 		
 		dialog = builder.create();
 		
-		var window = dialog.getWindow();
+		android.view.Window window = dialog.getWindow();
 		
 		if (window != null)
 			window.getAttributes().windowAnimations = R.style.DialogAnimationBounce;

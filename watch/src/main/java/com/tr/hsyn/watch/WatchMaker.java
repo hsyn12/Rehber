@@ -38,7 +38,7 @@ public class WatchMaker {
 	
 	protected final int runAfter(long value, TimeUnit timeUnit, Runnable runnable) {
 		
-		var   now = Time.now();
+		long  now = Time.now();
 		Watch watch;
 		
 		if (timeUnit.equals(TimeUnit.MILLISECONDS)) {
@@ -71,7 +71,7 @@ public class WatchMaker {
 		@Override
 		public boolean add(Watch watch) {
 			
-			var r = super.add(watch);
+			boolean r = super.add(watch);
 			
 			if (r && onNewWatch != null) onNewWatch.accept(watch);
 			

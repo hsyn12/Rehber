@@ -42,12 +42,12 @@ public class CodeFinder {
 	@NotNull
 	public static CodeLocation getLocation(int index) {
 		
-		var traces = Thread.currentThread().getStackTrace();
-		int size   = traces.length;
+		StackTraceElement[] traces = Thread.currentThread().getStackTrace();
+		int                 size   = traces.length;
 		
 		while (index >= size) --index;
 		
-		var element = traces[index];
+		StackTraceElement element = traces[index];
 		
 		String clasName   = element.getClassName();
 		String methodName = element.getMethodName();
@@ -62,7 +62,7 @@ public class CodeFinder {
 	@NotNull
 	public static String formatAsLog() {
 		
-		var location = getLocation();
+		CodeLocation location = getLocation();
 		
 		return format("%s.%s (%s:%d)",
 		              location.getClassName(),

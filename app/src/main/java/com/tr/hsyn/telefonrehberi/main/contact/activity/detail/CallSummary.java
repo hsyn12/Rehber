@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * CallSummary means to look more general about the call history of the selected contact.
  * This is the best sight on 'call history'.
- * Because all communication can be understood at first look.
+ * Because all communication gets clear at first look.
  */
 public abstract class CallSummary extends ContactDetailsHistory {
 	
@@ -35,19 +35,19 @@ public abstract class CallSummary extends ContactDetailsHistory {
 	 */
 	private final Gate      gateSummary = AutoGate.newGate(1000L);
 	/**
-	 * The view which the {@link #callSummaryView} will be placed
+	 * The view, which the {@link #callSummaryView} placed into.
 	 */
 	private       ViewGroup mainLayout;
 	/**
-	 * Indicates whether the history has been updated.
+	 * Indicates whether the history has updated.
 	 */
 	private       boolean   historyUpdated;
 	/**
-	 * Indicates whether we need to show the summary
+	 * Indicates whether it needs to show the summary
 	 */
 	private       boolean   needShowSummary;
 	/**
-	 * Indicates whether the summary view has been added
+	 * Indicates whether the summary view has added
 	 */
 	private       boolean   summaryViewAdded;
 	/**
@@ -55,7 +55,7 @@ public abstract class CallSummary extends ContactDetailsHistory {
 	 */
 	private       View      callSummaryView;
 	/**
-	 * Indicates whether the summary is opened
+	 * Indicates whether the summary opened
 	 */
 	private       boolean   isOpenedSummary;
 	/**
@@ -71,13 +71,13 @@ public abstract class CallSummary extends ContactDetailsHistory {
 	protected void prepare() {
 		//! This call must be first
 		super.prepare();
-		//- mainLayout already in there
+		//_ mainLayout already in there
 		mainLayout = findView(R.id.call_summary_body);
 		
 		List<String> numbers = contact.getData(ContactKey.NUMBERS);
 		
 		if (numbers == null || numbers.isEmpty()) {
-			//- if no numbers, do not show anything
+			//_ if no numbers, do not show anything
 			removeFromDetailView(mainLayout);
 			return;
 		}
@@ -119,10 +119,10 @@ public abstract class CallSummary extends ContactDetailsHistory {
 	}
 	
 	/**
-	 * @inheritDoc Call history is the list of call of the selected contact have been kept in the super class.
-	 * 		And we need to keep track of its updates.
-	 * 		This method is called from the super class
-	 * 		when the history is updated or in the first loading.
+	 * @inheritDoc Call history is the list of call of the selected contact gets kept in the super class.
+	 * 		Needs to keep track of its updates.
+	 * 		This method gets called from the super class
+	 * 		when the history gets updated or in the first loading.
 	 */
 	@CallSuper
 	@Override
@@ -130,10 +130,10 @@ public abstract class CallSummary extends ContactDetailsHistory {
 		
 		super.onHistoryLoad();
 		
-		History history = contact.getData(ContactKey.HISTORY);
+		History history = callCollection.getHistoryOf(contact);
 		
 		// if no history, do not show anything
-		if (history == null || history.isEmpty()) {
+		if (history.isEmpty()) {
 			
 			removeFromDetailView(mainLayout);
 			return;
@@ -144,7 +144,7 @@ public abstract class CallSummary extends ContactDetailsHistory {
 		//- yada yüklenmiş olan görsel güncellenecek.
 		if (!historyUpdated && needShowSummary) {
 			
-			//- historyUpdated sadece ilk açılışta false gelir.
+			//_ historyUpdated sadece ilk açılışta false gelir.
 			
 			showCallSummary();
 			return;
@@ -165,8 +165,8 @@ public abstract class CallSummary extends ContactDetailsHistory {
 	}
 	
 	/**
-	 * Called when the summary header is clicked.
-	 * And the call summary is opened in the same activity.
+	 * Called when the summary header gets clicked.
+	 * And when the call summary gets opened in the same activity.
 	 *
 	 * @param view The view
 	 */
@@ -281,13 +281,11 @@ public abstract class CallSummary extends ContactDetailsHistory {
 	
 	/**
 	 * Shows the call summary in the first time.
-	 * This method called only once or called when the history is updated.
+	 * This method gets called only once or called when the history gets updated.
 	 */
 	private void showCallSummary() {
 		
-		History history = contact.getData(ContactKey.HISTORY);
-		
-		if (history == null) return;
+		History history = callCollection.getHistoryOf(contact);
 		
 		setupSummaryViews(history);
 		animateCallSummary();
@@ -359,8 +357,8 @@ public abstract class CallSummary extends ContactDetailsHistory {
 			missedCall.setText(String.valueOf(missedSize));
 			rejectedCall.setText(String.valueOf(rejectedSize));
 			
-			var incomingDuration = callHistory.getDuration(CallType.INCOMING, CallType.INCOMING_WIFI);
-			var outgoingDuration = callHistory.getDuration(CallType.OUTGOING, CallType.OUTGOING_WIFI);
+			int incomingDuration = callHistory.getDuration(CallType.INCOMING, CallType.INCOMING_WIFI);
+			int outgoingDuration = callHistory.getDuration(CallType.OUTGOING, CallType.OUTGOING_WIFI);
 			
 			incomingCallDuration.setText(Time.formatSeconds(incomingDuration));
 			outgoingCallDuration.setText(Time.formatSeconds(outgoingDuration));
@@ -373,7 +371,7 @@ public abstract class CallSummary extends ContactDetailsHistory {
 			missedRow.setOnClickListener(v -> showCalls(callHistory.getCallsByTypes(CallType.MISSED)));
 			rejectedRow.setOnClickListener(v -> showCalls(callHistory.getCallsByTypes(CallType.REJECTED)));
 			
-			totalRow.setOnClickListener(v -> showCalls(history.getCalls()));
+			totalRow.setOnClickListener(v -> showCalls(history.calls()));
 		}
 		
 		if (!summaryViewAdded) {
@@ -381,7 +379,7 @@ public abstract class CallSummary extends ContactDetailsHistory {
 			//- Buradaki işler sadece bir kez yapılacak
 			summaryViewAdded = true;
 			
-			var ripple = Colors.getRipple();
+			int ripple = Colors.getRipple();
 			callSummaryView.findViewById(R.id.header_row).setBackgroundResource(ripple);
 			
 			if (incomingRow == null) return;
@@ -411,16 +409,14 @@ public abstract class CallSummary extends ContactDetailsHistory {
 	 */
 	private void updateSummary() {
 		
-		History history = contact.getData(ContactKey.HISTORY);
-		
-		if (history == null) return;
+		History history = callCollection.getHistoryOf(contact);
 		
 		setupSummaryViews(history);
 		onSummaryUpdate();
 	}
 	
 	/**
-	 * Called when the summary is updated or first time
+	 * Called when the summary updated or at the first time loading.
 	 */
 	private void onSummaryUpdate() {
 		

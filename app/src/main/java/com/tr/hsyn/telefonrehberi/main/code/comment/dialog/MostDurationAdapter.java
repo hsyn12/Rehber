@@ -36,8 +36,8 @@ public class MostDurationAdapter extends RecyclerView.Adapter<MostDurationAdapte
 	@Override
 	public void onBindViewHolder(@NonNull Holder holder, int position) {
 		
-		int color = Colors.COLOR_GENERATOR.getRandomColor();
-		var item  = mostDurationDataList.get(position);
+		int              color = Colors.COLOR_GENERATOR.getRandomColor();
+		MostDurationData item  = mostDurationDataList.get(position);
 		holder.name.setText(item.getName());
 		holder.text.setText(item.getText());
 		holder.order.setImageDrawable(TextDrawable.builder().buildRound(String.valueOf(item.getOrder()), color));

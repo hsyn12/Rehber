@@ -5,6 +5,7 @@ import android.database.Cursor;
 
 import androidx.annotation.NonNull;
 
+import com.tr.hsyn.content.handler.SQLContentHandler;
 import com.tr.hsyn.content.requestor.SQLContentRequester;
 
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public interface SQLContentFetcher<T> extends Fetcher<T> {
 	@Override
 	default List<T> fetch() {
 		
-		var requester = getContentRequester();
+		SQLContentRequester<T> requester = getContentRequester();
 		
 		Cursor cursor = requester.getReadableDatabase().query(
 				requester.getTableName(),
@@ -40,7 +41,7 @@ public interface SQLContentFetcher<T> extends Fetcher<T> {
 		
 		List<T> contents = new ArrayList<>(cursor.getCount());
 		
-		var handler = requester.getContentHandler();
+		SQLContentHandler<T> handler = requester.getContentHandler();
 		
 		handler.onCreateCursor(cursor);
 		

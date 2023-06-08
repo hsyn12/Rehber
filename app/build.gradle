@@ -1,7 +1,9 @@
 plugins {
 	id 'com.android.application'
 	id 'kotlin-android'
+	//id "systems.manifold.manifold-gradle-plugin" version "0.0.2-alpha"
 }
+
 
 android {
 	namespace 'com.tr.hsyn.telefonrehberi'
@@ -46,8 +48,8 @@ android {
 	}
 
 	compileOptions {
-		sourceCompatibility JavaVersion.VERSION_17
-		targetCompatibility JavaVersion.VERSION_17
+		sourceCompatibility rootProject.ext.java_version
+		targetCompatibility rootProject.ext.java_version
 	}
 
 	sourceSets {
@@ -95,6 +97,8 @@ android {
 }
 
 dependencies {
+
+	//region local dependencies
 	implementation project(path: ':xlog')
 	implementation project(path: ':executors')
 	implementation project(path: ':execution')
@@ -179,9 +183,10 @@ dependencies {
 	implementation project(path: ':tryme')
 	implementation project(path: ':objext')
 	annotationProcessor project(path: ':warnerbros')
+	//endregion
 
 	implementation "androidx.appcompat:appcompat:${rootProject.appcompat}"
-	implementation 'com.google.android.material:material:1.9.0'
+	implementation "com.google.android.material:material:${rootProject.material_version}"
 	implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 	testImplementation 'junit:junit:4.13.2'
 	androidTestImplementation 'androidx.test.ext:junit:1.1.5'
@@ -215,5 +220,6 @@ dependencies {
 	implementation 'de.hdodenhof:circleimageview:3.1.0'
 
 	implementation 'com.github.nisrulz:packagehunter:1.1.5'
+
 
 }

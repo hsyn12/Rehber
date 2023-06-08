@@ -29,7 +29,7 @@ public class Mapper {
 		
 		Map<K, V> map = new HashMap<>();
 		
-		for (var c : iterable)
+		for (V c : iterable)
 			map.put(mapper.apply(c), c);
 		
 		return map;
@@ -37,9 +37,9 @@ public class Mapper {
 	
 	public static <K, V> void toStr(@NotNull Map<K, V> map) {
 		
-		var keys = map.keySet();
+		java.util.Set<K> keys = map.keySet();
 		
-		for (var key : keys) {
+		for (K key : keys) {
 			
 			xlog.d("%s : %s", key, map.get(key));
 		}
@@ -48,9 +48,9 @@ public class Mapper {
 	
 	public static <K, V> void toStr(@NotNull Map<K, V> map, Function<K, String> mapper, Function<V, String> valueMapper) {
 		
-		var keys = map.keySet();
+		java.util.Set<K> keys = map.keySet();
 		
-		for (var key : keys) {
+		for (K key : keys) {
 			
 			xlog.d("%s : %s", mapper.apply(key), valueMapper.apply(map.get(key)));
 		}
@@ -58,9 +58,9 @@ public class Mapper {
 	
 	public static <K, V> void toStr(@NotNull Map<K, V> map, Function<V, String> valueMapper) {
 		
-		var keys = map.keySet();
+		java.util.Set<K> keys = map.keySet();
 		
-		for (var key : keys) {
+		for (K key : keys) {
 			
 			xlog.d("%s : %s", key, valueMapper.apply(map.get(key)));
 		}

@@ -88,7 +88,7 @@ public class CallDatabase extends DBBase<Call> implements DBCalls {
 		String     extra           = cursor.getString(extraCol);
 		Set<Label> labels          = getLabels(cursor.getString(labelCol));
 		
-		var call = new Call(name, number, type, date, duration, extra);
+		Call call = new Call(name, number, type, date, duration, extra);
 		
 		if (contactId != 0L) call.setData(CallKey.CONTACT_ID, contactId);
 		if (note != null) call.setData(CallKey.NOTE, note);
@@ -108,11 +108,11 @@ public class CallDatabase extends DBBase<Call> implements DBCalls {
 		
 		if (labels == null) return labelSet;
 		
-		var parts = labels.split(SEPARATOR);
+		String[] parts = labels.split(SEPARATOR);
 		
-		for (var part : parts) {
+		for (String part : parts) {
 			
-			var label = Label.fromString(part);
+			@NotNull Label label = Label.fromString(part);
 			
 			if (label.isValid())
 				labelSet.add(label);
@@ -131,7 +131,7 @@ public class CallDatabase extends DBBase<Call> implements DBCalls {
 		
 		StringBuilder sb = new StringBuilder();
 		
-		for (var label : labels) sb.append(label).append(SEPARATOR);
+		for (Label label : labels) sb.append(label).append(SEPARATOR);
 		
 		return sb.subSequence(0, sb.lastIndexOf(SEPARATOR)).toString();
 	}
@@ -142,7 +142,7 @@ public class CallDatabase extends DBBase<Call> implements DBCalls {
 		
 		if (extra != null && extra.startsWith(Calls.ACCOUNT_ID)) {
 			
-			var parts = extra.split(SEPARATOR);
+			String[] parts = extra.split(SEPARATOR);
 			
 			try {return Integer.parseInt(parts[2]);}
 			catch (Exception e) {xlog.e(e);}

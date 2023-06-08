@@ -28,7 +28,7 @@ public class CallOver {
 	@NotNull
 	public static List<Group<Call>> groupByNumber() {
 		
-		var calls = Over.CallLog.Calls.getCalls();
+		List<Call> calls = Over.CallLog.Calls.getCalls();
 		
 		if (calls != null)
 			return group(calls, c -> PhoneNumbers.formatNumber(c.getNumber(), 10));
@@ -67,11 +67,11 @@ public class CallOver {
 	@NotNull
 	public static List<Group<Call>> groupByNumber(@NotNull Comparator<Group<Call>> comparator) {
 		
-		var calls = Over.CallLog.Calls.getCalls();
+		List<Call> calls = Over.CallLog.Calls.getCalls();
 		
 		if (calls != null) {
 			
-			var list = group(calls, c -> PhoneNumbers.formatNumber(c.getNumber(), 10));
+			@NotNull List<Group<Call>> list = group(calls, c -> PhoneNumbers.formatNumber(c.getNumber(), 10));
 			
 			list.sort(comparator);
 			return list;
@@ -105,7 +105,7 @@ public class CallOver {
 	@NotNull
 	public static List<Group<Call>> groupByNumber(@NotNull List<Call> calls, @NotNull Comparator<Group<Call>> comparator) {
 		
-		var list = group(calls, c -> PhoneNumbers.formatNumber(c.getNumber(), 10));
+		@NotNull List<Group<Call>> list = group(calls, c -> PhoneNumbers.formatNumber(c.getNumber(), 10));
 		
 		list.sort(comparator);
 		return list;
@@ -120,7 +120,7 @@ public class CallOver {
 	@NotNull
 	public static List<Call> getCallsByNumber(@NotNull List<String> numbers) {
 		
-		var calls = Over.CallLog.Calls.getCalls();
+		List<Call> calls = Over.CallLog.Calls.getCalls();
 		
 		if (calls != null)
 			return calls
@@ -176,7 +176,7 @@ public class CallOver {
 		
 		for (int i = 0; i < groups.size(); i++) {
 			
-			var g = groups.get(i);
+			Group<Call> g = groups.get(i);
 			
 			g.setRank(rank);
 			
@@ -271,7 +271,7 @@ public class CallOver {
 		
 		Lister.loop(groups.size(), x -> {
 			
-			var g = groups.get(x);
+			Group<Call> g = groups.get(x);
 			
 			int duration = g.getList().stream().map(mapper).reduce(0, Integer::sum);
 			

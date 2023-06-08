@@ -22,7 +22,7 @@ import javax.tools.Diagnostic;
 
 
 @SupportedAnnotationTypes({"com.tr.hsyn.warnerlabel.Remember"})
-@SupportedSourceVersion(SourceVersion.RELEASE_11)
+@SupportedSourceVersion(SourceVersion.RELEASE_8)
 @AutoService(Processor.class)
 public class WarnTurner extends AbstractProcessor {
 	
@@ -39,7 +39,7 @@ public class WarnTurner extends AbstractProcessor {
 	@Override
 	public boolean process(Set<? extends TypeElement> annotations, @Nonnull RoundEnvironment roundEnv) {
 		
-		var elements = roundEnv.getElementsAnnotatedWith(Remember.class);
+		Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(Remember.class);
 		
 		if (elements.isEmpty()) return true;
 		
@@ -50,7 +50,7 @@ public class WarnTurner extends AbstractProcessor {
 	
 	private void inspectAnnotation(@Nonnull Element element) {
 		
-		var annotation = element.getAnnotation(Remember.class);
+		Remember annotation = element.getAnnotation(Remember.class);
 		
 		Name   name   = element.getSimpleName();
 		String note   = annotation.note();

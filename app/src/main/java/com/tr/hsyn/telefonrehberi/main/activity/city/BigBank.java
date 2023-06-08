@@ -35,7 +35,7 @@ public abstract class BigBank extends NorthBridge {
 		
 		super.onCreate();
 		
-		var callDatabase = new CallDatabase(this);
+		CallDatabase callDatabase = new CallDatabase(this);
 		callStory = new CallStory(callDatabase, getContentResolver());
 		
 		Blue.box(Key.CALL_STORY, callStory);

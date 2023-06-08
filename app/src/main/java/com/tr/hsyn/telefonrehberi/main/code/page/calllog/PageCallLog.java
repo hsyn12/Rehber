@@ -53,13 +53,13 @@ public class PageCallLog extends CallLogEvents {
 	public List<Call> deleteAllItems() {
 		
 		
-		var deletedCalls = Lister.listOf(getAdapter().getItems());
+		@NotNull List<Call> deletedCalls = Lister.listOf(getAdapter().getItems());
 		getAdapter().clearItems();
 		
 		//- Filtreleme durumuna göre silinen elemanları ana listeden de çıkaralım
 		if (Res.Calls.FILTER_ALL != filter) {
 			
-			var count = Lister.removeItems(getList(), deletedCalls);
+			int count = Lister.removeItems(getList(), deletedCalls);
 			
 			if (count == deletedCalls.size()) {
 				

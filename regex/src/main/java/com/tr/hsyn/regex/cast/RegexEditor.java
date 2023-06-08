@@ -41,22 +41,23 @@ public interface RegexEditor extends RegexFinder {
 	 */
 	default String removeFrom(@NotNull CharSequence text, int limit) {
 		
-		int count = 0;
-		var regex = Pattern.compile(getText());
+		if (true) throw new IllegalArgumentException("Not implemented yet");
+		int     count = 0;
+		Pattern regex = Pattern.compile(getText());
 		
-		var matcher = regex.matcher(text);
+		java.util.regex.Matcher matcher = regex.matcher(text);
 		
 		StringBuilder sb = new StringBuilder();
 		
 		while (matcher.find()) {
 			
-			matcher.appendReplacement(sb, "");
+			//matcher.appendReplacement(sb, "");
 			count++;
 			
 			if (limit > 0 && count >= limit) break;
 		}
 		
-		matcher.appendTail(sb);
+		//matcher.appendTail(sb);
 		
 		return sb.toString();
 	}
@@ -95,8 +96,8 @@ public interface RegexEditor extends RegexFinder {
 	 */
 	default String replaceFrom(@NotNull String text, @NotNull String replacement, int limit) {
 		
-		int count   = 0;
-		var matcher = createMatcher(text);
+		int                              count   = 0;
+		java.util.regex.@NotNull Matcher matcher = createMatcher(text);
 		
 		//!  StringBuilder android için yok görünüyor
 		//noinspection StringBufferMayBeStringBuilder

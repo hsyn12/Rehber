@@ -70,22 +70,9 @@ public abstract class CallLogView extends FragmentEvents<Call> {
 	}
 	
 	@Override
-	public void showProgress() {
-		
-		progressBar.setVisibility(View.VISIBLE);
-	}
-	
-	@Override
-	public void hideProgress() {
-		
-		progressBar.setVisibility(View.GONE);
-		refreshLayout.setRefreshing(false);
-	}
-	
-	@Override
 	public void onRefresh() {
 		
-		var activity = getActivity();
+		androidx.fragment.app.FragmentActivity activity = getActivity();
 		
 		if (activity instanceof SwipeRefreshLayout.OnRefreshListener) {
 			
@@ -97,6 +84,19 @@ public abstract class CallLogView extends FragmentEvents<Call> {
 			
 			refreshLayout.setRefreshing(false);
 		}
+	}
+	
+	@Override
+	public void showProgress() {
+		
+		progressBar.setVisibility(View.VISIBLE);
+	}
+	
+	@Override
+	public void hideProgress() {
+		
+		progressBar.setVisibility(View.GONE);
+		refreshLayout.setRefreshing(false);
 	}
 	
 }

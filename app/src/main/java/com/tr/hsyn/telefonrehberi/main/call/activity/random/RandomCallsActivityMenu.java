@@ -86,21 +86,21 @@ public abstract class RandomCallsActivityMenu extends RandomCallsActivityRutine 
 	@SuppressLint("InflateParams")
 	private void onMenuCallTypes() {
 		
-		var typeNames = Lists.newArrayList(
+		java.util.ArrayList<String> typeNames = Lists.newArrayList(
 				getString(R.string.call_type_incoming),
 				getString(R.string.call_type_outgoing),
 				getString(R.string.call_type_missed),
 				getString(R.string.call_type_rejected)
 		);
 		
-		var ids = Lists.newArrayList(
+		java.util.ArrayList<Integer> ids = Lists.newArrayList(
 				R.id.check_box_incomming,
 				R.id.check_box_outgoing,
 				R.id.check_box_missed,
 				R.id.check_box_rejected
 		);
 		
-		var callTypes = Lists.newArrayList(
+		java.util.ArrayList<Boolean> callTypes = Lists.newArrayList(
 				getCallTypeIncomming(),
 				getCallTypeOutgoing(),
 				getCallTypeMissed(),
@@ -124,7 +124,7 @@ public abstract class RandomCallsActivityMenu extends RandomCallsActivityRutine 
 		
 		if (dateStart == 0L) dateStart = Time.FromNow.months(-6);
 		
-		var calendar = Calendar.getInstance();
+		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(dateStart);
 		
 		showCalendar(calendar, 0L, getDateEnd(), c -> {
@@ -145,14 +145,14 @@ public abstract class RandomCallsActivityMenu extends RandomCallsActivityRutine 
 		
 		if (dateEnd == 0L) dateEnd = Time.now();
 		
-		var calendar = Calendar.getInstance();
+		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(dateEnd);
 		
 		showCalendar(calendar, getDateStart(), dateEnd, c -> {
 			
-			var day   = c.get(Calendar.DAY_OF_MONTH);
-			var month = c.get(Calendar.MONTH);
-			var year  = c.get(Calendar.YEAR);
+			int day   = c.get(Calendar.DAY_OF_MONTH);
+			int month = c.get(Calendar.MONTH);
+			int year  = c.get(Calendar.YEAR);
 			
 			setDateEnd(Time.Pointer.at(day, month, year));
 		});
@@ -161,7 +161,7 @@ public abstract class RandomCallsActivityMenu extends RandomCallsActivityRutine 
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 		
-		var text = buttonView.getText();
+		CharSequence text = buttonView.getText();
 		
 		if (text.equals(getString(R.string.call_type_incoming))) {
 			

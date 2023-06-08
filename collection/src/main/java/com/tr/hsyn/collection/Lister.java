@@ -57,10 +57,10 @@ public final class Lister {
 		
 		if (i1 == null || i2 == null) return false;
 		
-		var set1  = setOf(i1);
-		var set2  = setOf(i2);
-		int match = 0;
-		int size1 = set1.size(), size2 = set2.size();
+		@NotNull Set<? extends T> set1  = setOf(i1);
+		@NotNull Set<? extends T> set2  = setOf(i2);
+		int                       match = 0;
+		int                       size1 = set1.size(), size2 = set2.size();
 		
 		if (size1 == size2) {
 			
@@ -88,7 +88,7 @@ public final class Lister {
 		
 		Set<T> l = new HashSet<>();
 		
-		for (var e : iterable) l.add(e);
+		for (T e : iterable) l.add(e);
 		
 		return l;
 	}
@@ -123,7 +123,7 @@ public final class Lister {
 		
 		int size = 0;
 		
-		for (var ignored : iterable) size++;
+		for (T ignored : iterable) size++;
 		
 		return size;
 	}
@@ -152,15 +152,15 @@ public final class Lister {
 	@NotNull
 	public static <T> List<T> difference(@NotNull Iterable<T> A, @NotNull Iterable<T> B) {
 		
-		var s1 = listOf(A);
-		var s2 = listOf(B);
+		@NotNull List<T> s1 = listOf(A);
+		@NotNull List<T> s2 = listOf(B);
 		
 		if (s1.isEmpty()) return new ArrayList<>(0);
 		if (s2.isEmpty()) return s1;
 		
 		List<T> difference = new ArrayList<>();
 		
-		for (var t : s1)
+		for (T t : s1)
 			if (!s2.contains(t)) difference.add(t);
 		
 		return difference;
@@ -171,7 +171,7 @@ public final class Lister {
 		
 		List<T> l = new ArrayList<>();
 		
-		for (var e : iterable) l.add(e);
+		for (T e : iterable) l.add(e);
 		
 		return l;
 	}
@@ -233,7 +233,7 @@ public final class Lister {
 	 */
 	public static <T> void loop(@NotNull Iterable<? extends T> list, @NotNull Consumer<T> consumer) {
 		
-		for (var i : list) consumer.accept(i);
+		for (T i : list) consumer.accept(i);
 	}
 	
 	/**
@@ -325,9 +325,9 @@ public final class Lister {
 	@SuppressWarnings("UseOfSystemOutOrSystemErr")
 	public static void main(String... args) {
 		
-		var list = listOf("a", "ab", "abc", "abcd", "e", "ef", "efg", "efgh");
+		@NotNull List<String> list = listOf("a", "ab", "abc", "abcd", "e", "ef", "efg", "efgh");
 		
-		var g = group(list, String::length);
+		@NotNull Map<Integer, List<String>> g = group(list, String::length);
 		
 		System.out.printf("%s\n", g);
 		System.out.printf("%s\n", group(list, s -> s.charAt(0)));

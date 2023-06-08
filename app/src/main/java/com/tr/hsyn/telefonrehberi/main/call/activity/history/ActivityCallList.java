@@ -60,8 +60,8 @@ public class ActivityCallList extends ActivityCallHistoryView {
 		
 		if (!calls.isEmpty()) {
 			
-			var aCall = calls.get(0);
-			var name  = aCall.getName();
+			com.tr.hsyn.calldata.Call aCall = calls.get(0);
+			String                    name  = aCall.getName();
 			
 			setTitle(name != null ? name : aCall.getNumber());
 			
@@ -88,11 +88,11 @@ public class ActivityCallList extends ActivityCallHistoryView {
 		
 		Runny.run(() -> {
 			
-			var call = calls.get(0);
+			com.tr.hsyn.calldata.Call call = calls.get(0);
 			
 			if (call.getLong(CallKey.CONTACT_ID, 0L) != 0L) {
 				
-				var name = Calls.getContactName(getContentResolver(), call.getNumber());
+				String name = Calls.getContactName(getContentResolver(), call.getNumber());
 				
 				if (name != null) {
 					
@@ -190,21 +190,21 @@ public class ActivityCallList extends ActivityCallHistoryView {
 		
 		adapter.notifyItemRangeRemoved(0, calls.size() - 1);
 		
-		var deletedCalls = new ArrayList<>(calls);
+		ArrayList<com.tr.hsyn.calldata.Call> deletedCalls = new ArrayList<>(calls);
 		calls.clear();
 		
 		updateSize();
 		
 		Runny.run(() -> {
 			
-			var deleted = callStory.deleteFromSystem(deletedCalls);
+			int deleted = callStory.deleteFromSystem(deletedCalls);
 			
 			if (deleted == deletedCalls.size()) {
 				
 				long now = System.currentTimeMillis();
 				deletedCalls.forEach(c -> c.setData(CallKey.DELETED_DATE, now));
 				
-				var _deleted = callStory.updateFromDatabase(deletedCalls);
+				int _deleted = callStory.updateFromDatabase(deletedCalls);
 				
 				if (_deleted == deletedCalls.size()) {
 					

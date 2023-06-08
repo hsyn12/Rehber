@@ -143,7 +143,7 @@ public abstract class NorthBridge extends MainActivity implements PermissionHold
 	 */
 	protected void onDeniedContactsPermissions(@NonNull Map<String, Boolean> result) {
 		
-		var readPermission = result.get(CONTACTS_R);
+		Boolean readPermission = result.get(CONTACTS_R);
 		
 		if (readPermission != null) {
 			
@@ -152,7 +152,7 @@ public abstract class NorthBridge extends MainActivity implements PermissionHold
 				xlog.i("Rehber okuma izni var");
 			}
 			
-			var permenentlyDenied = isPermanentlyDenied(CONTACTS_R);
+			boolean permenentlyDenied = isPermanentlyDenied(CONTACTS_R);
 			
 			if (permenentlyDenied) {
 				
@@ -188,7 +188,7 @@ public abstract class NorthBridge extends MainActivity implements PermissionHold
 	 */
 	protected void onDeniedCallsPermissions(@NonNull Map<String, Boolean> result) {
 		
-		var readPermission = result.get(CALLS_R);
+		Boolean readPermission = result.get(CALLS_R);
 		
 		if (readPermission != null) {
 			
@@ -197,7 +197,7 @@ public abstract class NorthBridge extends MainActivity implements PermissionHold
 				xlog.i("Arama kayıtları okuma izni var");
 			}
 			
-			var permenentlyDenied = isPermanentlyDenied(CALLS_R);
+			boolean permenentlyDenied = isPermanentlyDenied(CALLS_R);
 			
 			if (permenentlyDenied) {
 				

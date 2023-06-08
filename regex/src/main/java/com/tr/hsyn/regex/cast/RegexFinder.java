@@ -30,12 +30,12 @@ public interface RegexFinder extends RegexTester {
 	@NotNull
 	default List<Index> findAll(@NotNull CharSequence text, int beginIndex) {
 		
-		var list = new ArrayList<Index>();
+		ArrayList<Index> list = new ArrayList<Index>();
 		
 		if (beginIndex < 0) beginIndex = 0;
 		if (text.length() <= beginIndex) return list;
 		
-		var matcher = createMatcher(text.toString().substring(beginIndex));
+		java.util.regex.@NotNull Matcher matcher = createMatcher(text.toString().substring(beginIndex));
 		
 		while (matcher.find()) {
 			
@@ -58,7 +58,7 @@ public interface RegexFinder extends RegexTester {
 		
 		if (text == null) return Index.INVALID_INDEX;
 		
-		var matcher = createMatcher(text);
+		java.util.regex.@NotNull Matcher matcher = createMatcher(text);
 		
 		if (matcher.find()) return new Index(matcher.start(), matcher.end());
 		
@@ -75,7 +75,7 @@ public interface RegexFinder extends RegexTester {
 	 */
 	default Index find(@NotNull CharSequence text, int startIndex) {
 		
-		var matcher = createMatcher(text);
+		java.util.regex.@NotNull Matcher matcher = createMatcher(text);
 		
 		if (matcher.find(startIndex)) return new Index(matcher.start(), matcher.end());
 		
@@ -93,7 +93,7 @@ public interface RegexFinder extends RegexTester {
 	 */
 	default Index find(@NotNull String text, int groupOrder) {
 		
-		var matcher = createMatcher(text);
+		java.util.regex.@NotNull Matcher matcher = createMatcher(text);
 		
 		if (matcher.find()) return new Index(matcher.start(groupOrder), matcher.end(groupOrder));
 		
@@ -116,12 +116,12 @@ public interface RegexFinder extends RegexTester {
 	 */
 	default List<Index> findGroup(@NotNull String text, @NotNull String groupName) {
 		
-		var         matcher = createMatcher(text);
-		List<Index> list    = new ArrayList<>();
+		java.util.regex.@NotNull Matcher matcher = createMatcher(text);
+		List<Index>                      list    = new ArrayList<>();
 		
 		while (matcher.find()) {
 			
-			var group = matcher.group(groupName);
+			String group = matcher.group(groupName);
 			
 			if (group != null) list.add(Index.of(matcher.start(groupName), matcher.end(groupName)));
 		}
@@ -131,7 +131,7 @@ public interface RegexFinder extends RegexTester {
 	
 	default Index find(@NotNull String text, @NotNull String groupName) {
 		
-		var matcher = createMatcher(text);
+		java.util.regex.@NotNull Matcher matcher = createMatcher(text);
 		
 		if (matcher.find())
 			return Index.of(matcher.start(groupName), matcher.end(groupName));
@@ -149,12 +149,12 @@ public interface RegexFinder extends RegexTester {
 	 */
 	default List<Index> findGroup(@NotNull CharSequence text, int groupOrder) {
 		
-		var         matcher = createMatcher(text);
-		List<Index> list    = new ArrayList<>();
+		java.util.regex.@NotNull Matcher matcher = createMatcher(text);
+		List<Index>                      list    = new ArrayList<>();
 		
 		while (matcher.find()) {
 			
-			var group = matcher.group(groupOrder);
+			String group = matcher.group(groupOrder);
 			
 			if (group != null) list.add(Index.of(matcher.start(groupOrder), matcher.end(groupOrder)));
 		}

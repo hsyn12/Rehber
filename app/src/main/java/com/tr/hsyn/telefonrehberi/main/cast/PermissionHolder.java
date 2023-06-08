@@ -101,8 +101,8 @@ public interface PermissionHolder extends ActivityCompat.OnRequestPermissionsRes
 		
 		for (int i = 0; i < grantResults.length; i++) {
 			
-			var key   = permissions[0];
-			var value = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+			String  key   = permissions[0];
+			boolean value = grantResults[0] == PackageManager.PERMISSION_GRANTED;
 			
 			result.put(key, value);
 		}

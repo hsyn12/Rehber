@@ -72,7 +72,7 @@ public class Rehber extends Application {
 	
 	private void setBlueRegister() {
 		
-		var register = new BlueRegister(getApplicationContext());
+		BlueRegister register = new BlueRegister(getApplicationContext());
 		
 		Blue.setHotel(new Rosa(new Daniel(new Alice(register))));
 	}

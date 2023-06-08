@@ -127,10 +127,16 @@ public class ContactSearchAdapter extends RecyclerView.Adapter<ContactSearchAdap
 		setHighlight(holder);
 	}
 	
+	@Override
+	public int getItemCount() {
+		
+		return filteredContacts.size();
+	}
+	
 	@NonNull
 	private String getLetter(String str) {
 		
-		var l = Stringx.getFirstChar(str);
+		@NotNull String l = Stringx.getFirstChar(str);
 		
 		if (l.isEmpty()) return "?";
 		
@@ -177,12 +183,6 @@ public class ContactSearchAdapter extends RecyclerView.Adapter<ContactSearchAdap
 			holder.number.setText(spanner);
 		}
 		
-	}
-	
-	@Override
-	public int getItemCount() {
-		
-		return filteredContacts.size();
 	}
 	
 	@SuppressLint("NotifyDataSetChanged")

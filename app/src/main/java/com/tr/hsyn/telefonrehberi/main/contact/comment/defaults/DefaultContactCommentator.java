@@ -109,16 +109,15 @@ public class DefaultContactCommentator implements ContactCommentator {
 	@Override
 	public @NotNull CharSequence commentOn(@NotNull Contact contact) {
 		
-		this.contact = contact;
-		//todo history 
-		this.history = contact.getData(ContactKey.HISTORY);
+		if (callCollection == null) return comment;
 		
-		//if history null or empty, no need to go any further.
-		if (history != null) {
-			if (history.isEmpty()) comment.append(commentStore.noHistory());
-			else commentOnContact();
-		}
-		else comment.append(commentStore.historyNotFound());
+		this.contact = contact;
+		
+		this.history = callCollection.getHistoryOf(contact);
+		
+		//if history is empty, no need to go any further.
+		if (history.isEmpty()) comment.append(commentStore.noHistory());
+		else commentOnContact();
 		
 		return comment;
 	}
@@ -190,7 +189,6 @@ public class DefaultContactCommentator implements ContactCommentator {
 	 */
 	private void commentOnContact() {
 		
-		if (callCollection == null) return;
 		hotListByQuantity = callCollection.getHotListByQuantity();
 		
 		// Here start to generate the comment.
@@ -202,11 +200,13 @@ public class DefaultContactCommentator implements ContactCommentator {
 			commentOnSingleCall();
 		}
 		else {
+			//region getting comments
 			this.comment.append(commentQuantity());
 			this.comment.append(commentMostQuantity());
 			this.comment.append(commentOnTheLastCall());
 			this.comment.append(commentLastCallType());
 			this.comment.append(firstLastCallComment());
+			//endregion
 		}
 		
 	}
@@ -236,13 +236,13 @@ public class DefaultContactCommentator implements ContactCommentator {
 		
 		Spanner              quantityComment = new Spanner();
 		String               name            = contact.getName() != null && !PhoneNumbers.isPhoneNumber(contact.getName()) ? contact.getName() : Stringx.toTitle(getString(R.string.word_contact));
-		View.OnClickListener listener        = view -> new ShowCallsDialog(commentStore.getActivity(), history.getCalls()).show();
+		View.OnClickListener listener        = view -> new ShowCallsDialog(commentStore.getActivity(), history.calls()).show();
 		quantityComment.append(name, Spans.bold(), Spans.foreground(getTextColor()));
 		
 		// Have two language resources forever, think so.
 		if (isTurkish) {
 			
-			var extension = WordExtension.getWordExt(name, Extension.TYPE_DATIVE);
+			@NotNull String extension = WordExtension.getWordExt(name, Extension.TYPE_DATIVE);
 			
 			quantityComment.append(Stringx.format("'%s %s ", extension, getString(R.string.word_has)))
 					.append(Stringx.format("%s", getString(R.string.word_calls, history.size())), getClickSpans(listener))
@@ -269,7 +269,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 	 */
 	private @NotNull CharSequence commentMostQuantity() {
 		
-		var            com        = new Spanner();
+		Spanner        com        = new Spanner();
 		CallCollection collection = getCallCollection();
 		
 		if (collection == null) {
@@ -278,12 +278,12 @@ public class DefaultContactCommentator implements ContactCommentator {
 			return com;
 		}
 		
-		var ranks = new RankList(collection.getNumberedCalls());
-		ranks.makeRanks();
+		RankList ranks = new RankList(collection.getNumberedCalls());
+		ranks.makeQuantityRanks();
 		
-		Map<Integer, List<CallRank>> map      = ranks.getRankMap();
-		RankMate                     rankMate = new RankMate(map);
-		var                          numbers  = ContactKey.getNumbers(contact);
+		Map<Integer, List<CallRank>>                     map      = ranks.getRankMap();
+		RankMate                                         rankMate = new RankMate(map);
+		@org.jetbrains.annotations.Nullable List<String> numbers  = ContactKey.getNumbers(contact);
 		
 		if (numbers == null) return com;
 		
@@ -291,11 +291,11 @@ public class DefaultContactCommentator implements ContactCommentator {
 		
 		if (rank != -1) {
 			
-			var callRankList = map.get(rank);
+			List<CallRank> callRankList = map.get(rank);
 			assert callRankList != null;
-			int rankCount = callRankList.size();
-			var mostList  = createMostCallItemList(map);
-			var dialog    = new MostCallDialog(commentStore.getActivity(), mostList);
+			int                                 rankCount = callRankList.size();
+			@NotNull List<MostCallItemViewData> mostList  = createMostCallItemList(map);
+			MostCallDialog                      dialog    = new MostCallDialog(commentStore.getActivity(), mostList);
 			
 			xlog.w("rank=%d, rankCount=%d", rank, rankCount);
 			
@@ -314,7 +314,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 				
 				com.append(fmt("And in the %d. place ", rank));
 				
-				var hotList = new Spanner().append("the hot list", getClickSpans(view -> dialog.show()));
+				Spanner hotList = new Spanner().append("the hot list", getClickSpans(view -> dialog.show()));
 				
 				if (rankCount == 1) com.append("alone ");
 				else com.append(fmt("together with %d contact(s) ", rankCount));
@@ -362,8 +362,8 @@ public class DefaultContactCommentator implements ContactCommentator {
 		}
 		else {
 			
-			var             historyCalls    = history.getCallsByTypes(callTypes);
-			ShowCallsDialog showCallsDialog = new ShowCallsDialog(commentStore.getActivity(), historyCalls, history.getContact().getName(), Stringx.format("%d %s", historyCalls.size(), typeStr));
+			@NotNull List<Call> historyCalls    = history.getCallsByTypes(callTypes);
+			ShowCallsDialog     showCallsDialog = new ShowCallsDialog(commentStore.getActivity(), historyCalls, history.contact().getName(), Stringx.format("%d %s", historyCalls.size(), typeStr));
 			
 			View.OnClickListener listener = view -> showCallsDialog.show();
 			
@@ -395,7 +395,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 	 */
 	private @NotNull CharSequence firstLastCallComment() {
 		
-		var comment = new Spanner();
+		Spanner comment = new Spanner();
 		
 		if (history.size() > 1) {
 			
@@ -511,15 +511,15 @@ public class DefaultContactCommentator implements ContactCommentator {
 		
 		List<MostCallItemViewData> list = new ArrayList<>();
 		
-		for (var rankList : map.values()) {
+		for (List<CallRank> rankList : map.values()) {
 			
 			for (CallRank callRank : rankList) {
 				
-				var call  = callRank.getCalls().get(0);
-				var n     = call.getName();
-				var name  = (n != null && !n.isBlank()) ? n : call.getNumber();
-				var size  = callRank.getCalls().size();
-				var order = callRank.getRank();
+				Call   call  = callRank.getCalls().get(0);
+				String n     = call.getName();
+				String name  = (n != null && !n.trim().isEmpty()) ? n : call.getNumber();
+				int    size  = callRank.getCalls().size();
+				int    order = callRank.getRank();
 				list.add(new MostCallItemViewData(name, size, order));
 			}
 		}
@@ -538,10 +538,10 @@ public class DefaultContactCommentator implements ContactCommentator {
 	private CharSequence mostHistoryDurationComment(@NotNull DurationGroup duration) {
 		
 		// region prepares all contacts history, and the duration list
-		var                         comment   = new Spanner();
+		Spanner                     comment   = new Spanner();
 		Map<Contact, DurationGroup> durations = new HashMap<>();
 		
-		var contacts = getContacts();
+		@org.jetbrains.annotations.Nullable List<Contact> contacts = getContacts();
 		
 		if (contacts == null || contacts.isEmpty())
 			return comment;
@@ -549,10 +549,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 		//? put the all durations into the map
 		for (Contact contact : contacts) {
 			
-			History history = ContactKey.getHistory(contact);
-			
-			if (history == null || history.isEmpty())
-				history = History.getHistory(contact);
+			History history = callCollection.getHistoryOf(contact);
 			
 			if (history.isEmpty()) {
 				
@@ -560,7 +557,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 				continue;
 			}
 			
-			var historyDuration = history.getHistoryDuration();
+			DurationGroup historyDuration = history.getHistoryDuration();
 			
 			if (!historyDuration.isZero())
 				durations.put(contact, historyDuration);
@@ -589,10 +586,10 @@ public class DefaultContactCommentator implements ContactCommentator {
 			long                              firstContactId = firstItem.getKey().getContactId();
 			DurationGroup                     firstDuration  = firstItem.getValue();
 			
-			var                  mostDurationDataList = createMostDurationList(durationList);
-			var                  dialog               = new MostDurationDialog(commentStore.getActivity(), mostDurationDataList);
-			View.OnClickListener listener             = view -> dialog.show();
-			boolean              isWinner             = firstContactId == this.contact.getContactId();
+			@NotNull List<MostDurationData> mostDurationDataList = createMostDurationList(durationList);
+			MostDurationDialog              dialog               = new MostDurationDialog(commentStore.getActivity(), mostDurationDataList);
+			View.OnClickListener            listener             = view -> dialog.show();
+			boolean                         isWinner             = firstContactId == this.contact.getContactId();
 			
 			
 			if (isTurkish) {
@@ -622,19 +619,26 @@ public class DefaultContactCommentator implements ContactCommentator {
 		return comment;
 	}
 	
+	/**
+	 * Creates a list of most duration items.
+	 *
+	 * @param durationList the list of duration
+	 * @return the list of most duration items
+	 */
 	@NotNull
 	private List<MostDurationData> createMostDurationList(@NotNull List<Map.Entry<Contact, DurationGroup>> durationList) {
 		
 		List<MostDurationData> list = new ArrayList<>();
 		
 		int order = 1;
-		for (var entry : durationList) {
+		for (Map.Entry<Contact, DurationGroup> entry : durationList) {
 			
-			var contact        = entry.getKey();
-			var duration       = entry.getValue();
-			var durationString = getDurationString(duration, Unit.YEAR, Unit.MONTH, Unit.DAY, Unit.HOUR);
+			Contact       contact        = entry.getKey();
+			DurationGroup duration       = entry.getValue();
+			String        durationString = getDurationString(duration, Unit.YEAR, Unit.MONTH, Unit.DAY, Unit.HOUR);
 			list.add(new MostDurationData(contact.getName(), durationString, order++));
 		}
+		
 		
 		return list;
 	}
@@ -649,10 +653,10 @@ public class DefaultContactCommentator implements ContactCommentator {
 	@NotNull
 	private String getDurationString(@NotNull DurationGroup duration, Unit @NotNull ... units) {
 		
-		var sb        = new StringBuilder();
-		var durations = duration.pickFrom(units);
+		StringBuilder          sb        = new StringBuilder();
+		@NotNull DurationGroup durations = duration.pickFrom(units);
 		
-		for (var _duration : durations.getDurations()) {
+		for (Duration _duration : durations.getDurations()) {
 			
 			if (_duration.isNotZero())
 				sb.append(makePlural(_duration.toString("%d %s"), _duration.getValue())).append(" ");

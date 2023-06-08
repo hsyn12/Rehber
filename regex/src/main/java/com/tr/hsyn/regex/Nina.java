@@ -742,8 +742,8 @@ public interface Nina {
 	
 	static void test26() {
 		
-		var nonLetter = Regex.LETTER.non();
-		var nonDigit  = Regex.DIGIT.non();
+		@NotNull Character nonLetter = Regex.LETTER.non();
+		@NotNull Character nonDigit  = Regex.DIGIT.non();
 		
 		pl("Letter : %s", nonLetter.getText());
 		pl("Digit  : %s", nonDigit.getText());
@@ -752,9 +752,9 @@ public interface Nina {
 	
 	static void test24() {
 		
-		var str = "Seni bu köyde 5 kez 8 yerde aradım";
+		String str = "Seni bu köyde 5 kez 8 yerde aradım";
 		
-		var regex = Range.letters().with(Range.of(Regex.WHITE_SPACE)).negate();
+		@NotNull Range regex = Range.letters().with(Range.of(Regex.WHITE_SPACE)).negate();
 		pl("Regex : %s", regex);
 		pl("Result : %s", Regex.getStringParts(str, regex.toRegex().findAll(str)));
 	}
@@ -762,15 +762,15 @@ public interface Nina {
 	//region Tests
 	static void test23() {
 		
-		var str = "Seni bu bu köyde";
+		String str = "Seni bu bu köyde";
 		test("12 Nisan 1981 Çarşamba öğleden sonra 15:45 suları");
 	}
 	
 	static void test21() {
 		
-		var str     = "123456HelloTest";
-		var lazy    = Nina.like().digits().letters().lazy();
-		var notLazy = Nina.like().digits().letters();
+		String                str     = "123456HelloTest";
+		@NotNull RegexBuilder lazy    = Nina.like().digits().letters().lazy();
+		@NotNull RegexBuilder notLazy = Nina.like().digits().letters();
 		
 		pl("Lazy Regex      : %s", lazy);
 		pl("Not Lazy Regex  : %s", notLazy);
@@ -780,8 +780,8 @@ public interface Nina {
 	
 	static void test22() {
 		
-		var str   = "12 Nisan 1981 Çarşamba öğleden sonra 15:45 suları";
-		var regex = Nina.like().digit(Quanta.ONE_OR_MORE).with(Look.ahead(":").negative());
+		String                str   = "12 Nisan 1981 Çarşamba öğleden sonra 15:45 suları";
+		@NotNull RegexBuilder regex = Nina.like().digit(Quanta.ONE_OR_MORE).with(Look.ahead(":").negative());
 		
 		pl("Regex  : %s", regex);
 		pl("Result : %s", Regex.getStringParts(str, regex.findAll(str)));
@@ -789,20 +789,20 @@ public interface Nina {
 	
 	static void test20() {
 		
-		var str = "12 Nisan 1981";
+		String str = "12 Nisan 1981";
 		pl("Result : %s", Regex.DIGIT.retainFrom(str));
 	}
 	
 	static void test19() {
 		
-		var hmt = HMT.builder()
+		@NotNull HMT hmt = HMT.builder()
 				.head(Nina.like().boundary())
 				.middle(Nina.like().punc().whiteSpace().toRange().negate().toRegex().oneOrMore().lazy())
 				.tail(Nina.like().boundary())
 				.build();
 		
-		var str    = "hello i am 42 years old. This is the 3point for me from 1981 in spring";
-		var result = hmt.findAll(str);
+		String                                                str    = "hello i am 42 years old. This is the 3point for me from 1981 in spring";
+		java.util.@NotNull List<com.tr.hsyn.regex.cast.Index> result = hmt.findAll(str);
 		
 		pl("Regex : %s", hmt.getRegex());
 		pl("Index : %s", result);
@@ -814,7 +814,7 @@ public interface Nina {
 		
 		
 		CoupleFinder _parser = new CoupleFinder(":", 3, 4);
-		var          str1    = "01:0dfd45546d54f121124:49df55:9dfiü";
+		String       str1    = "01:0dfd45546d54f121124:49df55:9dfiü";
 		CoupleFinder parser  = new CoupleFinder(Nina.like(":"), Nina.like("[0-9]").times(1, 2), Nina.like("[0-9]").times(1, 2));
 		
 		pl("Regex  : %s", parser.pattern.pattern());
@@ -825,41 +825,41 @@ public interface Nina {
 	
 	static void test17() {
 		
-		var str   = "123456789";
-		var regex = Nina.regex(Nina.rangeNumbers().except(Nina.range("3-5")));
+		String                str   = "123456789";
+		@NotNull RegexBuilder regex = Nina.regex(Nina.rangeNumbers().except(Nina.range("3-5")));
 		pl("Regex  : %s", regex);
 		pl("Result : %s", regex.matchesOf(str));
 	}
 	
 	static void test16() {
 		
-		var str   = "123456789";
-		var regex = Nina.regex(Nina.range("345").intersect("0-9"));
+		String                str   = "123456789";
+		@NotNull RegexBuilder regex = Nina.regex(Nina.range("345").intersect("0-9"));
 		pl("Regex  : %s", regex);
 		pl("Result : %s", regex.matchesOf(str));
 	}
 	
 	static void test15() {
 		
-		var str = "123go567come789looküğwpeor3948934711&/%+?&^%)?=^+?";
+		String str = "123go567come789looküğwpeor3948934711&/%+?&^%)?=^+?";
 		
 		pl(Regex.retainDigits(str));
 	}
 	
 	static void test14() {
 		
-		var str   = "123go567come789look?";
-		var regex = Teddy.regex().letter().oneOrMore().toGroup("word");
+		String                str   = "123go567come789look?";
+		@NotNull RegexBuilder regex = Teddy.regex().letter().oneOrMore().toGroup("word");
 		
 		pl(regex.replaceFrom(str, "#", 2));
 	}
 	
 	static void test13() {
 		
-		var str   = "123goGo";
-		var regex = Teddy.regex().with(Range.digits()).oneOrMore();
+		String                str   = "123goGo";
+		@NotNull RegexBuilder regex = Teddy.regex().with(Range.digits()).oneOrMore();
 		pl("Regex : %s", regex);
-		var result = regex.group("repeat", "go").oneOrMore().ignoreCase().toGroup("all").test(str);
+		boolean result = regex.group("repeat", "go").oneOrMore().ignoreCase().toGroup("all").test(str);
 		pl("Result : %s", result);
 		result = regex.ignoreCase().group("repeat", "go").oneOrMore().toGroup("all").test(str);
 		pl("Result : %s", result);
@@ -871,7 +871,7 @@ public interface Nina {
 		String pattern = "(?<name>\\p{L}+)(?=\\P{L}+)?";
 		String text    = "ali, ()?   _veli_,,,,deli,,,, keli.?";
 		
-		var l = regex(pattern).matchesOf(text);
+		java.util.@NotNull List<String> l = regex(pattern).matchesOf(text);
 		
 		pl("Result : %s", l);
 	}
@@ -881,13 +881,13 @@ public interface Nina {
 		//! (([0-2]?[0-9])|(3[0-1])) (N|n)isan
 		String str = "143 nisan";
 		
-		var range1 = group(range("0-2").toRegex().zeroOrMore().range("0-9"));
-		var range2 = group(regex().with(3).range("0-1"));
-		var date   = group(range1.or(range2));
+		@NotNull RegexBuilder range1 = group(range("0-2").toRegex().zeroOrMore().range("0-9"));
+		@NotNull RegexBuilder range2 = group(regex().with(3).range("0-1"));
+		@NotNull RegexBuilder date   = group(range1.or(range2));
 		
-		var month = regex().whiteSpaces().with(regex("N").or("n").toGroup()).with("isan");
+		@NotNull RegexBuilder month = regex().whiteSpaces().with(regex("N").or("n").toGroup()).with("isan");
 		
-		var regex = regex().with(date).with(month);
+		@NotNull RegexBuilder regex = regex().with(date).with(month);
 		
 		pl(regex);
 		pl(regex.test(str));
@@ -898,7 +898,7 @@ public interface Nina {
 		
 		//Regex r = regex().letterUpper().atLeast(4).digit().atLeast(4);
 		
-		var regex = Teddy.regex("1-5").toRange();
+		@NotNull Range regex = Teddy.regex("1-5").toRange();
 		pl("Regex : %s", regex);
 		
 		//String text = "ÇİğDEM01342";
@@ -912,7 +912,7 @@ public interface Nina {
 		String pattern = "(?<name>\\p{L}+)(?=\\P{L}+)?";
 		String text    = "ali, ()?    veli,,,, deli,,,, keli";
 		
-		var l = regex(pattern).matchesOf(text);
+		java.util.@NotNull List<String> l = regex(pattern).matchesOf(text);
 		
 		pl("Result : %s", l);
 	}
@@ -921,10 +921,10 @@ public interface Nina {
 		
 		String mySearch = "merhaba dünya";
 		
-		var m1 = Regex.toRegexCodes(mySearch, false, false);
-		var m2 = Regex.toRegexCodes(mySearch, false, true);
-		var m3 = Regex.toRegexCodes(mySearch, true, false);
-		var m4 = Regex.toRegexCodes(mySearch, true, true);
+		Integer[]                                     m1 = Regex.toRegexCodes(mySearch, false, false);
+		Integer @org.jetbrains.annotations.NotNull [] m2 = Regex.toRegexCodes(mySearch, false, true);
+		Integer @org.jetbrains.annotations.NotNull [] m3 = Regex.toRegexCodes(mySearch, true, false);
+		Integer @org.jetbrains.annotations.NotNull [] m4 = Regex.toRegexCodes(mySearch, true, true);
 		
 		pl("%s : %s", mySearch, Arrays.toString(m1));
 		pl("%s : %s", mySearch, Arrays.toString(m2));
@@ -945,14 +945,14 @@ public interface Nina {
 		System.out.println(System.getProperty("file.encoding"));
 		String myWord = "hello girls";
 		
-		var generator = new WordGenerator(myWord, 0, CharacterSet.ENGLISH_CHARS + CharacterSet.TURKISH_CHARS);
+		WordGenerator generator = new WordGenerator(myWord, 0, CharacterSet.ENGLISH_CHARS + CharacterSet.TURKISH_CHARS);
 		
 		pl("Word       : %s", myWord);
 		pl("RegexCodes : %s", Arrays.toString(generator.getRegexCodes()));
 		
 		for (int i = 0; i < 10; i++) {
 			
-			var word = generator.getWord();
+			@NotNull String word = generator.getWord();
 			
 			if (word.equals(myWord)) {
 				pl("Bingo!! %s [%d]", word, i);
@@ -971,7 +971,7 @@ public interface Nina {
 		
 		String mySearch = "nisa 66ebek";
 		
-		var m = regex().with("nisa\\s").group(regex().with("c").or("B")).with("bebek").any().oneOrMore();
+		@NotNull RegexBuilder m = regex().with("nisa\\s").group(regex().with("c").or("B")).with("bebek").any().oneOrMore();
 		
 		pl(m.findGroup(mySearch, "bebek"));
 		
@@ -980,21 +980,21 @@ public interface Nina {
 	
 	static void test4() {
 		
-		String mySearch = "nisa bebek";
-		var    s        = Regex.overWrite(mySearch, "*");
+		String          mySearch = "nisa bebek";
+		@NotNull String s        = Regex.overWrite(mySearch, "*");
 		
 		pl("overWrite : %s", s);
 	}
 	
 	static void test3() {
 		
-		String mySearch = "nisa bebek";
-		var    m        = regex().with("a").whiteSpace().zeroOrMore().with('b');
+		String                mySearch = "nisa bebek";
+		@NotNull RegexBuilder m        = regex().with("a").whiteSpace().zeroOrMore().with('b');
 		
 		pl("Match : '%s'", m.test(mySearch));
 		pl("Remove : '%s'", m.replaceFrom(mySearch, "*"));
 		
-		var indexes = m.findAll(mySearch);
+		java.util.List<com.tr.hsyn.regex.cast.Index> indexes = m.findAll(mySearch);
 		pl("Result : '%s'", indexes);
 		
 		pl("Exactly : %s", mySearch.substring(indexes.get(0).start, indexes.get(0).end));
@@ -1002,19 +1002,19 @@ public interface Nina {
 	
 	static void test2() {
 		
-		var date = DateGenerator.start().twoDigitDay().dot().twoDigitMonth().dot().fourDigitYear().space().longTime().getPattern();
+		@NotNull String date = DateGenerator.start().twoDigitDay().dot().twoDigitMonth().dot().fourDigitYear().space().longTime().getPattern();
 		
 		pl("Date pattern is : %s", date);
 		
-		var d = LocalDateTime.now();
+		LocalDateTime d = LocalDateTime.now();
 		
-		var dateStr = d.format(DateTimeFormatter.ofPattern(date));
+		String dateStr = d.format(DateTimeFormatter.ofPattern(date));
 		pl("Date string is : %s", dateStr);
 	}
 	
 	static void test1() {
 		
-		var m = regex().with(range(regex().letter().control().whiteSpace()).negate());
+		@NotNull RegexBuilder m = regex().with(range(regex().letter().control().whiteSpace()).negate());
 		pl(m.replaceFrom("+ 9 0 5 4 3 4 9 3 7 5 3 0", "*"));
 		
 		pl(m);

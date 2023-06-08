@@ -30,7 +30,7 @@ public abstract class FragmentContactListEditor extends FragmentPageList impleme
 	@Override
 	public Contact deleteItem(int index) {
 		
-		var contact = Editor.remove(getList(), index);
+		@org.jetbrains.annotations.Nullable Contact contact = Editor.remove(getList(), index);
 		
 		if (contact != null) {
 			

@@ -66,7 +66,7 @@ public final class Blue {
 	 */
 	private static <T> void checkKeepClass(@NotNull T object) {
 		
-		var clazz = object.getClass();
+		Class<?> clazz = object.getClass();
 		
 		if (!clazz.getCanonicalName().startsWith("java.") && !clazz.isAnnotationPresent(Keep.class)) {
 			

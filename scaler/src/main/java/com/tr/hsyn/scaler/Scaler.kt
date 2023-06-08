@@ -108,11 +108,13 @@ interface Scaler {
 		 * @param scale Scale
 		 * @return [Scaler]
 		 */
+		//region static fun createNewScaler(base: Int, scale: Float): Scaler {...}
 		@JvmStatic
 		fun createNewScaler(base: Int, scale: Float): Scaler {
 			
 			return Scale(base, scale)
 		}
+		//endregion
 	}
 }
 
@@ -125,6 +127,7 @@ private class Scale(val base: Int, val scale: Float) : Scaler {
 	 * @param size Niceliği öğrenilmek istenen çokluk
 	 * @return [MIN], [MID], [MAX], [LARGE] değerlerinden biri
 	 */
+	//region override fun getQuantity(size: Int): Int {...}
 	override fun getQuantity(size: Int): Int {
 		
 		if (size <= base) return MIN
@@ -134,6 +137,7 @@ private class Scale(val base: Int, val scale: Float) : Scaler {
 		if (size <= _scale) return MID
 		return if (size <= _scale * 2) MAX else LARGE
 	}
+	//endregion
 	
 	override fun toString(): String = "Scaler{base=$base, scale=$scale}"
 }

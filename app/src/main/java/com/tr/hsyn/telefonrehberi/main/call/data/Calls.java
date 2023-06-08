@@ -53,7 +53,7 @@ public interface Calls {
 	@NonNull
 	static List<Call> getCalls(@NonNull ContentResolver resolver) {
 		
-		var cursor = resolver.query(
+		Cursor cursor = resolver.query(
 				CallLog.Calls.CONTENT_URI,
 				COLUMNS,
 				null,
@@ -76,7 +76,7 @@ public interface Calls {
 				
 				String extra = cursor.getString(extraCol);
 				
-				var c = new Call(
+				Call c = new Call(
 						cursor.getString(nameCol),
 						cursor.getString(numberCol),
 						cursor.getInt(typeCol),
@@ -190,8 +190,8 @@ public interface Calls {
 	
 	static int delete(@NonNull final ContentResolver contentResolver, @NonNull List<? extends Call> calls) {
 		
-		var    dates       = calls.stream().map(call -> String.valueOf(call.getTime())).collect(Collectors.toList());
-		String selectionIn = Stringx.joinToString(dates);
+		List<String> dates       = calls.stream().map(call -> String.valueOf(call.getTime())).collect(Collectors.toList());
+		String       selectionIn = Stringx.joinToString(dates);
 		
 		return contentResolver.delete(
 				CallLog.Calls.CONTENT_URI,

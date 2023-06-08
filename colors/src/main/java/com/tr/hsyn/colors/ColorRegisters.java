@@ -13,7 +13,7 @@ public interface ColorRegisters extends Database<ColorRegister> {
 	@NonNull
 	static ColorRegisters getRegisters(@NonNull final Context context) {
 		
-		var holder = RegistersHolder.colorRegistersHolder.get();
+		com.tr.hsyn.holder.Holder<ColorRegisters> holder = RegistersHolder.colorRegistersHolder.get();
 		
 		if (holder.getValue() == null)
 			holder.setValue(new Colorabi(context));

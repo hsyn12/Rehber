@@ -39,9 +39,9 @@ public class MostCallDialogAdapter extends RecyclerView.Adapter<MostCallDialogAd
 	@Override
 	public void onBindViewHolder(@NotNull Holder holder, int position) {
 		
-		var item  = mostCallItemViewDataList.get(position);
-		int color = Colors.COLOR_GENERATOR.getRandomColor();
-		int order = item.getOrder();
+		MostCallItemViewData item  = mostCallItemViewDataList.get(position);
+		int                  color = Colors.COLOR_GENERATOR.getRandomColor();
+		int                  order = item.getOrder();
 		
 		holder.name.setText(item.getName());
 		

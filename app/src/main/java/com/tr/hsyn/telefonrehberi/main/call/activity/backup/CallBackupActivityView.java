@@ -45,6 +45,24 @@ public abstract class CallBackupActivityView extends ActivityView implements Ite
 		list.findView(this).setAdapter(adapter);
 	}
 	
+	@Override
+	protected boolean hasToolbar() {
+		
+		return true;
+	}
+	
+	@Override
+	protected int getToolbarResourceId() {
+		
+		return R.id.toolbar_activity_backup;
+	}
+	
+	@Override
+	protected Runnable getNavigationClickListener() {
+		
+		return this::onBackPressed;
+	}
+	
 	protected final void checkEmpty() {
 		
 		showEmptyView(adapter.getCallBackups().isEmpty());
@@ -52,12 +70,12 @@ public abstract class CallBackupActivityView extends ActivityView implements Ite
 	
 	protected void showEmptyView(boolean isShow) {
 		
-		View v       = empty.findView(this);
-		var  visable = v.getVisibility() != View.GONE;
+		View    v       = empty.findView(this);
+		boolean visable = v.getVisibility() != View.GONE;
 		
 		if (isShow == visable) return;
 		
-		var anim =
+		com.tr.hsyn.vanimator.AnimationBuilder anim =
 				ViewAnimator.on(v)
 						.duration(400)
 						.interpolator(new AccelerateInterpolator());
@@ -81,24 +99,6 @@ public abstract class CallBackupActivityView extends ActivityView implements Ite
 	protected void showProgress(boolean show) {
 		
 		progress.findView(this).setVisibility(show ? View.VISIBLE : View.GONE);
-	}
-	
-	@Override
-	protected boolean hasToolbar() {
-		
-		return true;
-	}
-	
-	@Override
-	protected int getToolbarResourceId() {
-		
-		return R.id.toolbar_activity_backup;
-	}
-	
-	@Override
-	protected Runnable getNavigationClickListener() {
-		
-		return this::onBackPressed;
 	}
 	
 	@Override

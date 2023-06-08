@@ -31,7 +31,7 @@ public class Counter<T> {
 		
 		long count = 0L;
 		
-		for (var t : list)
+		for (T t : list)
 			if (t.equals(item)) count++;
 		
 		return count;
@@ -54,7 +54,7 @@ public class Counter<T> {
 		long count = 0L;
 		S    s     = mapper.apply(item);
 		
-		for (var t : list)
+		for (T t : list)
 			if (mapper.apply(t).equals(s)) count++;
 		
 		return count;

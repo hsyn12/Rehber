@@ -58,7 +58,7 @@ public abstract class RandomCallsActivityRegister extends RandomCallsActivitySer
 	@NonNull
 	private Set<String> _getSelectedContacts() {
 		
-		var selectedContacts = register.getStringSet(SELECTED_CONTACTS, null);
+		Set<String> selectedContacts = register.getStringSet(SELECTED_CONTACTS, null);
 		
 		if (selectedContacts == null) {
 			
@@ -92,7 +92,7 @@ public abstract class RandomCallsActivityRegister extends RandomCallsActivitySer
 		types.get(getCallTypeMissed()).add(com.tr.hsyn.calldata.Call.MISSED);
 		types.get(getCallTypeRejected()).add(com.tr.hsyn.calldata.Call.REJECTED);
 		
-		var _types = types.get(true);
+		List<Integer> _types = types.get(true);
 		
 		//- Eğer tüm arama türleri
 		//- seçim dışı bırakılırsa

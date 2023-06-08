@@ -135,12 +135,12 @@ public class CoupleFinder {
 	@NotNull
 	public Couple parse(@NotNull String str) {
 		
-		var match = pattern.matcher(str);
+		java.util.regex.Matcher match = pattern.matcher(str);
 		
 		if (match.find()) {
 			
-			var left  = match.group("left");
-			var right = match.group("right");
+			String left  = match.group("left");
+			String right = match.group("right");
 			
 			return new Couple(left, right);
 		}
@@ -157,13 +157,13 @@ public class CoupleFinder {
 	@NotNull
 	public List<Couple> parseAll(@NotNull String str) {
 		
-		var          match   = pattern.matcher(str);
-		List<Couple> couples = new ArrayList<>();
+		java.util.regex.Matcher match   = pattern.matcher(str);
+		List<Couple>            couples = new ArrayList<>();
 		
 		while (match.find()) {
 			
-			var left  = match.group("left");
-			var right = match.group("right");
+			String left  = match.group("left");
+			String right = match.group("right");
 			
 			couples.add(new Couple(left, right));
 		}
@@ -193,7 +193,7 @@ public class CoupleFinder {
 	@Nullable
 	public Index find(@NotNull String str, int startIndex) {
 		
-		var match = pattern.matcher(str);
+		java.util.regex.Matcher match = pattern.matcher(str);
 		
 		if (match.find(startIndex)) {
 			
@@ -212,8 +212,8 @@ public class CoupleFinder {
 	@NotNull
 	public List<Index> findAll(@NotNull String str) {
 		
-		var         match = pattern.matcher(str);
-		List<Index> list  = new ArrayList<>();
+		java.util.regex.Matcher match = pattern.matcher(str);
+		List<Index>             list  = new ArrayList<>();
 		
 		while (match.find()) list.add(new Index(match.start(), match.end()));
 		

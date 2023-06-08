@@ -5,6 +5,7 @@ import android.database.Cursor;
 
 import androidx.annotation.NonNull;
 
+import com.tr.hsyn.content.handler.ContentHandler;
 import com.tr.hsyn.content.requestor.ContentRequester;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public interface ContentFetcher<T> extends Fetcher<T> {
 	@Override
 	default List<T> fetch() {
 		
-		var requester = getContentRequester();
+		ContentRequester<T> requester = getContentRequester();
 		
 		Cursor cursor = requester.getContentResolver().query(
 				requester.getContentUri(),
@@ -32,7 +33,7 @@ public interface ContentFetcher<T> extends Fetcher<T> {
 		
 		List<T> contents = new ArrayList<>(cursor.getCount());
 		
-		var handler = requester.getContentHandler();
+		ContentHandler<T> handler = requester.getContentHandler();
 		
 		handler.onCreateCursor(requester.getContentResolver(), cursor);
 		

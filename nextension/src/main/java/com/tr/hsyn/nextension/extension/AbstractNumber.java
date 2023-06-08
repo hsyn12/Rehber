@@ -11,20 +11,6 @@ import org.jetbrains.annotations.NotNull;
  */
 public class AbstractNumber implements NumberExtension {
 	
-	public static void main(String[] args) {
-		
-		long[] numbers = {
-				1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000, 10000000000L, 100000000000L, 1000000000000L
-		};
-		
-		var ext = new AbstractNumber();
-		
-		for (long number : numbers) {
-			
-			System.out.printf("%d : %s\n", number, ext.getExt(number));
-		}
-	}
-	
 	@Override
 	public @NotNull String getExt(long number) {
 		
@@ -105,6 +91,20 @@ public class AbstractNumber implements NumberExtension {
 			case '9': return resources.getString("abs_thick_ou");
 			
 			default: throw new IllegalArgumentException("This is not a number : " + number);
+		}
+	}
+	
+	public static void main(String[] args) {
+		
+		long[] numbers = {
+				1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000, 10000000000L, 100000000000L, 1000000000000L
+		};
+		
+		AbstractNumber ext = new AbstractNumber();
+		
+		for (long number : numbers) {
+			
+			System.out.printf("%d : %s\n", number, ext.getExt(number));
 		}
 	}
 }

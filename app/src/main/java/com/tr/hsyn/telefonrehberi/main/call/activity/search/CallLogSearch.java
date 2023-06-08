@@ -174,7 +174,7 @@ public class CallLogSearch extends ActivityView implements OnSearchViewListener,
 		
 		//- Arama kayıtlarında bu olay kaydın silinmesi ile sonuçlanır
 		
-		var call = searchAdapter.get(index);
+		Call call = searchAdapter.get(index);
 		searchAdapter.getFilteredCalls().remove(index);
 		searchAdapter.notifyItemRemoved(index);
 		

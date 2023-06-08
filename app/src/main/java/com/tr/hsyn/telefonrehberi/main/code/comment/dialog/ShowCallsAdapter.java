@@ -77,6 +77,12 @@ public class ShowCallsAdapter extends RecyclerView.Adapter<ShowCallsAdapter.Hold
 		holder.image.setImageDrawable(image);
 	}
 	
+	@Override
+	public int getItemCount() {
+		
+		return list.size();
+	}
+	
 	private int getTypeIcon(int type) {
 		
 		switch (type) {
@@ -107,19 +113,13 @@ public class ShowCallsAdapter extends RecyclerView.Adapter<ShowCallsAdapter.Hold
 	@NonNull
 	private String getLeter(String str) {
 		
-		var l = Stringx.getFirstChar(str);
+		@NotNull String l = Stringx.getFirstChar(str);
 		
 		if (l.isEmpty()) return "?";
 		
 		if (Character.isAlphabetic(l.charAt(0))) return l.toUpperCase(Locale.ROOT);
 		
 		return "?";
-	}
-	
-	@Override
-	public int getItemCount() {
-		
-		return list.size();
 	}
 	
 	static class Holder extends RecyclerView.ViewHolder {

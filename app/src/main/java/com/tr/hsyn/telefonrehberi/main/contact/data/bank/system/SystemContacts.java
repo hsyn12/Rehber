@@ -72,7 +72,7 @@ public interface SystemContacts {
 	 * @return Contact id
 	 */
 	@SuppressLint("Range")
-	private static String getContactIdFromRawId(@NotNull final ContentResolver contentResolver, @NotNull final Uri rawContactUri) {
+	static String getContactIdFromRawId(@NotNull final ContentResolver contentResolver, @NotNull final Uri rawContactUri) {
 		
 		final Cursor cursor = contentResolver.query(
 				
@@ -260,17 +260,17 @@ public interface SystemContacts {
 	@SuppressLint("Range")
 	static void lookUri(Context context) {
 		
-		var uri = ContactsContract.Contacts.CONTENT_URI;
+		Uri uri = ContactsContract.Contacts.CONTENT_URI;
 		
-		var cursor = context.getContentResolver().query(uri, null, null, null, null);
+		Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
 		
 		if (cursor == null) return;
 		
 		while (cursor.moveToNext()) {
 			
-			var id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+			String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
 			
-			var data = ContactsContract.Contacts.CONTENT_URI.buildUpon()
+			Uri data = ContactsContract.Contacts.CONTENT_URI.buildUpon()
 					.appendEncodedPath(id)
 					.appendPath(ContactsContract.Contacts.Data.CONTENT_DIRECTORY)
 					.build();
@@ -305,7 +305,7 @@ public interface SystemContacts {
 		
 		try {
 			
-			var cursor = context.getContentResolver().query(uri, null, null, null, null);
+			Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
 			
 			String[] columnNames = cursor.getColumnNames();
 			
@@ -372,7 +372,7 @@ public interface SystemContacts {
 	@Nullable
 	static String getLookupKey(@NotNull ContentResolver resolver, String contactId) {
 		
-		var cursor = resolver.query(
+		Cursor cursor = resolver.query(
 				
 				ContactsContract.Contacts.CONTENT_URI,
 				new String[]{ContactsContract.Contacts.LOOKUP_KEY},
@@ -409,7 +409,7 @@ public interface SystemContacts {
 				ContactsContract.CommonDataKinds.Phone.NUMBER
 		};
 		
-		var cursor = resolver.query(
+		Cursor cursor = resolver.query(
 				ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
 				columns,
 				null,
@@ -425,7 +425,7 @@ public interface SystemContacts {
 				
 				if (PhoneNumbers.equals(_number, number)) {
 					
-					var c = new Contact(
+					Contact c = new Contact(
 							cursor.getLong(cursor.getColumnIndex(columns[0])),
 							cursor.getString(cursor.getColumnIndex(columns[1])),
 							cursor.getString(cursor.getColumnIndex(columns[2]))

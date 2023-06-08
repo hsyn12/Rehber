@@ -90,6 +90,26 @@ public interface ContactLabel extends Mabel {
 	 */
 	Label LABEL_MY_FRIEND      = newLabel(7, "Arkadaşım");
 	
+	default long @Nullable [] getLabelIds() {
+		
+		@Nullable Set<Label> labels = getLabels();
+		
+		if (labels != null) {
+			
+			long[] ids = new long[labels.size()];
+			
+			int i = 0;
+			
+			for (Label label : labels)
+				ids[i++] = label.getId();
+			
+			
+			return ids;
+		}
+		
+		return null;
+	}
+	
 	/**
 	 * Returns the {@link Label} for the given {@code labelId}.
 	 *
@@ -126,32 +146,12 @@ public interface ContactLabel extends Mabel {
 		
 		Set<Label> labels = new HashSet<>(labelIds.length);
 		
-		for (var id : labelIds) {
+		for (int id : labelIds) {
 			
 			Try.ignore(() -> labels.add(getLabel(id)));
 		}
 		
 		return labels;
-	}
-	
-	default long @Nullable [] getLabelIds() {
-		
-		var labels = getLabels();
-		
-		if (labels != null) {
-			
-			var ids = new long[labels.size()];
-			
-			int i = 0;
-			
-			for (var label : labels)
-				ids[i++] = label.getId();
-			
-			
-			return ids;
-		}
-		
-		return null;
 	}
 	
 }

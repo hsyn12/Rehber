@@ -112,7 +112,7 @@ public final class AdapterCallBackup extends RecyclerView.Adapter<AdapterCallBac
 			size       = itemView.findViewById(R.id.text_size);
 			iconDelete = itemView.findViewById(R.id.icon_delete);
 			
-			var root = itemView.findViewById(R.id.root_backup);
+			View root = itemView.findViewById(R.id.root_backup);
 			
 			root.setBackgroundResource(Colors.getRipple());
 			root.setOnClickListener(v -> selectListener.onItemIndex(getAdapterPosition()));

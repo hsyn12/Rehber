@@ -325,7 +325,7 @@ public abstract class MainActivity extends MainActivityView implements SnackBarL
 	@Override
 	public void changeTabBehavior(int flags) {
 		
-		var p = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+		AppBarLayout.LayoutParams p = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
 		p.setScrollFlags(flags);
 		toolbar.setLayoutParams(p);
 	}

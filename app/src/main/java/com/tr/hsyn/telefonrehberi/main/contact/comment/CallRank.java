@@ -12,9 +12,17 @@ import java.util.List;
 
 public class CallRank {
 	
-	private final int        rank;
 	private final String     key;
 	private final List<Call> calls;
+	private       int        rank;
+	private       long       incomingDuration;
+	private       long       outgoingDuration;
+	
+	public CallRank(String key, List<Call> calls) {
+		
+		this.key   = key;
+		this.calls = calls;
+	}
 	
 	public CallRank(int rank, String key, List<Call> calls) {
 		
@@ -23,9 +31,39 @@ public class CallRank {
 		this.calls = calls;
 	}
 	
+	public long getDuration() {
+		
+		return incomingDuration + outgoingDuration;
+	}
+	
+	public long getIncomingDuration() {
+		
+		return incomingDuration;
+	}
+	
+	public void setIncomingDuration(long incomingDuration) {
+		
+		this.incomingDuration = incomingDuration;
+	}
+	
+	public long getOutgoingDuration() {
+		
+		return outgoingDuration;
+	}
+	
+	public void setOutgoingDuration(long outgoingDuration) {
+		
+		this.outgoingDuration = outgoingDuration;
+	}
+	
 	public int getRank() {
 		
 		return rank;
+	}
+	
+	public void setRank(int rank) {
+		
+		this.rank = rank;
 	}
 	
 	/**

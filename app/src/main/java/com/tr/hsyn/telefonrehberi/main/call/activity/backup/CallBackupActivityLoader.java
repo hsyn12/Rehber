@@ -47,11 +47,11 @@ public abstract class CallBackupActivityLoader extends CallBackupActivityView {
 		super.onCreate();
 		showEmptyView(true);
 		
-		var mainDirectory = DirectoryEditor.createInstance();
+		DirectoryEditor mainDirectory = DirectoryEditor.createInstance();
 		
 		if (mainDirectory.getDirectoryTree() != null) {
 			
-			var document = DocumentFile.fromTreeUri(this, mainDirectory.getDirectoryTree());
+			DocumentFile document = DocumentFile.fromTreeUri(this, mainDirectory.getDirectoryTree());
 			
 			if (document != null && !document.canRead()) {
 				
@@ -103,7 +103,7 @@ public abstract class CallBackupActivityLoader extends CallBackupActivityView {
 		
 		xlog.d("Directory is selected : %s", uri);
 		
-		var mainDirectory = DirectoryEditor.createInstance();
+		DirectoryEditor mainDirectory = DirectoryEditor.createInstance();
 		
 		
 		getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);

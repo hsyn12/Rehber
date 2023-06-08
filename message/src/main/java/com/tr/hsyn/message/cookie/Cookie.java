@@ -33,6 +33,7 @@ import com.tr.hsyn.message.R;
 
 final class Cookie extends LinearLayout implements View.OnTouchListener {
 	
+	View hr_duration, hr_duration_top;
 	private Animation                slideOutAnimation;
 	private ViewGroup                layoutCookie;
 	private TextView                 titleTextView;
@@ -56,7 +57,7 @@ final class Cookie extends LinearLayout implements View.OnTouchListener {
 	private boolean                  timeOutDismiss;
 	private Activity                 context;
 	private ViewPropertyAnimator     hrAnimator;
-	View hr_duration, hr_duration_top;
+	private CookieBar.Params         params;
 	
 	public Cookie(@NonNull final Context context) {
 		
@@ -138,7 +139,6 @@ final class Cookie extends LinearLayout implements View.OnTouchListener {
 		}
 	}
 	
-	
 	/**
 	 * Init the default text color or background color. You can change the default style by set the
 	 * Theme's attributes.
@@ -174,8 +174,6 @@ final class Cookie extends LinearLayout implements View.OnTouchListener {
 		}
 	}
 	
-	private CookieBar.Params params;
-	
 	@SuppressWarnings({"deprecation", "RedundantSuppression"})
 	private void setHR(CookieBar.Params params) {
 		
@@ -183,9 +181,9 @@ final class Cookie extends LinearLayout implements View.OnTouchListener {
 		
 		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
 			
-			var display = context.getWindowManager().getCurrentWindowMetrics();
+			android.view.WindowMetrics display = context.getWindowManager().getCurrentWindowMetrics();
 			
-			var bounds = display.getBounds();
+			android.graphics.Rect bounds = display.getBounds();
 			width = bounds.width();
 		}
 		else {
@@ -223,6 +221,7 @@ final class Cookie extends LinearLayout implements View.OnTouchListener {
 		int       animationResId   = layoutGravity == Gravity.BOTTOM ? animationInBottom : animationInTop;
 		Animation slideInAnimation = AnimationUtils.loadAnimation(getContext(), animationResId);
 		slideInAnimation.setAnimationListener(new Animation.AnimationListener() {
+			
 			@Override
 			public void onAnimationStart(Animation animation) {
 				
@@ -239,6 +238,7 @@ final class Cookie extends LinearLayout implements View.OnTouchListener {
 				}
 				
 				postDelayed(new Runnable() {
+					
 					@Override
 					public void run() {
 						
@@ -287,6 +287,7 @@ final class Cookie extends LinearLayout implements View.OnTouchListener {
 		try {
 			
 			postDelayed(new Runnable() {
+				
 				@Override
 				public void run() {
 					
@@ -308,6 +309,7 @@ final class Cookie extends LinearLayout implements View.OnTouchListener {
 	private Animator.AnimatorListener getDestroyListener() {
 		
 		return new Animator.AnimatorListener() {
+			
 			@Override
 			public void onAnimationStart(Animator animation) {
 				// no implementation
@@ -395,6 +397,7 @@ final class Cookie extends LinearLayout implements View.OnTouchListener {
 			actionButton.setVisibility(VISIBLE);
 			actionButton.setText(params.action);
 			actionButton.setOnClickListener(new OnClickListener() {
+				
 				@Override
 				public void onClick(View view) {
 					
@@ -463,6 +466,7 @@ final class Cookie extends LinearLayout implements View.OnTouchListener {
 		}
 		
 		slideOutAnimation.setAnimationListener(new Animation.AnimationListener() {
+			
 			@Override
 			public void onAnimationStart(final Animation animation) {
 				// no implementation

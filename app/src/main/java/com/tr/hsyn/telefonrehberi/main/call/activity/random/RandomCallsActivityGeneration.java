@@ -88,11 +88,6 @@ public abstract class RandomCallsActivityGeneration extends RandomCallsActivityM
 		}
 	}
 	
-	protected void startGeneration() {
-		
-		randomCallService.startGeneration(GenerationArgs.newArgs(getEnteredGenerationCount(), getDateStart(), getDateEnd(), 60 * 60, getCallTypes(), false, getContacts()));
-	}
-	
 	@Override
 	protected void onMissionCompleted(int compilationType) {
 		
@@ -125,11 +120,6 @@ public abstract class RandomCallsActivityGeneration extends RandomCallsActivityM
 		Runny.run(() -> textCurrentProgress.animateText(getString(R.string.ready_for_generation)), 4000);
 	}
 	
-	protected void onGenerationException() {
-		
-		
-	}
-	
 	@Override
 	protected void onGenerationStop() {
 		
@@ -138,6 +128,16 @@ public abstract class RandomCallsActivityGeneration extends RandomCallsActivityM
 		Runny.run(() -> progressGeneration.setIndeterminate(true));
 		
 		Runny.run(() -> textCurrentProgress.animateText(getString(R.string.saving)), 300);
+	}
+	
+	protected void startGeneration() {
+		
+		randomCallService.startGeneration(GenerationArgs.newArgs(getEnteredGenerationCount(), getDateStart(), getDateEnd(), 60 * 60, getCallTypes(), false, getContacts()));
+	}
+	
+	protected void onGenerationException() {
+		
+		
 	}
 	
 	/**
@@ -160,7 +160,7 @@ public abstract class RandomCallsActivityGeneration extends RandomCallsActivityM
 	@Override
 	public void onProgress(@NonNull Call value, int currentProgress, int total) {
 		
-		var now = Time.now();
+		long now = Time.now();
 		
 		if (now - progressWriteTime > 300) {
 			

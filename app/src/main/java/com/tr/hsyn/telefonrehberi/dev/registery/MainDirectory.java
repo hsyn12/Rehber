@@ -14,33 +14,33 @@ import io.paperdb.Paper;
  * Uygulamanın ana dizin kaydı.
  */
 public class MainDirectory implements DirectoryEditor {
-
-    private final String key                   = "main_directory";
-    private final Book   directoryRegisterData = Paper.book("directory_data");
-
-    @Nullable
-    @Override
-    public Uri getDirectoryTree() {
-
-        var rootDirectory = directoryRegisterData.read(key, "");
-
-        assert rootDirectory != null;
-
-        if (!rootDirectory.isEmpty())
-            return Uri.parse(rootDirectory);
-
-        return null;
-    }
-
-    @Override
-    public void saveDirectoryTree(@NonNull Uri uri) {
-
-        directoryRegisterData.write(key, uri.toString());
-    }
-
-    @Override
-    public void deleteDirectoryTree() {
-
-        directoryRegisterData.delete(key);
-    }
+	
+	private final String key                   = "main_directory";
+	private final Book   directoryRegisterData = Paper.book("directory_data");
+	
+	@Nullable
+	@Override
+	public Uri getDirectoryTree() {
+		
+		String rootDirectory = directoryRegisterData.read(key, "");
+		
+		assert rootDirectory != null;
+		
+		if (!rootDirectory.isEmpty())
+			return Uri.parse(rootDirectory);
+		
+		return null;
+	}
+	
+	@Override
+	public void saveDirectoryTree(@NonNull Uri uri) {
+		
+		directoryRegisterData.write(key, uri.toString());
+	}
+	
+	@Override
+	public void deleteDirectoryTree() {
+		
+		directoryRegisterData.delete(key);
+	}
 }

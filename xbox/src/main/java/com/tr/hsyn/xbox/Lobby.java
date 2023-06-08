@@ -40,7 +40,7 @@ public class Lobby {
 	@SuppressWarnings("unchecked")
 	public <T> void waitFor(com.tr.hsyn.key.Key key, Consumer<T> consumer) {
 		
-		var followers = this.WAITING_ROOM.get(key);
+		List<Consumer<Object>> followers = this.WAITING_ROOM.get(key);
 		
 		if (followers != null) {
 			

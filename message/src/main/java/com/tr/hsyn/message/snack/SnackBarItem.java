@@ -100,72 +100,11 @@ public class SnackBarItem {
 	private              float                mFromAnimation         = 0;
 	private              int                  drawable               = -1;
 	private              int                  textLineSize;
-	private TextView messageTV;
+	private              TextView             messageTV;
 	
 	private SnackBarItem(Activity activty) {
 		
 		mActivity = activty;
-	}
-	
-	@SuppressWarnings({"deprecation", "RedundantSuppression"})
-	private static void calculateHeightOfEachLine(Context context) {
-		
-		WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-		assert wm != null;
-		Display display = null;
-		
-		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-			display = context.getDisplay();
-		}
-		else {
-			
-			display = wm.getDefaultDisplay();
-		}
-		
-		Point size = new Point();
-		
-		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-			
-			var m = wm.getCurrentWindowMetrics();
-			var r = m.getBounds();
-			
-			size.x = r.width();
-		}
-		else {
-			
-			display.getSize(size);
-		}
-		
-		
-		int deviceWidth = size.x;
-		widthMeasureSpec  = View.MeasureSpec.makeMeasureSpec(deviceWidth, View.MeasureSpec.AT_MOST);
-		heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-		//1 line = 76; 2 lines = 76 + 66; 3 lines = 76 + 66 + 66
-		//=> height of first line = 76 pixel; height of second line = third line =... n line = 66 pixel
-		int heightOfFirstLine  = getHeightOfTextView(context, "A");
-		int heightOfSecondLine = getHeightOfTextView(context, "A\nA") - heightOfFirstLine;
-		paddingFirstLine = heightOfFirstLine - heightOfSecondLine;
-		heightOfEachLine = heightOfSecondLine;
-	}
-	
-	private static int getHeightOfTextView(Context context, String text) {
-		
-		//if(widthMeasureSpec == 0 || heightMeasureSpec == 0) calculateHeightOfEachLine(context);
-		
-		// Getting height of text view before rendering to layout
-		TextView textView = new TextView(context);
-		textView.setPadding(18, 0, 18, 0);
-		//textView.setTypeface(typeface);
-		textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimension(R.dimen.sb__text_size));
-		textView.setText(text, TextView.BufferType.SPANNABLE);
-		textView.measure(widthMeasureSpec, heightMeasureSpec);
-		return textView.getMeasuredHeight();
-	}
-	
-	private static int getLineCountOfTextViewBeforeRendering(Context context, String text) {
-		
-		if (widthMeasureSpec == 0 || heightMeasureSpec == 0) calculateHeightOfEachLine(context);
-		return (getHeightOfTextView(context, text) - paddingFirstLine) / heightOfEachLine;
 	}
 	
 	public TextView getMessageTV() {
@@ -192,7 +131,7 @@ public class SnackBarItem {
 		
 		if (mSnackBarView != null) {
 			FrameLayout parent = (FrameLayout) mSnackBarView.getParent();
-			if (parent != null) { parent.removeView(mSnackBarView); }
+			if (parent != null) {parent.removeView(mSnackBarView);}
 		}
 		
 		mAnimator            = null;
@@ -209,7 +148,7 @@ public class SnackBarItem {
 	private void setupGestureDetector() {
 		
 		mSnackBarView.setOnTouchListener((view, event) -> {
-			if (mIsDisposed || mIsGestureAccepted) { return false; }
+			if (mIsDisposed || mIsGestureAccepted) {return false;}
 			
 			float y = event.getY();
 			
@@ -246,13 +185,13 @@ public class SnackBarItem {
 			action.setTextAppearance(mActionTextAppearance);
 		}
 		
-		if (mActionTypeface != null) { action.setTypeface(mActionTypeface); }
+		if (mActionTypeface != null) {action.setTypeface(mActionTypeface);}
 		
 		action.setOnClickListener(view -> {
 			mActionButtonPressed   = true;
 			mShouldDisposeOnCancel = false;
 			mAnimator.cancel();
-			if (mActionClickListener != null) { mActionClickListener.onClick(view); }
+			if (mActionClickListener != null) {mActionClickListener.onClick(view);}
 			createHideAnimation();
 		});
 	}
@@ -271,7 +210,7 @@ public class SnackBarItem {
 			mSnackBarColor = a.getColor(0, res.getColor(R.color.snack_bar_bg_default, null));
 		}
 		
-		if (mAnimationDuration == -1) { mAnimationDuration = a.getInt(1, 3000); }
+		if (mAnimationDuration == -1) {mAnimationDuration = a.getInt(1, 3000);}
 		
 		if (mInterpolator == null) {
 			int id = a.getResourceId(2, android.R.interpolator.accelerate_decelerate);
@@ -302,7 +241,7 @@ public class SnackBarItem {
 		if (mActionTextAppearance == -1) {
 			mActionTextAppearance = a.getResourceId(8, -1);
 		}
-		if (mSnackBarOffset == 0) { mSnackBarOffset = a.getDimension(9, 0); }
+		if (mSnackBarOffset == 0) {mSnackBarOffset = a.getDimension(9, 0);}
 		a.recycle();
 	}
 	
@@ -333,7 +272,7 @@ public class SnackBarItem {
 			@Override
 			public void onAnimationCancel(Animator animation) {
 				
-				if (mShouldDisposeOnCancel) { dispose(); }
+				if (mShouldDisposeOnCancel) {dispose();}
 				
 			}
 			
@@ -530,7 +469,7 @@ public class SnackBarItem {
 		Button actionBtn = null;
 		
 		if (mMessageTextAppearance != -1) messageTV.setTextAppearance(mMessageTextAppearance);
-		if (mMessageTypeface != null) { messageTV.setTypeface(mMessageTypeface); }
+		if (mMessageTypeface != null) {messageTV.setTypeface(mMessageTypeface);}
 		
 		messageTV.setTextColor(mMessageColor);
 		
@@ -543,6 +482,67 @@ public class SnackBarItem {
 		
 		parent.addView(mSnackBarView);
 		createShowAnimation(messageTV, actionBtn);
+	}
+	
+	@SuppressWarnings({"deprecation", "RedundantSuppression"})
+	private static void calculateHeightOfEachLine(Context context) {
+		
+		WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+		assert wm != null;
+		Display display = null;
+		
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+			display = context.getDisplay();
+		}
+		else {
+			
+			display = wm.getDefaultDisplay();
+		}
+		
+		Point size = new Point();
+		
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+			
+			android.view.WindowMetrics m = wm.getCurrentWindowMetrics();
+			android.graphics.Rect      r = m.getBounds();
+			
+			size.x = r.width();
+		}
+		else {
+			
+			display.getSize(size);
+		}
+		
+		
+		int deviceWidth = size.x;
+		widthMeasureSpec  = View.MeasureSpec.makeMeasureSpec(deviceWidth, View.MeasureSpec.AT_MOST);
+		heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+		//1 line = 76; 2 lines = 76 + 66; 3 lines = 76 + 66 + 66
+		//=> height of first line = 76 pixel; height of second line = third line =... n line = 66 pixel
+		int heightOfFirstLine  = getHeightOfTextView(context, "A");
+		int heightOfSecondLine = getHeightOfTextView(context, "A\nA") - heightOfFirstLine;
+		paddingFirstLine = heightOfFirstLine - heightOfSecondLine;
+		heightOfEachLine = heightOfSecondLine;
+	}
+	
+	private static int getHeightOfTextView(Context context, String text) {
+		
+		//if(widthMeasureSpec == 0 || heightMeasureSpec == 0) calculateHeightOfEachLine(context);
+		
+		// Getting height of text view before rendering to layout
+		TextView textView = new TextView(context);
+		textView.setPadding(18, 0, 18, 0);
+		//textView.setTypeface(typeface);
+		textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimension(R.dimen.sb__text_size));
+		textView.setText(text, TextView.BufferType.SPANNABLE);
+		textView.measure(widthMeasureSpec, heightMeasureSpec);
+		return textView.getMeasuredHeight();
+	}
+	
+	private static int getLineCountOfTextViewBeforeRendering(Context context, String text) {
+		
+		if (widthMeasureSpec == 0 || heightMeasureSpec == 0) calculateHeightOfEachLine(context);
+		return (getHeightOfTextView(context, text) - paddingFirstLine) / heightOfEachLine;
 	}
 	
 	/**
@@ -620,7 +620,7 @@ public class SnackBarItem {
 		 */
 		public Builder setActionMessage(CharSequence actionMessage) {
 			// guard against any null values being passed
-			if (TextUtils.isEmpty(actionMessage)) { return this; }
+			if (TextUtils.isEmpty(actionMessage)) {return this;}
 			
 			mSnackBarItem.mActionMessage = actionMessage.toString().toUpperCase();
 			return this;

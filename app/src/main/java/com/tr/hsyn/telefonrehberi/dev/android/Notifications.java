@@ -93,7 +93,7 @@ public class Notifications {
 		
 		if (channelId != null) {
 			
-			var name = notificationManager.getNotificationChannel(channelId.toString());
+			NotificationChannel name = notificationManager.getNotificationChannel(channelId.toString());
 			
 			if (name != null) return name.getName();
 		}
@@ -110,7 +110,7 @@ public class Notifications {
 		
 		Notification notification;
 		
-		var channel = createRandomChannel(true);
+		NotificationChannel channel = createRandomChannel(true);
 		
 		notification = createSilentNotification("Test", getRandomWord(), channel.getId());
 		

@@ -13,22 +13,6 @@ import java.util.Locale;
  */
 public class Locative implements WordExtension {
 	
-	public static void main(String[] args) {
-		
-		String[] names = {
-				
-				"Tahta", "Kalem", "Ev", "Otel", "Ayak", "Kale", "Pencere", "Dümen", "Telefon", "Çiçek", "Çarşaf", "Keşiş", "İn", "İç"
-		};
-		
-		var ext = new Locative();
-		
-		for (var name : names) {
-			
-			System.out.printf("%s-%s\n", name, ext.getExt(name));
-		}
-		
-	}
-	
 	@Override
 	public @NotNull String getExt(@NotNull String word) {
 		
@@ -68,6 +52,22 @@ public class Locative implements WordExtension {
 		else if (WordExtension.isConsonantSoft(lastChar) && WordExtension.isVowelThick(charMate))
 			return "da";
 		else return ""; */
+	}
+	
+	public static void main(String[] args) {
+		
+		String[] names = {
+				
+				"Tahta", "Kalem", "Ev", "Otel", "Ayak", "Kale", "Pencere", "Dümen", "Telefon", "Çiçek", "Çarşaf", "Keşiş", "İn", "İç"
+		};
+		
+		Locative ext = new Locative();
+		
+		for (String name : names) {
+			
+			System.out.printf("%s-%s\n", name, ext.getExt(name));
+		}
+		
 	}
 	
 	

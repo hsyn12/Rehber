@@ -65,7 +65,7 @@ public interface Rehber {
 		 * @return resource id
 		 */
 		@DrawableRes
-		private static int getRipple(@NonNull final Context context, int primaryColor) {
+		static int getRipple(@NonNull final Context context, int primaryColor) {
 			
 			int ripple = com.tr.hsyn.resripple.R.drawable.ripple;
 			int index  = getColorIndex(context, primaryColor);
@@ -126,7 +126,7 @@ public interface Rehber {
 		 */
 		static int getColorIndex(@NonNull final Context context, int color) {
 			
-			var colors = getColors(context);
+			int[] colors = getColors(context);
 			
 			for (int i = 0; i < colors.length; i++)
 				if (colors[i] == color) return i;

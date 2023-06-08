@@ -82,6 +82,12 @@ public class CallHistoryAdapter extends RecyclerView.Adapter<CallHistoryAdapter.
 		holder.image.setImageDrawable(image);
 	}
 	
+	@Override
+	public int getItemCount() {
+		
+		return calls.size();
+	}
+	
 	private static int getTypeIcon(int type) {
 		
 		switch (type) {
@@ -112,19 +118,13 @@ public class CallHistoryAdapter extends RecyclerView.Adapter<CallHistoryAdapter.
 	@NonNull
 	private static String getLetter(String str) {
 		
-		var l = Stringx.getFirstChar(str);
+		@NotNull String l = Stringx.getFirstChar(str);
 		
 		if (l.isEmpty()) return "?";
 		
 		if (Character.isAlphabetic(l.charAt(0))) return l.toUpperCase(Locale.ROOT);
 		
 		return "?";
-	}
-	
-	@Override
-	public int getItemCount() {
-		
-		return calls.size();
 	}
 	
 	public static final class Holder extends RecyclerView.ViewHolder {

@@ -59,7 +59,7 @@ public class Contents {
 		
 		while (cursor.moveToNext()) {
 			
-			var content = contentHandler.handle(cursor);
+			T content = contentHandler.handle(cursor);
 			
 			if (contentHandler.predicate(content, list))
 				list.add(content);
@@ -90,7 +90,7 @@ public class Contents {
 			@Nullable String[] selectionArgs,
 			@NonNull ContentHandler<T> contentHandler) {
 		
-		var cursor = resolver.query(uri, contentHandler.getProjection(), selection, selectionArgs, contentHandler.getSortOrder());
+		Cursor cursor = resolver.query(uri, contentHandler.getProjection(), selection, selectionArgs, contentHandler.getSortOrder());
 		
 		if (cursor == null) return new ArrayList<>(0);
 		

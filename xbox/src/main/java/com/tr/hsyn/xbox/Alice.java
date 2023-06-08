@@ -73,11 +73,11 @@ public class Alice implements Writer {
 			
 			checkVisitors(visitors);
 			
-			var           ruleSize = 50;
-			StringBuilder sb       = new StringBuilder(String.format("\n%s\n", "=".repeat(ruleSize)));
+			int           ruleSize = 50;
+			StringBuilder sb       = new StringBuilder("\n========================================\n");
 			
 			sb.append(Time.ToString()).append("\n")
-					.append(String.format("%s\n", "-".repeat(ruleSize)))
+					.append("---------------------------\n")
 					.append(String.format("Kayıt sayısı               : %d\n", visitors.size()))
 					.append(String.format("Satır sayısı               : %d\n", rawCount))
 					.append(String.format("Byte sayısı                : %d [%.2fMB]\n", bytes, bytes / (float) (1024 * 1024)))
@@ -101,7 +101,7 @@ public class Alice implements Writer {
 				sb.append(String.format("%d kayıt silindi\n", deleted));
 			}
 			
-			sb.append(String.format("%s\n", "=".repeat(ruleSize)));
+			sb.append("================================================\n");
 			
 			xlog.i(sb.toString());
 		}
@@ -120,21 +120,21 @@ public class Alice implements Writer {
 			Visitor last  = visitors.get(0);
 			Visitor first = visitors.get(visitors.size() - 1);
 			
-			var           ruleSize = 80;
-			StringBuilder sb       = new StringBuilder(String.format("\n%s\n", "=".repeat(ruleSize)));
+			int           ruleSize = 80;
+			StringBuilder sb       = new StringBuilder("\n================================================\n");
 			
 			sb.append(String.format(
 					"Kayıt zaman aralığı %s - %s\n",
 					Time.toString(last.getTimeEnter(), "d.M.yyyy"),
 					Time.toString(first.getTimeEnter(), "d.M.yyyy")));
 			
-			sb.append(String.format("%s\n", "-".repeat(ruleSize)));
+			sb.append("================================================\n");
 			
-			var group = visitors.stream().collect(Collectors.groupingBy(Visitor::getKey));
+			Map<Key, List<Visitor>> group = visitors.stream().collect(Collectors.groupingBy(Visitor::getKey));
 			
 			sb.append("\n          Key                  Visitors\n");
 			
-			for (var entry : group.entrySet()) {
+			for (Map.Entry<Key, List<Visitor>> entry : group.entrySet()) {
 				
 				Key           key         = entry.getKey();
 				List<Visitor> keyVisitors = entry.getValue();
@@ -146,7 +146,7 @@ public class Alice implements Writer {
 				sb.append(String.format("%15d\n", totalInteraction));
 			}
 			
-			sb.append(String.format("%s\n", "=".repeat(ruleSize)));
+			sb.append("================================================\n");
 			xlog.i(sb.toString());
 		}
 		
@@ -155,7 +155,7 @@ public class Alice implements Writer {
 	@Override
 	public void remove(@NotNull Key key) {
 		
-		var data = keyMap.get(key);
+		Visitor data = keyMap.get(key);
 		data.setExit();
 		
 		if (register != null) {
@@ -179,7 +179,7 @@ public class Alice implements Writer {
 	@Override
 	public void interact(@NotNull Key key) {
 		
-		var data = keyMap.get(key);
+		Visitor data = keyMap.get(key);
 		data.interact();
 		
 		if (DEBUG_DEGREE > 1)
@@ -209,7 +209,7 @@ public class Alice implements Writer {
 	@Override
 	public void add(@NotNull Key key) {
 		
-		var data = keyMap.get(key);
+		Visitor data = keyMap.get(key);
 		
 		if (data == null) {
 			data = new Visitor(key);

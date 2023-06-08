@@ -94,7 +94,7 @@ public interface Register {
 	 */
 	default <T> T read(@NonNull String key, @NonNull Class<T> clazz, T defaultValue) {
 		
-		var t = read(key, clazz);
+		T t = read(key, clazz);
 		
 		return t != null ? t : defaultValue;
 	}
@@ -110,7 +110,7 @@ public interface Register {
 	 */
 	default <T> List<T> readList(@NonNull String key, @NonNull Class<T> clazz, List<T> defaultValue) {
 		
-		var t = readList(key, clazz);
+		List<T> t = readList(key, clazz);
 		
 		return t != null ? t : defaultValue;
 	}

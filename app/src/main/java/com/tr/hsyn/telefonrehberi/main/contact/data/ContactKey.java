@@ -26,11 +26,11 @@ public interface ContactKey {
 	 */
 	DataKey NUMBERS      = DataKey.of(4, "numbers");
 	/**
-	 * Email adresleri (string list)
+	 * Email adresleri -- string list
 	 */
 	DataKey EMAILS       = DataKey.of(5, "emails");
 	/**
-	 * Not (string)
+	 * Not -- string
 	 */
 	DataKey NOTE         = DataKey.of(6, "note");
 	/**
@@ -38,32 +38,21 @@ public interface ContactKey {
 	 */
 	DataKey EVENTS       = DataKey.of(7, "events");
 	/**
-	 * Gruplar (string list)
+	 * Gruplar -- string list
 	 */
 	DataKey GROUPS       = DataKey.of(8, "groups");
 	/**
-	 * Etiketler (label list)
+	 * Etiketler -- label list
 	 */
 	DataKey LABELS       = DataKey.of(9, "labels");
 	/**
-	 * Hesaplar (string list)
+	 * Hesaplar -- string list
 	 */
 	DataKey ACCOUNTS     = DataKey.of(10, "accounts");
 	/**
 	 * Silinme zamanı (long)
 	 */
 	DataKey DELETED_DATE = DataKey.of(11, "deletedDate");
-	/**
-	 * Detayların uygulandığını bildirir (boolean)
-	 */
-	@Deprecated(forRemoval = true)
-	DataKey DETAILS_APPLIED = DataKey.of(12, "detailsApplied");
-	
-	/**
-	 * Data key for the history object.<br>
-	 * {@link History} object
-	 */
-	DataKey HISTORY = DataKey.of(14, "history");
 	
 	@Nullable
 	static List<String> getNumbers(@NotNull Contact contact) {
@@ -155,17 +144,6 @@ public interface ContactKey {
 	static void setDeleted(@NotNull Contact contact) {
 		
 		contact.setData(DELETED_DATE, Time.now());
-	}
-	
-	@Nullable
-	static History getHistory(@NotNull Contact contact) {
-		
-		return contact.getData(HISTORY);
-	}
-	
-	static void setHistory(@NotNull Contact contact, History history) {
-		
-		contact.setData(HISTORY, history);
 	}
 	
 }

@@ -48,7 +48,7 @@ public class LifeDatabase extends DBBase<Life> implements LifeRecorder {
 	@NotNull
 	public Values contentValuesOf(@NotNull Life life) {
 		
-		var values = new Values();
+		Values values = new Values();
 		
 		values.put(NAME, life.getName());
 		values.put(START, life.getStartTime());
@@ -129,16 +129,23 @@ class DBInterface implements DB {
 	
 	@NotNull
 	@Override
-	public String getTableName() {
+	public String getDatabaseName() {
 		
-		return "Lives";
+		return "LifeRecords";
 	}
 	
 	@NotNull
 	@Override
-	public String getDatabaseName() {
+	public String getPrimaryKey() {
 		
-		return "LifeRecords";
+		return "start";
+	}
+	
+	@NotNull
+	@Override
+	public String getTableName() {
+		
+		return "Lives";
 	}
 	
 	@NotNull
@@ -151,12 +158,5 @@ class DBInterface implements DB {
 				new Number("start").primaryKey(),
 				new Number("end").defaultValue(0L)
 		};
-	}
-	
-	@NotNull
-	@Override
-	public String getPrimaryKey() {
-		
-		return "start";
 	}
 } 
