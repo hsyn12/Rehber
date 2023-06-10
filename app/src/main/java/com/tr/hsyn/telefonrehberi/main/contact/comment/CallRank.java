@@ -14,21 +14,34 @@ public class CallRank {
 	
 	private final String     key;
 	private final List<Call> calls;
+	private final String     number;
 	private       int        rank;
 	private       long       incomingDuration;
 	private       long       outgoingDuration;
+	private       String     name;
 	
-	public CallRank(String key, List<Call> calls) {
+	public CallRank(@NotNull String key, @NotNull List<Call> calls) {
 		
-		this.key   = key;
-		this.calls = calls;
+		this(0, key, calls);
 	}
 	
-	public CallRank(int rank, String key, List<Call> calls) {
+	public CallRank(int rank, @NotNull String key, @NotNull List<Call> calls) {
 		
 		this.rank  = rank;
 		this.key   = key;
 		this.calls = calls;
+		number     = calls.get(0).getNumber();
+		name       = calls.get(0).getName();
+	}
+	
+	public String getName() {
+		
+		return name;
+	}
+	
+	public void setName(String name) {
+		
+		this.name = name;
 	}
 	
 	public long getDuration() {

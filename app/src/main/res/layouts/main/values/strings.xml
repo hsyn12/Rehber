@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources  xmlns:tools="http://schemas.android.com/tools" tools:locale="en">
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="en">
 	<string name="select_directory">Select Directory</string>
-
+	<string name="header_icon">Header icon</string>
 	<string name="content_description_call_type">Call type</string>
 	<string name="txt_close">Close</string>
 	<string name="txt_sign_in">Sign In</string>

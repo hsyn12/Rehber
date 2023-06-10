@@ -30,7 +30,6 @@ public class ShowCallsDialog {
 	public ShowCallsDialog(@NotNull Activity activity, @NotNull List<Call> calls) {
 		
 		this(activity, calls, null, null);
-		
 	}
 	
 	public ShowCallsDialog(@NotNull Activity activity, @NotNull List<Call> calls, String title, String subTitle) {

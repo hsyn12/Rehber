@@ -7,5 +7,8 @@
 	<string name="history_not_found">Kişinin arama kayıtlarına erişim sağlanamadı</string>
 	<string name="history_size">Kişiye ait %1$d arama kaydı bulunuyor</string>
 	<string name="history_size_only">Kişiye ait sadece %1$d arama kaydı var</string>
-
+	<string name="title_most_call_history">Arama Geçmişi Süreleri</string>
+	<string name="size_contacts">%d Kişi</string>
+	<string name="title_speaking_durations">Toplam Konuşma Süreleri</string>
+	<string name="title_most_calls">En Fazla Arama Kaydı</string>
 </resources>

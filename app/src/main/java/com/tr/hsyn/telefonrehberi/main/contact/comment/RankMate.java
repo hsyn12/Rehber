@@ -27,13 +27,16 @@ public class RankMate {
 	 * @param numbers the numbers
 	 * @return the rank or -1
 	 */
-	public int getRank(@NotNull List<String> numbers) {
+	public int getRank(List<String> numbers) {
 		
-		for (var number : numbers) {
+		if (numbers != null) {
 			
-			var rank = getRank(number);
-			
-			if (rank != -1) return rank;
+			for (var number : numbers) {
+				
+				var rank = getRank(number);
+				
+				if (rank != -1) return rank;
+			}
 		}
 		
 		return -1;

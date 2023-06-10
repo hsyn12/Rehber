@@ -167,6 +167,25 @@ public class Colors {
 	}
 	
 	@SuppressWarnings({"deprecation", "RedundantSuppression"})
+	public static void setTintDrawable(@NonNull Drawable drawable) {
+		
+		@ColorInt int color = getPrimaryColor();
+		drawable.clearColorFilter();
+		
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+			
+			drawable.setColorFilter(new BlendModeColorFilter(color, BlendMode.SRC_IN));
+		}
+		else {
+			
+			drawable.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+		}
+		
+		drawable.invalidateSelf();
+		Drawable wrapDrawable = DrawableCompat.wrap(drawable).mutate();
+		DrawableCompat.setTint(wrapDrawable, color);
+	}
+	
 	public static void setTintDrawable(@NonNull Drawable drawable, @ColorInt int color) {
 		
 		drawable.clearColorFilter();

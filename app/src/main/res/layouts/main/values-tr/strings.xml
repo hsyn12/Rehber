@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+	<string name="header_icon">Başlık ikonu</string>
 	<string name="search_result">%d kayıt bulundu</string>
 	<string name="select_directory">Bir Klasör Seç</string>
 	<string name="msg_directory_selection">Bazı kayıtlar uygulamadan bağımsız kalıcı olarak kaydedilebilir. Uygulama kaldırılsa bile bu bilgiler kayıtlı kalır ve tekrar yüklendiğinde aynı klasör seçilerek daha önce kaydedilmiş bilgiler kullanılabilir.</string>
@@ -16,8 +16,6 @@
 	<string name="search">Arama</string>
 	<string name="no_permissions">Gerekli izinler yok</string>
 
-
-	
 
 	<!-- Contacts Groups -->
 

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<dimen name="high">50dp</dimen>
+	<dimen name="padding">8dp</dimen>
+	<dimen name="padding_left">12dp</dimen>
+
+	<style name="HeaderStyle">
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:background">@color/colorPrimary</item>
+		<item name="android:padding">@dimen/padding</item>
+	</style>
+
+</resources>

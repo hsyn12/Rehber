@@ -3,6 +3,9 @@ package com.tr.hsyn.telefonrehberi.main.code.comment;
 
 import android.view.View;
 
+import androidx.annotation.ColorInt;
+
+import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.text.Span;
 import com.tr.hsyn.text.Spans;
@@ -16,7 +19,6 @@ import org.jetbrains.annotations.NotNull;
  * Text color, underline and clickable text, etc.
  */
 public interface CommentEditor extends CommentStore {
-	
 	
 	/**
 	 * Returns the plural form of the given word based on the count for only english.
@@ -39,9 +41,16 @@ public interface CommentEditor extends CommentStore {
 	 * @param id the resource ID of the color
 	 * @return the color associated with the given resource ID
 	 */
+	@ColorInt
 	default int getColor(int id) {
 		
 		return getActivity().getColor(id);
+	}
+	
+	@ColorInt
+	default int getPrimaryColor() {
+		
+		return Colors.getPrimaryColor();
 	}
 	
 	/**
@@ -49,6 +58,7 @@ public interface CommentEditor extends CommentStore {
 	 *
 	 * @return the color
 	 */
+	@ColorInt
 	default int getTextColor() {
 		
 		return getActivity().getColor(com.tr.hsyn.rescolors.R.color.purple_500);
@@ -71,6 +81,7 @@ public interface CommentEditor extends CommentStore {
 	/**
 	 * @return the color for the clickable text
 	 */
+	@ColorInt
 	default int getClickColor() {
 		
 		return getActivity().getColor(com.tr.hsyn.rescolors.R.color.orange_500);

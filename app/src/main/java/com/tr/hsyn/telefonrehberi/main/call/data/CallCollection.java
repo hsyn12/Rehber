@@ -9,6 +9,7 @@ import com.tr.hsyn.keep.Keep;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.string.Stringx;
+import com.tr.hsyn.telefonrehberi.main.call.data.hotlist.HotListByDuration;
 import com.tr.hsyn.telefonrehberi.main.call.data.hotlist.HotListByQuantity;
 import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.contact.data.History;
@@ -45,6 +46,7 @@ public final class CallCollection {
 	private final int                     incomingDuration;
 	private final int                     outgoingDuration;
 	private final HotListByQuantity       hotListByQuantity;
+	private final HotListByDuration       hotListByDuration;
 	
 	/**
 	 * Creates a new empty call collection.
@@ -60,6 +62,7 @@ public final class CallCollection {
 		incomingDuration  = 0;
 		outgoingDuration  = 0;
 		hotListByQuantity = null;
+		hotListByDuration = null;
 	}
 	
 	/**
@@ -87,8 +90,24 @@ public final class CallCollection {
 				.orElse(0);
 		
 		hotListByQuantity = new HotListByQuantity(this);
+		hotListByDuration = new HotListByDuration(this);
 	}
 	
+	/**
+	 * Returns object that ranks calls by duration.
+	 *
+	 * @return {@link HotListByDuration}
+	 */
+	public HotListByDuration getHotListByDuration() {
+		
+		return hotListByDuration;
+	}
+	
+	/**
+	 * Returns object that ranks calls by quantity.
+	 *
+	 * @return {@link HotListByQuantity}
+	 */
 	public HotListByQuantity getHotListByQuantity() {
 		
 		return hotListByQuantity;

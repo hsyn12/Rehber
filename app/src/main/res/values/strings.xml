@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="tr">
-	<string name="app_name">Rehber</string>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="en">
+	<string name="app_name">Contacts</string>
+
 </resources>

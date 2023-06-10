@@ -152,6 +152,18 @@ public class PhoneNumbers {
 		return false;
 	}
 	
+	public static boolean existsNumber(List<String> numbers, String number) {
+		
+		if (numbers == null || number == null) return false;
+		
+		for (String n : numbers) {
+			
+			if (equals(n, number)) return true;
+		}
+		
+		return false;
+	}
+	
 	/**
 	 * İki numarayı eşitlik yada içerme için karşılaştırır.<br>
 	 * Aradaki boşluk ve sayısal olmayan karakterler önemli değil,

@@ -58,13 +58,13 @@
 
 		<activity android:name=".main.activity.color.ColorsActivity" />
 		<activity android:name=".main.contact.activity.detail.ContactDetails" />
-		<activity android:name=".main.activity.contact.backup.CallBackupActivity" />
-		<activity android:name=".main.activity.contact.MostCallsActivity" />
+		<activity android:name=".main.call.activity.backup.CallBackupActivity" />
+		<activity android:name=".main.call.activity.MostCallsActivity" />
 		<activity android:name=".main.call.activity.history.ActivityCallList" />
-		<activity android:name=".main.activity.contact.search.CallLogSearch" />
-		<activity android:name=".main.activity.contact.showcalls.ShowCallsActivity" />
+		<activity android:name=".main.call.activity.search.CallLogSearch" />
+		<activity android:name=".main.call.activity.showcalls.ShowCallsActivity" />
 		<activity
-				android:name=".main.activity.contact.random.RandomCallsActivity"
+				android:name=".main.call.activity.random.RandomCallsActivity"
 				android:exported="false" />
 
 		<activity
@@ -72,7 +72,7 @@
 				android:exported="false" />
 
 		<service
-				android:name=".main.activity.contact.random.service.RandomCallService"
+				android:name=".main.call.activity.random.service.RandomCallService"
 				android:enabled="true"
 				android:exported="false" />
 

@@ -4,10 +4,14 @@
 	<string name="single_call">This contact has just a single call</string>
 	<string name="log">log</string>
 	<string name="size_call">%d calls</string>
+
 	<string name="no_history">You have no any communication with this contact</string>
 	<string name="history_not_found">Unable to access contact\'s logs</string>
 	<string name="history_size">There are %1$d calls belong to the contact</string>
 	<string name="history_size_only">There are only %1$d calls belong to the contact</string>
-
+	<string name="title_most_call_history">Call History Durations</string>
+	<string name="title_speaking_durations">Total Speaking Durations</string>
+	<string name="title_most_calls">The Most Calls</string>
+	<string name="size_contacts">%d Contacts</string>
 
 </resources>
