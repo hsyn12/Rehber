@@ -47,6 +47,15 @@ public class MostCallDialogAdapter extends RecyclerView.Adapter<MostCallDialogAd
 		
 		holder.count.setImageDrawable(TextDrawable.builder().buildRound(String.valueOf(order != 0 ? order : position + 1), color));
 		holder.txtType.setText(String.format(Locale.getDefault(), "%d %s", item.getCallSize(), holder.itemView.getContext().getString(R.string.call_record)));
+		
+		if (item.isSelected()) {
+			int _color = Colors.getColor(holder.itemView.getContext(), com.tr.hsyn.rescolors.R.color.c_lightmediumorchid);
+			holder.itemView.setBackgroundColor(Colors.lighter(_color, 0.5f));
+		}
+		else {
+			holder.itemView.setBackgroundResource(Colors.getRipple());
+		}
+		
 	}
 	
 	@Override

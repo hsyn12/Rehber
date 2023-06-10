@@ -37,7 +37,7 @@ public class MostDurationDialog {
 		builder.setOnCancelListener(this::onCancel);
 		((TextView) view.findViewById(R.id.title)).setText(title);
 		((TextView) view.findViewById(R.id.sub_title)).setText(subTitle);
-		view.setBackgroundColor(Colors.getPrimaryColor());
+		view.findViewById(R.id.header_include).setBackgroundColor(Colors.getPrimaryColor());
 		dialog = builder.create();
 		android.view.Window window = dialog.getWindow();
 		

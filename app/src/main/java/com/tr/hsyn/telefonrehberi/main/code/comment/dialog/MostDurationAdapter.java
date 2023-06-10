@@ -41,6 +41,14 @@ public class MostDurationAdapter extends RecyclerView.Adapter<MostDurationAdapte
 		holder.name.setText(item.getName());
 		holder.text.setText(item.getText());
 		holder.order.setImageDrawable(TextDrawable.builder().buildRound(String.valueOf(item.getOrder()), color));
+		
+		if (item.isSelected()) {
+			int _color = Colors.getColor(holder.itemView.getContext(), com.tr.hsyn.rescolors.R.color.c_lightmediumorchid);
+			holder.itemView.setBackgroundColor(Colors.lighter(_color, 0.5f));
+		}
+		else {
+			holder.itemView.setBackgroundResource(Colors.getRipple());
+		}
 	}
 	
 	@Override

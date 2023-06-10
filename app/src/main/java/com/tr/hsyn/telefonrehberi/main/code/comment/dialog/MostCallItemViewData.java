@@ -3,9 +3,10 @@ package com.tr.hsyn.telefonrehberi.main.code.comment.dialog;
 
 public class MostCallItemViewData {
 	
-	private final String name;
-	private final int    callSize;
-	private final int    order;
+	private final String  name;
+	private final int     callSize;
+	private final int     order;
+	private       boolean selected;
 	
 	public MostCallItemViewData(String name, int callSize) {
 		
@@ -19,6 +20,16 @@ public class MostCallItemViewData {
 		this.name     = name;
 		this.callSize = callSize;
 		this.order    = order;
+	}
+	
+	public boolean isSelected() {
+		
+		return selected;
+	}
+	
+	public void setSelected(boolean selected) {
+		
+		this.selected = selected;
 	}
 	
 	public int getOrder() {
