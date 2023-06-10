@@ -40,6 +40,7 @@ import com.tr.hsyn.time.Unit;
 import com.tr.hsyn.xlog.xlog;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -278,9 +279,9 @@ public class DefaultContactCommentator implements ContactCommentator {
 		RankList ranks = new RankList(collection.getNumberedCalls());
 		ranks.makeQuantityRanks();
 		
-		Map<Integer, List<CallRank>>                     map      = ranks.getRankMap();
-		RankMate                                         rankMate = new RankMate(map);
-		@org.jetbrains.annotations.Nullable List<String> numbers  = ContactKey.getNumbers(contact);
+		Map<Integer, List<CallRank>> map      = ranks.getRankMap();
+		RankMate                     rankMate = new RankMate(map);
+		@Nullable List<String>       numbers  = ContactKey.getNumbers(contact);
 		
 		if (numbers == null) return com;
 		
