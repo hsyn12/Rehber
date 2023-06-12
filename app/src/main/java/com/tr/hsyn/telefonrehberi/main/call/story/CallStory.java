@@ -10,6 +10,7 @@ import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.execution.Runny;
 import com.tr.hsyn.keep.Keep;
+import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.regex.Nina;
 import com.tr.hsyn.registery.cast.Database;
 import com.tr.hsyn.string.Stringx;
@@ -25,7 +26,9 @@ import com.tr.hsyn.xlog.xlog;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -342,47 +345,63 @@ public class CallStory implements Story<Call> {
 	 */
 	private void updateInfo(@NotNull List<Call> calls) {
 		
+		Map<String, Long>   ids   = new HashMap<>();
+		Map<String, String> names = new HashMap<>();
+		
 		for (Call call : calls) {
 			
 			long id = CallKey.getContactId(call);
 			
 			if (id == 0L || Stringx.isNoboe(call.getName())) {
 				
-				Contact contact = SystemContacts.getContact(contentResolver, call.getNumber());
+				String  number   = PhoneNumbers.formatNumber(call.getNumber(), PhoneNumbers.N_MIN);
+				Long    _id      = ids.get(number);
+				boolean isUpdate = false;
 				
-				if (contact != null) {
+				if (_id == null) {
 					
-					String name = contact.getName();
+					Contact contact = SystemContacts.getContact(contentResolver, call.getNumber());
 					
-					boolean isName = Nina.regex("[^0-9+]").find(name).isValid();
-					
-					boolean isUpdate = false;
-					
-					if (isName) {
-						isUpdate = true;
-						call.setName(name);
-						xlog.d("Call owner found : %s", name);
-					}
-					else xlog.d("Call owner not found : %s", call.getNumber());
-					
-					
-					if (contact.getContactId() != 0) {
-						isUpdate = true;
-						CallKey.setContactId(call, contact.getId());
-						call.setExtra(Calls.createExtraInfo(call));
-					}
-					
-					if (isUpdate) {
-						boolean systemUpdated   = updateFromSystem(call);
-						boolean databaseUpdated = updateFromDatabase(call);
+					if (contact != null) {
 						
-						if (systemUpdated && databaseUpdated) {
-							xlog.d("Call updated : %s", call);
+						String name = contact.getName();
+						
+						boolean isName = Nina.regex("[^0-9+]").find(name).isValid();
+						
+						if (isName) {
+							isUpdate = true;
+							call.setName(name);
+							names.put(number, name);
+							xlog.d("Call owner found : %s", name);
 						}
-						else {
-							if (!systemUpdated) xlog.d("Call cannot updated [system] : %s", call);
-							if (!databaseUpdated) xlog.d("Call cannot updated  [database] : %s", call);
+						else xlog.d("Call owner not found : %s", call.getNumber());
+						
+						
+						if (contact.getContactId() != 0) {
+							isUpdate = true;
+							CallKey.setContactId(call, contact.getId());
+							ids.put(number, contact.getContactId());
 						}
+					}
+				}
+				else {
+					
+					CallKey.setContactId(call, _id);
+					call.setName(names.get(number));
+					isUpdate = true;
+				}
+				
+				
+				if (isUpdate) {
+					boolean systemUpdated   = updateFromSystem(call);
+					boolean databaseUpdated = updateFromDatabase(call);
+					
+					if (systemUpdated && databaseUpdated) {
+						xlog.d("Call updated : %s", call);
+					}
+					else {
+						if (!systemUpdated) xlog.d("Call cannot updated [system] : %s", call);
+						if (!databaseUpdated) xlog.d("Call cannot updated  [database] : %s", call);
 					}
 				}
 			}

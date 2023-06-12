@@ -90,6 +90,7 @@ public interface CallKey {
 	static void setContactId(@NotNull Call call, long contactId) {
 		
 		call.setData(CONTACT_ID, contactId);
+		call.setExtra(Calls.createExtraInfo(call));
 	}
 	
 	@Nullable
