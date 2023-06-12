@@ -21,7 +21,7 @@ import java.util.List;
  * The <code>ContactCommentator</code> interface defines the contract
  * for commenting on a phone contact.
  * <p>
- * Implementations of this interface should provide specific functionality
+ * Implementations of this interface should give specific capability
  * for commenting on different contacts.
  * <p>
  * This interface extends the {@link Commentator} interface,
@@ -29,7 +29,6 @@ import java.util.List;
  * for generating a comment on a contact.
  */
 public interface ContactCommentator extends Commentator<Contact>, CommentEditor {
-	
 	
 	/**
 	 * Returns a list of all contacts.
@@ -63,14 +62,17 @@ public interface ContactCommentator extends Commentator<Contact>, CommentEditor 
 	/**
 	 * This method is responsible for commenting on a contact.
 	 * <p>
-	 * Implementations of this method should provide specific functionality
+	 * Implementations of this method should give specific capability
 	 * for commenting on different contacts.
 	 *
 	 * @param contact the contact to be commented on
 	 * @return a CharSequence representing the comment on the contact
 	 */
 	@Override
-	@NotNull CharSequence commentOn(@NotNull Contact contact);
+	default @NotNull CharSequence commentOn(@NotNull Contact contact) {
+		
+		throw new UnsupportedOperationException("Use commentOn(Contact, Consumer) instead");
+	}
 	
 	/**
 	 * Returns the contact for which the comment is being generated.
@@ -78,14 +80,6 @@ public interface ContactCommentator extends Commentator<Contact>, CommentEditor 
 	 * @return current selected contact
 	 */
 	Contact getContact();
-	
-	/**
-	 * Return the comment about the last call.
-	 * The last call comment is about the last call between the contact and the user.
-	 *
-	 * @return the comment about the last call
-	 */
-	@NotNull CharSequence commentOnTheLastCall();
 	
 	/**
 	 * Returns the {@link CallCollection} object.

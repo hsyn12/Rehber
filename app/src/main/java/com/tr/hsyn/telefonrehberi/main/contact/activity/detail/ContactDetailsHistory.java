@@ -187,13 +187,6 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 				
 				Over.CallLog.getCallLogManager().load();
 			}
-			else {
-				
-				//- Demek ki arama kayıtları yükleme istasyonundan yüklenmiş
-				//- Buradan sonrası sorun çıkarmaz
-				
-				xlog.d("Accessed the call logs");
-			}
 		}
 		else {
 			

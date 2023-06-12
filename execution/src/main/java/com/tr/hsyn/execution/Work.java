@@ -14,7 +14,7 @@ import java.util.function.Consumer;
  * @param <T>
  */
 public interface Work<T> extends WorkType<T> {
-
+	
 	/**
 	 * Sonucu başarı ve hata olarak ayrı ayrı almak yerine,
 	 * ikisini birsen almayı sağlar.
@@ -27,7 +27,7 @@ public interface Work<T> extends WorkType<T> {
 	 * @return Work
 	 */
 	Work<T> onResult(BiConsumer<T, Throwable> onResult);
-
+	
 	/**
 	 * İşlemin başarısı durumunda ön planda çalışacak olan işi alır.
 	 * Ana thread üzerinde.
@@ -36,7 +36,7 @@ public interface Work<T> extends WorkType<T> {
 	 * @return Work
 	 */
 	Work<T> onSuccess(Consumer<T> onSuccess);
-
+	
 	/**
 	 * Hata işleyicisini tanımla.
 	 * Ana thread üzerinde.
@@ -45,7 +45,7 @@ public interface Work<T> extends WorkType<T> {
 	 * @return Work
 	 */
 	Work<T> onError(Consumer<Throwable> onError);
-
+	
 	/**
 	 * Verilen iş hata ile yada hatasız tamamlandıktan sonra en son çalıştırılmak istenen iş.
 	 * Ana thread üzerinde.
@@ -54,39 +54,53 @@ public interface Work<T> extends WorkType<T> {
 	 * @return Work
 	 */
 	Work<T> onLast(Runnable onLast);
-
+	
 	/**
 	 * Verilen iş hata ile yada hatasız tamamlandıktan sonra en son çalıştırılmak istenen iş.
 	 * Ana thread üzerinde.
 	 *
 	 * @param onLast İş
-	 * @param delay  Geçikme süresi
+	 * @param delay  Gecikme süresi
 	 * @return Work
 	 */
 	Work<T> onLast(Runnable onLast, long delay);
-
+	
 	/**
 	 * Verilen işin çalışmasını sağlar.
 	 * Bu çağrı olmazsa hiçbir işlem yapılmaz.
 	 */
 	void execute();
-
+	
 	/**
 	 * İşi gecikmeli başlatır
 	 *
 	 * @param delay Gecikme süresi
 	 */
 	void execute(long delay);
-
+	
+	/**
+	 * Creates a new {@code Work} instance with the given {@code callable}.
+	 *
+	 * @param callable the callable
+	 * @param <T>      the return type
+	 * @return a new {@code Work} instance
+	 */
 	static <T> Work<T> on(Callable<T> callable) {
-
+		
 		return Worker.on(callable);
 	}
-
+	
+	/**
+	 * Creates a new {@code Work} instance with the given {@code runnable}.
+	 *
+	 * @param runnable the runnable
+	 * @param <T>      the return type
+	 * @return a new {@code Work} instance
+	 */
 	static <T> Work<T> on(Runnable runnable) {
-
+		
 		return Worker.on(runnable);
 	}
-
-
+	
+	
 }

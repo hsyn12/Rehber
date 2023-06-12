@@ -147,30 +147,15 @@ public enum Runny {
 	@NotNull
 	public static <R> CompletableFuture<R> complete(long delay, boolean minPriority, @NotNull Callable<R> callable) {
 		
-		CompletableFuture<R> future;
-		
-		if (minPriority) {
+		return CompletableFuture.supplyAsync(() -> {
 			
-			future = CompletableFuture.supplyAsync(() -> {
-				
-				try {return Scheduler.schedule(delay, callable).get();}
-				catch (InterruptedException | ExecutionException e) {e.printStackTrace();}
-				
-				return null;
-			}, Executors.MIN_PRIORITY_EXECUTOR);
-		}
-		else {
+			try {
+				return minPriority ? Scheduler.schedule(delay, callable).get() : Scheduler.scheduleNorm(delay, callable).get();
+			}
+			catch (InterruptedException | ExecutionException e) {e.printStackTrace();}
 			
-			future = CompletableFuture.supplyAsync(() -> {
-				
-				try {return Scheduler.scheduleNorm(delay, callable).get();}
-				catch (InterruptedException | ExecutionException e) {e.printStackTrace();}
-				
-				return null;
-			}, Executors.NORM_PRIORITY_EXECUTOR);
-		}
-		
-		return future;
+			return null;
+		}, Executors.MIN_PRIORITY_EXECUTOR);
 	}
 	
 	/**

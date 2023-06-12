@@ -257,7 +257,7 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 	
 	private void deleteCalls(List<com.tr.hsyn.calldata.Call> deletedCalls, @NonNull Dialog dialog) {
 		
-		workOnBackground(() -> {
+		onBackground(() -> {
 			
 			int count = getCallStory().delete(deletedCalls);
 			

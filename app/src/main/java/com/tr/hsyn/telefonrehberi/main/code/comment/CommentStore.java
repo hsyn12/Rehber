@@ -18,7 +18,7 @@ public interface CommentStore {
 	/**
 	 * Returns a string representing the given resource id by using {@link #getActivity()} as context.
 	 *
-	 * @param resourceId the resource id to be used to get the string
+	 * @param resourceId the resource ID to be used to get the string
 	 * @param args       the arguments to be used in the string
 	 * @return the string
 	 */

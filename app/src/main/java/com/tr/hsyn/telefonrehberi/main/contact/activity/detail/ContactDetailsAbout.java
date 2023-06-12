@@ -12,7 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.UiThread;
 
 import com.tr.hsyn.colors.Colors;
-import com.tr.hsyn.execution.Runny;
+import com.tr.hsyn.execution.Work;
 import com.tr.hsyn.gate.AutoGate;
 import com.tr.hsyn.gate.Gate;
 import com.tr.hsyn.telefonrehberi.R;
@@ -62,7 +62,7 @@ public class ContactDetailsAbout extends ContactDetailsMenu {
 	@Override
 	protected void onHistoryLoad() {
 		// This must be the first call in the onHistoryLoad method
-		// because the call history must be updated before all
+		// because the call history must be updated before all.
 		super.onHistoryLoad();
 		
 		// The contact must have one call at least
@@ -130,16 +130,9 @@ public class ContactDetailsAbout extends ContactDetailsMenu {
 			
 			reComment = false;
 			
-			Runny.run(() -> {
-				
-				ContactCommentator commentator = createCommentator(this);
-				
-				Runny.run(() -> {
-					
-					@NotNull CharSequence comment = commentator.commentOn(contact);
-					onCommentReady(comment);
-				}, true);
-			}, false);
+			Work.on(this::getCommentator)
+					.onSuccess(this::onCommentatorReady)
+					.execute();
 		}
 		else {
 			
@@ -148,20 +141,34 @@ public class ContactDetailsAbout extends ContactDetailsMenu {
 	}
 	
 	/**
-	 * Called when the comment is ready.
+	 * Creates a new instance of a {@link ContactCommentator}.
 	 *
-	 * @param comment the comment
+	 * @return the {@link ContactCommentator}
+	 */
+	@NotNull
+	private ContactCommentator getCommentator() {
+		
+		return createCommentator(this);
+	}
+	
+	/**
+	 * Called when the {@link ContactCommentator} is ready.
+	 *
+	 * @param commentator the {@link ContactCommentator}
 	 */
 	@UiThread
-	private void onCommentReady(CharSequence comment) {
+	private void onCommentatorReady(@NotNull ContactCommentator commentator) {
 		
-		text_about.setText(comment);
-		animateAboutView();
+		commentator.commentOn(contact, comment -> {
+			text_about.setText(comment);
+			animateAboutView();
+		});
 	}
 	
 	/**
 	 * Animate the 'about view'.
 	 */
+	@UiThread
 	private void animateAboutView() {
 		
 		if (isOpenAboutView) {
@@ -186,7 +193,7 @@ public class ContactDetailsAbout extends ContactDetailsMenu {
 	
 	/**
 	 * Creates a new instance of a {@link ContactCommentator}
-	 * based on the current mood of the application.
+	 * based on the current mood of the app.
 	 *
 	 * @param activity the activity object
 	 * @return a new instance of a {@link ContactCommentator}

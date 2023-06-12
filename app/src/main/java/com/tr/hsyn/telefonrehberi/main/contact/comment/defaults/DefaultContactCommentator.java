@@ -6,6 +6,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 
 import com.tr.hsyn.calldata.Call;
+import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.nextension.Extension;
@@ -24,10 +25,16 @@ import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationData;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationDialog;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.ShowCallsDialog;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
+import com.tr.hsyn.telefonrehberi.main.contact.comment.ContactComment;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.RankList;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.RankMate;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.commentator.ContactCommentStore;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.commentator.ContactCommentator;
+import com.tr.hsyn.telefonrehberi.main.contact.comment.topics.LastCallComment;
+import com.tr.hsyn.telefonrehberi.main.contact.comment.topics.LastCallTypeComment;
+import com.tr.hsyn.telefonrehberi.main.contact.comment.topics.MostQuantityComment;
+import com.tr.hsyn.telefonrehberi.main.contact.comment.topics.QuantityComment;
+import com.tr.hsyn.telefonrehberi.main.contact.comment.topics.Topic;
 import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.contact.data.History;
 import com.tr.hsyn.text.Span;
@@ -37,6 +44,7 @@ import com.tr.hsyn.time.Duration;
 import com.tr.hsyn.time.DurationGroup;
 import com.tr.hsyn.time.Time;
 import com.tr.hsyn.time.Unit;
+import com.tr.hsyn.treadedwork.Threaded;
 import com.tr.hsyn.xlog.xlog;
 
 import org.jetbrains.annotations.NotNull;
@@ -45,35 +53,41 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 
 /**
  * This class implements the {@link ContactCommentator} interface and
  * provides default behavior for commenting on a contact.
  */
-public class DefaultContactCommentator implements ContactCommentator {
+public class DefaultContactCommentator implements ContactCommentator, Threaded {
 	
+	/** The count of the comment */
+	private static final int                      COUNT_OF_COMMENT    = 2;
 	/**
 	 * The comment object.
 	 * All generated comments by the commentator appends into this object.
 	 */
-	protected final Spanner             comment = new Spanner();
-	/**
-	 * The history that has the all calls of the current contact.
-	 */
-	protected       History             history;
-	/**
-	 * The current contact
-	 */
-	protected       Contact             contact;
-	/**
-	 * The comment store
-	 */
-	protected       ContactCommentStore commentStore;
-	protected       boolean             isTurkish;
-	protected       CallCollection      callCollection;
+	protected final      Spanner                  comment             = new Spanner();
+	private final        Map<Topic, CharSequence> comments            = new HashMap<>();
+	private final        QuantityComment          quantityComment     = new QuantityComment();
+	private final        MostQuantityComment      mostQuantityComment = new MostQuantityComment();
+	private final        LastCallComment          lastCallComment     = new LastCallComment();
+	private final        LastCallTypeComment      lastCallTypeComment = new LastCallTypeComment();
+	private final        Object                   gate                = new Object();
+	/** The history that has the all calls of the current contact. */
+	protected            History                  history;
+	/** The current contact */
+	protected            Contact                  contact;
+	/** The comment store */
+	protected            ContactCommentStore      commentStore;
+	protected            boolean                  isTurkish;
+	protected            CallCollection           callCollection;
+	private              Consumer<CharSequence>   callback;
 	
 	/**
 	 * Constructs a new {@link DefaultContactCommentator} object with the given comment store.
@@ -99,30 +113,6 @@ public class DefaultContactCommentator implements ContactCommentator {
 	}
 	
 	/**
-	 * Generates a comment on the specified contact.
-	 * This method is the entry point to the commentator.
-	 * So, it ensures that the contact is not null and not empty for the methods that called after.
-	 *
-	 * @param contact the contact to comment on
-	 * @return the generated comment as a CharSequence
-	 */
-	@Override
-	public @NotNull CharSequence commentOn(@NotNull Contact contact) {
-		
-		if (callCollection == null) return comment;
-		
-		this.contact = contact;
-		
-		this.history = callCollection.getHistoryOf(contact);
-		
-		//if history is empty, no need to go any further.
-		if (history.isEmpty()) comment.append(commentStore.noHistory());
-		else commentOnContact();
-		
-		return comment;
-	}
-	
-	/**
 	 * Returns the current contact commenting on.
 	 *
 	 * @return the current contact
@@ -133,53 +123,34 @@ public class DefaultContactCommentator implements ContactCommentator {
 		return contact;
 	}
 	
-	/**
-	 * @inheritDoc
-	 */
 	@Override
-	public @NotNull CharSequence commentOnTheLastCall() {
+	public void commentOn(@NotNull Contact contact, @NotNull Consumer<CharSequence> callback) {
 		
-		Spanner                   commentOnTheLastCall = new Spanner();
-		com.tr.hsyn.calldata.Call lastCall             = history.getLastCall();
-		String                    callType             = Res.getCallType(commentStore.getActivity(), lastCall.getCallType());
-		Duration                  timeBefore           = Time.howLongBefore(lastCall.getTime());
-		ShowCall                  showCall             = new ShowCall(commentStore.getActivity(), lastCall);
-		View.OnClickListener      listener1            = view -> showCall.show();
+		this.callback = callback;
 		
-		if (commentStore.isTurkishLanguage()) {
+		if (callCollection != null) {
 			
-			// bu arama 3 gün önce olan bir cevapsız çağrı
-			commentOnTheLastCall.append(getString(R.string.word_the_last_call), getClickSpans(listener1))
-					.append(" ")
-					.append(getString(R.string.word_date_before, timeBefore.getValue(), timeBefore.getUnit()))
-					.append(" ")
-					.append(getString(R.string.word_happened))
-					.append(" ")
-					.append(getString(R.string.word_a))
-					.append(" ")
-					.append(Stringx.format("%s", callType.toLowerCase()), Spans.bold())
-					.append(". ");
+			this.contact = contact;
+			this.history = callCollection.getHistoryOf(contact);
+			
+			//if history is empty, no need to go any further.
+			if (history.isEmpty()) {
+				
+				comment.append(commentStore.noHistory());
+				returnComment();
+			}
+			else commentOnContact();
 		}
 		else {
 			
-			// this call is from 3 days ago
-			commentOnTheLastCall.append(getString(R.string.word_the_last_call), getClickSpans(listener1))
-					.append(" ")
-					.append(getString(R.string.word_is))
-					.append(" ")
-					.append(Stringx.format("%s", (callType.toLowerCase().charAt(0) == 'o' || callType.toLowerCase().charAt(0) == 'i') ? "an " : "a "))
-					.append(Stringx.format("%s", callType.toLowerCase()), Spans.bold())
-					.append(" ")
-					.append(getString(R.string.word_from))
-					.append(" ")
-					.append(getString(R.string.word_date_unit, timeBefore.getValue(), timeBefore.getUnit()))
-					.append(Stringx.format("%s", timeBefore.getValue() > 1 ? "s " : " "))
-					.append(getString(R.string.word_is_ago))
-					.append(". ");
-			
+			xlog.d("Not fount call collection");
+			onMain(this::returnComment);
 		}
+	}
+	
+	private void returnComment() {
 		
-		return commentOnTheLastCall;
+		onMain(() -> callback.accept(comment));
 	}
 	
 	/**
@@ -199,14 +170,48 @@ public class DefaultContactCommentator implements ContactCommentator {
 		}
 		else {
 			
-			this.comment.append(commentQuantity());
-			this.comment.append(commentMostQuantity());
+			quantityComment.createComment(contact, commentStore.getActivity(), this::onComment, isTurkish);
+			mostQuantityComment.createComment(contact, commentStore.getActivity(), this::onComment, isTurkish);
+			lastCallComment.createComment(contact, commentStore.getActivity(), this::onComment, isTurkish);
+			lastCallTypeComment.createComment(contact, commentStore.getActivity(), this::onComment, isTurkish);
+			
+			
+			/* this.comment.append(commentMostQuantity());
 			this.comment.append(commentOnTheLastCall());
 			this.comment.append(commentLastCallType());
 			this.comment.append(firstLastCallComment());
-			this.comment.append(commentOnDurations());
+			this.comment.append(commentOnDurations()); */
 		}
 		
+	}
+	
+	private void onComment(@NotNull ContactComment contactComment) {
+		
+		synchronized (gate) {
+			
+			comments.put(contactComment.getTopic(), contactComment.getComment());
+			boolean commentsCompleted = comments.size() == COUNT_OF_COMMENT;
+			
+			xlog.dx("Comment created : %s", contactComment.getTopic());
+			xlog.d("Comment count : %d [commentsCompleted=%s]", comments.size(), commentsCompleted);
+			
+			if (commentsCompleted) {
+				
+				var commentList = comments.entrySet()
+						.stream()
+						.sorted(Map.Entry.comparingByKey())
+						.map(Map.Entry::getValue)
+						.collect(Collectors.toList());
+				
+				Lister.loop(commentList, comment::append);
+				
+				returnComment();
+			}
+			else {
+				
+				xlog.d("Waiting other comments...");
+			}
+		}
 	}
 	
 	/**
@@ -223,6 +228,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 	 * Returns a comment about the quantity of call history for the contact.
 	 * For example, <code>'The contact has <u>2 calls</u>'</code>.
 	 */
+	@Deprecated
 	@NonNull
 	private CharSequence commentQuantity() {
 		
@@ -232,17 +238,17 @@ public class DefaultContactCommentator implements ContactCommentator {
 		// Inform the user about the quantity of the call history.
 		// For example, 'The contact has 2 calls'.
 		
-		Spanner              quantityComment = new Spanner();
-		String               name            = contact.getName() != null && !PhoneNumbers.isPhoneNumber(contact.getName()) ? contact.getName() : Stringx.toTitle(getString(R.string.word_contact));
-		View.OnClickListener listener        = view -> new ShowCallsDialog(commentStore.getActivity(), history.calls(), contact.getName(), null).show();
-		quantityComment.append(name, Spans.bold(), Spans.foreground(getTextColor()));
+		Spanner              comment  = new Spanner();
+		String               name     = contact.getName() != null && !PhoneNumbers.isPhoneNumber(contact.getName()) ? contact.getName() : Stringx.toTitle(getString(R.string.word_contact));
+		View.OnClickListener listener = view -> new ShowCallsDialog(commentStore.getActivity(), history.calls(), contact.getName(), null).show();
+		comment.append(name, Spans.bold(), Spans.foreground(getTextColor()));
 		
 		// Have two language resources forever, think so.
 		if (isTurkish) {
 			
 			@NotNull String extension = WordExtension.getWordExt(name, Extension.TYPE_DATIVE);
 			
-			quantityComment.append(Stringx.format("'%s %s ", extension, getString(R.string.word_has)))
+			comment.append(Stringx.format("'%s %s ", extension, getString(R.string.word_has)))
 					.append(Stringx.format("%s", getString(R.string.word_calls, history.size())), getClickSpans(listener))
 					.append(" ")
 					.append(getString(R.string.word_exist))
@@ -250,14 +256,14 @@ public class DefaultContactCommentator implements ContactCommentator {
 		}
 		else {
 			
-			quantityComment.append(" ")
+			comment.append(" ")
 					.append(getString(R.string.word_has))
 					.append(" ")
 					.append(Stringx.format("%s", getString(R.string.word_calls, history.size())), getClickSpans(listener))
 					.append(". ");
 		}
 		
-		return quantityComment;
+		return comment;
 	}
 	
 	/**
@@ -267,13 +273,13 @@ public class DefaultContactCommentator implements ContactCommentator {
 	 */
 	private @NotNull CharSequence commentMostQuantity() {
 		
-		Spanner        com        = new Spanner();
+		Spanner        comment    = new Spanner();
 		CallCollection collection = getCallCollection();
 		
 		if (collection == null) {
 			
 			xlog.w("Cannot find call collection");
-			return com;
+			return comment;
 		}
 		
 		RankList ranks = new RankList(collection.getNumberedCalls());
@@ -283,7 +289,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 		RankMate                     rankMate = new RankMate(map);
 		@Nullable List<String>       numbers  = ContactKey.getNumbers(contact);
 		
-		if (numbers == null) return com;
+		if (numbers == null) return comment;
 		
 		int rank = rankMate.getRank(numbers);
 		
@@ -301,51 +307,51 @@ public class DefaultContactCommentator implements ContactCommentator {
 			
 			if (isTurkishLanguage()) {
 				
-				com.append("Ve ")
+				comment.append("Ve ")
 						.append("en fazla arama", getClickSpans(view -> dialog.show()))
 						.append(" kaydına sahip kişiler listesinde ");
 				
-				if (rankCount <= 1) com.append("tek başına ");
-				else com.append(fmt("%d kişi ile birlikte ", rankCount));
+				if (rankCount <= 1) comment.append("tek başına ");
+				else comment.append(fmt("%d kişi ile birlikte ", rankCount));
 				
-				com.append(fmt("%d. sırada. ", rank));
+				comment.append(fmt("%d. sırada. ", rank));
 			}
 			else {
 				
-				com.append(fmt("And in the %d. place ", rank));
+				comment.append(fmt("And in the %d. place ", rank));
 				
 				Spanner hotList = new Spanner().append("the hot list", getClickSpans(view -> dialog.show()));
 				
-				if (rankCount == 1) com.append("alone ");
-				else com.append(fmt("together with %d contact(s) ", rankCount));
+				if (rankCount == 1) comment.append("alone ");
+				else comment.append(fmt("together with %d contact(s) ", rankCount));
 				
-				com.append("in ")
+				comment.append("in ")
 						.append(hotList)
 						.append(" of the call quantity. ");
 			}
 		}
 		
-		return com;
+		return comment;
 	}
 	
 	/**
 	 * @return comment about last call type
 	 */
+	@Deprecated
 	private @NotNull CharSequence commentLastCallType() {
 		
-		Spanner                   commentAboutLastCallType = new Spanner();
-		com.tr.hsyn.calldata.Call lastCall                 = history.getLastCall();
-		int                       type                     = lastCall.getCallType();
-		
+		Spanner    comment    = new Spanner();
+		Call       lastCall   = history.getLastCall();
+		int        type       = lastCall.getCallType();
 		int[]      callTypes  = Res.getCallTypes(type);
 		List<Call> typedCalls = history.getCallsByTypes(callTypes);
 		String     typeStr    = Res.getCallType(commentStore.getActivity(), type);
 		
 		if (typedCalls.size() == 1) {
 			
-			if (commentStore.isTurkishLanguage()) {
+			if (isTurkish) {
 				
-				commentAboutLastCallType.append("Ve bu ")
+				comment.append("Ve bu ")
 						.append(Stringx.format("%s", typeStr.toLowerCase()), Spans.bold())
 						.append(" kişiye ait tek ")
 						.append(Stringx.format("%s", typeStr.toLowerCase()), Spans.bold())
@@ -353,7 +359,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 			}
 			else {
 				
-				commentAboutLastCallType.append("And this ")
+				comment.append("And this ")
 						.append(Stringx.format("%s", typeStr.toLowerCase()), Spans.bold())
 						.append(" is only single ")
 						.append(Stringx.format("%s", typeStr.toLowerCase()), Spans.bold())
@@ -362,14 +368,13 @@ public class DefaultContactCommentator implements ContactCommentator {
 		}
 		else {
 			
-			@NotNull List<Call> historyCalls    = history.getCallsByTypes(callTypes);
-			ShowCallsDialog     showCallsDialog = new ShowCallsDialog(commentStore.getActivity(), historyCalls, history.contact().getName(), Stringx.format("%d %s", historyCalls.size(), typeStr));
+			ShowCallsDialog showCallsDialog = new ShowCallsDialog(commentStore.getActivity(), typedCalls, history.contact().getName(), Stringx.format("%d %s", typedCalls.size(), typeStr));
 			
 			View.OnClickListener listener = view -> showCallsDialog.show();
 			
 			if (commentStore.isTurkishLanguage()) {
 				
-				commentAboutLastCallType.append("Ve bu ")
+				comment.append("Ve bu ")
 						.append(Stringx.format("%s", typeStr.toLowerCase()), Spans.bold())
 						.append(" kişiye ait ")
 						.append(Stringx.format("%d %s", typedCalls.size(), typeStr.toLowerCase()), Spans.click(listener, getClickColor()), Spans.underline())
@@ -377,7 +382,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 			}
 			else {
 				//and this call is one of the 33 outgoing calls
-				commentAboutLastCallType.append("And this ")
+				comment.append("And this ")
 						.append(Stringx.format("%s", typeStr.toLowerCase()), Spans.bold())
 						.append(" is one of the ")
 						.append(Stringx.format("%d %ss", typedCalls.size(), typeStr.toLowerCase()), Spans.click(listener, getClickColor()), Spans.underline())
@@ -385,7 +390,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 			}
 		}
 		
-		return commentAboutLastCallType;
+		return comment;
 	}
 	
 	/**
@@ -393,6 +398,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 	 *
 	 * @return comment about first and last call
 	 */
+	@Deprecated
 	private @NotNull CharSequence firstLastCallComment() {
 		
 		Spanner comment = new Spanner();
@@ -455,7 +461,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 				comment.append(msg);
 			}
 			
-			comment.append(mostHistoryDurationComment(duration));
+			comment.append(mostHistoryDurationComment());
 		}
 		
 		return comment;
@@ -536,11 +542,10 @@ public class DefaultContactCommentator implements ContactCommentator {
 	/**
 	 * Returns a comment about the duration of the history.
 	 *
-	 * @param duration the history duration of the current contact
 	 * @return comment
 	 */
 	@NotNull
-	private CharSequence mostHistoryDurationComment(@NotNull DurationGroup duration) {
+	private CharSequence mostHistoryDurationComment() {
 		
 		Spanner       comment  = new Spanner();
 		List<Contact> contacts = getContacts();
@@ -699,6 +704,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 			return fmt("There is a communication history between you and %d people out of %d people in your contacts. ", historyCount, contactCount);
 	}
 	
+	@NotNull
 	private CharSequence commentLastCallTypeRank() {
 		
 		Spanner rank     = new Spanner();
@@ -708,6 +714,7 @@ public class DefaultContactCommentator implements ContactCommentator {
 		return rank;
 	}
 	
+	@NotNull
 	private CharSequence commentOnDurations() {
 		
 		Spanner                      comment        = new Spanner();
@@ -723,8 +730,8 @@ public class DefaultContactCommentator implements ContactCommentator {
 		
 		comment.append("Bu kişi ")
 				.append("en çok konuştuğun", getClickSpans(listener))
-				.append(" kişiler listesine bakılırsa ")
-				.append(fmt("%s. sırada. ", rank), Spans.foreground(getTextColor()));
+				.append(" kişiler listesinde ")
+				.append(fmt("%s. sırada. ", rank));
 		
 		return comment;
 	}
@@ -772,6 +779,12 @@ public class DefaultContactCommentator implements ContactCommentator {
 		return list;
 	}
 	
+	/**
+	 * Returns the name of the contact.
+	 *
+	 * @param number the phone number
+	 * @return the name or the number
+	 */
 	@NotNull
 	private String getContactName(@NotNull String number) {
 		

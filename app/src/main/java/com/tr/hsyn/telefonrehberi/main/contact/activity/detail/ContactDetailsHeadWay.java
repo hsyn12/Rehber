@@ -22,7 +22,7 @@ import com.tr.hsyn.telefonrehberi.dev.Phone;
 import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
 import com.tr.hsyn.textdrawable.TextDrawable;
-import com.tr.hsyn.treadedwork.ThreadedWork;
+import com.tr.hsyn.treadedwork.Threaded;
 import com.tr.hsyn.xlog.xlog;
 
 import java.util.List;
@@ -35,7 +35,7 @@ import java.util.List;
  * All subclasses of this class need to work after {@link #prepare()},
  * please attention to the order.
  */
-public abstract class ContactDetailsHeadWay extends ContactDetailsView implements ThreadedWork {
+public abstract class ContactDetailsHeadWay extends ContactDetailsView implements Threaded {
 	
 	/** The selected contact */
 	protected Contact      contact;

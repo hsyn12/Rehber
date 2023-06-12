@@ -7,7 +7,7 @@ import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.telefonrehberi.app.UIThread;
 import com.tr.hsyn.telefonrehberi.main.activity.city.BigBank;
 import com.tr.hsyn.time.Time;
-import com.tr.hsyn.treadedwork.ThreadedWork;
+import com.tr.hsyn.treadedwork.Threaded;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
  * Kişileri alma işlemi her başlatıldığında bir değişken güncel zamanla kaydedilir.<br>
  * Bu zaman bilgisi {@link #getLastContactsLoadingStartTime()} metoduyla elde edilebilir.
  */
-public abstract class ContactsLoader extends BigBank implements ThreadedWork, UIThread {
+public abstract class ContactsLoader extends BigBank implements Threaded, UIThread {
 	
 	/**
 	 * Kişileri alma işleminin başlama zamanı

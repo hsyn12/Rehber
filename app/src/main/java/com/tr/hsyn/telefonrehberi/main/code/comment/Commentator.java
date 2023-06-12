@@ -3,6 +3,8 @@ package com.tr.hsyn.telefonrehberi.main.code.comment;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Consumer;
+
 
 /**
  * The <code>Commentator</code> interface defines a contract for
@@ -19,4 +21,6 @@ public interface Commentator<T> {
 	 */
 	@NotNull
 	CharSequence commentOn(@NotNull T subject);
+	
+	void commentOn(@NotNull T subject, @NotNull Consumer<CharSequence> callback);
 }
