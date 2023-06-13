@@ -31,8 +31,6 @@ import com.tr.hsyn.telefonrehberi.main.contact.comment.RankMate;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.commentator.ContactCommentStore;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.commentator.ContactCommentator;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.topics.LastCallComment;
-import com.tr.hsyn.telefonrehberi.main.contact.comment.topics.LastCallTypeComment;
-import com.tr.hsyn.telefonrehberi.main.contact.comment.topics.MostQuantityComment;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.topics.QuantityComment;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.topics.Topic;
 import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
@@ -67,18 +65,16 @@ import java.util.stream.Collectors;
 public class DefaultContactCommentator implements ContactCommentator, Threaded {
 	
 	/** The count of the comment */
-	private static final int                      COUNT_OF_COMMENT    = 2;
+	private static final int                      COUNT_OF_COMMENT = 2;
 	/**
 	 * The comment object.
 	 * All generated comments by the commentator appends into this object.
 	 */
-	protected final      Spanner                  comment             = new Spanner();
-	private final        Map<Topic, CharSequence> comments            = new HashMap<>();
-	private final        QuantityComment          quantityComment     = new QuantityComment();
-	private final        MostQuantityComment      mostQuantityComment = new MostQuantityComment();
-	private final        LastCallComment          lastCallComment     = new LastCallComment();
-	private final        LastCallTypeComment      lastCallTypeComment = new LastCallTypeComment();
-	private final        Object                   gate                = new Object();
+	protected final      Spanner                  comment          = new Spanner();
+	private final        Map<Topic, CharSequence> comments         = new HashMap<>();
+	private final        QuantityComment          quantityComment  = new QuantityComment();
+	private final        LastCallComment          lastCallComment  = new LastCallComment();
+	private final        Object                   gate             = new Object();
 	/** The history that has the all calls of the current contact. */
 	protected            History                  history;
 	/** The current contact */
@@ -171,9 +167,7 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 		else {
 			
 			quantityComment.createComment(contact, commentStore.getActivity(), this::onComment, isTurkish);
-			mostQuantityComment.createComment(contact, commentStore.getActivity(), this::onComment, isTurkish);
 			lastCallComment.createComment(contact, commentStore.getActivity(), this::onComment, isTurkish);
-			lastCallTypeComment.createComment(contact, commentStore.getActivity(), this::onComment, isTurkish);
 			
 			
 			/* this.comment.append(commentMostQuantity());

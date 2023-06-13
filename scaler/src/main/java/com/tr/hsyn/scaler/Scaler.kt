@@ -2,117 +2,108 @@ package com.tr.hsyn.scaler
 
 /**
  * > ## Ölçekleyici. ##
- * ===================
+ * =====================================================================
  *
- * > Bir şeyin miktar olarak az mı çok mu olduğunu nasıl
- * > anlarız?
+ * How do we know if something is more or less in quantity?
  *
- * > 10 adet, bir şeyin çok __az__ olduğu anlamına gelebilirken,
- * > aynı adet başka bir şey için __çok__ olduğu anlamına
- * > gelebilir.
+ * While 10 can mean something is too __few__,
+ * the same quantity can mean __many__ for something else.
  *
- * > Yani ölçüm, ölçtüğümüz şeye göre değişir. Mesela bir
- * > kilo pamuk için **çok** diyebiliriz ama bir kilo demir
- * > **az** olabilir. Bu sebeple ölçülen şeye göre farklı bir
- * > ***ölçek*** baz alırız ve buna göre bir şeyin az yada çok
- * > olduğuna karar veririz.
+ * So the measurement depends on what we are measuring.
+ * For example, we can say a kilo of cotton is a lot, but a kilo of iron may be less.
+ * For this reason we take a different scale based on what is being measured,
+ * and accordingly we decide if something is more or less.
  *
- * > [Scaler] arayüzü bu ölçeklemeyi yapmayı sağlar. Yani bir
- * > miktarın az mı çok mu olduğunu anlamımızı sağlar. Bunun için
- * > 4 çokluk belirlendi.
+ * The [Scaler] interface enables this scaling.
+ * In other words,
+ * a [Scaler] allows us to understand whether the amount is more or less.
+ * For this, 4 quantities were determined.
  *
- * 1. [MIN] çok az
+ * 1. [Quantity.MIN] few
  *
- * 2. [MID] normal
+ * 2. [Quantity.MID] normal
  *
- * 3. [MAX] çok
+ * 3. [Quantity.MAX] a lot
  *
- * 4. [LARGE] aşırı
+ * 4. [Quantity.LARGE] excessive
  *
- * > [getQuantity] metodu bu 4 değişmezden birini döndürür.
- * Ve diğer metotlar bu değişmezleri sorgulayarak ne olduğunu anlamamızı sağlar.
+ * [getQuantity] method returns a [Quantity] one of these.
  *
  *    val scaler = new Scaler(10, 2f);
- *    //bu nesne için minimum değer 10 ve aşağısıdır. (..., 10]
- *    //orta değer (10, 10 * scale] aralığıdır. (10, 20] on ve yirmi arası
- *    //yüksek değer (orta, 10 * scale * 2] aralığıdır. (20, 40] yirmi ve kırk arası
- *    //en yüksek değer (yüksek, 10 * scale * 3] aralığıdır. (40, ...) kırk ve üzeri
+ *    //the minimum value for this object is 10 and below (..., 10]
+ *    //the middle value is the range (10, 10 * scale] (10, 20] between ten and twenty
+ *    //high value (medium, 10 * scale * 2] range (20, 40] twenty to forty
+ *    //the highest value is (high, 10 * scale * 3] range (40, ...) forty and above
  *
  * @author hsyn 23.08.2022 18:14:23
  */
 interface Scaler {
 	
 	/**
-	 * Verilen değerin miktarını döndürür.
+	 * Returns the [Quantity] for the [size].
 	 *
-	 * @param size Miktarı öğrenilmek istenen değer
-	 * @return miktar
-	 * @see [MIN]
-	 * @see [MID]
-	 * @see [MAX]
-	 * @see [LARGE]
+	 * @param size size to get the [Quantity]
+	 * @return the [Quantity] for the [size]
+	 * @see [Quantity]
 	 */
-	fun getQuantity(size: Int): Int
-	
-	/**
-	 * @param quantity Miktar. [getQuantity] metodundan dönen değer
-	 *     olmalı.
-	 * @return
-	 */
-	fun isMin(quantity: Int): Boolean = quantity == MIN
-	
-	/**
-	 * @param quantity Miktar. [getQuantity] metodundan dönen değer
-	 *     olmalı.
-	 * @return
-	 */
-	fun isMid(quantity: Int): Boolean = quantity == MID
-	
-	/**
-	 * @param quantity Miktar. [getQuantity] metodundan dönen değer
-	 *     olmalı.
-	 * @return
-	 */
-	fun isMax(quantity: Int): Boolean = quantity == MAX
-	
-	/**
-	 * @param quantity Miktar. [getQuantity] metodundan dönen değer
-	 *     olmalı.
-	 * @return
-	 */
-	fun isLarge(quantity: Int): Boolean = quantity == LARGE
+	fun getQuantity(size: Int): Quantity
 	
 	companion object {
 		
 		/**
-		 * ## Yeni bir ölçekleyici oluşturur.
+		 * ## Creates new [Scaler] object.
 		 *
-		 * [base] değeri taban değerdir.
-		 * Yani [MIN] değerini belirler. [scale] ise [base] değerinin çarpılacağı katsayıdır.
-		 
-		 * [MID] için `1 * base * scale`
+		 * [base] value determines the [Quantity#MIN] value.
+		 * And [scale] is the value to be multiplied with the [base] value.
 		 * # -------------------------
-		 * [MAX] için `2 * base * scale`
+		 * [Quantity.MIN] --> `base`
 		 * # -------------------------
-		 * [LARGE] için `3 * base * scale`
+		 * [Quantity.MID] --> `1 * base * scale`
+		 * # -------------------------
+		 *  [Quantity.MAX] --> `2 * base * scale`
+		 * # -------------------------
+		 *  [Quantity.LARGE] --> `3 * base * scale`
 		 * # -------------------------
 		 *
 		 *
 		 *    val scaler = new Scaler(10, 2f);
-		 *    //bu nesne için minimum değer 10 ve aşağısıdır. (..., 10]
-		 *    //orta değer (10, 10 * scale] aralığıdır. (10, 20]
-		 *    //yüksek değer (orta, 10 * scale * 2] aralığıdır. (20, 40]
-		 *    //en yüksek değer (yüksek, 10 * scale * 3] aralığıdır. (40, ...)
+		 *    //the minimum value for this object is 10 and below (..., 10]
+		 *    //the middle value is the range (10, 10 * scale] (10, 20] between ten and twenty
+		 *    //high value (medium, 10 * scale * 2] range (20, 40] twenty to forty
+		 *    //the highest value is (high, 10 * scale * 3] range (40, ...) forty and above
 		 *
 		 * @param base Base
 		 * @param scale Scale
 		 * @return [Scaler]
 		 */
-		//region static fun createNewScaler(base: Int, scale: Float): Scaler {...}
 		@JvmStatic
-		fun createNewScaler(base: Int, scale: Float): Scaler {
+		fun createNewScaler(base: Int, scale: Float): Scaler = Scale(base, scale)
+		
+		/**
+		 * Calculates the [Quantity] of the [size] value.
+		 *
+		 *    val quantity = Scaler.getQuantity(8, 10, 2f);
+		 *    //the minimum value for this object is 10 and below (..., 10]
+		 *    //the middle value is the range (10, 10 * scale] (10, 20] between ten and twenty
+		 *    //high value (medium, 10 * scale * 2] range (20, 40] twenty to forty
+		 *    //the highest value is (high, 10 * scale * 3] range (40, ...) forty and above
+		 *
+		 *    quantity.isMin();// returns true because 8 is less than 10 (base value 10)
+		 *
+		 * @param size size to calculate
+		 * @param base base value
+		 * @param scale scale value
+		 * @return [Quantity] object
+		 */
+		//region fun getQuantity(size: Int, base: Int, scale: Float): Quantity {...}
+		fun getQuantity(size: Int, base: Int, scale: Float): Quantity {
 			
-			return Scale(base, scale)
+			if (size <= base) return Quantity.MIN
+			
+			val _scale = (scale * base).toInt()
+			
+			if (size <= _scale) return Quantity.MID
+			return if (size <= _scale * 2) Quantity.MAX else Quantity.LARGE
 		}
 		//endregion
 	}
@@ -122,42 +113,39 @@ interface Scaler {
 private class Scale(val base: Int, val scale: Float) : Scaler {
 	
 	/**
-	 * Verilen çokluğun niceliğini döndürür.
+	 * Returns the [Quantity] for the [size].
 	 *
-	 * @param size Niceliği öğrenilmek istenen çokluk
-	 * @return [MIN], [MID], [MAX], [LARGE] değerlerinden biri
+	 * @param size size to get the [Quantity]
+	 * @return [Quantity]
 	 */
-	//region override fun getQuantity(size: Int): Int {...}
-	override fun getQuantity(size: Int): Int {
-		
-		if (size <= base) return MIN
-		
-		val _scale = (scale * base).toInt()
-		
-		if (size <= _scale) return MID
-		return if (size <= _scale * 2) MAX else LARGE
-	}
-	//endregion
+	override fun getQuantity(size: Int): Quantity = Scaler.getQuantity(size, base, scale)
 	
 	override fun toString(): String = "Scaler{base=$base, scale=$scale}"
 }
 
-/**
- * En düşük değer. Buna ***az*** diyebiliriz
- */
-const val MIN = 0
-
-/**
- * Orta değer. Buna ***normal*** diyebiliriz
- */
-const val MID = 1
-
-/**
- * Maximum değer. Buna ***çok*** diyebiliriz
- */
-const val MAX = 2
-
-/**
- * Büyük değer. Buna ***aşırı*** diyebiliriz
- */
-const val LARGE = 3
+enum class Quantity {
+	/**
+	 * En düşük değer. Buna ***az*** diyebiliriz
+	 */
+	MIN,
+	
+	/**
+	 * Orta değer. Buna ***normal*** diyebiliriz
+	 */
+	MID,
+	
+	/**
+	 * Maximum değer. Buna ***çok*** diyebiliriz
+	 */
+	MAX,
+	
+	/**
+	 * Büyük değer. Buna ***aşırı*** diyebiliriz
+	 */
+	LARGE;
+	
+	fun isMin(): Boolean = this == MIN
+	fun isMid(): Boolean = this == MID
+	fun isMax(): Boolean = this == MAX
+	fun isLarge(): Boolean = this == LARGE
+}

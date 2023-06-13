@@ -78,7 +78,7 @@ public class HotListByQuantity {
 	 *
 	 * @return object that ranked by calls size.
 	 */
-	public Map<Integer, List<CallRank>> getRankedByRejected() {
+	public Map<Integer, List<CallRank>> getRankByRejected() {
 		
 		return rankedByRejected;
 	}
