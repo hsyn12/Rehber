@@ -20,7 +20,6 @@ public final class ContactCallHistory implements History {
 	private final Contact    contact;
 	private final List<Call> calls;
 	
-	
 	/**
 	 * Creates a new history for the given contact with the given calls.
 	 */
@@ -34,7 +33,7 @@ public final class ContactCallHistory implements History {
 	 * @inheritDoc
 	 */
 	@Override
-	public @NotNull Contact contact() {
+	public @NotNull Contact getContact() {
 		
 		return contact;
 	}
@@ -44,7 +43,7 @@ public final class ContactCallHistory implements History {
 	 */
 	@Override
 	@NotNull
-	public List<Call> calls() {
+	public List<Call> getCalls() {
 		
 		return calls;
 	}

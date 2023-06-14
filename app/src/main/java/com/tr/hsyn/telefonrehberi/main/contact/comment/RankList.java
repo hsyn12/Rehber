@@ -54,6 +54,7 @@ public class RankList {
 		return rankMap;
 	}
 	
+	
 	/**
 	 * Starts the rank process.
 	 * After this, call {@link #getRankMap()} to get the rank map.

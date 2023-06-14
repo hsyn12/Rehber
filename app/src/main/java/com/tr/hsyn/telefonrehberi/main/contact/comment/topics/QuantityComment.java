@@ -9,12 +9,13 @@ import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.nextension.Extension;
 import com.tr.hsyn.nextension.WordExtension;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
+import com.tr.hsyn.scaler.Quantity;
 import com.tr.hsyn.scaler.Scaler;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallCollection;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
-import com.tr.hsyn.telefonrehberi.main.call.data.hotlist.HotListByQuantity;
+import com.tr.hsyn.telefonrehberi.main.call.data.hotlist.RankByQuantity;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostCallDialog;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostCallItemViewData;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.ShowCallsDialog;
@@ -81,10 +82,9 @@ public class QuantityComment implements ContactComment {
 		
 		onBackground(() -> {
 			
-			HotListByQuantity            quantityHotList = callCollection.getHotListByQuantity();
-			Map<Integer, List<CallRank>> map             = quantityHotList.getRankMap();
-			RankMate                     rankMate        = new RankMate(map);
-			@Nullable List<String>       numbers         = ContactKey.getNumbers(contact);
+			Map<Integer, List<CallRank>> map      = RankByQuantity.createRankMap(callCollection);
+			RankMate                     rankMate = new RankMate(map);
+			@Nullable List<String>       numbers  = ContactKey.getNumbers(contact);
 			
 			
 			if (numbers != null) {
@@ -147,24 +147,18 @@ public class QuantityComment implements ContactComment {
 	}
 	
 	@NotNull
-	private CharSequence ioComment(@NotNull HotListByQuantity quantityHotList) {
+	private CharSequence ioComment(@NotNull RankByQuantity quantityHotList) {
 		
 		assert callCollection != null;
-		Spanner comment  = new Spanner();
-		Scaler  scaler   = Scaler.createNewScaler(99, 4.f);
-		int     quantity = scaler.getQuantity(callCollection.getCalls().size());
+		Spanner  comment  = new Spanner();
+		Quantity quantity = Scaler.makeQuantity(callCollection.getCalls().size(), 99, 4.f);
 		
-		if (scaler.isMin(quantity)) {
+		if (quantity.isMin()) {
 			
 			xlog.d("Calls quantity is min [callSize=%d]. And no go any further.", callCollection.getCalls().size());
 			return comment;
 		}
 		
-		
-		var inMap       = quantityHotList.getRankByIncoming().get(1);
-		var outMap      = quantityHotList.getRankByOutgoing();
-		var missedMap   = quantityHotList.getRankByMissed();
-		var rejectedMap = quantityHotList.getRankByRejected();
 		
 		return comment;
 	}
@@ -176,7 +170,7 @@ public class QuantityComment implements ContactComment {
 		assert callCollection != null;
 		History              history  = callCollection.getHistoryOf(contact);
 		String               name     = contact.getName() != null && !PhoneNumbers.isPhoneNumber(contact.getName()) ? contact.getName() : Stringx.toTitle(getString(R.string.word_contact));
-		View.OnClickListener listener = view -> new ShowCallsDialog(activity, history.calls(), contact.getName(), null).show();
+		View.OnClickListener listener = view -> new ShowCallsDialog(activity, history.getCalls(), contact.getName(), null).show();
 		
 		comment.append(name, Spans.bold(), Spans.foreground(getTextColor()));
 		

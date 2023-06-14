@@ -95,8 +95,9 @@ interface Scaler {
 		 * @param scale scale value
 		 * @return [Quantity] object
 		 */
+		@JvmStatic
 		//region fun getQuantity(size: Int, base: Int, scale: Float): Quantity {...}
-		fun getQuantity(size: Int, base: Int, scale: Float): Quantity {
+		fun makeQuantity(size: Int, base: Int, scale: Float): Quantity {
 			
 			if (size <= base) return Quantity.MIN
 			
@@ -118,34 +119,34 @@ private class Scale(val base: Int, val scale: Float) : Scaler {
 	 * @param size size to get the [Quantity]
 	 * @return [Quantity]
 	 */
-	override fun getQuantity(size: Int): Quantity = Scaler.getQuantity(size, base, scale)
+	override fun getQuantity(size: Int): Quantity = Scaler.makeQuantity(size, base, scale)
 	
 	override fun toString(): String = "Scaler{base=$base, scale=$scale}"
 }
 
 enum class Quantity {
-	/**
-	 * En düşük değer. Buna ***az*** diyebiliriz
-	 */
+	
+	/** The lowest value. Can be called it ***little***  */
 	MIN,
 	
-	/**
-	 * Orta değer. Buna ***normal*** diyebiliriz
-	 */
+	/** Median. Can be called it ***normal*** */
 	MID,
 	
-	/**
-	 * Maximum değer. Buna ***çok*** diyebiliriz
-	 */
+	/**  Maximum value. Can be called it ***a lot***  */
 	MAX,
 	
-	/**
-	 * Büyük değer. Buna ***aşırı*** diyebiliriz
-	 */
+	/** Great value. Can be called it ***excessive***  */
 	LARGE;
 	
+	/** @return `true` if this is [MIN] */
 	fun isMin(): Boolean = this == MIN
+	
+	/** @return `true` if this is [MID]  */
 	fun isMid(): Boolean = this == MID
+	
+	/** @return `true` if this is [MAX]  */
 	fun isMax(): Boolean = this == MAX
+	
+	/**  @return `true` if this is [LARGE] */
 	fun isLarge(): Boolean = this == LARGE
 }

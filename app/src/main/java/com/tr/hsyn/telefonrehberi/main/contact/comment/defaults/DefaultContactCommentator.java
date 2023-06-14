@@ -18,7 +18,7 @@ import com.tr.hsyn.telefonrehberi.dev.android.dialog.ShowCall;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallCollection;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
 import com.tr.hsyn.telefonrehberi.main.call.data.Res;
-import com.tr.hsyn.telefonrehberi.main.call.data.hotlist.HotListByDuration;
+import com.tr.hsyn.telefonrehberi.main.call.data.hotlist.RankByDuration;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostCallDialog;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostCallItemViewData;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationData;
@@ -234,7 +234,7 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 		
 		Spanner              comment  = new Spanner();
 		String               name     = contact.getName() != null && !PhoneNumbers.isPhoneNumber(contact.getName()) ? contact.getName() : Stringx.toTitle(getString(R.string.word_contact));
-		View.OnClickListener listener = view -> new ShowCallsDialog(commentStore.getActivity(), history.calls(), contact.getName(), null).show();
+		View.OnClickListener listener = view -> new ShowCallsDialog(commentStore.getActivity(), history.getCalls(), contact.getName(), null).show();
 		comment.append(name, Spans.bold(), Spans.foreground(getTextColor()));
 		
 		// Have two language resources forever, think so.
@@ -362,7 +362,7 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 		}
 		else {
 			
-			ShowCallsDialog showCallsDialog = new ShowCallsDialog(commentStore.getActivity(), typedCalls, history.contact().getName(), Stringx.format("%d %s", typedCalls.size(), typeStr));
+			ShowCallsDialog showCallsDialog = new ShowCallsDialog(commentStore.getActivity(), typedCalls, history.getContact().getName(), Stringx.format("%d %s", typedCalls.size(), typeStr));
 			
 			View.OnClickListener listener = view -> showCallsDialog.show();
 			
@@ -711,16 +711,15 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 	@NotNull
 	private CharSequence commentOnDurations() {
 		
-		Spanner                      comment        = new Spanner();
-		HotListByDuration            rankByDuration = callCollection.getHotListByDuration();
-		RankMate                     rankMate       = new RankMate(rankByDuration.getRankMap());
-		int                          rank           = rankMate.getRank(ContactKey.getNumbers(contact));
-		Map<Integer, List<CallRank>> rankMap        = rankByDuration.getRankMap();
-		List<MostDurationData>       durationList   = createDurationList(rankMap);
-		String                       title          = getString(R.string.title_speaking_durations);
-		String                       subtitle       = getString(R.string.size_contacts, durationList.size());
-		MostDurationDialog           dialog         = new MostDurationDialog(commentStore.getActivity(), durationList, title, subtitle);
-		View.OnClickListener         listener       = view -> dialog.show();
+		Spanner                      comment      = new Spanner();
+		Map<Integer, List<CallRank>> rankMap      = RankByDuration.createRankMap(callCollection);
+		RankMate                     rankMate     = new RankMate(rankMap);
+		int                          rank         = rankMate.getRank(ContactKey.getNumbers(contact));
+		List<MostDurationData>       durationList = createDurationList(rankMap);
+		String                       title        = getString(R.string.title_speaking_durations);
+		String                       subtitle     = getString(R.string.size_contacts, durationList.size());
+		MostDurationDialog           dialog       = new MostDurationDialog(commentStore.getActivity(), durationList, title, subtitle);
+		View.OnClickListener         listener     = view -> dialog.show();
 		
 		comment.append("Bu kişi ")
 				.append("en çok konuştuğun", getClickSpans(listener))

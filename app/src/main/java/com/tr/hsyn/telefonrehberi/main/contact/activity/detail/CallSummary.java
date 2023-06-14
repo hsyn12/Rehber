@@ -371,7 +371,7 @@ public abstract class CallSummary extends ContactDetailsHistory {
 			missedRow.setOnClickListener(v -> showCalls(callHistory.getCallsByTypes(CallType.MISSED)));
 			rejectedRow.setOnClickListener(v -> showCalls(callHistory.getCallsByTypes(CallType.REJECTED)));
 			
-			totalRow.setOnClickListener(v -> showCalls(history.calls()));
+			totalRow.setOnClickListener(v -> showCalls(history.getCalls()));
 		}
 		
 		if (!summaryViewAdded) {

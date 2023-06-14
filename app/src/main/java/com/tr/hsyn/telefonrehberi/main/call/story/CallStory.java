@@ -8,13 +8,11 @@ import androidx.annotation.NonNull;
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.contactdata.Contact;
-import com.tr.hsyn.execution.Runny;
 import com.tr.hsyn.keep.Keep;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.regex.Nina;
 import com.tr.hsyn.registery.cast.Database;
 import com.tr.hsyn.string.Stringx;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallCollection;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallDatabase;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
 import com.tr.hsyn.telefonrehberi.main.call.data.Calls;
@@ -83,15 +81,10 @@ public class CallStory implements Story<Call> {
 				}
 				
 				systemCalls.sort((x, y) -> Long.compare(y.getTime(), x.getTime()));
-				
 				updateInfo(systemCalls);
-				
-				Runny.run(() -> CallCollection.create(systemCalls), false);
 				return systemCalls;
 			}
 			else {
-				
-				CallCollection.createEmpty();
 				xlog.d("Sistemde arama kaydı yok");
 			}
 		}
@@ -104,10 +97,7 @@ public class CallStory implements Story<Call> {
 				long now = System.currentTimeMillis();
 				
 				databaseCalls.forEach(c -> c.setData(CallKey.DELETED_DATE, now));
-				
 				database.update(databaseCalls);
-				
-				CallCollection.createEmpty();
 				return new ArrayList<>(0);
 			}
 			else {
@@ -155,10 +145,7 @@ public class CallStory implements Story<Call> {
 		//! Hangi diğer ayrıntıları?
 		
 		databaseCalls.sort((x, y) -> Long.compare(y.getTime(), x.getTime()));
-		
 		updateInfo(databaseCalls);
-		
-		Runny.run(() -> CallCollection.create(databaseCalls), false);
 		return databaseCalls;
 	}
 	

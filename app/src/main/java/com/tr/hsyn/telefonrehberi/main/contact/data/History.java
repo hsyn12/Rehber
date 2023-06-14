@@ -3,7 +3,6 @@ package com.tr.hsyn.telefonrehberi.main.contact.data;
 
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.contactdata.Contact;
-import com.tr.hsyn.holder.Holder;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallCollection;
 import com.tr.hsyn.telefonrehberi.main.call.data.Res;
@@ -26,14 +25,12 @@ import java.util.stream.Collectors;
  */
 public interface History {
 	
-	Holder<CallCollection> CALL_COLLECTION = Holder.newHolder();
-	
 	/**
 	 * Returns the contact that this history belongs to.
 	 *
 	 * @return the contact
 	 */
-	@NotNull Contact contact();
+	@NotNull Contact getContact();
 	
 	/**
 	 * Returns the call at the given index
@@ -43,7 +40,7 @@ public interface History {
 	 */
 	default Call get(int index) {
 		
-		return calls().get(index);
+		return getCalls().get(index);
 	}
 	
 	/**
@@ -51,7 +48,7 @@ public interface History {
 	 *
 	 * @return the calls
 	 */
-	@NotNull List<Call> calls();
+	@NotNull List<Call> getCalls();
 	
 	/**
 	 * Returns the duration of the call history.
@@ -78,7 +75,7 @@ public interface History {
 	 */
 	default int size() {
 		
-		return calls().size();
+		return getCalls().size();
 	}
 	
 	/**
@@ -88,7 +85,7 @@ public interface History {
 	 */
 	default Call getFirstCall() {
 		
-		return calls().get(size() - 1);
+		return getCalls().get(size() - 1);
 	}
 	
 	/**
@@ -98,7 +95,7 @@ public interface History {
 	 */
 	default Call getLastCall() {
 		
-		return calls().get(0);
+		return getCalls().get(0);
 	}
 	
 	/**
@@ -108,7 +105,7 @@ public interface History {
 	 */
 	default void sort(Comparator<Call> comparator) {
 		
-		calls().sort(comparator);
+		getCalls().sort(comparator);
 	}
 	
 	/**
@@ -130,7 +127,7 @@ public interface History {
 	 */
 	default @NotNull List<Call> getCallsByTypes(int... types) {
 		
-		return getCallsByTypes(calls(), types);
+		return getCallsByTypes(getCalls(), types);
 	}
 	
 	/**
@@ -153,7 +150,7 @@ public interface History {
 	 */
 	default @NotNull List<Call> getCalls(@NotNull Predicate<Call> predicate) {
 		
-		return calls().stream().filter(predicate).collect(Collectors.toList());
+		return getCalls().stream().filter(predicate).collect(Collectors.toList());
 	}
 	
 	/**
@@ -168,10 +165,10 @@ public interface History {
 		
 		if (types.length == 1) {
 			
-			return (int) calls().stream().filter(call -> call.getCallType() == callType).count();
+			return (int) getCalls().stream().filter(call -> call.getCallType() == callType).count();
 		}
 		
-		return (int) calls().stream().filter(call -> call.getCallType() == callType || call.getCallType() == types[1]).count();
+		return (int) getCalls().stream().filter(call -> call.getCallType() == callType || call.getCallType() == types[1]).count();
 	}
 	
 	/**
@@ -181,7 +178,7 @@ public interface History {
 	 */
 	default boolean isEmpty() {
 		
-		return calls().isEmpty();
+		return getCalls().isEmpty();
 	}
 	
 	/**
@@ -194,13 +191,7 @@ public interface History {
 	@Deprecated
 	static History getHistory(@NotNull Contact contact) {
 		
-		CallCollection collection = CALL_COLLECTION.getValue();
-		
-		if (collection == null) {
-			
-			collection = Blue.getObject(Key.CALL_COLLECTION);
-			CALL_COLLECTION.setValue(collection);
-		}
+		CallCollection collection = Blue.getObject(Key.CALL_COLLECTION);
 		
 		if (collection == null) return ofEmpty(contact);
 		

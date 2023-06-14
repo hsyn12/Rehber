@@ -9,10 +9,9 @@ import com.tr.hsyn.keep.Keep;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.string.Stringx;
-import com.tr.hsyn.telefonrehberi.main.call.data.hotlist.HotListByDuration;
-import com.tr.hsyn.telefonrehberi.main.call.data.hotlist.HotListByQuantity;
 import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.contact.data.History;
+import com.tr.hsyn.telefonrehberi.main.dev.Over;
 import com.tr.hsyn.xbox.Blue;
 
 import org.jetbrains.annotations.NotNull;
@@ -33,84 +32,21 @@ public final class CallCollection {
 	/**
 	 * All call log calls
 	 */
-	private final List<Call>              calls;
+	@NotNull private final List<Call>              calls;
 	/**
 	 * Map object that has a key by phone number, and a value as a list of its calls
 	 * that belong to the phone number.
 	 */
-	private final Map<String, List<Call>> numberedCalls;
-	private final List<Call>              incomingCalls;
-	private final List<Call>              outgoingCalls;
-	private final List<Call>              missedCalls;
-	private final List<Call>              rejectedCalls;
-	private final int                     incomingDuration;
-	private final int                     outgoingDuration;
-	private final HotListByQuantity       hotListByQuantity;
-	private final HotListByDuration       hotListByDuration;
+	@NotNull private final Map<String, List<Call>> numberedCalls;
 	
 	/**
 	 * Creates a new empty call collection.
 	 */
 	private CallCollection() {
 		
-		this.calls        = null;
-		numberedCalls     = null;
-		incomingCalls     = null;
-		outgoingCalls     = null;
-		missedCalls       = null;
-		rejectedCalls     = null;
-		incomingDuration  = 0;
-		outgoingDuration  = 0;
-		hotListByQuantity = null;
-		hotListByDuration = null;
-	}
-	
-	/**
-	 * Creates a new call collection.
-	 *
-	 * @param calls the calls
-	 */
-	private CallCollection(@NotNull List<Call> calls) {
-		
-		this.calls    = calls;
-		numberedCalls = makeNumberedCalls(calls);
-		incomingCalls = getCallsByType(Call.INCOMING, Call.INCOMING_WIFI);
-		outgoingCalls = getCallsByType(Call.OUTGOING, Call.OUTGOING_WIFI);
-		missedCalls   = getCallsByType(Call.MISSED);
-		rejectedCalls = getCallsByType(Call.REJECTED);
-		
-		incomingDuration = getIncomingCalls().stream()
-				.map(Call::getDuration)
-				.reduce(Integer::sum)
-				.orElse(0);
-		
-		outgoingDuration = getOutgoingCalls().stream()
-				.map(Call::getDuration)
-				.reduce(Integer::sum)
-				.orElse(0);
-		
-		hotListByQuantity = new HotListByQuantity(this);
-		hotListByDuration = new HotListByDuration(this);
-	}
-	
-	/**
-	 * Returns object that ranks calls by duration.
-	 *
-	 * @return {@link HotListByDuration}
-	 */
-	public HotListByDuration getHotListByDuration() {
-		
-		return hotListByDuration;
-	}
-	
-	/**
-	 * Returns object that ranks calls by quantity.
-	 *
-	 * @return {@link HotListByQuantity}
-	 */
-	public HotListByQuantity getHotListByQuantity() {
-		
-		return hotListByQuantity;
+		List<Call> c = Over.CallLog.Calls.getCalls();
+		this.calls    = c != null ? c : new ArrayList<>(0);
+		numberedCalls = mapNumberToCalls(this.calls);
 	}
 	
 	@NotNull
@@ -143,7 +79,7 @@ public final class CallCollection {
 	@NonNull
 	public List<Call> getIncomingCalls() {
 		
-		return incomingCalls;
+		return getCallsByType(Call.INCOMING, Call.INCOMING_WIFI);
 	}
 	
 	/**
@@ -152,7 +88,7 @@ public final class CallCollection {
 	@NonNull
 	public List<Call> getOutgoingCalls() {
 		
-		return outgoingCalls;
+		return getCallsByType(Call.OUTGOING, Call.OUTGOING_WIFI);
 	}
 	
 	/**
@@ -160,6 +96,7 @@ public final class CallCollection {
 	 *
 	 * @return the object that mapped phone number and its calls
 	 */
+	@NotNull
 	public Map<String, List<Call>> getNumberedCalls() {
 		
 		return numberedCalls;
@@ -168,6 +105,7 @@ public final class CallCollection {
 	/**
 	 * @return all call log calls
 	 */
+	@NotNull
 	public List<Call> getCalls() {
 		
 		return calls;
@@ -176,52 +114,41 @@ public final class CallCollection {
 	/**
 	 * @return total speaking duration of all incoming calls in seconds
 	 */
-	public int getIncomingDuration() {
+	public int getIncomingDuration(@NotNull List<Call> calls) {
 		
-		return incomingDuration;
+		return calls.stream()
+				.map(Call::getDuration)
+				.reduce(Integer::sum)
+				.orElse(0);
 	}
 	
 	/**
 	 * @return total speaking duration of all outgoing calls in seconds
 	 */
-	public int getOutgoingDuration() {
+	public int getOutgoingDuration(@NotNull List<Call> calls) {
 		
-		return outgoingDuration;
+		return calls.stream()
+				.map(Call::getDuration)
+				.reduce(Integer::sum)
+				.orElse(0);
 	}
 	
 	/**
 	 * @return missed calls
 	 */
-	@NonNull
+	@NotNull
 	public List<Call> getMissedCalls() {
 		
-		return missedCalls;
+		return getCallsByType(Call.MISSED);
 	}
 	
 	/**
 	 * @return rejected calls
 	 */
-	@NonNull
+	@NotNull
 	public List<Call> getRejectedCalls() {
 		
-		return rejectedCalls;
-	}
-	
-	/**
-	 * @param callType call type
-	 * @return call size for the given call type
-	 */
-	public int getCallSize(int callType) {
-		
-		switch (callType) {
-			case Call.INCOMING:
-			case Call.INCOMING_WIFI: return incomingCalls.size();
-			case Call.OUTGOING:
-			case Call.OUTGOING_WIFI: return outgoingCalls.size();
-			case Call.MISSED: return missedCalls.size();
-			case Call.REJECTED: return rejectedCalls.size();
-			default: return getCallsByType(callType).size();
-		}
+		return getCallsByType(Call.REJECTED);
 	}
 	
 	/**
@@ -254,7 +181,15 @@ public final class CallCollection {
 		return calls;
 	}
 	
-	public List<Call> getCallsByNumbers(List<String> numbers, List<Call> callList) {
+	/**
+	 * Returns all calls for the given numbers in the given list.
+	 *
+	 * @param numbers  the numbers
+	 * @param callList the list of calls to search
+	 * @return calls
+	 */
+	@NotNull
+	public List<Call> getCallsByNumbers(List<String> numbers, @NotNull List<Call> callList) {
 		
 		List<Call> calls = new ArrayList<>();
 		
@@ -266,11 +201,11 @@ public final class CallCollection {
 	}
 	
 	/**
-	 * @return {@code true} if the collection is empty or <code>null</code>
+	 * @return {@code true} if the collection is empty
 	 */
 	public boolean isEmpty() {
 		
-		return calls == null || calls.isEmpty();
+		return calls.isEmpty();
 	}
 	
 	/**
@@ -288,7 +223,14 @@ public final class CallCollection {
 		return numberedCalls.getOrDefault(phoneNumber, new ArrayList<>(0));
 	}
 	
-	public @NotNull List<Call> getCallsByNumber(String phoneNumber, List<Call> callList) {
+	/**
+	 * Returns all calls with the given number in the given list.
+	 *
+	 * @param phoneNumber the number
+	 * @param callList    the list of calls to search
+	 * @return calls
+	 */
+	public @NotNull List<Call> getCallsByNumber(String phoneNumber, @NotNull List<Call> callList) {
 		
 		if (Stringx.isNoboe(phoneNumber) || isEmpty()) return new ArrayList<>(0);
 		
@@ -296,7 +238,13 @@ public final class CallCollection {
 		return callList.stream().filter(c -> c.getNumber().equals(_phoneNumber)).collect(Collectors.toList());
 	}
 	
-	public static Map<String, List<Call>> makeNumberedCalls(@NotNull List<Call> calls) {
+	/**
+	 * Maps the phone number to the calls.
+	 *
+	 * @param calls the calls
+	 * @return the map
+	 */
+	public static Map<String, List<Call>> mapNumberToCalls(@NotNull List<Call> calls) {
 		
 		return calls.stream().collect(Collectors.groupingBy(CallCollection::getKey));
 	}
@@ -318,27 +266,11 @@ public final class CallCollection {
 	 * Creates a new call collection.
 	 * Also, stored on the blue cloud.
 	 *
-	 * @param calls the calls
 	 * @return the call collection
 	 * @see Key#CALL_COLLECTION
 	 */
 	@NotNull
-	public static CallCollection create(@NotNull List<Call> calls) {
-		
-		CallCollection collection = new CallCollection(calls);
-		
-		Blue.box(Key.CALL_COLLECTION, collection);
-		
-		return collection;
-	}
-	
-	/**
-	 * Creates a new empty call collection.
-	 *
-	 * @return the call collection
-	 */
-	@NotNull
-	public static CallCollection createEmpty() {
+	public static CallCollection create() {
 		
 		CallCollection collection = new CallCollection();
 		

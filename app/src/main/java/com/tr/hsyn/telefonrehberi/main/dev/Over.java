@@ -209,9 +209,7 @@ public interface Over {
 			
 			/**
 			 * @return all call log calls
-			 * @deprecated Use {@link com.tr.hsyn.telefonrehberi.main.call.data.CallCollection}
 			 */
-			@Deprecated
 			@Nullable
 			static List<com.tr.hsyn.calldata.Call> getCalls() {
 				

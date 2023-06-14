@@ -305,7 +305,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 				
 				if (!history.isEmpty()) {
 					
-					showCalls(history.calls());
+					showCalls(history.getCalls());
 				}
 				else {
 					

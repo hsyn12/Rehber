@@ -73,7 +73,7 @@ public class LastCallComment implements ContactComment {
 		Duration                  timeBefore      = Time.howLongBefore(lastCall.getTime());
 		ShowCall                  showCall        = new ShowCall(getActivity(), lastCall);
 		View.OnClickListener      listener1       = view -> showCall.show();
-		ShowCallsDialog           showCallsDialog = new ShowCallsDialog(getActivity(), typedCalls, history.contact().getName(), Stringx.format("%d %s", typedCalls.size(), typeStr));
+		ShowCallsDialog           showCallsDialog = new ShowCallsDialog(getActivity(), typedCalls, history.getContact().getName(), Stringx.format("%d %s", typedCalls.size(), typeStr));
 		View.OnClickListener      listener        = view -> showCallsDialog.show();
 		
 		if (isTurkish) {
