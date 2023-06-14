@@ -217,13 +217,24 @@ public interface History {
 	}
 	
 	/**
+	 * Creates a new history for the given key.
+	 *
+	 * @param key the key used by this history
+	 * @return the history for the given contact
+	 */
+	@NotNull
+	static History of(@NotNull String key, @NotNull List<Call> calls) {
+		
+		return new ContactCallHistory(key, calls);
+	}
+	
+	/**
 	 * Creates a new history for the given contact.
 	 *
 	 * @param contact the contact used by this history
 	 * @return the history for the given contact
 	 */
-	@NotNull
-	static History of(@NotNull Contact contact, @NotNull List<Call> calls) {
+	static @NotNull History of(@NotNull Contact contact, @NotNull List<Call> calls) {
 		
 		return new ContactCallHistory(contact, calls);
 	}
@@ -235,7 +246,7 @@ public interface History {
 	 * @param types the call types
 	 * @return the calls
 	 */
-	static @NotNull List<Call> getCallsByTypes(@NotNull List<Call> calls, int @NotNull ... types) {
+	static List<Call> getCallsByTypes(@NotNull List<Call> calls, int @NotNull ... types) {
 		
 		List<Call> _calls = new ArrayList<>();
 		

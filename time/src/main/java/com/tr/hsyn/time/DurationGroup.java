@@ -202,7 +202,7 @@ public class DurationGroup implements Comparable<DurationGroup> {
 	
 	/**
 	 * Normally the biggest unit is {@link Unit#YEAR}.
-	 * But if its value is zero, then the biggest unit is {@link Unit#MONTH}.
+	 * If its value is zero, then the biggest unit is {@link Unit#MONTH}.
 	 * If its value is zero, then the biggest unit is {@link Unit#DAY} ... and so forth.
 	 * İf all duration's value of this {@link DurationGroup} is zero,
 	 * then the biggest unit is {@link Unit#YEAR} with value of zero.
@@ -306,9 +306,9 @@ public class DurationGroup implements Comparable<DurationGroup> {
 	}
 	
 	/**
-	 * Checks if this {@link DurationGroup} contains the specified time unit.
+	 * Checks if this {@link DurationGroup} has the specified time unit.
 	 *
-	 * @param unit time unit to check
+	 * @param unit time unit to select
 	 * @return {@code true} if the unit exists and its value is not zero
 	 */
 	public boolean isNotZeroByUnit(@NotNull Unit unit) {
@@ -417,10 +417,10 @@ public class DurationGroup implements Comparable<DurationGroup> {
 	}
 	
 	/**
-	 * Returns the calendar equivalent of the durations.
+	 * Returns the calendar equal of the durations.
 	 * Negative-valued durations move backwards in the calendar,
 	 * positive values move forward.<br>
-	 * The start time for the calculation is selected as the present time.
+	 * The start time for the calculation is selected as the now.
 	 *
 	 * @return LocalDateTime
 	 */

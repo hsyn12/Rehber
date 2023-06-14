@@ -19,14 +19,28 @@ public final class ContactCallHistory implements History {
 	
 	private final Contact    contact;
 	private final List<Call> calls;
+	private final String     key;
 	
 	/**
 	 * Creates a new history for the given contact with the given calls.
 	 */
+	public ContactCallHistory(@NotNull String key, @NotNull List<Call> calls) {
+		
+		this.contact = null;
+		this.calls   = calls;
+		this.key     = key;
+	}
+	
 	public ContactCallHistory(@NotNull Contact contact, @NotNull List<Call> calls) {
 		
 		this.contact = contact;
 		this.calls   = calls;
+		key          = String.valueOf(contact.getContactId());
+	}
+	
+	public String getKey() {
+		
+		return key;
 	}
 	
 	/**
