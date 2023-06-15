@@ -276,7 +276,7 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 			return comment;
 		}
 		
-		RankList ranks = new RankList(collection.getNumberedCalls());
+		RankList ranks = new RankList(collection.getMapNumberToCalls());
 		ranks.makeQuantityRanks();
 		
 		Map<Integer, List<CallRank>> map      = ranks.getRankMap();

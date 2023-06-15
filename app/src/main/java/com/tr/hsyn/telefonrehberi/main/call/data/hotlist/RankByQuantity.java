@@ -86,7 +86,7 @@ public class RankByQuantity {
 	@NotNull
 	public static Map<Integer, List<CallRank>> createRankMap(@NotNull CallCollection callCollection) {
 		
-		return new RankList(callCollection.getNumberedCalls()).makeQuantityRanks().getRankMap();
+		return new RankList(callCollection.getMapNumberToCalls()).makeQuantityRanks().getRankMap();
 	}
 	
 }

@@ -22,6 +22,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
 
 
+/**
+ * This interface defines how to comment on a contact.
+ */
 public interface ContactComment extends Threaded {
 	
 	default @Nullable CallCollection getCallCollection() {
@@ -32,7 +35,7 @@ public interface ContactComment extends Threaded {
 	/**
 	 * Returns a string representing the given resource ID by using {@link #getActivity()} as context.
 	 *
-	 * @param resourceId the resource id to be used to get the string
+	 * @param resourceId the resource ID to be used to get the string
 	 * @param args       the arguments to be used in the string
 	 * @return the string
 	 */
@@ -75,22 +78,61 @@ public interface ContactComment extends Threaded {
 		return getActivity().getColor(com.tr.hsyn.rescolors.R.color.orange_500);
 	}
 	
+	/**
+	 * Returns formatted text.
+	 *
+	 * @param text the text
+	 * @param args the arguments
+	 * @return the formatted text
+	 */
 	default @NotNull String fmt(String text, Object... args) {
 		
 		return Stringx.format(text, args);
 	}
 	
+	/**
+	 * Some information needs to create a dialog and needs to get text, color, etc. from the resources.
+	 *
+	 * @return the activity
+	 */
 	Activity getActivity();
 	
+	/**
+	 * Returns the created comment.
+	 *
+	 * @return the comment
+	 */
 	@NotNull CharSequence getComment();
 	
+	/**
+	 * Returns the topic of the comment.
+	 *
+	 * @return the topic
+	 * @see Topic
+	 */
 	Topic getTopic();
 	
+	/**
+	 * Creates a comment.
+	 *
+	 * @param contact   contact
+	 * @param activity  activity
+	 * @param callback  callback
+	 * @param isTurkish isTurkish
+	 */
 	void createComment(@NotNull Contact contact, @NotNull Activity activity, @NotNull Consumer<ContactComment> callback, boolean isTurkish);
 	
+	/**
+	 * Returns the callback that called when the comment created.
+	 *
+	 * @return the callback
+	 */
 	@NotNull
 	Consumer<ContactComment> getCallback();
 	
+	/**
+	 * Returns the comment to the callback.
+	 */
 	default void returnComment() {
 		
 		onMain(() -> getCallback().accept(this));

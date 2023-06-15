@@ -4,6 +4,7 @@ package com.tr.hsyn.telefonrehberi.main.call.data;
 import androidx.annotation.NonNull;
 
 import com.tr.hsyn.calldata.Call;
+import com.tr.hsyn.collection.CoupleMap;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.keep.Keep;
 import com.tr.hsyn.key.Key;
@@ -15,8 +16,10 @@ import com.tr.hsyn.telefonrehberi.main.dev.Over;
 import com.tr.hsyn.xbox.Blue;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -32,12 +35,14 @@ public final class CallCollection {
 	/**
 	 * All call log calls
 	 */
-	@NotNull private final List<Call>              calls;
+	@NotNull private final List<Call>               calls;
 	/**
 	 * Map object that has a key by phone number, and a value as a list of its calls
 	 * that belong to the phone number.
 	 */
-	@NotNull private final Map<String, List<Call>> numberedCalls;
+	@NotNull private final Map<String, List<Call>>  mapNumberToCalls;
+	private                CoupleMap<Long, Contact> mapIdToContact;
+	private                CoupleMap<String, Long>  mapNumberToId;
 	
 	/**
 	 * Creates a new empty call collection.
@@ -45,8 +50,78 @@ public final class CallCollection {
 	private CallCollection() {
 		
 		List<Call> c = Over.CallLog.Calls.getCalls();
-		this.calls    = c != null ? c : new ArrayList<>(0);
-		numberedCalls = mapNumberToCalls(this.calls);
+		this.calls       = c != null ? c : new ArrayList<>(0);
+		mapNumberToCalls = mapNumberToCalls(this.calls);
+		mapNumberToId    = new CoupleMap<>(createMapNumberToId());
+		mapIdToContact   = new CoupleMap<>(createMapIdToContact());
+	}
+	
+	/**
+	 * Returns the map object that has a key by contact ID, and a contact as value.
+	 *
+	 * @return map
+	 */
+	public CoupleMap<Long, Contact> getMapIdToContact() {
+		
+		return mapIdToContact;
+	}
+	
+	/**
+	 * Returns the map object that has a key by phone number, and a contact ID as value.
+	 *
+	 * @return map
+	 */
+	public CoupleMap<String, Long> getMapNumberToId() {
+		
+		return mapNumberToId;
+	}
+	
+	public Contact getContact(@NotNull String number) {
+		
+		return mapIdToContact.getFromKey(mapNumberToId.getFromKey(number));
+	}
+	
+	@Nullable
+	public Long getContactId(@NotNull String number) {
+		
+		return mapNumberToId.getFromKey(number);
+	}
+	
+	public String getNumber(long id) {
+		
+		return mapNumberToId.getFromValue(id);
+	}
+	
+	/**
+	 * Creates the map object that has a key by contact ID, and a contact as value.
+	 */
+	private Map<Long, Contact> createMapIdToContact() {
+		
+		List<Contact> contacts = Blue.getObject(Key.CONTACTS);
+		
+		if (contacts != null) {
+			return contacts.stream().collect(Collectors.toMap(Contact::getContactId, c -> c));
+		}
+		
+		return new HashMap<>();
+	}
+	
+	/**
+	 * Creates the map object that has a key by phone number, and a contact ID as value.
+	 */
+	@NotNull
+	private Map<String, Long> createMapNumberToId() {
+		
+		Map<String, Long> mapNumberToId = new HashMap<>();
+		
+		for (var entry : mapNumberToCalls.entrySet()) {
+			
+			String number = entry.getKey();
+			long   id     = CallKey.getContactId(entry.getValue().get(0));
+			mapNumberToId.put(number, id);
+		}
+		
+		return mapNumberToId;
 	}
 	
 	@NotNull
@@ -97,9 +172,9 @@ public final class CallCollection {
 	 * @return the object that mapped phone number and its calls
 	 */
 	@NotNull
-	public Map<String, List<Call>> getNumberedCalls() {
+	public Map<String, List<Call>> getMapNumberToCalls() {
 		
-		return numberedCalls;
+		return mapNumberToCalls;
 	}
 	
 	/**
@@ -220,7 +295,7 @@ public final class CallCollection {
 		
 		phoneNumber = PhoneNumbers.formatNumber(phoneNumber, 10);
 		//noinspection DataFlowIssue
-		return numberedCalls.getOrDefault(phoneNumber, new ArrayList<>(0));
+		return mapNumberToCalls.getOrDefault(phoneNumber, new ArrayList<>(0));
 	}
 	
 	/**

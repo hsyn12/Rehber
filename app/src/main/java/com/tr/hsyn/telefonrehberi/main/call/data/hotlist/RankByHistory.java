@@ -3,6 +3,7 @@ package com.tr.hsyn.telefonrehberi.main.call.data.hotlist;
 
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallCollection;
+import com.tr.hsyn.telefonrehberi.main.contact.comment.RankList;
 import com.tr.hsyn.telefonrehberi.main.contact.data.History;
 import com.tr.hsyn.time.DurationGroup;
 
@@ -23,10 +24,12 @@ public class RankByHistory {
 	 * @param callCollection the call collection
 	 * @return the list of entries
 	 */
-	private static List<Map.Entry<String, DurationGroup>> createRankMap(@NotNull CallCollection callCollection) {
+	@NotNull
+	public static List<Map.Entry<String, DurationGroup>> createRankMap(@NotNull CallCollection callCollection) {
 		
 		Map<String, DurationGroup> durations = new HashMap<>();
-		Map<String, List<Call>>    map       = callCollection.getNumberedCalls();
+		Map<String, List<Call>>    map       = callCollection.getMapNumberToCalls();
+		RankList.mergeSameCalls(map);
 		
 		for (Map.Entry<String, List<Call>> entry : map.entrySet()) {
 			
@@ -39,6 +42,7 @@ public class RankByHistory {
 			}
 		}
 		
+		// descending order
 		return durations.entrySet().stream()
 				.sorted((o1, o2) -> o2.getValue().compareTo(o1.getValue()))
 				.collect(Collectors.toList());

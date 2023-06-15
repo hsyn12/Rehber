@@ -62,7 +62,7 @@ public class RankList {
 	public RankList makeQuantityRanks() {
 		
 		rankMap.clear();
-		mergeSameCalls();
+		mergeSameCalls(entries);
 		
 		if (rankList == null) makeRankListByQuantity();
 		
@@ -97,7 +97,7 @@ public class RankList {
 	public RankList makeDurationRanks() {
 		
 		rankMap.clear();
-		mergeSameCalls();
+		mergeSameCalls(entries);
 		
 		Set<String>    keys      = entries.keySet();
 		List<CallRank> callRanks = new ArrayList<>();
@@ -158,7 +158,27 @@ public class RankList {
 		rankList = entries.entrySet().stream().sorted((e1, e2) -> e2.getValue().size() - e1.getValue().size()).collect(Collectors.toList());
 	}
 	
-	private void mergeSameCalls() {
+	@NotNull
+	@Override
+	public String toString() {
+		
+		StringBuilder sb = new StringBuilder("\n");
+		
+		for (Map.Entry<String, List<Call>> entry : rankList) {
+			
+			sb.append(entry.getKey()).append(" : ").append(entry.getValue().size()).append("\n");
+		}
+		
+		return sb.toString();
+	}
+	
+	/**
+	 * Maybe there are more than one phone number belonging to the same contact.
+	 * This method merges the calls belonging to the same contact.
+	 *
+	 * @param entries the map object that mapped the phone number to its calls.
+	 */
+	public static void mergeSameCalls(@NotNull Map<String, List<Call>> entries) {
 		
 		// phone numbers
 		List<String> keys = new ArrayList<>(entries.keySet());
@@ -204,19 +224,5 @@ public class RankList {
 			// put it back in
 			entries.put(firstKey, calls);
 		}
-	}
-	
-	@NotNull
-	@Override
-	public String toString() {
-		
-		StringBuilder sb = new StringBuilder("\n");
-		
-		for (Map.Entry<String, List<Call>> entry : rankList) {
-			
-			sb.append(entry.getKey()).append(" : ").append(entry.getValue().size()).append("\n");
-		}
-		
-		return sb.toString();
 	}
 }

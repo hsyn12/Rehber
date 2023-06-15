@@ -96,7 +96,7 @@ public class RankByDuration {
 	@NotNull
 	public static Map<Integer, List<CallRank>> createRankMap(@NotNull CallCollection callCollection) {
 		
-		return new RankList(callCollection.getNumberedCalls()).makeDurationRanks().getRankMap();
+		return new RankList(callCollection.getMapNumberToCalls()).makeDurationRanks().getRankMap();
 	}
 	
 	
