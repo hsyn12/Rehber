@@ -12,6 +12,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.view.MenuProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -45,6 +46,7 @@ import com.tr.hsyn.xlog.xlog;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 /**
@@ -107,6 +109,7 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 	 * sonraki aramayı kabul etmez.
 	 */
 	private final   Gate                           keepCallAction       = AutoGate.newGate(GATE_WAIT_DURATION);
+	private final   AtomicBoolean                  loadingCompleted     = new AtomicBoolean(false);
 	/**
 	 * {@linkplain MenuEditor}
 	 */
@@ -340,7 +343,22 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 	protected void onCallLogLoaded(List<Call> calls, Throwable throwable) {
 		
 		super.onCallLogLoaded(calls, throwable);
-		CallCollection.create();
+		
+		if (loadingCompleted.getAndSet(true)) {
+			
+			CallCollection.create();
+		}
+	}
+	
+	@Override
+	protected void onContactsLoaded(List<Contact> contacts, @Nullable Throwable throwable) {
+		
+		super.onContactsLoaded(contacts, throwable);
+		
+		if (loadingCompleted.getAndSet(true)) {
+			
+			CallCollection.create();
+		}
 	}
 	
 	@Override

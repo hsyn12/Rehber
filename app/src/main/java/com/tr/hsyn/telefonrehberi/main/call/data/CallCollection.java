@@ -14,6 +14,7 @@ import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.contact.data.History;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
 import com.tr.hsyn.xbox.Blue;
+import com.tr.hsyn.xlog.xlog;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -41,8 +42,8 @@ public final class CallCollection {
 	 * that belong to the phone number.
 	 */
 	@NotNull private final Map<String, List<Call>>  mapNumberToCalls;
-	private                CoupleMap<Long, Contact> mapIdToContact;
-	private                CoupleMap<String, Long>  mapNumberToId;
+	private final          CoupleMap<Long, Contact> mapIdToContact;
+	private final          CoupleMap<String, Long>  mapNumberToId;
 	
 	/**
 	 * Creates a new empty call collection.
@@ -100,6 +101,9 @@ public final class CallCollection {
 		List<Contact> contacts = Blue.getObject(Key.CONTACTS);
 		
 		if (contacts != null) {
+			
+			xlog.d("Contacts size : %s", contacts.size());
+			
 			return contacts.stream().collect(Collectors.toMap(Contact::getContactId, c -> c));
 		}
 		

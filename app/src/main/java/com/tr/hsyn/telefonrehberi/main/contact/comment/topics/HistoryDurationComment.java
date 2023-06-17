@@ -9,6 +9,7 @@ import com.tr.hsyn.telefonrehberi.main.call.data.hotlist.RankByHistory;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.ContactComment;
 import com.tr.hsyn.text.Spanner;
 import com.tr.hsyn.time.DurationGroup;
+import com.tr.hsyn.time.Unit;
 import com.tr.hsyn.xlog.xlog;
 
 import org.jetbrains.annotations.NotNull;
@@ -63,17 +64,32 @@ public class HistoryDurationComment implements ContactComment {
 		//+ We have a list that has the duration of each phone number.
 		//+ And the order is by descending of the duration.
 		
-		Map.Entry<String, DurationGroup> longestDuration = durationList.get(0);
-		Long                             id              = callCollection.getContactId(longestDuration.getKey());
+		Map.Entry<String, DurationGroup> longestDurationItem = durationList.get(0);
+		DurationGroup                    longestDuration     = longestDurationItem.getValue();
+		Contact                          _contact            = callCollection.getContact(longestDurationItem.getKey());
+		//String                           msg                 = fmt("Longest duration : %s [contact=%s]", longestDuration, _contact);
 		
-		if (id != null) {
+		for (Map.Entry<String, DurationGroup> durationItem : durationList) {
+			
+			DurationGroup duration  = durationItem.getValue();
+			Contact       __contact = callCollection.getContact(durationItem.getKey());
+			String        msg       = fmt("%s%-18s : %s", __contact.getContactId() == contact.getContactId() ? "*" : "", __contact.getName(), duration.toString(Unit.MONTH, Unit.DAY));
+			xlog.d(msg);
+		}
+		
+		if (_contact != null) {
+			
+			long id = _contact.getContactId();
 			
 			if (id == contact.getId()) {
+				
+				//+ The current contact has the longest duration.
 				
 				
 			}
 		}
 		
+		returnComment();
 	}
 	
 	@Override

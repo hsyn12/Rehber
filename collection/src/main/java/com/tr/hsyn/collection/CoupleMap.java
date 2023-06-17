@@ -4,6 +4,7 @@ package com.tr.hsyn.collection;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -59,4 +60,14 @@ public class CoupleMap<K, V> {
 		return null;
 	}
 	
+	public Set<Map.Entry<K, V>> getEntries() {
+		
+		return map.entrySet();
+		
+	}
+	
+	public Map<K, V> getMap() {
+		
+		return map;
+	}
 }
