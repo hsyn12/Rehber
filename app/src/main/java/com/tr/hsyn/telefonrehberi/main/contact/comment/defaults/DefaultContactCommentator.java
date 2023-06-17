@@ -18,16 +18,14 @@ import com.tr.hsyn.telefonrehberi.dev.android.dialog.ShowCall;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallCollection;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
 import com.tr.hsyn.telefonrehberi.main.call.data.Res;
-import com.tr.hsyn.telefonrehberi.main.call.data.hotlist.RankByDuration;
-import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostCallDialog;
+import com.tr.hsyn.telefonrehberi.main.call.data.hotlist.DurationRanker;
+import com.tr.hsyn.telefonrehberi.main.call.data.hotlist.Ranker;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostCallItemViewData;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationData;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationDialog;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.ShowCallsDialog;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.ContactComment;
-import com.tr.hsyn.telefonrehberi.main.contact.comment.RankList;
-import com.tr.hsyn.telefonrehberi.main.contact.comment.RankMate;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.commentator.ContactCommentStore;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.commentator.ContactCommentator;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.topics.HistoryDurationComment;
@@ -47,7 +45,6 @@ import com.tr.hsyn.treadedwork.Threaded;
 import com.tr.hsyn.xlog.xlog;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -257,74 +254,6 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 					.append(" ")
 					.append(Stringx.format("%s", getString(R.string.word_calls, history.size())), getClickSpans(listener))
 					.append(". ");
-		}
-		
-		return comment;
-	}
-	
-	/**
-	 * Returns the comment about the most quantity of calls.
-	 *
-	 * @return the comment
-	 */
-	private @NotNull CharSequence commentMostQuantity() {
-		
-		Spanner        comment    = new Spanner();
-		CallCollection collection = getCallCollection();
-		
-		if (collection == null) {
-			
-			xlog.w("Cannot find call collection");
-			return comment;
-		}
-		
-		RankList ranks = new RankList(collection.getMapNumberToCalls());
-		ranks.makeQuantityRanks();
-		
-		Map<Integer, List<CallRank>> map      = ranks.getRankMap();
-		RankMate                     rankMate = new RankMate(map);
-		@Nullable List<String>       numbers  = ContactKey.getNumbers(contact);
-		
-		if (numbers == null) return comment;
-		
-		int rank = rankMate.getRank(numbers);
-		
-		if (rank != -1) {
-			
-			List<CallRank> callRankList = map.get(rank);
-			assert callRankList != null;
-			int                                 rankCount = callRankList.size();
-			@NotNull List<MostCallItemViewData> mostList  = createMostCallItemList(map);
-			String                              title     = getString(R.string.title_most_calls);
-			String                              subtitle  = getString(R.string.size_contacts, mostList.size());
-			MostCallDialog                      dialog    = new MostCallDialog(commentStore.getActivity(), mostList, title, subtitle);
-			
-			xlog.w("rank=%d, rankCount=%d", rank, rankCount);
-			
-			if (isTurkishLanguage()) {
-				
-				comment.append("Ve ")
-						.append("en fazla arama", getClickSpans(view -> dialog.show()))
-						.append(" kaydına sahip kişiler listesinde ");
-				
-				if (rankCount <= 1) comment.append("tek başına ");
-				else comment.append(fmt("%d kişi ile birlikte ", rankCount));
-				
-				comment.append(fmt("%d. sırada. ", rank));
-			}
-			else {
-				
-				comment.append(fmt("And in the %d. place ", rank));
-				
-				Spanner hotList = new Spanner().append("the hot list", getClickSpans(view -> dialog.show()));
-				
-				if (rankCount == 1) comment.append("alone ");
-				else comment.append(fmt("together with %d contact(s) ", rankCount));
-				
-				comment.append("in ")
-						.append(hotList)
-						.append(" of the call quantity. ");
-			}
 		}
 		
 		return comment;
@@ -714,9 +643,8 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 	private CharSequence commentOnDurations() {
 		
 		Spanner                      comment      = new Spanner();
-		Map<Integer, List<CallRank>> rankMap      = RankByDuration.createRankMap(callCollection);
-		RankMate                     rankMate     = new RankMate(rankMap);
-		int                          rank         = rankMate.getRank(ContactKey.getNumbers(contact));
+		Map<Integer, List<CallRank>> rankMap      = DurationRanker.createRankMap(callCollection);
+		int                          rank         = Ranker.getRank(contact, rankMap);
 		List<MostDurationData>       durationList = createDurationList(rankMap);
 		String                       title        = getString(R.string.title_speaking_durations);
 		String                       subtitle     = getString(R.string.size_contacts, durationList.size());

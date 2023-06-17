@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 
 /**
  * Collection of the call logs.
+ * This class can be accessed via {@link Blue#getObject(Key)} with the key {@link Key#CALL_COLLECTION}.
  */
 @Keep
 public final class CallCollection {
@@ -52,6 +53,20 @@ public final class CallCollection {
 		
 		List<Call> c = Over.CallLog.Calls.getCalls();
 		this.calls       = c != null ? c : new ArrayList<>(0);
+		mapNumberToCalls = mapNumberToCalls(this.calls);
+		mergeSameCalls(mapNumberToCalls);
+		mapNumberToId  = new CoupleMap<>(createMapNumberToId());
+		mapIdToContact = new CoupleMap<>(createMapIdToContact());
+	}
+	
+	/**
+	 * Creates a new call collection.
+	 *
+	 * @param calls list of calls
+	 */
+	private CallCollection(List<Call> calls) {
+		
+		this.calls       = calls != null ? calls : new ArrayList<>(0);
 		mapNumberToCalls = mapNumberToCalls(this.calls);
 		mapNumberToId    = new CoupleMap<>(createMapNumberToId());
 		mapIdToContact   = new CoupleMap<>(createMapIdToContact());
@@ -356,5 +371,75 @@ public final class CallCollection {
 		Blue.box(Key.CALL_COLLECTION, collection);
 		
 		return collection;
+	}
+	
+	/**
+	 * Creates a new call collection.
+	 *
+	 * @param calls the calls
+	 * @return the call collection
+	 */
+	@NotNull
+	public static CallCollection create(List<Call> calls) {
+		
+		CallCollection collection = new CallCollection(calls);
+		
+		Blue.box(Key.CALL_COLLECTION, collection);
+		
+		return collection;
+	}
+	
+	/**
+	 * Maybe there are more than one phone number belonging to the same contact.
+	 * This method merges the calls belonging to the same contact.
+	 *
+	 * @param entries the map object that mapped the phone number to its calls.
+	 */
+	public static void mergeSameCalls(@NotNull Map<String, List<Call>> entries) {
+		
+		// phone numbers
+		List<String> keys = new ArrayList<>(entries.keySet());
+		
+		// loop on numbers
+		for (int i = 0; i < keys.size(); i++) {
+			
+			// Get contact ID.
+			// Needs to find the same ID in the list and make it one list.
+			var firstKey = keys.get(i);
+			// aggregated calls
+			var calls = entries.remove(firstKey);
+			
+			if (calls == null) continue;
+			
+			var contactId = CallKey.getContactId(calls.get(0));
+			
+			if (contactId != 0L) {//+ Contact ID found
+				
+				// loop on the other numbers and find the same ID 
+				for (int j = i + 1; j < keys.size(); j++) {
+					
+					var secondKey  = keys.get(j);
+					var otherCalls = entries.remove(secondKey);
+					
+					if (otherCalls == null) continue;
+					
+					var otherContactId = CallKey.getContactId(otherCalls.get(0));
+					
+					// contactId cannot be zero but otherContactId maybe
+					if (contactId == otherContactId) {
+						
+						// that is the same ID, put it together
+						calls.addAll(otherCalls);
+						continue;
+					}
+					
+					// put it back in
+					entries.put(secondKey, otherCalls);
+				}
+			}
+			
+			// put it back in
+			entries.put(firstKey, calls);
+		}
 	}
 }

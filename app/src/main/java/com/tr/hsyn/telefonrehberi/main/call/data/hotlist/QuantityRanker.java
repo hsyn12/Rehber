@@ -4,7 +4,6 @@ package com.tr.hsyn.telefonrehberi.main.call.data.hotlist;
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallCollection;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
-import com.tr.hsyn.telefonrehberi.main.contact.comment.RankList;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -27,7 +26,7 @@ import java.util.Map;
  *  The ranking is based on the number of calls and ranks start from 1.
  *  So the first rank is 1, and it has the highest number of calls.
  */
-public class RankByQuantity {
+public class QuantityRanker {
 	
 	/**
 	 * Returns object that ranked by calls size.
@@ -40,8 +39,7 @@ public class RankByQuantity {
 		
 		List<Call>              incomingCalls = callCollection.getIncomingCalls();
 		Map<String, List<Call>> numberedCalls = CallCollection.mapNumberToCalls(incomingCalls);
-		RankList                rankList      = new RankList(numberedCalls);
-		return rankList.makeQuantityRanks().getRankMap();
+		return Ranker.createRankMap(numberedCalls, Ranker.QUANTITY_COMPARATOR);
 	}
 	
 	/**
@@ -51,10 +49,9 @@ public class RankByQuantity {
 	 */
 	public static Map<Integer, List<CallRank>> rankByOutgoing(@NotNull CallCollection callCollection) {
 		
-		List<com.tr.hsyn.calldata.Call>              outgoingCalls = callCollection.getOutgoingCalls();
-		Map<String, List<com.tr.hsyn.calldata.Call>> numberedCalls = CallCollection.mapNumberToCalls(outgoingCalls);
-		RankList                                     rankList      = new RankList(numberedCalls);
-		return rankList.makeQuantityRanks().getRankMap();
+		List<Call>              outgoingCalls = callCollection.getOutgoingCalls();
+		Map<String, List<Call>> numberedCalls = CallCollection.mapNumberToCalls(outgoingCalls);
+		return Ranker.createRankMap(numberedCalls, Ranker.QUANTITY_COMPARATOR);
 	}
 	
 	/**
@@ -64,10 +61,9 @@ public class RankByQuantity {
 	 */
 	public static Map<Integer, List<CallRank>> rankByMissed(@NotNull CallCollection callCollection) {
 		
-		List<com.tr.hsyn.calldata.Call>              missedCalls   = callCollection.getMissedCalls();
-		Map<String, List<com.tr.hsyn.calldata.Call>> numberedCalls = CallCollection.mapNumberToCalls(missedCalls);
-		RankList                                     rankList      = new RankList(numberedCalls);
-		return rankList.makeQuantityRanks().getRankMap();
+		List<Call>              missedCalls   = callCollection.getMissedCalls();
+		Map<String, List<Call>> numberedCalls = CallCollection.mapNumberToCalls(missedCalls);
+		return Ranker.createRankMap(numberedCalls, Ranker.QUANTITY_COMPARATOR);
 	}
 	
 	/**
@@ -77,16 +73,10 @@ public class RankByQuantity {
 	 */
 	public static Map<Integer, List<CallRank>> rankByRejected(@NotNull CallCollection callCollection) {
 		
-		List<com.tr.hsyn.calldata.Call>              rejectedCalls = callCollection.getRejectedCalls();
-		Map<String, List<com.tr.hsyn.calldata.Call>> numberedCalls = CallCollection.mapNumberToCalls(rejectedCalls);
-		RankList                                     rankList      = new RankList(numberedCalls);
-		return rankList.makeQuantityRanks().getRankMap();
+		List<Call>              rejectedCalls = callCollection.getRejectedCalls();
+		Map<String, List<Call>> numberedCalls = CallCollection.mapNumberToCalls(rejectedCalls);
+		return Ranker.createRankMap(numberedCalls, Ranker.QUANTITY_COMPARATOR);
 	}
 	
-	@NotNull
-	public static Map<Integer, List<CallRank>> createRankMap(@NotNull CallCollection callCollection) {
-		
-		return new RankList(callCollection.getMapNumberToCalls()).makeQuantityRanks().getRankMap();
-	}
 	
 }

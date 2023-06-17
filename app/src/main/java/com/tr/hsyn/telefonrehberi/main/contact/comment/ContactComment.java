@@ -27,6 +27,8 @@ import java.util.function.Consumer;
  */
 public interface ContactComment extends Threaded {
 	
+	boolean isTurkish();
+	
 	default @Nullable CallCollection getCallCollection() {
 		
 		return Blue.getObject(Key.CALL_COLLECTION);
@@ -53,6 +55,29 @@ public interface ContactComment extends Threaded {
 	default int getTextColor() {
 		
 		return getActivity().getColor(com.tr.hsyn.rescolors.R.color.purple_500);
+	}
+	
+	default Span[] getTextStyle() {
+		
+		return new Span[]{
+				Spans.foreground(getTextColor()),
+				Spans.bold()
+		};
+	}
+	
+	/**
+	 * Returns the plural form of the given word based on the count for only english.
+	 *
+	 * @param word  the word to make plural
+	 * @param count the count
+	 * @return the plural form of the word
+	 */
+	@NotNull
+	default String makePlural(@NotNull String word, long count) {
+		
+		if (isTurkish() || count < 2) return word;
+		
+		return word + "s";
 	}
 	
 	/**

@@ -30,7 +30,6 @@ import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.dev.android.dialog.Dialog;
 import com.tr.hsyn.telefonrehberi.main.activity.city.station.LoadingStation;
 import com.tr.hsyn.telefonrehberi.main.activity.color.ColorsActivity;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallCollection;
 import com.tr.hsyn.telefonrehberi.main.contact.activity.detail.ContactDetails;
 import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.contact.data.Contacts;
@@ -46,7 +45,6 @@ import com.tr.hsyn.xlog.xlog;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 
 /**
@@ -109,7 +107,6 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 	 * sonraki aramayı kabul etmez.
 	 */
 	private final   Gate                           keepCallAction       = AutoGate.newGate(GATE_WAIT_DURATION);
-	private final   AtomicBoolean                  loadingCompleted     = new AtomicBoolean(false);
 	/**
 	 * {@linkplain MenuEditor}
 	 */
@@ -343,22 +340,12 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 	protected void onCallLogLoaded(List<Call> calls, Throwable throwable) {
 		
 		super.onCallLogLoaded(calls, throwable);
-		
-		if (loadingCompleted.getAndSet(true)) {
-			
-			CallCollection.create();
-		}
 	}
 	
 	@Override
 	protected void onContactsLoaded(List<Contact> contacts, @Nullable Throwable throwable) {
 		
 		super.onContactsLoaded(contacts, throwable);
-		
-		if (loadingCompleted.getAndSet(true)) {
-			
-			CallCollection.create();
-		}
 	}
 	
 	@Override

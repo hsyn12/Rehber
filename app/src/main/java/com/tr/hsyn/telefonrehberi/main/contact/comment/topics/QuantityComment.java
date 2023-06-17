@@ -15,13 +15,13 @@ import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallCollection;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
-import com.tr.hsyn.telefonrehberi.main.call.data.hotlist.RankByQuantity;
+import com.tr.hsyn.telefonrehberi.main.call.data.hotlist.QuantityRanker;
+import com.tr.hsyn.telefonrehberi.main.call.data.hotlist.Ranker;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostCallDialog;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostCallItemViewData;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.ShowCallsDialog;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.ContactComment;
-import com.tr.hsyn.telefonrehberi.main.contact.comment.RankMate;
 import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.contact.data.History;
 import com.tr.hsyn.text.Spanner;
@@ -29,7 +29,6 @@ import com.tr.hsyn.text.Spans;
 import com.tr.hsyn.xlog.xlog;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -45,6 +44,12 @@ public class QuantityComment implements ContactComment {
 	private       Activity                 activity;
 	private       Consumer<ContactComment> callback;
 	private       Contact                  contact;
+	
+	@Override
+	public boolean isTurkish() {
+		
+		return false;
+	}
 	
 	@Override
 	public Activity getActivity() {
@@ -82,21 +87,20 @@ public class QuantityComment implements ContactComment {
 		
 		onBackground(() -> {
 			
-			Map<Integer, List<CallRank>> map      = RankByQuantity.createRankMap(callCollection);
-			RankMate                     rankMate = new RankMate(map);
-			@Nullable List<String>       numbers  = ContactKey.getNumbers(contact);
-			
+			Comparator<Map.Entry<String, List<Call>>> comparator = (e1, e2) -> e2.getValue().size() - e1.getValue().size();
+			Map<Integer, List<CallRank>>              rankMap    = Ranker.createRankMap(callCollection.getMapNumberToCalls(), comparator);
+			List<String>                              numbers    = ContactKey.getNumbers(contact);
 			
 			if (numbers != null) {
 				
-				int rank = rankMate.getRank(numbers);
+				int rank = Ranker.getRank(contact, rankMap);
 				
 				if (rank != -1) {
 					
-					List<CallRank> callRankList = map.get(rank);
+					List<CallRank> callRankList = rankMap.get(rank);
 					assert callRankList != null;
 					int                                 rankCount = callRankList.size();
-					@NotNull List<MostCallItemViewData> mostList  = createMostCallItemList(map);
+					@NotNull List<MostCallItemViewData> mostList  = createMostCallItemList(rankMap);
 					
 					onMain(() -> {
 						
@@ -147,7 +151,7 @@ public class QuantityComment implements ContactComment {
 	}
 	
 	@NotNull
-	private CharSequence ioComment(@NotNull RankByQuantity quantityHotList) {
+	private CharSequence ioComment(@NotNull QuantityRanker quantityHotList) {
 		
 		assert callCollection != null;
 		Spanner  comment  = new Spanner();

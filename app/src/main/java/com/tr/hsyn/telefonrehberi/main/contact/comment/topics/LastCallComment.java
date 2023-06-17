@@ -34,6 +34,12 @@ public class LastCallComment implements ContactComment {
 	private       Consumer<ContactComment> callback;
 	
 	@Override
+	public boolean isTurkish() {
+		
+		return false;
+	}
+	
+	@Override
 	public Activity getActivity() {
 		
 		return activity;

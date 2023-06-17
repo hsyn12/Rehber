@@ -29,7 +29,7 @@ import java.util.Map;
  * So the first rank is 1, and it has the highest duration of calls.
  * The duration consists of the total duration of incoming-outgoing calls.
  */
-public class RankByDuration {
+public class DurationRanker {
 	
 	/**
 	 * Returns a map object that ranked by calls duration in incoming calls.

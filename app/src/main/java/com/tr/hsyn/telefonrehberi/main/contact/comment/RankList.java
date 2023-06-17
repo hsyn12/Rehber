@@ -14,6 +14,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 
+@Deprecated
 public class RankList {
 	
 	/**
@@ -35,11 +36,6 @@ public class RankList {
 	public RankList(@NotNull Map<String, List<Call>> entries) {
 		
 		this.entries = entries;
-	}
-	
-	public List<Map.Entry<String, List<Call>>> getRankList() {
-		
-		return rankList;
 	}
 	
 	/**
@@ -178,6 +174,7 @@ public class RankList {
 	 *
 	 * @param entries the map object that mapped the phone number to its calls.
 	 */
+	@Deprecated(forRemoval = true)
 	public static void mergeSameCalls(@NotNull Map<String, List<Call>> entries) {
 		
 		// phone numbers

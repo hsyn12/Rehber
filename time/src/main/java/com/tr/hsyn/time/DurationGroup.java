@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Function;
 
 
 /**
@@ -638,11 +639,18 @@ public class DurationGroup implements Comparable<DurationGroup>, Iterable<Durati
 	
 	public static final class Stringer {
 		
-		private final List<Unit>           units     = new ArrayList<>();
-		private final LinkedList<Duration> durations = new LinkedList<>();
-		private       boolean              zeros;
-		private       int                  maxItemSize;
-		private       String               formattedString;
+		private final List<Unit>                 units     = new ArrayList<>();
+		private final LinkedList<Duration>       durations = new LinkedList<>();
+		private       boolean                    zeros;
+		private       int                        maxItemSize;
+		private       String                     formattedString;
+		private       Function<Duration, String> formatter;
+		
+		public Stringer formatter(Function<Duration, String> formatter) {
+			
+			this.formatter = formatter;
+			return this;
+		}
 		
 		/**
 		 * Sets the formatted string.
@@ -748,10 +756,9 @@ public class DurationGroup implements Comparable<DurationGroup>, Iterable<Durati
 			
 			for (Duration duration : durations) {
 				
-				if (formattedString != null)
-					builder.append(duration.toString(formattedString)).append(" ");
-				else
-					builder.append(duration).append(" ");
+				if (formatter != null) builder.append(formatter.apply(duration)).append(" ");
+				else if (formattedString != null) builder.append(duration.toString(formattedString)).append(" ");
+				else builder.append(duration).append(" ");
 			}
 			
 			return builder.toString().trim();
