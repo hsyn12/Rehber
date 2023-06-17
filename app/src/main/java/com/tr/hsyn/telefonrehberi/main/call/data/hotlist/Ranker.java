@@ -2,6 +2,7 @@ package com.tr.hsyn.telefonrehberi.main.call.data.hotlist;
 
 
 import com.tr.hsyn.calldata.Call;
+import com.tr.hsyn.calldata.CallType;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
@@ -87,11 +88,9 @@ public class Ranker {
 		return -1;
 	}
 	
-	
 	public static Map<Integer, List<CallRank>> createRankMap(@NotNull List<Call> calls, Comparator<Map.Entry<String, List<Call>>> comparator, int callType) {
 		
 		var entries = mapNumberToCalls(calls, callType);
-		
 		return createRankMap(entries, comparator);
 	}
 	
@@ -101,6 +100,8 @@ public class Ranker {
 	}
 	
 	public static Map<String, List<Call>> mapNumberToCalls(@NotNull List<Call> calls, int callType) {
+		
+		if (CallType.UNKNOWN == callType) return mapNumberToCalls(calls);
 		
 		return calls.stream().filter(c -> c.getCallType() == callType).collect(Collectors.groupingBy(Ranker::getKey));
 	}

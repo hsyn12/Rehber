@@ -643,7 +643,7 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 	private CharSequence commentOnDurations() {
 		
 		Spanner                      comment      = new Spanner();
-		Map<Integer, List<CallRank>> rankMap      = DurationRanker.createRankMap(callCollection);
+		Map<Integer, List<CallRank>> rankMap      = DurationRanker.createRankMap(callCollection.getMapNumberToCalls());
 		int                          rank         = Ranker.getRank(contact, rankMap);
 		List<MostDurationData>       durationList = createDurationList(rankMap);
 		String                       title        = getString(R.string.title_speaking_durations);

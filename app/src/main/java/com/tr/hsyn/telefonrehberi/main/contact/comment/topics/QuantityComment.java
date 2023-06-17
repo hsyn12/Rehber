@@ -9,13 +9,10 @@ import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.nextension.Extension;
 import com.tr.hsyn.nextension.WordExtension;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
-import com.tr.hsyn.scaler.Quantity;
-import com.tr.hsyn.scaler.Scaler;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallCollection;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
-import com.tr.hsyn.telefonrehberi.main.call.data.hotlist.QuantityRanker;
 import com.tr.hsyn.telefonrehberi.main.call.data.hotlist.Ranker;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostCallDialog;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostCallItemViewData;
@@ -87,9 +84,8 @@ public class QuantityComment implements ContactComment {
 		
 		onBackground(() -> {
 			
-			Comparator<Map.Entry<String, List<Call>>> comparator = (e1, e2) -> e2.getValue().size() - e1.getValue().size();
-			Map<Integer, List<CallRank>>              rankMap    = Ranker.createRankMap(callCollection.getMapNumberToCalls(), comparator);
-			List<String>                              numbers    = ContactKey.getNumbers(contact);
+			Map<Integer, List<CallRank>> rankMap = Ranker.createRankMap(callCollection.getMapNumberToCalls(), Ranker.QUANTITY_COMPARATOR);
+			List<String>                 numbers = ContactKey.getNumbers(contact);
 			
 			if (numbers != null) {
 				
@@ -148,23 +144,6 @@ public class QuantityComment implements ContactComment {
 	public @NotNull Consumer<ContactComment> getCallback() {
 		
 		return callback;
-	}
-	
-	@NotNull
-	private CharSequence ioComment(@NotNull QuantityRanker quantityHotList) {
-		
-		assert callCollection != null;
-		Spanner  comment  = new Spanner();
-		Quantity quantity = Scaler.makeQuantity(callCollection.getCalls().size(), 99, 4.f);
-		
-		if (quantity.isMin()) {
-			
-			xlog.d("Calls quantity is min [callSize=%d]. And no go any further.", callCollection.getCalls().size());
-			return comment;
-		}
-		
-		
-		return comment;
 	}
 	
 	@NotNull

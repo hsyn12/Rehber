@@ -5,7 +5,6 @@ import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallCollection;
-import com.tr.hsyn.telefonrehberi.main.contact.comment.RankList;
 import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.contact.data.History;
 import com.tr.hsyn.time.DurationGroup;
@@ -25,7 +24,6 @@ public class HistoryRanker {
 		
 		Map<String, DurationGroup> durations = new HashMap<>();
 		Map<String, List<Call>>    map       = callCollection.getMapNumberToCalls();
-		RankList.mergeSameCalls(map);
 		
 		for (Map.Entry<String, List<Call>> entry : map.entrySet()) {
 			
