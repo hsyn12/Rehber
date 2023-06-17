@@ -69,7 +69,7 @@ public class HistoryDurationComment implements ContactComment {
 		}
 		
 		//+ The duration map of each phone number.
-		Map<String, DurationGroup> historyRankMap = HistoryRanker.createRankMap(callCollection);
+		Map<String, DurationGroup> historyRankMap = HistoryRanker.createRankMap(callCollection.getMapNumberToCalls());
 		
 		//+ The list that has the duration of each phone number.
 		//+ And the order is by descending of the duration.

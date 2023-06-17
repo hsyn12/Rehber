@@ -4,6 +4,7 @@ package com.tr.hsyn.telefonrehberi.main.call.data;
 import androidx.annotation.NonNull;
 
 import com.tr.hsyn.calldata.Call;
+import com.tr.hsyn.calldata.CallType;
 import com.tr.hsyn.collection.CoupleMap;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.keep.Keep;
@@ -333,30 +334,6 @@ public final class CallCollection {
 	}
 	
 	/**
-	 * Maps the phone number to the calls.
-	 *
-	 * @param calls the calls
-	 * @return the map
-	 */
-	public static Map<String, List<Call>> mapNumberToCalls(@NotNull List<Call> calls) {
-		
-		return calls.stream().collect(Collectors.groupingBy(CallCollection::getKey));
-	}
-	
-	/**
-	 * Returns a key for the given call.
-	 * Used as an identifier.
-	 *
-	 * @param call the call
-	 * @return the key
-	 */
-	@NotNull
-	private static String getKey(@NotNull Call call) {
-		
-		return PhoneNumbers.formatNumber(call.getNumber(), PhoneNumbers.N_MIN);
-	}
-	
-	/**
 	 * Creates a new call collection.
 	 * Also, stored on the blue cloud.
 	 *
@@ -441,5 +418,30 @@ public final class CallCollection {
 			// put it back in
 			entries.put(firstKey, calls);
 		}
+	}
+	
+	public static Map<String, List<Call>> mapNumberToCalls(@NotNull List<Call> calls) {
+		
+		return calls.stream().collect(Collectors.groupingBy(CallCollection::getKey));
+	}
+	
+	public static Map<String, List<Call>> mapNumberToCalls(@NotNull List<Call> calls, int callType) {
+		
+		if (CallType.UNKNOWN == callType) return mapNumberToCalls(calls);
+		
+		return calls.stream().filter(c -> c.getCallType() == callType).collect(Collectors.groupingBy(CallCollection::getKey));
+	}
+	
+	/**
+	 * Returns a key for the given call.
+	 * Used as an identifier.
+	 *
+	 * @param call the call
+	 * @return the key
+	 */
+	@NotNull
+	private static String getKey(@NotNull Call call) {
+		
+		return PhoneNumbers.formatNumber(call.getNumber(), PhoneNumbers.N_MIN);
 	}
 }

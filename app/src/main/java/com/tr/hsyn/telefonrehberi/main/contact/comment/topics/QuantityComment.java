@@ -146,6 +146,22 @@ public class QuantityComment implements ContactComment {
 		return callback;
 	}
 	
+	private void alternativeComment() {
+		
+		assert callCollection != null;
+		Map<Integer, List<CallRank>> rankMap = Ranker.createRankMap(callCollection.getMapNumberToCalls(), Ranker.QUANTITY_COMPARATOR);
+		int                          rank    = Ranker.getRank(contact, rankMap);
+		
+		if (rank == -1) {
+			
+			xlog.d("rank==-1");
+			returnComment();
+			return;
+		}
+		
+		
+	}
+	
 	@NotNull
 	private CharSequence getQuantityComment(boolean isTurkish) {
 		

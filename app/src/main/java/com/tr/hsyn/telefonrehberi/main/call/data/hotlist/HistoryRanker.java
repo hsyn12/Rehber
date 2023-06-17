@@ -4,7 +4,6 @@ package com.tr.hsyn.telefonrehberi.main.call.data.hotlist;
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallCollection;
 import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.contact.data.History;
 import com.tr.hsyn.time.DurationGroup;
@@ -20,15 +19,22 @@ import java.util.stream.Collectors;
 
 public class HistoryRanker {
 	
-	public static Map<String, DurationGroup> createRankMap(@NotNull CallCollection callCollection) {
+	/**
+	 * Creates a map of phone number to a duration group.
+	 *
+	 * @param entries the map of phone number to calls
+	 * @return the map of phone number to a duration group
+	 */
+	@NotNull
+	public static Map<String, DurationGroup> createRankMap(@NotNull Map<String, List<Call>> entries) {
 		
 		Map<String, DurationGroup> durations = new HashMap<>();
-		Map<String, List<Call>>    map       = callCollection.getMapNumberToCalls();
 		
-		for (Map.Entry<String, List<Call>> entry : map.entrySet()) {
+		for (Map.Entry<String, List<Call>> entry : entries.entrySet()) {
 			
-			var calls = callCollection.getCallsByNumber(entry.getKey());
+			var calls = entries.get(entry.getKey());
 			
+			assert calls != null;
 			if (calls.size() > 2) {
 				
 				var history = History.of(entry.getKey(), calls);

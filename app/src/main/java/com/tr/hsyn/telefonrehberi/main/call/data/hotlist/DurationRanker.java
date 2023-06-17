@@ -18,11 +18,11 @@ public class DurationRanker {
 	/**
 	 * Returns a map object that ranked by calls duration by descending.
 	 *
-	 * @param entries the entries
+	 * @param entries the entries to be ranked by calls duration by descending
 	 * @return a map object that ranked by calls duration by descending
 	 */
 	@NotNull
-	public static Map<Integer, List<CallRank>> createRankMap(Map<String, List<Call>> entries) {
+	public static Map<Integer, List<CallRank>> createRankMap(@NotNull Map<String, List<Call>> entries) {
 		
 		Set<String>    keys      = entries.keySet();
 		List<CallRank> callRanks = new ArrayList<>();
