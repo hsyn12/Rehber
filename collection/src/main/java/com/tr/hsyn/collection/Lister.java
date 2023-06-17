@@ -142,7 +142,7 @@ public final class Lister {
 	}
 	
 	/**
-	 * A fark B (A - B)
+	 * A fark B (A–B)
 	 *
 	 * @param A   A
 	 * @param B   B
@@ -177,23 +177,24 @@ public final class Lister {
 	}
 	
 	/**
-	 * Dizi üzerinde döngü oluşturur.
+	 * Creates a loop with the given list and uses each item through the given consumer.
 	 *
-	 * @param list     Dizi
-	 * @param consumer Döngü işleyicisi
+	 * @param list     list
+	 * @param consumer loop consumer
 	 */
-	public static void loop(int[] list, @NotNull IntConsumer consumer) {
+	public static void loopWith(int[] list, @NotNull IntConsumer consumer) {
 		
 		for (int i = 0; i < list.length; i++) consumer.accept(list[i]);
 	}
 	
 	/**
-	 * Dizi üzerinde döngü oluşturur.
+	 * Creates a loop with the given list and uses each item through the given consumer.
 	 *
-	 * @param list     Dizi
-	 * @param consumer Döngü işleyicisi
+	 * @param list     list
+	 * @param consumer loop consumer
+	 * @param <T>      element type
 	 */
-	public static <T> void loop(T @NotNull [] list, @NotNull Consumer<T> consumer) {
+	public static <T> void loopWith(T @NotNull [] list, @NotNull Consumer<T> consumer) {
 		
 		for (int i = 0; i < list.length; i++) consumer.accept(list[i]);
 	}
@@ -210,7 +211,7 @@ public final class Lister {
 		
 		AtomicInteger counter = new AtomicInteger();
 		
-		loop(toRemove, item -> {
+		loopWith(toRemove, item -> {
 			
 			int index = indexOf(mainList, item);
 			
@@ -225,13 +226,13 @@ public final class Lister {
 	}
 	
 	/**
-	 * Liste üzerinde döngü oluştur.
+	 * Creates a loop with the given list and uses each item through the given consumer.
 	 *
-	 * @param list     Liste
-	 * @param consumer Döngü işleyicisi
-	 * @param <T>      Liste elemanı türü
+	 * @param list     list
+	 * @param consumer loop consumer
+	 * @param <T>      element type
 	 */
-	public static <T> void loop(@NotNull Iterable<? extends T> list, @NotNull Consumer<T> consumer) {
+	public static <T> void loopWith(@NotNull Iterable<? extends T> list, @NotNull Consumer<T> consumer) {
 		
 		for (T i : list) consumer.accept(i);
 	}
@@ -325,13 +326,10 @@ public final class Lister {
 	@SuppressWarnings("UseOfSystemOutOrSystemErr")
 	public static void main(String... args) {
 		
-		@NotNull List<String> list = listOf("a", "ab", "abc", "abcd", "e", "ef", "efg", "efgh");
-		
-		@NotNull Map<Integer, List<String>> g = group(list, String::length);
-		
-		System.out.printf("%s\n", g);
-		System.out.printf("%s\n", group(list, s -> s.charAt(0)));
-		
+		var list = listOf(1, 2, 3);
+		System.out.println(list);
+		loopWith(list.size(), list::add);
+		System.out.println(list);
 	}
 	
 	/**
@@ -371,7 +369,7 @@ public final class Lister {
 		
 		Map<R, List<T>> groups = new HashMap<>();
 		
-		loop(list.size(), i -> {
+		loopWith(list.size(), i -> {
 			
 			T t = list.get(i);
 			R r = keyMapper.apply(t);
@@ -394,12 +392,39 @@ public final class Lister {
 	}
 	
 	/**
-	 * Sıfırdan başlayarak verilen sayıya kadar döngü oluşturur.
+	 * Creates a loop with the given counter and executes the given runnable in each cycle.
+	 * The loop starts at 0, goes to {@code loop}.<br><br>
 	 *
-	 * @param loop     Döngü sayısı
-	 * @param consumer Döngü işleyicisi
+	 * <pre>
+	 * var list = listOf(1, 2, 3);
+	 * System.out.println(list); // [1, 2, 3]
+	 * loopWithout(list.size(), () -> list.add(0));
+	 * System.out.println(list); // [1, 2, 3, 0, 0, 0]
+	 * </pre>
+	 *
+	 * @param loop     loop counter
+	 * @param consumer loop consumer
 	 */
-	public static void loop(int loop, @NotNull IntConsumer consumer) {
+	public static void loopWithout(int loop, @NotNull Runnable consumer) {
+		
+		for (int i = 0; i < loop; i++) consumer.run();
+	}
+	
+	/**
+	 * Creates a loop with the given size and uses the size through the given consumer.
+	 * If not used the size use {@link #loopWithout(int, Runnable)} instead.<br><br>
+	 *
+	 * <pre>
+	 * var list = listOf(1, 2, 3);
+	 * System.out.println(list); // [1, 2, 3]
+	 * loopWith(list.size(), list::add);
+	 * System.out.println(list); // [1, 2, 3, 0, 1, 2]
+	 * </pre>
+	 *
+	 * @param loop     loop size
+	 * @param consumer consumer
+	 */
+	public static void loopWith(int loop, @NotNull IntConsumer consumer) {
 		
 		for (int i = 0; i < loop; i++) consumer.accept(i);
 	}

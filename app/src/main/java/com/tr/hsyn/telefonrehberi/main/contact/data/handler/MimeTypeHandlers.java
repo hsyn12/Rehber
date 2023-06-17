@@ -21,7 +21,7 @@ public class MimeTypeHandlers extends MimeTypeHandler {
 		
 		this();
 		
-		Lister.loop(handlers, this::addHandler);
+		Lister.loopWith(handlers, this::addHandler);
 	}
 	
 	public MimeTypeHandlers() {

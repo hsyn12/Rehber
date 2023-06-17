@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 
 /**
@@ -46,7 +47,7 @@ public class Duration {
 	/**
 	 * Creates a new Duration.
 	 *
-	 * @param unit  Type of the time unit
+	 * @param unit  Unit of the time
 	 * @param value Amount of the time
 	 */
 	Duration(@NotNull Unit unit, long value) {
@@ -69,6 +70,11 @@ public class Duration {
 	public boolean isNotZero() {
 		
 		return value != 0L;
+	}
+	
+	public void isNotZero(@NotNull Consumer<Duration> consumer) {
+		
+		if (value != 0L) consumer.accept(this);
 	}
 	
 	/**
@@ -95,7 +101,7 @@ public class Duration {
 	 * İf the given duration is negative, made subtract.
 	 * İf the given {@linkplain Duration} has a different {@linkplain Unit},
 	 * it is converted to this {@linkplain Duration} unit.
-	 * So returned {@link Duration} unit will be same as this {@linkplain Duration} unit.
+	 * So returned {@link Duration} unit is same as this {@linkplain Duration} unit.
 	 *
 	 * <pre>
 	 *     var duration = Duration.of(Unit.MINUTE, 5);
@@ -140,7 +146,7 @@ public class Duration {
 	@Override
 	public String toString() {
 		
-		return toString("Duration{type=%2$s, value=%1$d}");
+		return toString("Duration{unit=%2$s, value=%1$d}");
 	}
 	
 	/**
@@ -149,7 +155,7 @@ public class Duration {
 	 * @param formatted Formatted {@linkplain String} representation.
 	 *                  For example: <code>"%d %s"</code>.
 	 *                  The first parameter is the value, the second parameter is the unit.
-	 *                  But can be changed the order of the parameters like this <code>"%2$s %1$d"</code> (as known).
+	 *                  Can be changed the order of the parameters like this <code>"%2$s %1$d"</code> (as known).
 	 * @return Formatted {@linkplain String} representation
 	 */
 	@NotNull
@@ -237,7 +243,7 @@ public class Duration {
 	/**
 	 * Determines whether this <code>Duration</code> is equal to given {@link Unit}.
 	 *
-	 * @param unit Type of the unit
+	 * @param unit the unit
 	 * @return {@code true} if this <code>Duration</code> is equal to given {@link Unit}
 	 */
 	public boolean is(@NotNull Unit unit) {
@@ -282,7 +288,7 @@ public class Duration {
 	/**
 	 * Converts the duration to the given unit
 	 *
-	 * @param unit Type of the unit
+	 * @param unit the unit
 	 * @return {@link Duration}
 	 */
 	public Duration getValueAs(@NotNull Unit unit) {

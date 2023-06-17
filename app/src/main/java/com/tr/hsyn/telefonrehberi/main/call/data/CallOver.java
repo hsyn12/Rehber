@@ -52,7 +52,7 @@ public class CallOver {
 		Map<Y, List<X>> map    = Lister.group(list, groupMaker);
 		List<Group<X>>  groups = new ArrayList<>();
 		
-		Lister.loop(map.keySet(), key -> groups.add(new Group<>(map.get(key))));
+		Lister.loopWith(map.keySet(), key -> groups.add(new Group<>(map.get(key))));
 		
 		return groups;
 	}
@@ -269,7 +269,7 @@ public class CallOver {
 	 */
 	public static void accumulateBy(@NotNull List<Group<Call>> groups, @NotNull Function<Call, Integer> mapper) {
 		
-		Lister.loop(groups.size(), x -> {
+		Lister.loopWith(groups.size(), x -> {
 			
 			Group<Call> g = groups.get(x);
 			

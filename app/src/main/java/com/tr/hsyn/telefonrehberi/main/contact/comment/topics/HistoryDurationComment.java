@@ -69,11 +69,17 @@ public class HistoryDurationComment implements ContactComment {
 		Contact                          _contact            = callCollection.getContact(longestDurationItem.getKey());
 		//String                           msg                 = fmt("Longest duration : %s [contact=%s]", longestDuration, _contact);
 		
+		var stringer = DurationGroup.Stringer.builder()
+				.formattedString("%d %s")
+				.unit(Unit.YEAR, Unit.MONTH, Unit.DAY)
+				.zeros(false);
+		
+		
 		for (Map.Entry<String, DurationGroup> durationItem : durationList) {
 			
 			DurationGroup duration  = durationItem.getValue();
 			Contact       __contact = callCollection.getContact(durationItem.getKey());
-			String        msg       = fmt("%s%-18s : %s", __contact.getContactId() == contact.getContactId() ? "*" : "", __contact.getName(), duration.toString(Unit.MONTH, Unit.DAY));
+			String        msg       = fmt("%s%-18s : %s", __contact.getContactId() == contact.getContactId() ? "*" : "", __contact.getName(), stringer.durations(duration.getDurations()).toString());
 			xlog.d(msg);
 		}
 		

@@ -7,32 +7,34 @@ import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 
 /**
- * Allows multiple {@link Duration} objects to be used.<br>
+ * Provides many {@link Duration} objects to be used.<br>
  * Each time unit can only be used <u>once</u> in a {@linkplain DurationGroup} object.<br>
  * Duration specified with this class can be converted to calendar time.
  *
  * @see Unit
  * @see Duration
  */
-public class DurationGroup implements Comparable<DurationGroup> {
+public class DurationGroup implements Comparable<DurationGroup>, Iterable<Duration> {
 	
 	/**
 	 * Empty {@link DurationGroup} consists of {@link Duration} objects with value of zero
 	 */
-	public static final DurationGroup  EMPTY = new DurationGroup(new ArrayList<>(0));
-	private final       Duration       year;
-	private final       Duration       month;
-	private final       Duration       day;
-	private final       Duration       hour;
-	private final       Duration       minute;
-	private final       Duration       second;
-	private final       Duration       mlSecond;
-	private final       List<Duration> durations;
+	public static final DurationGroup        EMPTY = new DurationGroup(new ArrayList<>(0));
+	private final       Duration             year;
+	private final       Duration             month;
+	private final       Duration             day;
+	private final       Duration             hour;
+	private final       Duration             minute;
+	private final       Duration             second;
+	private final       Duration             mlSecond;
+	private final       LinkedList<Duration> durations;
 	
 	/**
 	 * Creates a new {@link DurationGroup}
@@ -42,7 +44,7 @@ public class DurationGroup implements Comparable<DurationGroup> {
 	DurationGroup(@NotNull List<Duration> durations) {
 		
 		//durations.sort(Comparator.comparing(Duration::getUnit));
-		this.durations = new ArrayList<>(7);
+		this.durations = new LinkedList<>();
 		year           = getDuration(Unit.YEAR, durations);
 		month          = getDuration(Unit.MONTH, durations);
 		day            = getDuration(Unit.DAY, durations);
@@ -391,7 +393,17 @@ public class DurationGroup implements Comparable<DurationGroup> {
 	public String toString(Unit... units) {
 		
 		@NotNull DurationGroup durations = pickFrom(units);
-		return durations.toString();
+		StringBuilder          sb        = new StringBuilder();
+		
+		Lister.loopWith(durations, duration -> {
+			
+			duration.isNotZero(d -> {
+				
+			});
+		});
+		
+		
+		return sb.toString();
 	}
 	
 	/**
@@ -442,6 +454,13 @@ public class DurationGroup implements Comparable<DurationGroup> {
 		}
 		
 		return date;
+	}
+	
+	@NotNull
+	@Override
+	public Iterator<Duration> iterator() {
+		
+		return durations.iterator();
 	}
 	
 	/**
@@ -616,4 +635,136 @@ public class DurationGroup implements Comparable<DurationGroup> {
 			durations.add(mlSecond);
 		}
 	}
+	
+	public static final class Stringer {
+		
+		private final List<Unit>           units     = new ArrayList<>();
+		private final LinkedList<Duration> durations = new LinkedList<>();
+		private       boolean              zeros;
+		private       int                  maxItemSize;
+		private       String               formattedString;
+		
+		/**
+		 * Sets the formatted string.
+		 *
+		 * @param formatted formatted
+		 * @return this {@link Stringer}
+		 * @see Duration#toString(String)
+		 */
+		public Stringer formattedString(String formatted) {
+			
+			this.formattedString = formatted;
+			return this;
+		}
+		
+		/**
+		 * Sets the zero flag.
+		 *
+		 * @param zeros {@code true} if zero durations should be used, {@code false} otherwise
+		 * @return this {@link Stringer}
+		 */
+		public Stringer zeros(boolean zeros) {
+			
+			this.zeros = zeros;
+			return this;
+		}
+		
+		/**
+		 * Sets the maximum item size.
+		 *
+		 * @param maxUnit maximum item size. Used when not set the {@link #units}.
+		 * @return this {@link Stringer}
+		 */
+		public Stringer maxItemSize(int maxUnit) {
+			
+			this.maxItemSize = maxUnit;
+			return this;
+		}
+		
+		/**
+		 * Sets the units to be used.
+		 *
+		 * @param units units
+		 * @return this {@link Stringer}
+		 */
+		@NotNull
+		public Stringer unit(Unit @NotNull ... units) {
+			
+			this.units.clear();
+			this.units.addAll(Arrays.asList(units));
+			return this;
+		}
+		
+		/**
+		 * Sets the durations to be used.
+		 *
+		 * @param durations durations
+		 * @return this {@link Stringer}
+		 */
+		public Stringer duration(Duration @NotNull ... durations) {
+			
+			this.durations.clear();
+			this.durations.addAll(Arrays.asList(durations));
+			return this;
+			
+		}
+		
+		/**
+		 * Sets the durations to be used.
+		 *
+		 * @param durations durations
+		 * @return this {@link Stringer}
+		 */
+		public Stringer durations(@NotNull List<Duration> durations) {
+			
+			this.durations.clear();
+			this.durations.addAll(durations);
+			return this;
+		}
+		
+		/**
+		 * Returns the string of the {@link DurationGroup}
+		 *
+		 * @return the string
+		 */
+		@NotNull
+		public String toString() {
+			
+			if (units.isEmpty()) {
+				//+ this is the item size to be removed
+				int itemSize = durations.size() - maxItemSize;
+				//+ remove from last until the desired size
+				Lister.loopWithout(itemSize, durations::removeLast);
+			}
+			else {
+				//+ remove undesired units
+				this.durations.removeIf(d -> !units.contains(d.getUnit()));
+			}
+			
+			//+ if zero value then remove if need be
+			if (!zeros) durations.removeIf(Duration::isZero);
+			
+			StringBuilder builder = new StringBuilder();
+			
+			for (Duration duration : durations) {
+				
+				if (formattedString != null)
+					builder.append(duration.toString(formattedString)).append(" ");
+				else
+					builder.append(duration).append(" ");
+			}
+			
+			return builder.toString().trim();
+		}
+		
+		/**
+		 * Returns a builder.
+		 *
+		 * @return {@link Stringer}
+		 */
+		@NotNull
+		public static Stringer builder() {return new Stringer();}
+		
+	}
+	
 }

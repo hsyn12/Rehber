@@ -199,7 +199,7 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 						.map(Map.Entry::getValue)
 						.collect(Collectors.toList());
 				
-				Lister.loop(commentList, comment::append);
+				Lister.loopWith(commentList, comment::append);
 				
 				returnComment();
 			}
