@@ -333,6 +333,11 @@ public final class CallCollection {
 		return callList.stream().filter(c -> c.getNumber().equals(_phoneNumber)).collect(Collectors.toList());
 	}
 	
+	public List<Contact> getContacts() {
+		
+		return Blue.getObject(Key.CONTACTS);
+	}
+	
 	/**
 	 * Creates a new call collection.
 	 * Also, stored on the blue cloud.

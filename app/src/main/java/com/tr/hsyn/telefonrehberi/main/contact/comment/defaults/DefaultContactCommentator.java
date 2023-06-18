@@ -47,7 +47,6 @@ import com.tr.hsyn.xlog.xlog;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -480,7 +479,7 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 		}
 		
 		//_ The list that has durations of all contacts
-		List<Map.Entry<Contact, DurationGroup>> durationList = createContactHistoryDurationList(contacts);
+		List<Map.Entry<Contact, DurationGroup>> durationList = null;
 		
 		//! --------------------------------------------------------------
 		int contactCount = contacts.size();
@@ -527,40 +526,6 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 		return comment;
 	}
 	
-	/**
-	 * Creates a list that consists of calculated history duration of each contact.
-	 *
-	 * @param contacts the list of contacts
-	 * @return the list of contact history duration ordered by history duration in descending order.
-	 * 		The first item has the most history duration.
-	 */
-	@NotNull
-	private List<Map.Entry<Contact, DurationGroup>> createContactHistoryDurationList(@NotNull List<Contact> contacts) {
-		
-		List<Map.Entry<Contact, DurationGroup>> durationList = new ArrayList<>();
-		
-		for (Contact contact : contacts) {
-			
-			History history = callCollection.getHistoryOf(contact);
-			
-			if (history.isEmpty()) {
-				
-				//xlog.d("%s has no history", contact.getName());
-				continue;
-			}
-			
-			DurationGroup historyDuration = history.getHistoryDuration();
-			
-			if (!historyDuration.isZero())
-				durationList.add(Map.entry(contact, historyDuration));
-		}
-		
-		//_ Comparing by value makes the list in ascending order 
-		durationList.sort(Map.Entry.comparingByValue());
-		Collections.reverse(durationList);// descending order
-		
-		return durationList;
-	}
 	
 	/**
 	 * Creates a list of most duration items.

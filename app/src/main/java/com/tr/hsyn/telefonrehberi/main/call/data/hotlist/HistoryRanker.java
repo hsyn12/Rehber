@@ -3,8 +3,6 @@ package com.tr.hsyn.telefonrehberi.main.call.data.hotlist;
 
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.contactdata.Contact;
-import com.tr.hsyn.phone_numbers.PhoneNumbers;
-import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.contact.data.History;
 import com.tr.hsyn.time.DurationGroup;
 
@@ -68,24 +66,24 @@ public class HistoryRanker {
 	 * @return the duration
 	 */
 	@Nullable
-	public static DurationGroup getDuration(@NotNull Map<String, DurationGroup> durations, Contact contact) {
+	public static DurationGroup getDuration(@NotNull List<Map.Entry<Contact, DurationGroup>> durations, Contact contact) {
 		
 		if (contact == null) return null;
 		
-		List<String> phoneNumber = ContactKey.getNumbers(contact);
-		
-		if (phoneNumber == null || phoneNumber.isEmpty()) return null;
-		
-		DurationGroup duration = null;
-		
-		for (String number : phoneNumber) {
-			
-			duration = durations.get(PhoneNumbers.formatNumber(number, PhoneNumbers.N_MIN));
-			
-			if (duration != null) break;
-		}
-		
-		return duration;
+		return durations.stream()
+				.filter(e -> e.getKey().getContactId() == contact.getContactId())
+				.findFirst().map(Map.Entry::getValue)
+				.orElse(null);
 	}
 	
+	
+	public static int getRank(List<Map.Entry<Contact, DurationGroup>> durationList, Contact contact) {
+		
+		for (int i = 0; i < durationList.size(); i++)
+			if (durationList.get(i).getKey().getContactId() == contact.getContactId())
+				return i;
+		
+		return 0;
+		
+	}
 }

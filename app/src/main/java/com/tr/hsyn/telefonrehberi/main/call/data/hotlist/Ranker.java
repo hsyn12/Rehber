@@ -8,6 +8,7 @@ import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
 import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -129,5 +130,30 @@ public class Ranker {
 		return createRankMap(filtered, comparator);
 	}
 	
+	@Nullable
+	public static List<Call> getCalls(@NotNull Contact contact, List<CallRank> ranks) {
+		
+		if (ranks == null) return null;
+		
+		var numbers = ContactKey.getNumbers(contact);
+		
+		if (numbers != null && !numbers.isEmpty()) {
+			
+			for (var rank : ranks) {
+				
+				for (String number : numbers) {
+					
+					var _number = PhoneNumbers.formatNumber(number, PhoneNumbers.N_MIN);
+					
+					if (rank.getKey().equals(_number)) {
+						
+						return rank.getCalls();
+					}
+				}
+			}
+		}
+		
+		return null;
+	}
 	
 }

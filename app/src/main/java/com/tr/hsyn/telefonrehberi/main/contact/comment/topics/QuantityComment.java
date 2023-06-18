@@ -19,7 +19,6 @@ import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostCallItemViewData;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.ShowCallsDialog;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.ContactComment;
-import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.contact.data.History;
 import com.tr.hsyn.text.Spanner;
 import com.tr.hsyn.text.Spans;
@@ -85,56 +84,50 @@ public class QuantityComment implements ContactComment {
 		onBackground(() -> {
 			
 			Map<Integer, List<CallRank>> rankMap = Ranker.createRankMap(callCollection.getMapNumberToCalls(), Ranker.QUANTITY_COMPARATOR);
-			List<String>                 numbers = ContactKey.getNumbers(contact);
+			int                          rank    = Ranker.getRank(contact, rankMap);
 			
-			if (numbers != null) {
+			if (rank != -1) {
 				
-				int rank = Ranker.getRank(contact, rankMap);
+				List<CallRank> callRankList = rankMap.get(rank);
+				assert callRankList != null;
+				int                        rankCount = callRankList.size();
+				List<MostCallItemViewData> mostList  = createMostCallItemList(rankMap);
 				
-				if (rank != -1) {
+				onMain(() -> {
 					
-					List<CallRank> callRankList = rankMap.get(rank);
-					assert callRankList != null;
-					int                                 rankCount = callRankList.size();
-					@NotNull List<MostCallItemViewData> mostList  = createMostCallItemList(rankMap);
+					String         title    = getString(R.string.title_most_calls);
+					String         subtitle = getString(R.string.size_contacts, mostList.size());
+					MostCallDialog dialog   = new MostCallDialog(getActivity(), mostList, title, subtitle);
 					
-					onMain(() -> {
+					//xlog.w("rank=%d, rankCount=%d", rank, rankCount);
+					
+					if (isTurkish) {
 						
-						String         title    = getString(R.string.title_most_calls);
-						String         subtitle = getString(R.string.size_contacts, mostList.size());
-						MostCallDialog dialog   = new MostCallDialog(getActivity(), mostList, title, subtitle);
+						comment.append("Ve ")
+								.append("en fazla arama", getClickSpans(view -> dialog.show()))
+								.append(" kaydına sahip kişiler listesinde ");
 						
-						//xlog.w("rank=%d, rankCount=%d", rank, rankCount);
+						if (rankCount <= 1) comment.append("tek başına ");
+						else comment.append(fmt("%d kişi ile birlikte ", rankCount));
 						
-						if (isTurkish) {
-							
-							comment.append("Ve ")
-									.append("en fazla arama", getClickSpans(view -> dialog.show()))
-									.append(" kaydına sahip kişiler listesinde ");
-							
-							if (rankCount <= 1) comment.append("tek başına ");
-							else comment.append(fmt("%d kişi ile birlikte ", rankCount));
-							
-							comment.append(fmt("%d. sırada. ", rank));
-						}
-						else {
-							
-							comment.append(fmt("And in the %d. place ", rank));
-							
-							Spanner hotList = new Spanner().append("the hot list", getClickSpans(view -> dialog.show()));
-							
-							if (rankCount == 1) comment.append("alone ");
-							else comment.append(fmt("together with %d contact(s) ", rankCount));
-							
-							comment.append("in ")
-									.append(hotList)
-									.append(" of the call quantity. ");
-						}
+						comment.append(fmt("%d. sırada. ", rank));
+					}
+					else {
 						
-						returnComment();
-					});
-				}
-				else returnComment();
+						comment.append(fmt("And in the %d. place ", rank));
+						
+						Spanner hotList = new Spanner().append("the hot list", getClickSpans(view -> dialog.show()));
+						
+						if (rankCount == 1) comment.append("alone ");
+						else comment.append(fmt("together with %d contact(s) ", rankCount));
+						
+						comment.append("in ")
+								.append(hotList)
+								.append(" of the call quantity. ");
+					}
+					
+					returnComment();
+				});
 			}
 			else returnComment();
 		});
@@ -144,22 +137,6 @@ public class QuantityComment implements ContactComment {
 	public @NotNull Consumer<ContactComment> getCallback() {
 		
 		return callback;
-	}
-	
-	private void alternativeComment() {
-		
-		assert callCollection != null;
-		Map<Integer, List<CallRank>> rankMap = Ranker.createRankMap(callCollection.getMapNumberToCalls(), Ranker.QUANTITY_COMPARATOR);
-		int                          rank    = Ranker.getRank(contact, rankMap);
-		
-		if (rank == -1) {
-			
-			xlog.d("rank==-1");
-			returnComment();
-			return;
-		}
-		
-		
 	}
 	
 	@NotNull
