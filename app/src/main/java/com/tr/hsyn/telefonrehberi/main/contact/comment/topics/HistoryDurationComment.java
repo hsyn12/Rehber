@@ -117,8 +117,8 @@ public class HistoryDurationComment implements ContactComment {
 					.append("arama geçmişi süreleri", getClickSpans(listener))
 					.append(" listesinin ");
 			
-			if (winner) comment.append("ilk sırasında yer aldığı görülüyor \uEB52.\n");
-			else comment.append(fmt("%d. sırasında yer aldığı görülüyor.\n", rank));
+			if (winner) comment.append("ilk sırasında yer aldığı görülüyor. ");
+			else comment.append(fmt("%d. sırasında yer aldığı görülüyor. ", rank));
 		}
 		else {
 			
@@ -137,7 +137,7 @@ public class HistoryDurationComment implements ContactComment {
 			}
 			
 			comment.append("call history durations", getClickSpans(listener))
-					.append(" list.\n");
+					.append(" list. ");
 		}
 		
 		returnComment();

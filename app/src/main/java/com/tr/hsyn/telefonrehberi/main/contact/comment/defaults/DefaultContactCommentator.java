@@ -21,6 +21,7 @@ import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.ContactComment;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.commentator.ContactCommentStore;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.commentator.ContactCommentator;
+import com.tr.hsyn.telefonrehberi.main.contact.comment.topics.CallDurationComment;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.topics.HistoryDurationComment;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.topics.LastCallComment;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.topics.QuantityComment;
@@ -51,7 +52,7 @@ import java.util.stream.Collectors;
 public class DefaultContactCommentator implements ContactCommentator, Threaded {
 	
 	/** The count of the comment */
-	private static final int                      COUNT_OF_COMMENT       = 3;
+	private static final int                      COUNT_OF_COMMENT       = 4;
 	/**
 	 * The comment object.
 	 * All generated comments by the commentator appends into this object.
@@ -61,6 +62,7 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 	private final        QuantityComment          quantityComment        = new QuantityComment();
 	private final        LastCallComment          lastCallComment        = new LastCallComment();
 	private final        HistoryDurationComment   historyDurationComment = new HistoryDurationComment();
+	private final        CallDurationComment      callDurationComment    = new CallDurationComment();
 	private final        Object                   gate                   = new Object();
 	/** The history that has the all calls of the current contact. */
 	protected            History                  history;
@@ -156,6 +158,7 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 			quantityComment.createComment(contact, commentStore.getActivity(), this::onComment, isTurkish);
 			lastCallComment.createComment(contact, commentStore.getActivity(), this::onComment, isTurkish);
 			historyDurationComment.createComment(contact, commentStore.getActivity(), this::onComment, isTurkish);
+			callDurationComment.createComment(contact, commentStore.getActivity(), this::onComment, isTurkish);
 			
 			/* this.comment.append(commentMostQuantity());
 			this.comment.append(commentOnTheLastCall());
@@ -263,8 +266,8 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 	private CharSequence commentOnDurations() {
 		
 		Spanner                      comment      = new Spanner();
-		Map<Integer, List<CallRank>> rankMap      = DurationRanker.createRankMap(callCollection.getMapNumberToCalls());
-		int                          rank         = Ranker.getRank(contact, rankMap);
+		Map<Integer, List<CallRank>> rankMap      = DurationRanker.createRankMap(callCollection);
+		int                          rank         = Ranker.getRank(rankMap, contact);
 		List<MostDurationData>       durationList = createDurationList(rankMap);
 		String                       title        = getString(R.string.title_speaking_durations);
 		String                       subtitle     = getString(R.string.size_contacts, durationList.size());

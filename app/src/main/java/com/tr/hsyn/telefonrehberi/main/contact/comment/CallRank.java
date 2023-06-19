@@ -4,6 +4,7 @@ package com.tr.hsyn.telefonrehberi.main.contact.comment;
 import androidx.annotation.Nullable;
 
 import com.tr.hsyn.calldata.Call;
+import com.tr.hsyn.contactdata.Contact;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -19,6 +20,7 @@ public class CallRank {
 	private       long       incomingDuration;
 	private       long       outgoingDuration;
 	private       String     name;
+	private       Contact    contact;
 	
 	public CallRank(@NotNull String key, @NotNull List<Call> calls) {
 		
@@ -32,6 +34,16 @@ public class CallRank {
 		this.calls = calls;
 		number     = calls.get(0).getNumber();
 		name       = calls.get(0).getName();
+	}
+	
+	public Contact getContact() {
+		
+		return contact;
+	}
+	
+	public void setContact(Contact contact) {
+		
+		this.contact = contact;
 	}
 	
 	public String getNumber() {

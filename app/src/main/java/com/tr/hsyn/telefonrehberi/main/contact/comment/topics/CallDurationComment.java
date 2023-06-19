@@ -27,7 +27,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Consumer;
 
 
@@ -81,10 +80,9 @@ public class CallDurationComment implements ContactComment {
 		}
 		// endregion
 		
-		Map<Integer, List<CallRank>> rankMap      = DurationRanker.createRankMap(callCollection.getMapNumberToCalls());
+		Map<Integer, List<CallRank>> rankMap      = DurationRanker.createRankMap(callCollection);
 		int                          rank         = Ranker.getRank(rankMap, contact);
 		CallRank                     thisRank     = DurationRanker.getCallRank(rankMap, rank, contact);
-		int                          rankCount    = Objects.requireNonNull(rankMap.get(rank)).size();
 		List<MostDurationData>       durationList = createDurationList(rankMap, callCollection.getContacts());
 		String                       title        = getString(R.string.title_speaking_durations);
 		String                       subtitle     = getString(R.string.size_contacts, durationList.size());
@@ -93,27 +91,54 @@ public class CallDurationComment implements ContactComment {
 		
 		if (thisRank != null) {
 			
-			long          totalDuration = thisRank.getDuration() * 1000L;
-			DurationGroup duration      = Time.toDuration(totalDuration);
-			//+ The object that to convert the duration to string.
-			DurationGroup.Stringer stringer = DurationGroup.Stringer.builder()
-					.formatter(duration1 -> fmt("%d %s", duration1.getValue(), makePlural(duration1.getUnit().toString(), duration1.getValue())))//_ the formatted string to be used.
-					.units(Unit.YEAR, Unit.MONTH, Unit.DAY, Unit.HOUR, Unit.MINUTE)//_ the units should be used.
-					.zeros(false);//_ the zero durations should not be used.
+			long totalDuration = thisRank.getDuration() * 1000L;
 			
-			
-			if (isTurkish) {
+			//+ if exist any speaking
+			if (totalDuration > 0L) {
 				
-				comment.append("Bu arama geçmişi süresi boyunca bu kişi ile aranızda toplam ")
-						.append(fmt("%s", stringer.durations(duration.getDurations()).toString()), getTextStyle())
-						.append(" konuşma gerçekleşti. Ve bu süre ")
-						.append("en çok konuştuğun", getClickSpans(listener))
-						.append(" kişiler listesinde ")
-						.append(fmt("%s", rank), getTextStyle())
-						.append(". sırada. ");
+				DurationGroup duration = Time.toDuration(totalDuration);
+				//+ The object that to convert the duration to string.
+				DurationGroup.Stringer stringer = DurationGroup.Stringer.builder()
+						.formatter(duration1 -> fmt("%d %s", duration1.getValue(), makePlural(duration1.getUnit().toString(), duration1.getValue())))//_ the formatted string to be used.
+						.units(Unit.YEAR, Unit.MONTH, Unit.DAY, Unit.HOUR, Unit.MINUTE)//_ the units should be used.
+						.zeros(false);//_ the zero durations should not be used.
+				
+				
+				if (isTurkish) {
+					
+					comment.append("Bu arama geçmişi süresi boyunca bu kişi ile aranızda toplam ")
+							.append(fmt("%s", stringer.durations(duration.getDurations()).toString()), getTextStyle())
+							.append(" konuşma gerçekleşti. Ve bu süre ")
+							.append("en çok konuştuğun", getClickSpans(listener))
+							.append(" kişiler listesinde ")
+							.append(fmt("%s", rank), getTextStyle())
+							.append(". sırada. ");
+				}
+				else {
+					
+					comment.append("During this call history duration, there was a total of ")
+							.append(fmt("%s", stringer.durations(duration.getDurations()).toString()), getTextStyle())
+							.append(" of conversation between you and this contact. And this duration is in the ")
+							.append(fmt("%s", rank), getTextStyle())
+							.append(". order in the list of ")
+							.append("the people you talk to the most", getClickSpans(listener))
+							.append(" . ");
+				}
 			}
-			else {
+			else {//+ no speaking
 				
+				
+				if (isTurkish) {
+					
+					comment.append("Bu arama geçmişi süresi boyunca bu kişi ile aranızda hiç konuşma olmamış. ");
+				}
+				else {
+					
+					comment.append("During this call history duration, there was no conversation between you and this contact. ");
+				}
+				
+				
+				//todo get all no speaking contacts
 				
 			}
 			

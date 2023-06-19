@@ -4,6 +4,7 @@ package com.tr.hsyn.telefonrehberi.main.call.data.hotlist;
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallCollection;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
 import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
 
@@ -22,12 +23,13 @@ public class DurationRanker {
 	/**
 	 * Returns a map object that ranked by calls duration by descending.
 	 *
-	 * @param entries the entries to be ranked by calls duration by descending
+	 * @param callCollection call collection
 	 * @return a map object that ranked by calls duration by descending
 	 */
 	@NotNull
-	public static Map<Integer, List<CallRank>> createRankMap(@NotNull Map<String, List<Call>> entries) {
+	public static Map<Integer, List<CallRank>> createRankMap(@NotNull CallCollection callCollection) {
 		
+		var            entries   = callCollection.getMapNumberToCalls();
 		Set<String>    keys      = entries.keySet();
 		List<CallRank> callRanks = new ArrayList<>();
 		
@@ -97,6 +99,25 @@ public class DurationRanker {
 				if (PhoneNumbers.equals(number, callRank.getKey())) return callRank;
 		
 		return null;
+	}
+	
+	public static List<Contact> getNoSpeakings(@NotNull Map<Integer, List<CallRank>> rankMap) {
+		
+		List<Contact> contacts = new ArrayList<>();
+		
+		for (var rank : rankMap.keySet()) {
+			
+			List<CallRank> ranks = rankMap.get(rank);
+			
+			for (CallRank callRank : ranks) {
+				
+				if (callRank.getDuration() > 0) continue;
+				
+				contacts.add(callRank.getContact());
+			}
+		}
+		
+		return contacts;
 	}
 	
 }

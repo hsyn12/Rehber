@@ -84,7 +84,7 @@ public class QuantityComment implements ContactComment {
 		onBackground(() -> {
 			
 			Map<Integer, List<CallRank>> rankMap = Ranker.createRankMap(callCollection.getMapNumberToCalls(), Ranker.QUANTITY_COMPARATOR);
-			int                          rank    = Ranker.getRank(contact, rankMap);
+			int                          rank    = Ranker.getRank(rankMap, contact);
 			
 			if (rank != -1) {
 				
