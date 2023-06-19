@@ -3,14 +3,9 @@ package com.tr.hsyn.telefonrehberi.main.contact.comment.defaults;
 
 import android.view.View;
 
-import androidx.annotation.NonNull;
-
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.collection.Lister;
-import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.contactdata.Contact;
-import com.tr.hsyn.nextension.Extension;
-import com.tr.hsyn.nextension.WordExtension;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
@@ -20,10 +15,8 @@ import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
 import com.tr.hsyn.telefonrehberi.main.call.data.Res;
 import com.tr.hsyn.telefonrehberi.main.call.data.hotlist.DurationRanker;
 import com.tr.hsyn.telefonrehberi.main.call.data.hotlist.Ranker;
-import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostCallItemViewData;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationData;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationDialog;
-import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.ShowCallsDialog;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.ContactComment;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.commentator.ContactCommentStore;
@@ -34,20 +27,16 @@ import com.tr.hsyn.telefonrehberi.main.contact.comment.topics.QuantityComment;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.topics.Topic;
 import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.contact.data.History;
-import com.tr.hsyn.text.Span;
 import com.tr.hsyn.text.Spanner;
 import com.tr.hsyn.text.Spans;
 import com.tr.hsyn.time.Duration;
-import com.tr.hsyn.time.DurationGroup;
 import com.tr.hsyn.time.Time;
-import com.tr.hsyn.time.Unit;
 import com.tr.hsyn.treadedwork.Threaded;
 import com.tr.hsyn.xlog.xlog;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -217,181 +206,6 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 	}
 	
 	/**
-	 * Returns a comment about the quantity of call history for the contact.
-	 * For example, <code>'The contact has <u>2 calls</u>'</code>.
-	 */
-	@Deprecated
-	@NonNull
-	private CharSequence commentQuantity() {
-		
-		// Now, certainly the call history size is more than one.
-		// The call history of the current contact has two calls at least.
-		
-		// Inform the user about the quantity of the call history.
-		// For example, 'The contact has 2 calls'.
-		
-		Spanner              comment  = new Spanner();
-		String               name     = contact.getName() != null && !PhoneNumbers.isPhoneNumber(contact.getName()) ? contact.getName() : Stringx.toTitle(getString(R.string.word_contact));
-		View.OnClickListener listener = view -> new ShowCallsDialog(commentStore.getActivity(), history.getCalls(), contact.getName(), null).show();
-		comment.append(name, Spans.bold(), Spans.foreground(getTextColor()));
-		
-		// Have two language resources forever, think so.
-		if (isTurkish) {
-			
-			@NotNull String extension = WordExtension.getWordExt(name, Extension.TYPE_DATIVE);
-			
-			comment.append(Stringx.format("'%s %s ", extension, getString(R.string.word_has)))
-					.append(Stringx.format("%s", getString(R.string.word_calls, history.size())), getClickSpans(listener))
-					.append(" ")
-					.append(getString(R.string.word_exist))
-					.append(". ");
-		}
-		else {
-			
-			comment.append(" ")
-					.append(getString(R.string.word_has))
-					.append(" ")
-					.append(Stringx.format("%s", getString(R.string.word_calls, history.size())), getClickSpans(listener))
-					.append(". ");
-		}
-		
-		return comment;
-	}
-	
-	/**
-	 * @return comment about last call type
-	 */
-	@Deprecated
-	private @NotNull CharSequence commentLastCallType() {
-		
-		Spanner    comment    = new Spanner();
-		Call       lastCall   = history.getLastCall();
-		int        type       = lastCall.getCallType();
-		int[]      callTypes  = Res.getCallTypes(type);
-		List<Call> typedCalls = history.getCallsByTypes(callTypes);
-		String     typeStr    = Res.getCallType(commentStore.getActivity(), type);
-		
-		if (typedCalls.size() == 1) {
-			
-			if (isTurkish) {
-				
-				comment.append("Ve bu ")
-						.append(Stringx.format("%s", typeStr.toLowerCase()), Spans.bold())
-						.append(" kişiye ait tek ")
-						.append(Stringx.format("%s", typeStr.toLowerCase()), Spans.bold())
-						.append(". ");
-			}
-			else {
-				
-				comment.append("And this ")
-						.append(Stringx.format("%s", typeStr.toLowerCase()), Spans.bold())
-						.append(" is only single ")
-						.append(Stringx.format("%s", typeStr.toLowerCase()), Spans.bold())
-						.append(" of this contact. ");
-			}
-		}
-		else {
-			
-			ShowCallsDialog showCallsDialog = new ShowCallsDialog(commentStore.getActivity(), typedCalls, history.getContact().getName(), Stringx.format("%d %s", typedCalls.size(), typeStr));
-			
-			View.OnClickListener listener = view -> showCallsDialog.show();
-			
-			if (commentStore.isTurkishLanguage()) {
-				
-				comment.append("Ve bu ")
-						.append(Stringx.format("%s", typeStr.toLowerCase()), Spans.bold())
-						.append(" kişiye ait ")
-						.append(Stringx.format("%d %s", typedCalls.size(), typeStr.toLowerCase()), Spans.click(listener, getClickColor()), Spans.underline())
-						.append("dan biri. ");
-			}
-			else {
-				//and this call is one of the 33 outgoing calls
-				comment.append("And this ")
-						.append(Stringx.format("%s", typeStr.toLowerCase()), Spans.bold())
-						.append(" is one of the ")
-						.append(Stringx.format("%d %ss", typedCalls.size(), typeStr.toLowerCase()), Spans.click(listener, getClickColor()), Spans.underline())
-						.append(". ");
-			}
-		}
-		
-		return comment;
-	}
-	
-	/**
-	 * Generates a comment about the first and last call made to the contact.
-	 *
-	 * @return comment about first and last call
-	 */
-	@Deprecated
-	private @NotNull CharSequence firstLastCallComment() {
-		
-		Spanner comment = new Spanner();
-		
-		if (history.size() > 1) {
-			
-			DurationGroup duration                  = history.getHistoryDuration();
-			Unit[]        durationUnits             = {Unit.YEAR, Unit.MONTH, Unit.DAY, Unit.HOUR};
-			Duration      longest                   = duration.getGreatestUnit();
-			String        durationString            = getDurationString(duration, durationUnits);
-			boolean       isDurationGreaterThanHour = longest.isGreaterByUnit(Unit.HOUR);
-			Span[] textSpans = {
-					Spans.bold(),
-					Spans.foreground(Colors.lighter(Colors.getPrimaryColor(), 0.35f))
-			};
-			
-			comment.append("\n");
-			
-			if (longest.isNotZero()) {
-				
-				if (isTurkish) {
-					
-					comment.append("Kişinin ilk arama kaydı ile son arama kaydı arasında geçen zaman tam olarak ")
-							.append(durationString, textSpans)
-							.append(". ");
-					
-					if (isDurationGreaterThanHour) {
-						
-						comment.append(fmt("Yani bu kişiyle kabaca %s%s bir arama geçmişiniz var. ", longest.toString("%d %s"), WordExtension.getWordExt(longest.toString("%d %s"), Extension.TYPE_ABSTRACT)));
-					}
-					else {
-						
-						//+ The call history duration is less than 1-day.
-						String msg = fmt("Yani bu kişiyle aranızda bir arama geçmişi olduğu pek söylenemez. ");
-						comment.append(msg);
-					}
-				}
-				else {
-					
-					comment.append("The exact time elapsed between the contact's first call record and the last call record is ")
-							.append(durationString, textSpans)
-							.append(". ");
-					
-					if (isDurationGreaterThanHour) {
-						comment.append(fmt("So you have roughly %s of contact history with this person. ", makePlural(longest.toString("%d %s"), longest.getValue())));
-					}
-					else {
-						
-						//+ The call history duration is less than 1-day.
-						String msg = fmt("So, it cannot be said that there is a communication history between you and this person. ");
-						comment.append(msg);
-					}
-				}
-			}
-			else {
-				
-				String msg;
-				if (isTurkish) msg = fmt("Bu kişi ile aranızda bir arama geçmişi yok. ");
-				else msg = fmt("There is no communication history between you and this person. ");
-				comment.append(msg);
-			}
-			
-			comment.append(mostHistoryDurationComment());
-		}
-		
-		return comment;
-	}
-	
-	/**
 	 * Appends a comment about the given call to the {@link #comment} object.
 	 *
 	 * @param call the call to comment on
@@ -431,155 +245,6 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 		
 	}
 	
-	/**
-	 * Creates a list of most call items.
-	 *
-	 * @param map the map of call ranks
-	 * @return the list of most call items
-	 */
-	@NotNull
-	private List<MostCallItemViewData> createMostCallItemList(@NotNull Map<Integer, List<CallRank>> map) {
-		
-		List<MostCallItemViewData> list = new ArrayList<>();
-		
-		for (List<CallRank> rankList : map.values()) {
-			
-			for (CallRank callRank : rankList) {
-				
-				Call   call  = callRank.getCalls().get(0);
-				String n     = call.getName();
-				String name  = (n != null && !n.trim().isEmpty()) ? n : call.getNumber();
-				int    size  = callRank.getCalls().size();
-				int    order = callRank.getRank();
-				var    data  = new MostCallItemViewData(name, size, order);
-				
-				if (CallKey.getContactId(call) == this.contact.getContactId()) data.setSelected(true);
-				
-				list.add(data);
-			}
-		}
-		
-		list.sort(Comparator.comparingInt(MostCallItemViewData::getCallSize).reversed());
-		return list;
-	}
-	
-	/**
-	 * Returns a comment about the duration of the history.
-	 *
-	 * @return comment
-	 */
-	@NotNull
-	private CharSequence mostHistoryDurationComment() {
-		
-		Spanner       comment  = new Spanner();
-		List<Contact> contacts = getContacts();
-		
-		if (contacts == null || contacts.isEmpty()) {
-			return comment;
-		}
-		
-		//_ The list that has durations of all contacts
-		List<Map.Entry<Contact, DurationGroup>> durationList = null;
-		
-		//! --------------------------------------------------------------
-		int contactCount = contacts.size();
-		int historyCount = durationList.size();
-		
-		comment.append(getHistoryCountComment(contactCount, historyCount));
-		
-		//+ winner item
-		Map.Entry<Contact, DurationGroup> firstItem            = durationList.get(0);
-		long                              firstContactId       = firstItem.getKey().getContactId();
-		@NotNull List<MostDurationData>   mostDurationDataList = createMostHistoryDurationList(durationList);
-		String                            title                = getString(R.string.title_most_call_history);
-		String                            subtitle             = getString(R.string.size_contacts, mostDurationDataList.size());
-		MostDurationDialog                dialog               = new MostDurationDialog(commentStore.getActivity(), mostDurationDataList, title, subtitle);
-		View.OnClickListener              listener             = view -> dialog.show();
-		boolean                           isWinner             = firstContactId == this.contact.getContactId();
-		int                               rank                 = 0;
-		
-		int i = 0;
-		for (Map.Entry<Contact, DurationGroup> item : durationList) {
-			
-			if (item.getKey().getContactId() == this.contact.getContactId()) {
-				
-				rank = i + 1;
-				break;
-			}
-			
-			i++;
-		}
-		
-		if (isTurkish) {
-			
-			comment.append("Arama geçmişi süreleri", getClickSpans(listener))
-					.append(fmt("ne göre bu kişi %d. sırada yer alıyor. ", rank));
-			
-		}
-		else {
-			
-			comment.append("According to ")
-					.append("the call history durations, ", getClickSpans(listener))
-					.append(fmt(" this contact is in the %d. order. ", rank));
-		}
-		
-		return comment;
-	}
-	
-	
-	/**
-	 * Creates a list of most duration items.
-	 *
-	 * @param durationList the list of duration
-	 * @return the list of most duration items
-	 */
-	@NotNull
-	private List<MostDurationData> createMostHistoryDurationList(@NotNull List<Map.Entry<Contact, DurationGroup>> durationList) {
-		
-		List<MostDurationData> list = new ArrayList<>();
-		
-		int order = 1;
-		for (Map.Entry<Contact, DurationGroup> entry : durationList) {
-			
-			DurationGroup duration = entry.getValue();
-			
-			if (duration.isZero()) continue;
-			
-			Contact contact        = entry.getKey();
-			String  durationString = getDurationString(duration, Unit.YEAR, Unit.MONTH, Unit.DAY, Unit.HOUR);
-			var     data           = new MostDurationData(contact.getName(), durationString, order++);
-			
-			if (this.contact.getContactId() == contact.getContactId()) data.setSelected(true);
-			
-			list.add(data);
-		}
-		
-		
-		return list;
-	}
-	
-	/**
-	 * Returns the duration of the history as a string.
-	 *
-	 * @param duration the history duration
-	 * @param units    the units during the history to display
-	 * @return the string
-	 */
-	@NotNull
-	private String getDurationString(@NotNull DurationGroup duration, Unit @NotNull ... units) {
-		
-		StringBuilder          sb        = new StringBuilder();
-		@NotNull DurationGroup durations = duration.pickFrom(units);
-		
-		for (Duration _duration : durations.getDurations()) {
-			
-			if (_duration.isNotZero())
-				sb.append(makePlural(_duration.toString("%d %s"), _duration.getValue())).append(" ");
-		}
-		
-		return sb.toString().trim();
-	}
-	
 	@NotNull
 	private CharSequence getHistoryCountComment(int contactCount, int historyCount) {
 		
@@ -592,16 +257,6 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 			return fmt("Rehberde bulunan %d kişi içinden %d kişi ile aranızda bir arama geçmişi var. ", contactCount, historyCount);
 		else
 			return fmt("There is a communication history between you and %d people out of %d people in your contacts. ", historyCount, contactCount);
-	}
-	
-	@NotNull
-	private CharSequence commentLastCallTypeRank() {
-		
-		Spanner rank     = new Spanner();
-		Call    lastCall = history.getLastCall();
-		
-		
-		return rank;
 	}
 	
 	@NotNull

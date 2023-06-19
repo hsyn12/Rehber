@@ -696,7 +696,7 @@ public class DurationGroup implements Comparable<DurationGroup>, Iterable<Durati
 		 * @return this {@link Stringer}
 		 */
 		@NotNull
-		public Stringer unit(Unit @NotNull ... units) {
+		public Stringer units(Unit @NotNull ... units) {
 			
 			this.units.clear();
 			this.units.addAll(Arrays.asList(units));

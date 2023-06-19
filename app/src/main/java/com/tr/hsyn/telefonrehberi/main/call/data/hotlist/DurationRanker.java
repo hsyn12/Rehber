@@ -2,9 +2,13 @@ package com.tr.hsyn.telefonrehberi.main.call.data.hotlist;
 
 
 import com.tr.hsyn.calldata.Call;
+import com.tr.hsyn.contactdata.Contact;
+import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
+import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,18 +32,18 @@ public class DurationRanker {
 		List<CallRank> callRanks = new ArrayList<>();
 		
 		//_ create call rank objects
-		for (var key : keys) {
+		for (String key : keys) {
 			
-			var calls = entries.get(key);
+			List<Call> calls = entries.get(key);
 			
 			if (calls == null) continue;
 			
-			var callRank = new CallRank(key, calls);
+			CallRank callRank = new CallRank(key, calls);
 			
 			long incomingDuration = 0L;
 			long outgoingDuration = 0L;
 			
-			for (var call : calls) {
+			for (Call call : calls) {
 				
 				if (call.isIncoming()) incomingDuration += call.getDuration();
 				else if (call.isOutgoing()) outgoingDuration += call.getDuration();
@@ -62,18 +66,37 @@ public class DurationRanker {
 		//_ set ranks
 		for (int i = 0; i < size; i++) {
 			
-			var callRank = callRanks.get(i);
-			var ranks    = rankMap.computeIfAbsent(rank, r -> new ArrayList<>());
+			CallRank       callRank = callRanks.get(i);
+			List<CallRank> ranks    = rankMap.computeIfAbsent(rank, r -> new ArrayList<>());
 			ranks.add(callRank);
 			
 			if (i == last) break;
 			
-			var next = callRanks.get(i + 1);
+			CallRank next = callRanks.get(i + 1);
 			if (callRank.getDuration() > next.getDuration()) rank++;
 		}
 		
 		return rankMap;
 	}
 	
+	@Nullable
+	public static CallRank getCallRank(@NotNull Map<Integer, List<CallRank>> rankMap, int rank, Contact contact) {
+		
+		if (contact == null) return null;
+		
+		var numbers = ContactKey.getNumbers(contact);
+		
+		if (numbers == null || numbers.isEmpty()) return null;
+		
+		List<CallRank> ranks = rankMap.get(rank);
+		
+		if (ranks == null) return null;
+		
+		for (CallRank callRank : ranks)
+			for (var number : numbers)
+				if (PhoneNumbers.equals(number, callRank.getKey())) return callRank;
+		
+		return null;
+	}
 	
 }

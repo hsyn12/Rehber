@@ -2,15 +2,32 @@ package com.tr.hsyn.telefonrehberi.main.contact.comment.topics;
 
 
 import android.app.Activity;
+import android.view.View;
 
 import com.tr.hsyn.contactdata.Contact;
+import com.tr.hsyn.phone_numbers.PhoneNumbers;
+import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallCollection;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
+import com.tr.hsyn.telefonrehberi.main.call.data.hotlist.DurationRanker;
+import com.tr.hsyn.telefonrehberi.main.call.data.hotlist.Ranker;
+import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationData;
+import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationDialog;
+import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.ContactComment;
+import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
 import com.tr.hsyn.text.Spanner;
+import com.tr.hsyn.time.DurationGroup;
+import com.tr.hsyn.time.Time;
+import com.tr.hsyn.time.Unit;
 import com.tr.hsyn.xlog.xlog;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 
@@ -64,12 +81,124 @@ public class CallDurationComment implements ContactComment {
 		}
 		// endregion
 		
+		Map<Integer, List<CallRank>> rankMap      = DurationRanker.createRankMap(callCollection.getMapNumberToCalls());
+		int                          rank         = Ranker.getRank(rankMap, contact);
+		CallRank                     thisRank     = DurationRanker.getCallRank(rankMap, rank, contact);
+		int                          rankCount    = Objects.requireNonNull(rankMap.get(rank)).size();
+		List<MostDurationData>       durationList = createDurationList(rankMap, callCollection.getContacts());
+		String                       title        = getString(R.string.title_speaking_durations);
+		String                       subtitle     = getString(R.string.size_contacts, durationList.size());
+		MostDurationDialog           dialog       = new MostDurationDialog(getActivity(), durationList, title, subtitle);
+		View.OnClickListener         listener     = view -> dialog.show();
 		
+		if (thisRank != null) {
+			
+			long          totalDuration = thisRank.getDuration() * 1000L;
+			DurationGroup duration      = Time.toDuration(totalDuration);
+			//+ The object that to convert the duration to string.
+			DurationGroup.Stringer stringer = DurationGroup.Stringer.builder()
+					.formatter(duration1 -> fmt("%d %s", duration1.getValue(), makePlural(duration1.getUnit().toString(), duration1.getValue())))//_ the formatted string to be used.
+					.units(Unit.YEAR, Unit.MONTH, Unit.DAY, Unit.HOUR, Unit.MINUTE)//_ the units should be used.
+					.zeros(false);//_ the zero durations should not be used.
+			
+			
+			if (isTurkish) {
+				
+				comment.append("Bu arama geçmişi süresi boyunca bu kişi ile aranızda toplam ")
+						.append(fmt("%s", stringer.durations(duration.getDurations()).toString()), getTextStyle())
+						.append(" konuşma gerçekleşti. Ve bu süre ")
+						.append("en çok konuştuğun", getClickSpans(listener))
+						.append(" kişiler listesinde ")
+						.append(fmt("%s", rank), getTextStyle())
+						.append(". sırada. ");
+			}
+			else {
+				
+				
+			}
+			
+			
+		}
+		
+		
+		returnComment();
 	}
 	
 	@Override
 	public @NotNull Consumer<ContactComment> getCallback() {
 		
 		return callback;
+	}
+	
+	/**
+	 * Creates a list of most duration items.
+	 *
+	 * @param rankMap the map of rank
+	 * @return the list of most duration items
+	 */
+	@NotNull
+	private List<MostDurationData> createDurationList(@NotNull Map<Integer, List<CallRank>> rankMap, List<Contact> contacts) {
+		
+		List<MostDurationData> list = new ArrayList<>();
+		
+		int rank = 1;
+		while (true) {
+			
+			List<CallRank> rankList = rankMap.get(rank);
+			
+			if (rankList == null) break;
+			
+			for (CallRank callRank : rankList) {
+				
+				if (callRank.getDuration() == 0) continue;
+				
+				String name = callRank.getName();
+				
+				if (name == null || name.trim().isEmpty())
+					name = getContactName(callRank.getCalls().get(0).getNumber(), contacts);
+				
+				long contactId = contact.getContactId();
+				
+				MostDurationData data = new MostDurationData(name, Time.formatSeconds((int) callRank.getDuration()), rank);
+				
+				if (contactId == CallKey.getContactId(callRank.getCalls().get(0)))
+					data.setSelected(true);
+				
+				list.add(data);
+			}
+			
+			rank++;
+		}
+		
+		return list;
+	}
+	
+	/**
+	 * Returns the name of the contact.
+	 *
+	 * @param number the phone number
+	 * @return the name or the number
+	 */
+	@NotNull
+	private String getContactName(@NotNull String number, List<Contact> contacts) {
+		
+		if (contacts == null || contacts.isEmpty())
+			return number;
+		
+		for (Contact contact : contacts) {
+			
+			List<String> numbers = ContactKey.getNumbers(contact);
+			
+			if (numbers == null || numbers.isEmpty()) continue;
+			
+			
+			if (PhoneNumbers.existsNumber(numbers, number)) {
+				
+				String name = contact.getName();
+				return name != null && !name.trim().isEmpty() ? name : number;
+			}
+		}
+		
+		return number;
 	}
 }

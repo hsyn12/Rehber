@@ -78,35 +78,36 @@ public class Ranker {
 	/**
 	 * Returns the rank of the contact.
 	 *
-	 * @param contact the contact
 	 * @param rankMap the rank map
+	 * @param contact the contact
 	 * @return the rank of the contact or –1 if not found
 	 */
-	public static int getRank(Contact contact, @NotNull Map<Integer, List<CallRank>> rankMap) {
+	public static int getRank(@NotNull Map<Integer, List<CallRank>> rankMap, @NotNull Contact contact) {
 		
-		if (contact != null) {
+		List<String> numbers = ContactKey.getNumbers(contact);
+		
+		if (numbers == null || numbers.isEmpty()) {
 			
-			var numbers = ContactKey.getNumbers(contact);
-			int rank    = -1;
+			return 0;
+		}
+		
+		for (Map.Entry<Integer, List<CallRank>> entry : rankMap.entrySet()) {
 			
-			if (numbers != null && !numbers.isEmpty()) {
+			List<CallRank> callRanks = entry.getValue();
+			
+			for (CallRank callRank : callRanks) {
 				
-				for (Map.Entry<Integer, List<CallRank>> entry : rankMap.entrySet()) {
+				for (String number : numbers) {
 					
-					for (String number : numbers) {
+					if (PhoneNumbers.equals(number, callRank.getKey())) {
 						
-						var _number = PhoneNumbers.formatNumber(number, PhoneNumbers.N_MIN);
-						
-						if (entry.getValue().stream().anyMatch(p -> p.getKey().equals(_number))) {
-							
-							return entry.getKey();
-						}
+						return entry.getKey();
 					}
 				}
 			}
 		}
 		
-		return -1;
+		return 0;
 	}
 	
 	/**

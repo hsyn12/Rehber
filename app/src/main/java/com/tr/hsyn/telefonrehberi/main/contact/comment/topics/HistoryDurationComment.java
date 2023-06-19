@@ -86,7 +86,7 @@ public class HistoryDurationComment implements ContactComment {
 		//+ The object that to convert the duration to string.
 		DurationGroup.Stringer stringer = DurationGroup.Stringer.builder()
 				.formatter(duration1 -> fmt("%d %s", duration1.getValue(), makePlural(duration1.getUnit().toString(), duration1.getValue())))//_ the formatted string to be used.
-				.unit(Unit.YEAR, Unit.MONTH, Unit.DAY)//_ the units should be used.
+				.units(Unit.YEAR, Unit.MONTH, Unit.DAY)//_ the units should be used.
 				.zeros(false);//_ the zero durations should not be used.
 		//+ The duration of this contact.
 		DurationGroup thisDuration = HistoryRanker.getDuration(durationList, contact);

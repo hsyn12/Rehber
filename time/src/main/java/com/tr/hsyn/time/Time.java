@@ -576,19 +576,18 @@ public class Time implements TimeMillis {
 	}
 	
 	/**
-	 * Returns exactly how long the given milliseconds are.
-	 * <br><br>
+	 * Returns exactly how long the given milliseconds are.<br><br>
 	 *
 	 * <pre>
 	 * var myBirthDay = Pointer.at(12, 4, 1981, 23, 30);
 	 * var p = currentMillis() - myBirthDay;
 	 * System.out.printf("%s", toDuration(p));
-	 * output : [Duration{type=YEAR, value=40}, Duration{type=MONTH, value=9}, Duration{type=DAY, value=6}, Duration{type=HOUR, value=17}, Duration{type=MINUTE, value=3}, Duration{type=SECOND, value=8}, Duration{type=MILLISECOND, value=568}]
-	 * So the milliseconds from my birthday to this day are 40 years 9 months 3 weeks 6 days 17 hours 3 minutes 8 seconds 568 milliseconds
+	 * // output : [Duration{type=YEAR, value=40}, Duration{type=MONTH, value=9}, Duration{type=DAY, value=6}, Duration{type=HOUR, value=17}, Duration{type=MINUTE, value=3}, Duration{type=SECOND, value=8}, Duration{type=MILLISECOND, value=568}]
+	 * // So the duration from my birthday to now is 40 years 9 months 3 weeks 6 days 17 hours 3 minutes 8 seconds 568 milliseconds
 	 * </pre>
 	 *
 	 * <p>
-	 * This method can also work with negative values.
+	 * This method can work with negative values.
 	 *
 	 * @param duration duration
 	 * @return List of {@link Duration} objects declaring how long the duration is

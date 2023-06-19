@@ -230,8 +230,8 @@ public class PhoneNumbers {
 		
 		if (number1.equals(number2)) return true;
 		
-		@NotNull String n1 = formatNumber(number1, N_MIN);
-		@NotNull String n2 = formatNumber(number2, N_MIN);
+		String n1 = formatNumber(number1, N_MIN);
+		String n2 = formatNumber(number2, N_MIN);
 		
 		if (n1.length() != n2.length()) return false;
 		

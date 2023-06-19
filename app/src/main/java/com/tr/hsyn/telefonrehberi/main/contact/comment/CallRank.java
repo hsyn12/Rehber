@@ -34,6 +34,11 @@ public class CallRank {
 		name       = calls.get(0).getName();
 	}
 	
+	public String getNumber() {
+		
+		return number;
+	}
+	
 	public String getName() {
 		
 		return name;
