@@ -105,36 +105,39 @@ public class HistoryDurationComment implements ContactComment {
 		String                            subtitle            = getString(R.string.size_contacts, durationDataList.size());
 		MostDurationDialog                dialog              = new MostDurationDialog(getActivity(), durationDataList, title, subtitle);
 		View.OnClickListener              listener            = view -> dialog.show();
-		//+ Duration string of this contact.
-		String durationString = stringer.durations(thisDuration.getDurations()).toString();
-		int    rank           = HistoryRanker.getRank(durationList, contact);
+		String                            durationString      = stringer.durations(thisDuration.getDurations()).toString();//+ Duration string of this contact.
+		int                               rank                = HistoryRanker.getRank(durationList, contact);
+		boolean                           winner              = contact.getContactId() == winnerContact.getContactId();
 		
 		if (isTurkish) {
 			
 			comment.append("Kişinin arama geçmişi süresi ")
 					.append(fmt("%s", durationString), getTextStyle())
-					.append(". Rehberdeki diğer kişilerle karşılaştırıldığında ");
+					.append(". Rehberdeki diğer kişilerle karşılaştırıldığında ")
+					.append("arama geçmişi süreleri", getClickSpans(listener))
+					.append(" listesinin ");
 			
-			comment.append("arama geçmişi süreleri", getClickSpans(listener))
-					.append(" listesinin");
-			if (contact.getContactId() == winnerContact.getContactId()) {
-				
-				//  
-				comment.append("ilk sırasında yer aldığı görülüyor \uE1CF. ");
-			}
-			else {
-				
-				comment.append(fmt("%d. sırasında yer aldığı görülüyor. ", rank));
-				
-			}
-			
+			if (winner) comment.append("ilk sırasında yer aldığı görülüyor \uEB52.\n");
+			else comment.append(fmt("%d. sırasında yer aldığı görülüyor.\n", rank));
 		}
 		else {
 			
 			comment.append("This contact has ")
 					.append(fmt("%s", durationString), getTextStyle())
-					.append(" call history. ");
+					.append(" call history. ")
+					.append("Compared to others in the contacts ");
 			
+			if (winner) {
+				
+				comment.append("he/she appears in the first order in the ");
+			}
+			else {
+				
+				comment.append(fmt("he/she appears in the %d. order in the ", rank));
+			}
+			
+			comment.append("call history durations", getClickSpans(listener))
+					.append(" list.\n");
 		}
 		
 		returnComment();
