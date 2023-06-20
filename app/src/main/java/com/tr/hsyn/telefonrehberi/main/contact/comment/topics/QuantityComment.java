@@ -86,7 +86,7 @@ public class QuantityComment implements ContactComment {
 		// endregion
 		
 		comment.append(getQuantityComment(isTurkish));
-		
+		mostCall(Call.INCOMING);
 		returnComment();
 		
 		/* onBackground(() -> {
@@ -205,11 +205,20 @@ public class QuantityComment implements ContactComment {
 				Scaler   scaler   = Scaler.Companion.createNewScaler(leastCallSize, 2f);
 				Quantity quantity = scaler.getQuantity(calls.size());
 				
+				xlog.d("base : %d", leastCallSize);
+				xlog.d("max  : %s", winner.get(0).getCalls().size());
+				
 				switch (quantity) {
 					
-					
+					case MIN: xlog.d("MIN");
+						break;
+					case MID: xlog.d("MID");
+						break;
+					case MAX: xlog.d("MAX");
+						break;
+					case LARGE: xlog.d("LARGE");
+						break;
 				}
-				
 			}
 			
 			

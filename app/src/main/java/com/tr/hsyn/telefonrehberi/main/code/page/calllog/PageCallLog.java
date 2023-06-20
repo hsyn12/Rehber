@@ -83,5 +83,12 @@ public class PageCallLog extends CallLogEvents {
 		return ready;
 	}
 	
-	
+	@Override
+	protected int getAdapterSize() {
+		
+		if (getAdapter() != null)
+			return getAdapter().getSize();
+		
+		return 0;
+	}
 }

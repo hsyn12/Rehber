@@ -12,29 +12,36 @@ import androidx.annotation.Nullable;
  * Kişiler
  */
 public class FragmentContacts extends FragmentPageMenu {
-
-    protected boolean ready;
-
-    @Override
-    public boolean isReady() {
-
-        return ready;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-
-        super.onViewCreated(view, savedInstanceState);
-
-        showTime(true);
-        ready = true;
-
-        if (onReady != null) {
-
-            onReady.run();
-            onReady = null;
-        }
-    }
-
-
+	
+	protected boolean ready;
+	
+	@Override
+	public boolean isReady() {
+		
+		return ready;
+	}
+	
+	@Override
+	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+		
+		super.onViewCreated(view, savedInstanceState);
+		
+		showTime(true);
+		ready = true;
+		
+		if (onReady != null) {
+			
+			onReady.run();
+			onReady = null;
+		}
+	}
+	
+	@Override
+	protected int getAdapterSize() {
+		
+		if (adapter != null)
+			return adapter.getSize();
+		
+		return 0;
+	}
 }
