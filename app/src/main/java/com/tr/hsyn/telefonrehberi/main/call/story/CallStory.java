@@ -84,6 +84,8 @@ public class CallStory implements Story<Call> {
 				systemCalls.sort((x, y) -> Long.compare(y.getTime(), x.getTime()));
 				updateInfo(systemCalls);
 				CallCollection.create(systemCalls);
+				
+				xlog.d("Call collection created [system]");
 				return systemCalls;
 			}
 			else {
@@ -101,6 +103,7 @@ public class CallStory implements Story<Call> {
 				databaseCalls.forEach(c -> c.setData(CallKey.DELETED_DATE, now));
 				database.update(databaseCalls);
 				CallCollection.create(systemCalls);
+				xlog.d("Call collection created [system]");
 				return new ArrayList<>(0);
 			}
 			else {
@@ -144,12 +147,10 @@ public class CallStory implements Story<Call> {
 			}
 		}
 		
-		//Arama kayıtlarının diğer ayrıntılarına burada bakılmayacak
-		//! Hangi diğer ayrıntıları?
-		
 		databaseCalls.sort((x, y) -> Long.compare(y.getTime(), x.getTime()));
 		updateInfo(databaseCalls);
 		CallCollection.create(databaseCalls);
+		xlog.d("Call collection created [database]");
 		return databaseCalls;
 	}
 	
@@ -330,7 +331,7 @@ public class CallStory implements Story<Call> {
 	}
 	
 	/**
-	 * Updates the calls for its name and contact id.
+	 * Updates the calls for its name and contact ID.
 	 *
 	 * @param calls Calls to update
 	 */

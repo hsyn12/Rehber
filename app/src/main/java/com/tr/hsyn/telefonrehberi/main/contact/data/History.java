@@ -119,15 +119,39 @@ public interface History {
 		return getCallsByTypes(types).stream().mapToInt(Call::getDuration).sum();
 	}
 	
+	default List<Call> getIncomingCalls() {
+		
+		return getCallsByTypes(Call.INCOMING, Call.INCOMING_WIFI);
+	}
+	
+	default List<Call> getOutgoingCalls() {
+		
+		return getCallsByTypes(Call.OUTGOING, Call.OUTGOING_WIFI);
+	}
+	
+	default List<Call> getMediaCalls() {
+		
+		return getCallsByTypes(Call.MISSED);
+	}
+	
+	default List<Call> getRejectCalls() {
+		
+		return getCallsByTypes(Call.REJECTED);
+	}
+	
 	/**
 	 * Returns the calls of the given call types.
 	 *
 	 * @param types the call types
 	 * @return the calls
 	 */
-	default @NotNull List<Call> getCallsByTypes(int... types) {
+	default @NotNull List<Call> getCallsByTypes(int @NotNull ... types) {
 		
-		return getCallsByTypes(getCalls(), types);
+		List<Call> calls = new ArrayList<>();
+		
+		for (int type : types) calls.addAll(getCalls(type));
+		
+		return calls;
 	}
 	
 	/**

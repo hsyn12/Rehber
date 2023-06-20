@@ -199,7 +199,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 			return History.ofEmpty(contact);
 		}
 		
-		List<Call> calls = callCollection.getCallsByNumbers(phoneNumbers);
+		List<Call> calls = callCollection.getCallsById(String.valueOf(contact.getContactId()));
 		calls.sort((x, y) -> Long.compare(y.getTime(), x.getTime()));
 		//_ This is the 'call history' of the selected contact
 		return History.of(contact, calls);

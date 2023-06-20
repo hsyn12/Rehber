@@ -14,7 +14,6 @@ import com.tr.hsyn.telefonrehberi.main.call.data.CallCollection;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
 import com.tr.hsyn.telefonrehberi.main.call.data.Res;
 import com.tr.hsyn.telefonrehberi.main.call.data.hotlist.DurationRanker;
-import com.tr.hsyn.telefonrehberi.main.call.data.hotlist.Ranker;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationData;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationDialog;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
@@ -38,6 +37,7 @@ import com.tr.hsyn.xlog.xlog;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,28 +51,37 @@ import java.util.stream.Collectors;
  */
 public class DefaultContactCommentator implements ContactCommentator, Threaded {
 	
-	/** The count of the comment */
-	private static final int                      COUNT_OF_COMMENT       = 4;
 	/**
 	 * The comment object.
 	 * All generated comments by the commentator appends into this object.
 	 */
-	protected final      Spanner                  comment                = new Spanner();
-	private final        Map<Topic, CharSequence> comments               = new HashMap<>();
-	private final        QuantityComment          quantityComment        = new QuantityComment();
-	private final        LastCallComment          lastCallComment        = new LastCallComment();
-	private final        HistoryDurationComment   historyDurationComment = new HistoryDurationComment();
-	private final        CallDurationComment      callDurationComment    = new CallDurationComment();
-	private final        Object                   gate                   = new Object();
+	protected final Spanner                  comment                = new Spanner();
+	/**
+	 * Topics of the comment.
+	 */
+	private final   List<Topic>              TOPICS                 = Arrays.asList(
+			Topic.QUANTITY,
+			Topic.LAST_CALL,
+			Topic.HISTORY_DURATION,
+			Topic.CALL_DURATION
+	);
+	/** The count of the comment */
+	private final   int                      COUNT_OF_COMMENT       = TOPICS.size();
+	private final   Map<Topic, CharSequence> comments               = new HashMap<>();
+	private final   QuantityComment          quantityComment        = new QuantityComment();
+	private final   LastCallComment          lastCallComment        = new LastCallComment();
+	private final   HistoryDurationComment   historyDurationComment = new HistoryDurationComment();
+	private final   CallDurationComment      callDurationComment    = new CallDurationComment();
+	private final   Object                   gate                   = new Object();
 	/** The history that has the all calls of the current contact. */
-	protected            History                  history;
+	protected       History                  history;
 	/** The current contact */
-	protected            Contact                  contact;
+	protected       Contact                  contact;
 	/** The comment store */
-	protected            ContactCommentStore      commentStore;
-	protected            boolean                  isTurkish;
-	protected            CallCollection           callCollection;
-	private              Consumer<CharSequence>   callback;
+	protected       ContactCommentStore      commentStore;
+	protected       boolean                  isTurkish;
+	protected       CallCollection           callCollection;
+	private         Consumer<CharSequence>   callback;
 	
 	/**
 	 * Constructs a new {@link DefaultContactCommentator} object with the given comment store.
@@ -169,15 +178,21 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 		
 	}
 	
+	/**
+	 * Controls the creation of a comment.
+	 *
+	 * @param contactComment the comment
+	 */
 	private void onComment(@NotNull ContactComment contactComment) {
 		
 		synchronized (gate) {
 			
 			comments.put(contactComment.getTopic(), contactComment.getComment());
 			boolean commentsCompleted = comments.size() == COUNT_OF_COMMENT;
+			var     waitingComments   = new ArrayList<>(TOPICS);
+			waitingComments.removeAll(comments.keySet());
 			
-			xlog.dx("Comment created : %s", contactComment.getTopic());
-			xlog.d("Comment count : %d [commentsCompleted=%s]", comments.size(), commentsCompleted);
+			xlog.dx("Comment created : %s [commentCount=%d, commentsCompleted=%s, waitingComments=%s]", contactComment.getTopic(), comments.size(), commentsCompleted, waitingComments);
 			
 			if (commentsCompleted) {
 				
@@ -190,10 +205,6 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 				Lister.loopWith(commentList, comment::append);
 				
 				returnComment();
-			}
-			else {
-				
-				xlog.d("Waiting other comments...");
 			}
 		}
 	}
@@ -267,7 +278,7 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 		
 		Spanner                      comment      = new Spanner();
 		Map<Integer, List<CallRank>> rankMap      = DurationRanker.createRankMap(callCollection);
-		int                          rank         = Ranker.getRank(rankMap, contact);
+		int                          rank         = CallCollection.getRank(rankMap, contact);
 		List<MostDurationData>       durationList = createDurationList(rankMap);
 		String                       title        = getString(R.string.title_speaking_durations);
 		String                       subtitle     = getString(R.string.size_contacts, durationList.size());

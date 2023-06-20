@@ -165,14 +165,11 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 		if (keepContactSelection.enter()) {
 			
 			Contact selectedContact = pageContacts.getItem(index);
+			Blue.box(com.tr.hsyn.key.Key.SELECTED_CONTACT, selectedContact);
+			startActivity(new Intent(this, ContactDetails.class));
+			Bungee.slideRight(this);
 			
 			xlog.d("Contact Selected : %s", selectedContact);
-			
-			Blue.box(com.tr.hsyn.key.Key.SELECTED_CONTACT, selectedContact);
-			
-			startActivity(new Intent(this, ContactDetails.class));
-			
-			Bungee.slideRight(this);
 		}
 	}
 	

@@ -10,7 +10,6 @@ import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallCollection;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
 import com.tr.hsyn.telefonrehberi.main.call.data.hotlist.DurationRanker;
-import com.tr.hsyn.telefonrehberi.main.call.data.hotlist.Ranker;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationData;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationDialog;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
@@ -81,7 +80,7 @@ public class CallDurationComment implements ContactComment {
 		// endregion
 		
 		Map<Integer, List<CallRank>> rankMap      = DurationRanker.createRankMap(callCollection);
-		int                          rank         = Ranker.getRank(rankMap, contact);
+		int                          rank         = CallCollection.getRank(rankMap, contact);
 		CallRank                     thisRank     = DurationRanker.getCallRank(rankMap, rank, contact);
 		List<MostDurationData>       durationList = createDurationList(rankMap, callCollection.getContacts());
 		String                       title        = getString(R.string.title_speaking_durations);
@@ -127,24 +126,10 @@ public class CallDurationComment implements ContactComment {
 			}
 			else {//+ no speaking
 				
-				
-				if (isTurkish) {
-					
-					comment.append("Bu arama geçmişi süresi boyunca bu kişi ile aranızda hiç konuşma olmamış. ");
-				}
-				else {
-					
-					comment.append("During this call history duration, there was no conversation between you and this contact. ");
-				}
-				
-				
-				//todo get all no speaking contacts
-				
+				if (isTurkish) comment.append("Bu arama geçmişi süresi boyunca bu kişi ile aranızda hiç konuşma olmamış. ");
+				else comment.append("During this call history duration, there was no conversation between you and this contact. ");
 			}
-			
-			
 		}
-		
 		
 		returnComment();
 	}

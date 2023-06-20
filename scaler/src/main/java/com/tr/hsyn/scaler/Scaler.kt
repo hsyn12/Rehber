@@ -11,12 +11,12 @@ package com.tr.hsyn.scaler
  *
  * So the measurement depends on what we are measuring.
  * For example, we can say a kilo of cotton is a lot, but a kilo of iron may be less.
- * For this reason we take a different scale based on what is being measured,
- * and accordingly we decide if something is more or less.
+ * For this reason, we take a different scale based on what is being measured,
+ * and so we decide if something is more or less.
  *
  * The [Scaler] interface enables this scaling.
  * In other words,
- * a [Scaler] allows us to understand whether the amount is more or less.
+ * a [Scaler] allows to understand whether the amount is more or less.
  * For this, 4 quantities were determined.
  *
  * 1. [Quantity.MIN] few
@@ -33,7 +33,7 @@ package com.tr.hsyn.scaler
  *    //the minimum value for this object is 10 and below (..., 10]
  *    //the middle value is the range (10, 10 * scale] (10, 20] between ten and twenty
  *    //high value (medium, 10 * scale * 2] range (20, 40] twenty to forty
- *    //the highest value is (high, 10 * scale * 3] range (40, ...) forty and above
+ *    //the highest value is (high, 10 * scale * 3] range (40, ...) forty and later
  *
  * @author hsyn 23.08.2022 18:14:23
  */
@@ -70,7 +70,7 @@ interface Scaler {
 		 *    //the minimum value for this object is 10 and below (..., 10]
 		 *    //the middle value is the range (10, 10 * scale] (10, 20] between ten and twenty
 		 *    //high value (medium, 10 * scale * 2] range (20, 40] twenty to forty
-		 *    //the highest value is (high, 10 * scale * 3] range (40, ...) forty and above
+		 *    //the highest value is (high, 10 * scale * 3] range (40, ...) forty and later
 		 *
 		 * @param base Base
 		 * @param scale Scale
@@ -86,7 +86,7 @@ interface Scaler {
 		 *    //the minimum value for this object is 10 and below (..., 10]
 		 *    //the middle value is the range (10, 10 * scale] (10, 20] between ten and twenty
 		 *    //high value (medium, 10 * scale * 2] range (20, 40] twenty to forty
-		 *    //the highest value is (high, 10 * scale * 3] range (40, ...) forty and above
+		 *    //the highest value is (high, 10 * scale * 3] range (40, ...) forty and later
 		 *
 		 *    quantity.isMin();// returns true because 8 is less than 10 (base value 10)
 		 *

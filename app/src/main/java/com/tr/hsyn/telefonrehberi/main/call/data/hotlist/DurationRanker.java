@@ -29,7 +29,7 @@ public class DurationRanker {
 	@NotNull
 	public static Map<Integer, List<CallRank>> createRankMap(@NotNull CallCollection callCollection) {
 		
-		var            entries   = callCollection.getMapNumberToCalls();
+		var            entries   = callCollection.getMapIdToCalls();
 		Set<String>    keys      = entries.keySet();
 		List<CallRank> callRanks = new ArrayList<>();
 		
@@ -53,7 +53,7 @@ public class DurationRanker {
 			
 			callRank.setIncomingDuration(incomingDuration);
 			callRank.setOutgoingDuration(outgoingDuration);
-			
+			callRank.setContact(callCollection.getContact(key));
 			callRanks.add(callRank);
 		}
 		
@@ -99,25 +99,6 @@ public class DurationRanker {
 				if (PhoneNumbers.equals(number, callRank.getKey())) return callRank;
 		
 		return null;
-	}
-	
-	public static List<Contact> getNoSpeakings(@NotNull Map<Integer, List<CallRank>> rankMap) {
-		
-		List<Contact> contacts = new ArrayList<>();
-		
-		for (var rank : rankMap.keySet()) {
-			
-			List<CallRank> ranks = rankMap.get(rank);
-			
-			for (CallRank callRank : ranks) {
-				
-				if (callRank.getDuration() > 0) continue;
-				
-				contacts.add(callRank.getContact());
-			}
-		}
-		
-		return contacts;
 	}
 	
 }

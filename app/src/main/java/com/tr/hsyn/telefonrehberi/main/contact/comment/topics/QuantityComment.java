@@ -9,11 +9,13 @@ import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.nextension.Extension;
 import com.tr.hsyn.nextension.WordExtension;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
+import com.tr.hsyn.scaler.Quantity;
+import com.tr.hsyn.scaler.Scaler;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallCollection;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
-import com.tr.hsyn.telefonrehberi.main.call.data.hotlist.Ranker;
+import com.tr.hsyn.telefonrehberi.main.call.data.Res;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostCallDialog;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostCallItemViewData;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.ShowCallsDialog;
@@ -40,11 +42,12 @@ public class QuantityComment implements ContactComment {
 	private       Activity                 activity;
 	private       Consumer<ContactComment> callback;
 	private       Contact                  contact;
+	private       boolean                  isTurkish;
 	
 	@Override
 	public boolean isTurkish() {
 		
-		return false;
+		return isTurkish;
 	}
 	
 	@Override
@@ -68,9 +71,11 @@ public class QuantityComment implements ContactComment {
 	@Override
 	public void createComment(@NotNull Contact contact, @NotNull Activity activity, @NotNull Consumer<ContactComment> callback, boolean isTurkish) {
 		
-		this.contact  = contact;
-		this.callback = callback;
-		this.activity = activity;
+		// region Initialization
+		this.contact   = contact;
+		this.callback  = callback;
+		this.activity  = activity;
+		this.isTurkish = isTurkish;
 		
 		if (callCollection == null) {
 			
@@ -78,13 +83,18 @@ public class QuantityComment implements ContactComment {
 			returnComment();
 			return;
 		}
+		// endregion
 		
 		comment.append(getQuantityComment(isTurkish));
 		
-		onBackground(() -> {
+		returnComment();
+		
+		/* onBackground(() -> {
 			
-			Map<Integer, List<CallRank>> rankMap = Ranker.createRankMap(callCollection.getMapNumberToCalls(), Ranker.QUANTITY_COMPARATOR);
-			int                          rank    = Ranker.getRank(rankMap, contact);
+			Map<Integer, List<CallRank>> rankMap = CallCollection.createRankMap(callCollection.getMapIdToCalls(), CallCollection.QUANTITY_COMPARATOR);
+			int                          rank    = CallCollection.getRank(rankMap, contact);
+			
+			xlog.d("Rank=%d", rank);
 			
 			if (rank != -1) {
 				
@@ -98,8 +108,6 @@ public class QuantityComment implements ContactComment {
 					String         title    = getString(R.string.title_most_calls);
 					String         subtitle = getString(R.string.size_contacts, mostList.size());
 					MostCallDialog dialog   = new MostCallDialog(getActivity(), mostList, title, subtitle);
-					
-					//xlog.w("rank=%d, rankCount=%d", rank, rankCount);
 					
 					if (isTurkish) {
 						
@@ -130,13 +138,82 @@ public class QuantityComment implements ContactComment {
 				});
 			}
 			else returnComment();
-		});
+		}); */
 	}
 	
 	@Override
 	public @NotNull Consumer<ContactComment> getCallback() {
 		
 		return callback;
+	}
+	
+	private void mostCall(int callType) {
+		
+		assert callCollection != null;
+		History    history = callCollection.getHistoryOf(contact);
+		List<Call> calls   = history.getCallsByTypes(Res.getCallTypes(callType));
+		
+		if (calls.isEmpty()) {
+			
+			return;
+		}
+		
+		Map<Integer, List<CallRank>> mostCalls = callCollection.getMostIncoming();
+		
+		if (!mostCalls.isEmpty()) {
+			
+			int            rank   = CallCollection.getRank(mostCalls, contact);
+			List<CallRank> winner = mostCalls.get(1);
+			assert winner != null;
+			int rankCount = winner.size();
+			
+			if (rank == 1) {
+				
+				List<MostCallItemViewData> mostList = createMostCallItemList(mostCalls);
+				String                     title    = getString(R.string.title_most_incoming_calls);
+				String                     subtitle = getString(R.string.size_contacts, mostList.size());
+				MostCallDialog             dialog   = new MostCallDialog(activity, mostList, title, subtitle);
+				
+				if (isTurkish()) {
+					
+					comment.append(fmt("%s", contact.getName()))
+							.append(" seni ")
+							.append("en çok arayan", getClickSpans(view -> dialog.show()));
+					
+					if (rankCount == 1) comment.append(" kişi. ");
+					else comment.append(fmt("%d kişiden biri. ", winner.size()));
+				}
+				else {
+					
+					comment.append(fmt("%s", contact.getName()));
+					
+					if (winner.size() == 1) comment.append(" is the person ");
+					else comment.append(" is one of the persons");
+					
+					comment.append("who calls you the most", getClickSpans(view -> dialog.show()))
+							.append(". ");
+				}
+			}
+			else {
+				
+				int            maxRank = mostCalls.keySet().stream().max(Comparator.naturalOrder()).orElse(0);
+				List<CallRank> least   = mostCalls.get(maxRank);
+				
+				assert least != null;
+				int leastCallSize = least.get(0).getCalls().size();
+				
+				Scaler   scaler   = Scaler.Companion.createNewScaler(leastCallSize, 2f);
+				Quantity quantity = scaler.getQuantity(calls.size());
+				
+				switch (quantity) {
+					
+					
+				}
+				
+			}
+			
+			
+		}
 	}
 	
 	@NotNull
@@ -187,12 +264,12 @@ public class QuantityComment implements ContactComment {
 			
 			for (CallRank callRank : rankList) {
 				
-				Call   call  = callRank.getCalls().get(0);
-				String n     = call.getName();
-				String name  = (n != null && !n.trim().isEmpty()) ? n : call.getNumber();
-				int    size  = callRank.getCalls().size();
-				int    order = callRank.getRank();
-				var    data  = new MostCallItemViewData(name, size, order);
+				Call                 call  = callRank.getCalls().get(0);
+				String               n     = call.getName();
+				String               name  = (n != null && !n.trim().isEmpty()) ? n : call.getNumber();
+				int                  size  = callRank.getCalls().size();
+				int                  order = callRank.getRank();
+				MostCallItemViewData data  = new MostCallItemViewData(name, size, order);
 				
 				if (CallKey.getContactId(call) == contact.getContactId()) data.setSelected(true);
 				
