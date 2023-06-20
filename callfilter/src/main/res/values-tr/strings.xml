@@ -11,11 +11,11 @@
 	<string name="outgoing_calls">Giden Aramalar</string>
 	<!--Sadece cevapsız arama kayıtlarının gösterileceğini bildirir-->
 	<string name="missed_calls">Cevapsız Aramalar</string>
-	<!--Sadece reddedilenn arama kayıtlarının gösterileceğini bildirir-->
+	<!--Sadece reddedilen arama kayıtlarının gösterileceğini bildirir-->
 	<string name="rejected_calls">Reddedilen Aramalar</string>
-	<!--Sadece reddedilenn arama kayıtlarının gösterileceğini bildirir-->
+	<!--Sadece İsimsiz arama kayıtlarının gösterileceğini bildirir-->
 	<string name="no_name_calls">İsimsiz Aramalar</string>
-	<!--Sadece reddedilenn arama kayıtlarının gösterileceğini bildirir-->
+	<!--Sadece Rastgele arama kayıtlarının gösterileceğini bildirir-->
 	<string name="random_calls">Rastgele Aramalar</string>
 
 	<string name="most_outgoing_calls">En Çok Arananlar</string>
@@ -27,5 +27,4 @@
 
 
 	<string name="description_call_type">Arama türü</string>
-
 </resources>

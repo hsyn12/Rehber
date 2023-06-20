@@ -2,6 +2,7 @@ package com.tr.hsyn.telefonrehberi.main.contact.data;
 
 
 import com.tr.hsyn.calldata.Call;
+import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallCollection;
@@ -147,23 +148,7 @@ public interface History {
 	 */
 	default @NotNull List<Call> getCallsByTypes(int @NotNull ... types) {
 		
-		List<Call> calls = new ArrayList<>();
-		
-		for (int type : types) calls.addAll(getCalls(type));
-		
-		return calls;
-	}
-	
-	/**
-	 * Returns all calls of the given call type.
-	 *
-	 * @param callType the call type
-	 * @return the calls
-	 */
-	default @NotNull List<Call> getCalls(int callType) {
-		
-		Predicate<Call> test = call -> call.getCallType() == callType;
-		return getCalls(test);
+		return getCalls().stream().filter(c -> Lister.IntArray.contains(types, c.getCallType())).collect(Collectors.toList());
 	}
 	
 	/**

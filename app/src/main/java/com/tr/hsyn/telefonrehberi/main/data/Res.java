@@ -1,7 +1,9 @@
 package com.tr.hsyn.telefonrehberi.main.data;
 
 
-import android.content.Context;
+import android.app.Activity;
+
+import com.tr.hsyn.telefonrehberi.R;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -71,13 +73,11 @@ public interface Res {
 		 * @param filter  Filtreleme türü
 		 * @return Filtre ismi
 		 */
-		static String getCallFilterName(@NotNull Context context, int filter) {
+		static String getCallFilterName(@NotNull Activity context, int filter) {
 			
-			//var filters = context.getResources().getStringArray(R.array.call_filter_items);
+			var filters = context.getResources().getStringArray(R.array.call_filter_items);
 			
-			//return filters[filter];
-			
-			return null;
+			return filters[filter];
 		}
 	}
 	

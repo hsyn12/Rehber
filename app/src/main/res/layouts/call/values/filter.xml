@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:locale="en">
+
 	<string name="filters">Filters</string>
 	<string name="all_calls">Calls</string>
 	<string name="incoming_calls">Incoming Calls</string>
@@ -16,7 +17,23 @@
 
 	<string name="most_duration_incoming_calls">En Çok Konuşanlar</string>
 	<string name="most_duration_outgoing_calls">En Çok Konuştukların</string>
-
-
 	<string name="description_call_type">Call type</string>
+
+	<!--Arama kayıtları filtreleme öğeleri dizisi-->
+	<string-array name="call_filter_items">
+		<item>@string/all_calls</item>
+		<item>@string/incoming_calls</item>
+		<item>@string/outgoing_calls</item>
+		<item>@string/missed_calls</item>
+		<item>@string/rejected_calls</item>
+		<item>@string/no_name_calls</item>
+		<item>@string/random_calls</item>
+		<item>@string/most_incoming_calls</item>
+		<item>@string/most_outgoing_calls</item>
+		<item>@string/most_missed_calls</item>
+		<item>@string/most_rejected_calls</item>
+		<item>@string/most_duration_incoming_calls</item>
+		<item>@string/most_duration_outgoing_calls</item>
+
+	</string-array>
 </resources>

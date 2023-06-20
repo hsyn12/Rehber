@@ -181,8 +181,9 @@ public class CallOver {
 			g.setRank(rank);
 			
 			if (i == groups.size() - 1) break;
+			var next = groups.get(i + 1);
 			
-			if (comparator.compare(g, groups.get(i + 1)) < 0) rank++;
+			if (comparator.compare(g, next) > 0) rank++;
 			//if (g.size() > groups.get(i + 1).size()) rank++;
 		}
 	}

@@ -27,6 +27,15 @@ import java.util.stream.Collectors;
 @SuppressWarnings("ForLoopReplaceableByForEach")
 public final class Lister {
 	
+	public static <T> boolean contains(Iterable<T> list, T value) {
+		
+		if (list == null) return false;
+		
+		for (T t : list)
+			if (Objects.equals(t, value)) return true;
+		
+		return false;
+	}
 	
 	/**
 	 * Verilen liste elemanlarıyla yeni bir liste oluşturur.
@@ -437,5 +446,17 @@ public final class Lister {
 		
 		return list != null && !list.isEmpty();
 	}
+	
+	public interface IntArray {
+		
+		static boolean contains(int[] array, int value) {
+			
+			for (int i : array)
+				if (i == value) return true;
+			
+			return false;
+		}
+	}
+	
 	
 }
