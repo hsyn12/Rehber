@@ -28,6 +28,7 @@ public class TimeDurationImp extends DurationImp implements TimeDuration {
 			
 			
 		}
+		return null;
 	}
 	
 	@Override
