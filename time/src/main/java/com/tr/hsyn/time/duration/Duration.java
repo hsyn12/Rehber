@@ -10,7 +10,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Consumer;
 
 
@@ -37,48 +36,27 @@ import java.util.function.Consumer;
  * @see Unit
  * @see DurationGroup
  */
-public class Duration implements Comparable<Duration> {
-	
-	/**
-	 * Time unit
-	 */
-	private final Unit unit;
-	/**
-	 * Value of time
-	 */
-	private final long value;
-	
-	/**
-	 * Creates a new Duration.
-	 *
-	 * @param unit  Unit of the time
-	 * @param value Amount of the time
-	 */
-	Duration(@NotNull Unit unit, long value) {
-		
-		this.unit  = unit;
-		this.value = value;
-	}
+public interface Duration extends Comparable<Duration> {
 	
 	/**
 	 * @return {@code true} if duration value is zero, {@code false} otherwise
 	 */
-	public boolean isZero() {
+	default boolean isZero() {
 		
-		return value == 0L;
+		return getValue() == 0L;
 	}
 	
 	/**
 	 * @return {@code true} if duration value is not zero, {@code false} otherwise
 	 */
-	public boolean isNotZero() {
+	default boolean isNotZero() {
 		
-		return value != 0L;
+		return getValue() != 0L;
 	}
 	
-	public void isNotZero(@NotNull Consumer<Duration> consumer) {
+	default void isNotZero(@NotNull Consumer<Duration> consumer) {
 		
-		if (value != 0L) consumer.accept(this);
+		if (getValue() != 0L) consumer.accept(this);
 	}
 	
 	/**
@@ -95,9 +73,9 @@ public class Duration implements Comparable<Duration> {
 	 * @param value Amount of the time
 	 * @return new {@link Duration}
 	 */
-	public Duration plus(long value) {
+	default Duration plus(long value) {
 		
-		return new Duration(this.unit, this.value + value);
+		return new DurationImp(getUnit(), getValue() + value);
 	}
 	
 	/**
@@ -117,81 +95,34 @@ public class Duration implements Comparable<Duration> {
 	 * @param other Other {@linkplain Duration} object to add
 	 * @return new {@link Duration}
 	 */
-	public Duration plus(@NotNull Duration other) {
+	default Duration plus(@NotNull Duration other) {
 		
 		if (isDifferentByUnit(other)) {
 			
-			Duration d = other.getValueAs(this.unit);
-			return new Duration(this.unit, this.value + d.getValue());
+			Duration d = other.getValueAs(getUnit());
+			return new DurationImp(getUnit(), getValue() + d.getValue());
 		}
 		
-		return new Duration(this.unit, this.value + value);
-	}
-	
-	@Override
-	public int hashCode() {
-		
-		return Objects.hash(unit, value);
-	}
-	
-	/**
-	 * Checks whether this <code>Duration</code> is equal to other {@link Duration}.
-	 *
-	 * @param o Other {@linkplain Duration} object
-	 * @return {@code true} if {@link Unit} and {@link #value} are equal
-	 */
-	@Override
-	public boolean equals(Object o) {
-		
-		return o instanceof Duration && unit.equals(((Duration) o).getUnit()) && value == ((Duration) o).getValue();
-	}
-	
-	@NotNull
-	@Override
-	public String toString() {
-		
-		return toString("Duration{unit=%2$s, value=%1$d}");
-	}
-	
-	/**
-	 * Returns formatted {@linkplain String} representation of this {@linkplain Duration}.
-	 *
-	 * @param formatted Formatted {@linkplain String} representation.
-	 *                  For example: <code>"%d %s"</code>.
-	 *                  The first parameter is the value, the second parameter is the unit.
-	 *                  Can be changed the order of the parameters like this <code>"%2$s %1$d"</code> (as known).
-	 * @return Formatted {@linkplain String} representation
-	 */
-	@NotNull
-	public String toString(@NotNull String formatted) {
-		
-		return String.format(formatted, value, unit);
+		return new DurationImp(getUnit(), getValue() + other.getValue());
 	}
 	
 	/**
 	 * @return the unit of this {@linkplain Duration} object
 	 */
-	public Unit getUnit() {
-		
-		return unit;
-	}
+	Unit getUnit();
 	
 	/**
 	 * @return duration value of this {@linkplain Duration} object
 	 */
-	public long getValue() {
-		
-		return value;
-	}
+	long getValue();
 	
 	/**
 	 * Determines whether this <code>Duration</code> is different from other {@linkplain Duration} by unit and value.
 	 *
 	 * @param other Other {@linkplain Duration} object
 	 * @return {@code true} if this <code>Duration</code> is not equal to other {@link Duration}.
-	 * 		Equality is determined by {@link #equals(Object)}.
 	 */
-	public boolean isDifferent(@NotNull Duration other) {
+	default boolean isDifferent(@NotNull Duration other) {
 		
 		return !this.equals(other);
 	}
@@ -204,9 +135,9 @@ public class Duration implements Comparable<Duration> {
 	 * @return {@code true} if this <code>Duration</code> unit is different
 	 * 		from given {@link Unit} by unit
 	 */
-	public boolean isDifferentByUnit(@NotNull Unit other) {
+	default boolean isDifferentByUnit(@NotNull Unit other) {
 		
-		return !unit.equals(other);
+		return !getUnit().equals(other);
 	}
 	
 	/**
@@ -215,7 +146,7 @@ public class Duration implements Comparable<Duration> {
 	 * @param other Other {@linkplain Duration} object
 	 * @return {@code true} if this <code>Duration</code> unit is different from given {@link Duration} unit
 	 */
-	public boolean isDifferentByUnit(@NotNull Duration other) {
+	default boolean isDifferentByUnit(@NotNull Duration other) {
 		
 		return isDifferentByUnit(other.getUnit());
 	}
@@ -227,9 +158,9 @@ public class Duration implements Comparable<Duration> {
 	 * @return {@code true} if this <code>Duration</code> unit is greater than given {@link Unit}
 	 * @see Unit#isGreaterThan(Unit)
 	 */
-	public boolean isGreaterByUnit(@NotNull Unit other) {
+	default boolean isGreaterByUnit(@NotNull Unit other) {
 		
-		return unit.isGreaterThan(other);
+		return getUnit().isGreaterThan(other);
 	}
 	
 	/**
@@ -239,9 +170,9 @@ public class Duration implements Comparable<Duration> {
 	 * @return {@code true} if this <code>Duration</code> unit is less than given {@link Unit}
 	 * @see Unit#isLessThan(Unit)
 	 */
-	public boolean isLessByUnit(@NotNull Unit other) {
+	default boolean isLessByUnit(@NotNull Unit other) {
 		
-		return unit.isLessThan(other);
+		return getUnit().isLessThan(other);
 	}
 	
 	/**
@@ -250,9 +181,9 @@ public class Duration implements Comparable<Duration> {
 	 * @param unit the unit
 	 * @return {@code true} if this <code>Duration</code> is equal to given {@link Unit}
 	 */
-	public boolean isUnit(@NotNull Unit unit) {
+	default boolean isUnit(@NotNull Unit unit) {
 		
-		return this.unit.equals(unit);
+		return getUnit().equals(unit);
 	}
 	
 	/**
@@ -266,7 +197,7 @@ public class Duration implements Comparable<Duration> {
 	 *
 	 * @return {@link DurationGroup}
 	 */
-	public DurationGroup toTimeDuration() {
+	default DurationGroup toTimeDuration() {
 		
 		return Time.toDuration(toMilliseconds());
 	}
@@ -274,16 +205,19 @@ public class Duration implements Comparable<Duration> {
 	/**
 	 * @return as milliseconds of this {@linkplain Duration}
 	 */
-	public long toMilliseconds() {
+	default long toMilliseconds() {
+		
+		long value = getValue();
+		
 		//@off
-		switch (unit) {
+		switch (getUnit()) {
 			case MILLISECOND : return value;
-			case SECOND : return value * 1000;
-			case MINUTE : return value * 60000;
-			case HOUR  : return value * 3600000;
-			case DAY : return value * 86400000;
-			case MONTH  : return value * 259200000;
-			case YEAR : return value * 36500000;
+			case SECOND :      return value * 1000;
+			case MINUTE :      return value * 60000;
+			case HOUR  :       return value * 3600000;
+			case DAY :         return value * 86400000;
+			case MONTH  :      return value * 259200000;
+			case YEAR :        return value * 36500000;
 		}//@on
 		
 		return 0;
@@ -295,34 +229,24 @@ public class Duration implements Comparable<Duration> {
 	 * @param unit the unit
 	 * @return {@link Duration}
 	 */
-	public Duration getValueAs(@NotNull Unit unit) {
+	default Duration getValueAs(@NotNull Unit unit) {
 		
 		long value = toMilliseconds();
 		//@off
 		switch (unit) {
-			case MILLISECOND : return new Duration(unit, value);
-			case SECOND : return new Duration(unit, value / 1000);
-			case MINUTE : return new Duration(unit, value / 60000);
-			case HOUR : return new Duration(unit, value / 3600000);
-			case DAY : return new Duration(unit, value / 86400000);
-			case MONTH : return new Duration(unit, value / 259200000);
-			case YEAR : return new Duration(unit, value / 36500000);
+			case MILLISECOND : return new DurationImp(unit, value);
+			case SECOND : return new DurationImp(unit, value / 1000);
+			case MINUTE : return new DurationImp(unit, value / 60000);
+			case HOUR : return new DurationImp(unit, value / 3600000);
+			case DAY : return new DurationImp(unit, value / 86400000);
+			case MONTH : return new DurationImp(unit, value / 259200000);
+			case YEAR : return new DurationImp(unit, value / 36500000);
 		}//@on
 		
 		throw new IllegalArgumentException("Unknown unit: " + unit);
 	}
 	
-	@Override
-	public int compareTo(@NotNull Duration duration) {
-		
-		if (duration.isUnit(this.unit)) {
-			return Long.compare(this.value, duration.getValue());
-		}
-		
-		return duration.unit.ordinal() - this.unit.ordinal();
-	}
-	
-	public static void main(String[] args) {
+	static void main(String[] args) {
 		
 		@NotNull Duration duration  = Duration.of(Unit.MINUTE, 5);
 		@NotNull Duration duration2 = Duration.ofMinute(-1);
@@ -336,7 +260,7 @@ public class Duration implements Comparable<Duration> {
 	 * @param minutes Number of minutes
 	 */
 	@NotNull
-	public static Duration ofMinute(long minutes) {
+	static Duration ofMinute(long minutes) {
 		
 		return of(Unit.MINUTE, minutes);
 	}
@@ -349,19 +273,19 @@ public class Duration implements Comparable<Duration> {
 	 * @return Duration
 	 */
 	@NotNull
-	public static Duration of(@NotNull Unit unit, long value) {
+	static Duration of(@NotNull Unit unit, long value) {
 		
-		return new Duration(unit, value);
+		return new DurationImp(unit, value);
 	}
 	
 	@NotNull
-	public static DurationGroup of(@NotNull List<Duration> durations) {
+	static DurationGroup of(@NotNull List<Duration> durations) {
 		
 		return new DurationGroup(durations);
 	}
 	
 	@NotNull
-	public static DurationGroup of(@NotNull Duration... durations) {
+	static DurationGroup of(@NotNull Duration... durations) {
 		
 		return new DurationGroup(new ArrayList<>(Arrays.asList(durations)));
 	}
@@ -372,7 +296,7 @@ public class Duration implements Comparable<Duration> {
 	 * @param unit Unit of time
 	 */
 	@NotNull
-	public static Duration ofZero(@NotNull Unit unit) {return new Duration(unit, 0L);}
+	static Duration ofZero(@NotNull Unit unit) {return new DurationImp(unit, 0L);}
 	
 	/**
 	 * Creates a new Duration with given years.
@@ -380,7 +304,7 @@ public class Duration implements Comparable<Duration> {
 	 * @param years Number of years
 	 */
 	@NotNull
-	public static Duration ofYear(long years) {return of(Unit.YEAR, years);}
+	static Duration ofYear(long years) {return of(Unit.YEAR, years);}
 	
 	/**
 	 * Creates a new Duration with given months.
@@ -388,7 +312,7 @@ public class Duration implements Comparable<Duration> {
 	 * @param months Number of months
 	 */
 	@NotNull
-	public static Duration ofMonth(long months) {
+	static Duration ofMonth(long months) {
 		
 		return of(Unit.MONTH, months);
 	}
@@ -399,7 +323,7 @@ public class Duration implements Comparable<Duration> {
 	 * @param days Number of days
 	 */
 	@NotNull
-	public static Duration ofDay(long days) {return of(Unit.DAY, days);}
+	static Duration ofDay(long days) {return of(Unit.DAY, days);}
 	
 	/**
 	 * Creates a new Duration with given hours.
@@ -407,7 +331,7 @@ public class Duration implements Comparable<Duration> {
 	 * @param hours Number of hours
 	 */
 	@NotNull
-	public static Duration ofHour(long hours) {
+	static Duration ofHour(long hours) {
 		
 		return of(Unit.HOUR, hours);
 	}
@@ -418,7 +342,7 @@ public class Duration implements Comparable<Duration> {
 	 * @param seconds Number of seconds
 	 */
 	@NotNull
-	public static Duration ofSecond(long seconds) {
+	static Duration ofSecond(long seconds) {
 		
 		return of(Unit.SECOND, seconds);
 	}
@@ -429,19 +353,19 @@ public class Duration implements Comparable<Duration> {
 	 * @param milliseconds Number of milliseconds
 	 **/
 	@NotNull
-	public static Duration ofMillisecond(long milliseconds) {
+	static Duration ofMillisecond(long milliseconds) {
 		
 		return of(Unit.MILLISECOND, milliseconds);
 	}
 	
-	public interface Random {
+	interface Random {
 		
 		long MAX_VALUE = 100L;
 		
 		@NotNull
 		static Duration getNext() {
 			
-			return new Duration(Unit.values()[Randoom.getInt(Unit.values().length)], Randoom.getLong(MAX_VALUE));
+			return new DurationImp(Unit.values()[Randoom.getInt(Unit.values().length)], Randoom.getLong(MAX_VALUE));
 		}
 	}
 }

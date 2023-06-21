@@ -109,6 +109,13 @@ public class DurationGroup implements Comparable<DurationGroup>, Iterable<Durati
 		return durations.get(unit.ordinal());
 	}
 	
+	/**
+	 * Returns the duration of the specified time unit.
+	 *
+	 * @param unit      Unit
+	 * @param durations list of durations to be used to get the duration
+	 * @return {@link Duration}
+	 */
 	@NotNull
 	private Duration getDuration(@NotNull Unit unit, @NotNull List<Duration> durations) {
 		
@@ -307,7 +314,7 @@ public class DurationGroup implements Comparable<DurationGroup>, Iterable<Durati
 	/**
 	 * @return duration of millisecond
 	 */
-	public Duration getMilliSecond() {
+	public Duration getMillisecond() {
 		
 		return millisecond;
 	}
