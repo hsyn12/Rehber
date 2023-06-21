@@ -3,7 +3,6 @@ package com.tr.hsyn.time.duration;
 
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.random.Randoom;
-import com.tr.hsyn.scaler.Generator;
 import com.tr.hsyn.time.Time;
 import com.tr.hsyn.time.Unit;
 
@@ -360,19 +359,6 @@ public interface DurationGroup extends Comparable<DurationGroup>, Iterable<Durat
 		
 		//System.out.println(dg.toString("%1$d years %2$d months %3$d days %4$d hours %5$d minutes"));
 		
-		Generator<Duration> generator = new DurationGenerator(3);
-		DurationGroup[]     array     = new DurationGroup[7];
-		var                 vals      = Unit.values();
-		
-		for (int i = 0; i < 7; i++) {
-			
-			var next = random();
-			array[i] = next;
-		}
-		
-		System.out.println(Arrays.toString(array));
-		Arrays.sort(array);
-		System.out.println(Arrays.toString(array));
 	}
 	
 	/**

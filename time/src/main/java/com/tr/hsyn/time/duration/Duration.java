@@ -2,6 +2,9 @@ package com.tr.hsyn.time.duration;
 
 
 import com.tr.hsyn.random.Randoom;
+import com.tr.hsyn.scaler.Generatable;
+import com.tr.hsyn.scaler.Generation;
+import com.tr.hsyn.scaler.Generator;
 import com.tr.hsyn.time.Time;
 import com.tr.hsyn.time.Unit;
 
@@ -37,7 +40,54 @@ import java.util.function.Consumer;
  * @see Unit
  * @see DurationGroup
  */
-public interface Duration extends Comparable<Duration> {
+public interface Duration extends Comparable<Duration>, Generatable<Duration> {
+	
+	@Override
+	default Generator<Duration> getGenerator() {
+		
+		return (start, end, step) -> {
+			
+			if (start.equalsByUnit(end) && end.equalsByUnit(step))
+				return new Generation<>() {
+					
+					private Duration current = start;
+					
+					@Override
+					public Duration getStep() {
+						
+						return step;
+					}
+					
+					@Override
+					public Duration getStart() {
+						
+						return start;
+					}
+					
+					@Override
+					public Duration getEnd() {
+						
+						return end;
+					}
+					
+					@Override
+					public boolean hasNext() {
+						
+						return current.lessThan(end);
+					}
+					
+					@Override
+					public Duration getNext() {
+						
+						if (hasNext()) return current = current.plus(step);
+						
+						throw new IndexOutOfBoundsException("End is less than start : " + start + " - " + end);
+					}
+				};
+			
+			throw new IllegalArgumentException("Units must be the same : " + start.getUnit() + " - " + end.getUnit() + " - " + step.getUnit());
+		};
+	}
 	
 	/**
 	 * @return {@code true} if duration value is zero, {@code false} otherwise
@@ -232,6 +282,17 @@ public interface Duration extends Comparable<Duration> {
 	default boolean isUnit(@NotNull Unit unit) {
 		
 		return getUnit().equals(unit);
+	}
+	
+	/**
+	 * Determines whether this unit of the duration is equal to given unit of the duration.
+	 *
+	 * @param duration the duration
+	 * @return {@code true} if this unit of the duration is equal to given unit of the duration
+	 */
+	default boolean equalsByUnit(@NotNull Duration duration) {
+		
+		return getUnit().equals(duration.getUnit());
 	}
 	
 	/**

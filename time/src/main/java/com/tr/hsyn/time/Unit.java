@@ -13,34 +13,63 @@ public enum Unit {
 	/**
 	 * Year
 	 */
-	YEAR,
+	YEAR(Long.MAX_VALUE),
 	/**
 	 * Month
 	 */
-	MONTH,
+	MONTH(12L),
 	/**
 	 * DAY
 	 */
-	DAY,
+	DAY(30L),
 	/**
 	 * Hour
 	 */
-	HOUR,
+	HOUR(23L),
 	/**
 	 * MINUTES
 	 */
-	MINUTE,
+	MINUTE(59L),
 	/**
 	 * Seconds
 	 */
-	SECOND,
+	SECOND(59L),
 	/**
 	 * Millisecond
 	 */
-	MILLISECOND;
+	MILLISECOND(999L);
 	
-	static final ResourceBundle BUNDLE = ResourceBundle.getBundle("units");
+	static final  ResourceBundle BUNDLE = ResourceBundle.getBundle("units");
+	private final long           limit;
 	
+	Unit(long limit) {this.limit = limit;}
+	
+	/**
+	 * Determines whether the value is in the limit.
+	 *
+	 * @param value Value
+	 * @return {@code true} if the value is in the limit
+	 */
+	public boolean inLimit(long value) {
+		
+		return value <= limit;
+	}
+	
+	/**
+	 * Determines whether the value is out of the limit.
+	 *
+	 * @param value Value
+	 * @return {@code true} if the value is out of the limit
+	 */
+	public boolean overLimit(long value) {
+		
+		return value > limit;
+	}
+	
+	public long getLimit() {
+		
+		return limit;
+	}
 	
 	@NotNull
 	@Override

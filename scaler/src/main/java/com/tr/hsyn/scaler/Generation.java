@@ -21,6 +21,8 @@ public interface Generation<T extends Comparable<T>> extends Iterable<T> {
 	
 	T getEnd();
 	
+	boolean hasNext();
+	
 	T getNext();
 	
 	default boolean contains(T i) {

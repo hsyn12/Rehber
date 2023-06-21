@@ -11,13 +11,7 @@ public interface Generator<T extends Comparable<T>> {
 	
 	Generation<T> getGeneration(T start, T end, T step);
 	
-	default List<T> generate(Generation<T> generation) {
-		
-		return _generate(generation);
-	}
-	
-	@NotNull
-	private static <T extends Comparable<T>> List<T> _generate(@NotNull Generation<T> generation) {
+	default List<T> generate(@NotNull Generation<T> generation) {
 		
 		List<T> list = new ArrayList<>();
 		
