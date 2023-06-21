@@ -74,7 +74,7 @@ public class DurationImp implements Duration {
 	/**
 	 * @return the unit of this {@linkplain Duration} object
 	 */
-	public Unit getUnit() {
+	public @NotNull Unit getUnit() {
 		
 		return unit;
 	}

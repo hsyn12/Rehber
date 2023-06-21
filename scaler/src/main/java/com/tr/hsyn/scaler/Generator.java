@@ -1,8 +1,27 @@
 package com.tr.hsyn.scaler;
 
 
-public interface Generator<T> {
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
+
+
+public interface Generator<T extends Comparable<T>> {
 	
-	T getNext();
+	Generation<T> getGeneration(T start, T end, T step);
+	
+	@NotNull
+	static <T extends Comparable<T>> List<T> generate(@NotNull Generation<T> generation) {
+		
+		List<T> list = new ArrayList<>();
+		
+		for (T i = generation.getStart(); i.compareTo(generation.getEnd()) <= 0; i = generation.getNext()) {
+			
+			list.add(i);
+		}
+		
+		return list;
+	}
 	
 }

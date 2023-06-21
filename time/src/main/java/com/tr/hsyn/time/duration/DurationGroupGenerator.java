@@ -1,6 +1,7 @@
 package com.tr.hsyn.time.duration;
 
 
+import com.tr.hsyn.scaler.Generation;
 import com.tr.hsyn.scaler.Generator;
 
 
@@ -30,9 +31,37 @@ public class DurationGroupGenerator implements Generator<DurationGroup> {
 		this.current = start != null ? start : DurationGroup.EMPTY;
 	}
 	
+	
 	@Override
-	public DurationGroup getNext() {
+	public Generation<DurationGroup> getGeneration(DurationGroup start, DurationGroup end, DurationGroup step) {
 		
-		return current = current.plus(step);
+		return new Generation<DurationGroup>() {
+			
+			private DurationGroup current = start;
+			
+			@Override
+			public DurationGroup getStep() {
+				
+				return step;
+			}
+			
+			@Override
+			public DurationGroup getStart() {
+				
+				return start;
+			}
+			
+			@Override
+			public DurationGroup getEnd() {
+				
+				return end;
+			}
+			
+			@Override
+			public DurationGroup getNext() {
+				
+				return current = current.plus(step);
+			}
+		};
 	}
 }

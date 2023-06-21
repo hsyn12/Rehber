@@ -94,6 +94,28 @@ public interface DurationGroup extends Comparable<DurationGroup>, Iterable<Durat
 		throw new IllegalArgumentException("Unknown unit: " + duration.getUnit());
 	}
 	
+	default DurationGroup plus(@NotNull DurationGroup durationGroup) {
+		
+		DurationGroup newDurationGroup = EMPTY;
+		
+		for (Duration duration : durationGroup) {
+			
+			if (duration.isZero()) continue;
+			//@off
+			switch (duration.getUnit()) {
+				case MILLISECOND: newDurationGroup = setDuration(Duration.of(Unit.MILLISECOND, getDuration(Unit.MILLISECOND).getValue() + duration.getValue()));break;
+				case SECOND: newDurationGroup = setDuration(Duration.of(Unit.SECOND, getDuration(Unit.SECOND).getValue() + duration.getValue()));break;
+				case MINUTE: newDurationGroup = setDuration(Duration.of(Unit.MINUTE, getDuration(Unit.MINUTE).getValue() + duration.getValue()));break;
+				case HOUR: newDurationGroup = setDuration(Duration.of(Unit.HOUR, getDuration(Unit.HOUR).getValue() + duration.getValue()));break;
+				case DAY: newDurationGroup = setDuration(Duration.of(Unit.DAY, getDuration(Unit.DAY).getValue() + duration.getValue()));break;
+				case MONTH: newDurationGroup = setDuration(Duration.of(Unit.MONTH, getDuration(Unit.MONTH).getValue() + duration.getValue()));break;
+				case YEAR: newDurationGroup = setDuration(Duration.of(Unit.YEAR, getDuration(Unit.YEAR).getValue() + duration.getValue()));break;
+			}//@on
+		}
+		
+		return newDurationGroup;
+	}
+	
 	/**
 	 * Sets the duration of this {@link DurationGroup}.
 	 * Setting a duration is replacing the existing duration.<br><br>
@@ -353,11 +375,31 @@ public interface DurationGroup extends Comparable<DurationGroup>, Iterable<Durat
 		System.out.println(Arrays.toString(array));
 	}
 	
+	/**
+	 * Creates a {@link DurationGroup}
+	 *
+	 * @param durations {@link Duration} list
+	 * @return {@link DurationGroup}
+	 */
+	@NotNull
 	static DurationGroup of(@NotNull List<Duration> durations) {
 		
 		return new DurationGroupImp(durations);
 	}
 	
+	/**
+	 * Creates a {@link DurationGroup}
+	 *
+	 * @param duration {@link Duration}
+	 * @return {@link DurationGroup}
+	 */
+	@NotNull
+	static DurationGroup of(@NotNull Duration duration) {
+		
+		return new DurationGroupImp(List.of(duration));
+	}
+	
+	@NotNull
 	static DurationGroup random() {
 		
 		return DurationGroup.builder()

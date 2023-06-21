@@ -80,6 +80,26 @@ public interface Duration extends Comparable<Duration> {
 		return new DurationImp(getUnit(), getValue() + value);
 	}
 	
+	default boolean lessThan(@NotNull Duration other) {
+		
+		return this.compareTo(other) < 0;
+	}
+	
+	default boolean lessThanOrEqual(@NotNull Duration other) {
+		
+		return this.compareTo(other) <= 0;
+	}
+	
+	default boolean greaterThan(@NotNull Duration other) {
+		
+		return this.compareTo(other) > 0;
+	}
+	
+	default boolean greaterThanOrEqual(@NotNull Duration other) {
+		
+		return this.compareTo(other) >= 0;
+	}
+	
 	/**
 	 * Adds {@code Duration} to this {@link Duration}.
 	 * İf the given duration is negative, made subtract.
