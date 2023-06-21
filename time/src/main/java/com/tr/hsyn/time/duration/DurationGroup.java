@@ -195,41 +195,49 @@ public interface DurationGroup extends Comparable<DurationGroup>, Iterable<Durat
 	/**
 	 * @return duration of year
 	 */
+	@NotNull
 	Duration getYear();
 	
 	/**
 	 * @return duration of month
 	 */
+	@NotNull
 	Duration getMonth();
 	
 	/**
 	 * @return duration of day
 	 */
+	@NotNull
 	Duration getDay();
 	
 	/**
 	 * @return duration of hour
 	 */
+	@NotNull
 	Duration getHour();
 	
 	/**
 	 * @return duration of minute
 	 */
+	@NotNull
 	Duration getMinute();
 	
 	/**
 	 * @return duration of second
 	 */
+	@NotNull
 	Duration getSecond();
 	
 	/**
 	 * @return duration of millisecond
 	 */
+	@NotNull
 	Duration getMillisecond();
 	
 	/**
 	 * @return duration list copy
 	 */
+	@NotNull
 	List<Duration> getDurations();
 	
 	/**
@@ -251,6 +259,7 @@ public interface DurationGroup extends Comparable<DurationGroup>, Iterable<Durat
 	 *
 	 * @return LocalDateTime
 	 */
+	@NotNull
 	default LocalDateTime addToLocalDate() {
 		
 		LocalDateTime date = Time.localDateNow();
@@ -279,6 +288,7 @@ public interface DurationGroup extends Comparable<DurationGroup>, Iterable<Durat
 	 * @param date {@link LocalDateTime} as starting point for calculation
 	 * @return LocalDateTime
 	 */
+	@NotNull
 	default LocalDateTime addToLocalDate(@NotNull LocalDateTime date) {
 		
 		for (Duration duration : getDurations()) {
@@ -343,7 +353,7 @@ public interface DurationGroup extends Comparable<DurationGroup>, Iterable<Durat
 		System.out.println(Arrays.toString(array));
 	}
 	
-	static DurationGroup of(List<Duration> durations) {
+	static DurationGroup of(@NotNull List<Duration> durations) {
 		
 		return new DurationGroupImp(durations);
 	}

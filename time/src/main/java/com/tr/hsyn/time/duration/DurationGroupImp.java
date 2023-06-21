@@ -74,6 +74,7 @@ public class DurationGroupImp implements DurationGroup {
 		this.durations = other.getDurations();
 	}
 	
+	@Override
 	@NotNull
 	public Duration getDuration(@NotNull Unit unit) {
 		
@@ -81,48 +82,48 @@ public class DurationGroupImp implements DurationGroup {
 	}
 	
 	@Override
-	public Duration getYear() {
+	public @NotNull Duration getYear() {
 		
 		return year;
 	}
 	
 	@Override
-	public Duration getMonth() {
+	public @NotNull Duration getMonth() {
 		
 		return month;
 	}
 	
 	@Override
-	public Duration getDay() {
+	public @NotNull Duration getDay() {
 		
 		return day;
 	}
 	
 	@Override
-	public Duration getHour() {
+	public @NotNull Duration getHour() {
 		
 		return hour;
 	}
 	
 	@Override
-	public Duration getMinute() {
+	public @NotNull Duration getMinute() {
 		
 		return minute;
 	}
 	
 	@Override
-	public Duration getSecond() {
+	public @NotNull Duration getSecond() {
 		
 		return second;
 	}
 	
 	@Override
-	public Duration getMillisecond() {
+	public @NotNull Duration getMillisecond() {
 		
 		return millisecond;
 	}
 	
-	public List<Duration> getDurations() {
+	public @NotNull List<Duration> getDurations() {
 		
 		return Lister.listOf(durations);
 	}
