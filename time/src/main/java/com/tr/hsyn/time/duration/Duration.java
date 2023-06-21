@@ -290,13 +290,13 @@ public interface Duration extends Comparable<Duration> {
 	@NotNull
 	static DurationGroup of(@NotNull List<Duration> durations) {
 		
-		return new DurationGroup(durations);
+		return DurationGroup.of(durations);
 	}
 	
 	@NotNull
 	static DurationGroup of(@NotNull Duration... durations) {
 		
-		return new DurationGroup(new ArrayList<>(Arrays.asList(durations)));
+		return DurationGroup.of(new ArrayList<>(Arrays.asList(durations)));
 	}
 	
 	/**
