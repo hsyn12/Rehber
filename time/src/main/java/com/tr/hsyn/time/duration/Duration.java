@@ -300,7 +300,7 @@ public interface Duration extends Comparable<Duration>, Generatable<Duration> {
 	 * Determines whether this unit of the duration is equal to given unit of the duration.
 	 *
 	 * @param duration the duration
-	 * @return {@code true} if this unit of the duration is equal to given unit of the duration
+	 * @return {@code true} if this unit of the duration is equal to given unit of the duration.
 	 */
 	default boolean equalsByUnit(@NotNull Duration duration) {
 		
