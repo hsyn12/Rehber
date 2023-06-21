@@ -55,6 +55,11 @@ public interface Duration extends Comparable<Duration> {
 		return getValue() != 0L;
 	}
 	
+	/**
+	 * If this duration is not zero then calls the given {@code consumer}.
+	 *
+	 * @param consumer consumer to be called
+	 */
 	default void isNotZero(@NotNull Consumer<Duration> consumer) {
 		
 		if (getValue() != 0L) consumer.accept(this);
@@ -80,21 +85,37 @@ public interface Duration extends Comparable<Duration> {
 		return new DurationImp(getUnit(), getValue() + value);
 	}
 	
+	/**
+	 * @param other duration
+	 * @return {@code true} if this {@link Duration} is less than other
+	 */
 	default boolean lessThan(@NotNull Duration other) {
 		
 		return this.compareTo(other) < 0;
 	}
 	
+	/**
+	 * @param other duration
+	 * @return {@code true} if this {@link Duration} is less than other or equal
+	 */
 	default boolean lessThanOrEqual(@NotNull Duration other) {
 		
 		return this.compareTo(other) <= 0;
 	}
 	
+	/**
+	 * @param other duration
+	 * @return {@code true} if this {@link Duration} is greater than other
+	 */
 	default boolean greaterThan(@NotNull Duration other) {
 		
 		return this.compareTo(other) > 0;
 	}
 	
+	/**
+	 * @param other duration
+	 * @return {@code true} if this {@link Duration} is greater than other or equal
+	 */
 	default boolean greaterThanOrEqual(@NotNull Duration other) {
 		
 		return this.compareTo(other) >= 0;
