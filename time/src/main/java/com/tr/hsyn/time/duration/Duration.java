@@ -29,7 +29,7 @@ import java.util.function.Consumer;
  * So it is not treated as time, because if it were treated as time,
  * the minute value could be at most {@code 59}.<br>
  * However,
- * a <b>duration</b> can be converted to a time by calling {@link #toTimeDuration()}<br><br>
+ * a <b>duration</b> can be converted to a time by calling {@link #toTimeDurationGroup()}<br><br>
  *
  * <pre>
  * var duration = Duration.ofMinute(1981);
@@ -210,16 +210,6 @@ public interface Duration extends Comparable<Duration>, Generatable<Duration> {
 		}
 		
 		return new DurationImp(getUnit(), getValue() + other.getValue());
-	}
-	
-	/**
-	 * Converts this {@link Duration} to a {@link TimeDuration}.
-	 *
-	 * @return new {@link TimeDuration}
-	 */
-	default TimeDuration toTimeDuration() {
-		
-		return TimeDuration.of(getUnit(), getValue());
 	}
 	
 	@NotNull
