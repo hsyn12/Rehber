@@ -19,7 +19,6 @@ import java.util.function.Function;
 /**
  * Provides many {@link Duration} objects to be used.<br>
  * Each time unit can only be used <u>once</u> in a {@linkplain DurationGroup} object.<br>
- * Duration specified with this class can be converted to calendar time.
  *
  * @see Unit
  * @see Duration

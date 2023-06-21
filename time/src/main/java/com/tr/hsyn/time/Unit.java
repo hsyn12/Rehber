@@ -25,19 +25,19 @@ public enum Unit {
 	/**
 	 * Hour
 	 */
-	HOUR(23L),
+	HOUR(24L),
 	/**
 	 * MINUTES
 	 */
-	MINUTE(59L),
+	MINUTE(60L),
 	/**
 	 * Seconds
 	 */
-	SECOND(59L),
+	SECOND(60L),
 	/**
 	 * Millisecond
 	 */
-	MILLISECOND(999L);
+	MILLISECOND(1000L);
 	
 	static final  ResourceBundle BUNDLE = ResourceBundle.getBundle("units");
 	private final long           limit;

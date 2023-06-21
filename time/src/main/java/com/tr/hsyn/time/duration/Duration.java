@@ -136,6 +136,18 @@ public interface Duration extends Comparable<Duration>, Generatable<Duration> {
 	}
 	
 	/**
+	 * Returns a new {@link Duration} with the given value.
+	 * The unit is not changed.
+	 *
+	 * @param value Amount of the time
+	 * @return new {@link Duration}
+	 */
+	default Duration withValue(long value) {
+		
+		return of(getUnit(), value);
+	}
+	
+	/**
 	 * @param other duration
 	 * @return {@code true} if this {@link Duration} is less than other
 	 */
@@ -198,6 +210,16 @@ public interface Duration extends Comparable<Duration>, Generatable<Duration> {
 		}
 		
 		return new DurationImp(getUnit(), getValue() + other.getValue());
+	}
+	
+	/**
+	 * Converts this {@link Duration} to a {@link TimeDuration}.
+	 *
+	 * @return new {@link TimeDuration}
+	 */
+	default TimeDuration toTimeDuration() {
+		
+		return TimeDuration.of(getUnit(), getValue());
 	}
 	
 	@NotNull
@@ -307,7 +329,7 @@ public interface Duration extends Comparable<Duration>, Generatable<Duration> {
 	 * @return {@link DurationGroup}
 	 */
 	@NotNull
-	default DurationGroup toTimeDuration() {
+	default DurationGroup toTimeDurationGroup() {
 		
 		return Time.toDuration(toMilliseconds());
 	}
@@ -346,12 +368,12 @@ public interface Duration extends Comparable<Duration>, Generatable<Duration> {
 		//@off
 		switch (unit) {
 			case MILLISECOND : return new DurationImp(unit, value);
-			case SECOND : return new DurationImp(unit, value / 1000);
-			case MINUTE : return new DurationImp(unit, value / 60000);
-			case HOUR : return new DurationImp(unit, value / 3600000);
-			case DAY : return new DurationImp(unit, value / 86400000);
-			case MONTH : return new DurationImp(unit, value / 259200000);
-			case YEAR : return new DurationImp(unit, value / 36500000);
+			case SECOND      : return new DurationImp(unit, value / 1000);
+			case MINUTE      : return new DurationImp(unit, value / 60000);
+			case HOUR        : return new DurationImp(unit, value / 3600000);
+			case DAY         : return new DurationImp(unit, value / 86400000);
+			case MONTH       : return new DurationImp(unit, value / 259200000);
+			case YEAR        : return new DurationImp(unit, value / 36500000);
 		}//@on
 		
 		throw new IllegalArgumentException("Unknown unit: " + unit);
