@@ -74,6 +74,7 @@ public interface Duration extends Comparable<Duration> {
 	 * @param value Amount of the time
 	 * @return new {@link Duration}
 	 */
+	@NotNull
 	default Duration plus(long value) {
 		
 		return new DurationImp(getUnit(), getValue() + value);
@@ -96,6 +97,7 @@ public interface Duration extends Comparable<Duration> {
 	 * @param other Other {@linkplain Duration} object to add
 	 * @return new {@link Duration}
 	 */
+	@NotNull
 	default Duration plus(@NotNull Duration other) {
 		
 		if (isDifferentByUnit(other)) {
@@ -107,9 +109,13 @@ public interface Duration extends Comparable<Duration> {
 		return new DurationImp(getUnit(), getValue() + other.getValue());
 	}
 	
+	@NotNull
+	String toString(@NotNull String formatted);
+	
 	/**
 	 * @return the unit of this {@linkplain Duration} object
 	 */
+	@NotNull
 	Unit getUnit();
 	
 	/**
@@ -198,6 +204,7 @@ public interface Duration extends Comparable<Duration> {
 	 *
 	 * @return {@link DurationGroup}
 	 */
+	@NotNull
 	default DurationGroup toTimeDuration() {
 		
 		return Time.toDuration(toMilliseconds());
@@ -230,6 +237,7 @@ public interface Duration extends Comparable<Duration> {
 	 * @param unit the unit
 	 * @return {@link Duration}
 	 */
+	@NotNull
 	default Duration getValueAs(@NotNull Unit unit) {
 		
 		long value = toMilliseconds();
