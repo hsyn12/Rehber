@@ -4,7 +4,7 @@ package com.tr.hsyn.telefonrehberi.main.call.data.hotlist;
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.telefonrehberi.main.contact.data.History;
-import com.tr.hsyn.time.DurationGroup;
+import com.tr.hsyn.time.duration.DurationGroup;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

@@ -16,9 +16,9 @@ import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.ContactComment;
 import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
 import com.tr.hsyn.text.Spanner;
-import com.tr.hsyn.time.DurationGroup;
 import com.tr.hsyn.time.Time;
 import com.tr.hsyn.time.Unit;
+import com.tr.hsyn.time.duration.DurationGroup;
 import com.tr.hsyn.xlog.xlog;
 
 import org.jetbrains.annotations.NotNull;

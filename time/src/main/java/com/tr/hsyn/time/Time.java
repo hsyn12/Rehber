@@ -2,6 +2,8 @@ package com.tr.hsyn.time;
 
 
 import com.tr.hsyn.random.Randoom;
+import com.tr.hsyn.time.duration.Duration;
+import com.tr.hsyn.time.duration.DurationGroup;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -219,6 +221,17 @@ public class Time implements TimeMillis {
 	 */
 	@NotNull
 	public static Time time() {return new Time();}
+	
+	/**
+	 * Returns the current date and time.
+	 *
+	 * @return {@link LocalDateTime} now
+	 */
+	@NotNull
+	public static LocalDateTime localDateNow() {
+		
+		return LocalDateTime.now();
+	}
 	
 	/**
 	 * @param date Tarih
@@ -645,7 +658,7 @@ public class Time implements TimeMillis {
 		}
 		
 		if (isNegative) duration = -duration;
-		durationBuilder.milliSecond(duration);
+		durationBuilder.millisecond(duration);
 		//durations.add(Duration.of(Unit.MILLISECOND, duration));
 		return durationBuilder.build();
 	}

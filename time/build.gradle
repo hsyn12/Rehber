@@ -6,6 +6,7 @@ dependencies {
 
 	implementation project(path: ':random')
 	implementation project(path: ':collection')
+	implementation project(path: ':scaler')
 	compileOnly "org.jetbrains:annotations:${rootProject.annotations}"
 }
 

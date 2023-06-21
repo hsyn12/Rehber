@@ -83,7 +83,7 @@ interface Scaler {
 		 * Calculates the [Quantity] of the [size] value.
 		 *
 		 *    val quantity = Scaler.getQuantity(8, 10, 2f);
-		 *    //the minimum value for this object is 10 and below (..., 10]
+		 *    //the minimum value is 10 and below (..., 10]
 		 *    //the middle value is the range (10, 10 * scale] (10, 20] between ten and twenty
 		 *    //high value (medium, 10 * scale * 2] range (20, 40] twenty to forty
 		 *    //the highest value is (high, 10 * scale * 3] range (40, ...) forty and later
@@ -108,6 +108,17 @@ interface Scaler {
 		}
 		//endregion
 	}
+}
+
+fun main() {
+	
+	val base = 10
+	val scale = 6f
+	
+	for (i in 0 until 180 step 4) {
+		println("val : $i - base: $base - scale : $scale --> ${Scaler.makeQuantity(i, base, scale)}")
+	}
+	
 }
 
 

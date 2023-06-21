@@ -1,5 +1,9 @@
-package com.tr.hsyn.time;
+package com.tr.hsyn.time.duration;
 
+
+import com.tr.hsyn.random.Randoom;
+import com.tr.hsyn.time.Time;
+import com.tr.hsyn.time.Unit;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -19,10 +23,10 @@ import java.util.function.Consumer;
  * </pre>
  * <p>
  * There are no restrictions when specifying the duration,
- * the aforementioned minute is saved as it is.
+ * the that minute is saved as it is.
  * So it is not treated as time, because if it were treated as time,
  * the minute value could be at most {@code 59}.<br>
- * However, a <b>duration</b> can be converted to an exact time equivalent.<br><br>
+ * However, a <b>duration</b> can be converted to an exact time equal to the duration.<br><br>
  *
  * <pre>
  * var duration = Duration.ofMinute(1981);
@@ -33,7 +37,7 @@ import java.util.function.Consumer;
  * @see Unit
  * @see DurationGroup
  */
-public class Duration {
+public class Duration implements Comparable<Duration> {
 	
 	/**
 	 * Time unit
@@ -78,7 +82,7 @@ public class Duration {
 	}
 	
 	/**
-	 * Adds {@code value} to this {@link Duration}.
+	 * Adds {@code value} to the {@link Duration}.
 	 * İf the given value is negative, made subtract.
 	 *
 	 * <pre>
@@ -246,7 +250,7 @@ public class Duration {
 	 * @param unit the unit
 	 * @return {@code true} if this <code>Duration</code> is equal to given {@link Unit}
 	 */
-	public boolean is(@NotNull Unit unit) {
+	public boolean isUnit(@NotNull Unit unit) {
 		
 		return this.unit.equals(unit);
 	}
@@ -306,6 +310,16 @@ public class Duration {
 		}//@on
 		
 		throw new IllegalArgumentException("Unknown unit: " + unit);
+	}
+	
+	@Override
+	public int compareTo(@NotNull Duration duration) {
+		
+		if (duration.isUnit(this.unit)) {
+			return Long.compare(this.value, duration.getValue());
+		}
+		
+		return duration.unit.ordinal() - this.unit.ordinal();
 	}
 	
 	public static void main(String[] args) {
@@ -420,4 +434,14 @@ public class Duration {
 		return of(Unit.MILLISECOND, milliseconds);
 	}
 	
+	public interface Random {
+		
+		long MAX_VALUE = 100L;
+		
+		@NotNull
+		static Duration getNext() {
+			
+			return new Duration(Unit.values()[Randoom.getInt(Unit.values().length)], Randoom.getLong(MAX_VALUE));
+		}
+	}
 }

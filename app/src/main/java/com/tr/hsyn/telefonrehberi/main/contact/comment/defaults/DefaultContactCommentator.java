@@ -29,8 +29,8 @@ import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.contact.data.History;
 import com.tr.hsyn.text.Spanner;
 import com.tr.hsyn.text.Spans;
-import com.tr.hsyn.time.Duration;
 import com.tr.hsyn.time.Time;
+import com.tr.hsyn.time.duration.Duration;
 import com.tr.hsyn.treadedwork.Threaded;
 import com.tr.hsyn.xlog.xlog;
 

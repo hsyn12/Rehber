@@ -107,7 +107,7 @@ public class QuantityComment implements ContactComment {
 					
 					String         title    = getString(R.string.title_most_calls);
 					String         subtitle = getString(R.string.size_contacts, mostList.size());
-					MostCallDialog dialog   = new MostCallDialog(getActivity(), mostList, title, subtitle);
+					MostCallDialog dialog = new MostCallDialog(getActivity(), mostList, title, subtitle);
 					
 					if (isTurkish) {
 						
@@ -196,32 +196,20 @@ public class QuantityComment implements ContactComment {
 			}
 			else {
 				
-				int            maxRank = mostCalls.keySet().stream().max(Comparator.naturalOrder()).orElse(0);
-				List<CallRank> least   = mostCalls.get(maxRank);
+				Quantity quantity = Scaler.makeQuantity(calls.size(), 10, 6f);
 				
-				assert least != null;
-				int leastCallSize = least.get(0).getCalls().size();
-				
-				Scaler   scaler   = Scaler.Companion.createNewScaler(leastCallSize, 2f);
-				Quantity quantity = scaler.getQuantity(calls.size());
-				
-				xlog.d("base : %d", leastCallSize);
-				xlog.d("max  : %s", winner.get(0).getCalls().size());
-				
-				switch (quantity) {
+				if (quantity.isMin()) {
 					
-					case MIN: xlog.d("MIN");
-						break;
-					case MID: xlog.d("MID");
-						break;
-					case MAX: xlog.d("MAX");
-						break;
-					case LARGE: xlog.d("LARGE");
-						break;
+					if (isTurkish) {
+						
+						comment.append("Bu kişi seni en az arayanlardan biri. ");
+					}
+					else {
+						
+						comment.append("This person is one of the least calling for you. ");
+					}
 				}
 			}
-			
-			
 		}
 	}
 	

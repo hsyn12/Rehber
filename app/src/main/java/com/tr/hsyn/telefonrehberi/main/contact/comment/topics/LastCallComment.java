@@ -16,8 +16,8 @@ import com.tr.hsyn.telefonrehberi.main.contact.comment.ContactComment;
 import com.tr.hsyn.telefonrehberi.main.contact.data.History;
 import com.tr.hsyn.text.Spanner;
 import com.tr.hsyn.text.Spans;
-import com.tr.hsyn.time.Duration;
 import com.tr.hsyn.time.Time;
+import com.tr.hsyn.time.duration.Duration;
 import com.tr.hsyn.xlog.xlog;
 
 import org.jetbrains.annotations.NotNull;

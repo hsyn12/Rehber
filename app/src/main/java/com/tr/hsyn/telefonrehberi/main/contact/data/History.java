@@ -7,8 +7,8 @@ import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallCollection;
 import com.tr.hsyn.telefonrehberi.main.call.data.Res;
-import com.tr.hsyn.time.DurationGroup;
 import com.tr.hsyn.time.Time;
+import com.tr.hsyn.time.duration.DurationGroup;
 import com.tr.hsyn.xbox.Blue;
 
 import org.jetbrains.annotations.NotNull;

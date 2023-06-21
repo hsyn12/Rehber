@@ -3,10 +3,8 @@ package com.tr.hsyn.telefonrehberi.main.call.data.hotlist;
 
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.contactdata.Contact;
-import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallCollection;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
-import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -86,17 +84,13 @@ public class DurationRanker {
 		
 		if (contact == null) return null;
 		
-		var numbers = ContactKey.getNumbers(contact);
-		
-		if (numbers == null || numbers.isEmpty()) return null;
-		
 		List<CallRank> ranks = rankMap.get(rank);
 		
 		if (ranks == null) return null;
 		
 		for (CallRank callRank : ranks)
-			for (var number : numbers)
-				if (PhoneNumbers.equals(number, callRank.getKey())) return callRank;
+			if (callRank.getKey().equals(String.valueOf(contact.getContactId())))
+				return callRank;
 		
 		return null;
 	}

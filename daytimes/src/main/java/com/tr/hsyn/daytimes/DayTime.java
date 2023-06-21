@@ -6,8 +6,9 @@ import android.content.Context;
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 
-import com.tr.hsyn.time.DurationGroup;
 import com.tr.hsyn.time.Unit;
+import com.tr.hsyn.time.duration.Duration;
+import com.tr.hsyn.time.duration.DurationGroup;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -157,7 +158,7 @@ public class DayTime {
 		LinkedList<String> list = new LinkedList<>();
 		String             str;
 		
-		for (com.tr.hsyn.time.Duration part : durationGroup.getDurations()) {
+		for (Duration part : durationGroup.getDurations()) {
 			
 			str = part.getValue() + " ";
 			
@@ -194,7 +195,7 @@ public class DayTime {
 		LinkedList<String>   list   = new LinkedList<>();
 		String               str;
 		
-		for (com.tr.hsyn.time.Duration part : durationGroup.getDurations()) {
+		for (Duration part : durationGroup.getDurations()) {
 			
 			str = part.getValue() + " ";
 			
