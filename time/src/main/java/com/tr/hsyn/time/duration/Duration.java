@@ -25,7 +25,8 @@ import java.util.function.Consumer;
  * the that minute is saved as it is.
  * So it is not treated as time, because if it were treated as time,
  * the minute value could be at most {@code 59}.<br>
- * However, a <b>duration</b> can be converted to an exact time equal to the duration.<br><br>
+ * However,
+ * a <b>duration</b> can be converted to a time by calling {@link #toTimeDuration()}<br><br>
  *
  * <pre>
  * var duration = Duration.ofMinute(1981);

@@ -608,8 +608,8 @@ public class Time implements TimeMillis {
 	@NotNull
 	public static DurationGroup toDuration(long duration) {
 		
-		DurationGroup.@NotNull Builder durationBuilder = DurationGroup.builder();
-		boolean                        isNegative      = duration < 0L;
+		DurationGroup.Builder durationBuilder = DurationGroup.builder();
+		boolean               isNegative      = duration < 0L;
 		duration = Math.abs(duration);
 		
 		while (true) {
@@ -618,14 +618,12 @@ public class Time implements TimeMillis {
 				long year = duration / YEAR;
 				if (isNegative) year = -year;
 				durationBuilder.year(year);
-				//durations.add(Duration.of(Unit.YEAR, duration / YEAR));
 				duration %= YEAR;
 			}
 			else if (duration >= MONTH) {
 				long month = duration / MONTH;
 				if (isNegative) month = -month;
 				durationBuilder.month(month);
-				//durations.add(Duration.of(Unit.MONTH, duration / MONTH));
 				duration %= MONTH;
 			}
 			else if (duration >= DAY) {
@@ -659,7 +657,6 @@ public class Time implements TimeMillis {
 		
 		if (isNegative) duration = -duration;
 		durationBuilder.millisecond(duration);
-		//durations.add(Duration.of(Unit.MILLISECOND, duration));
 		return durationBuilder.build();
 	}
 	
