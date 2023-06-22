@@ -13,7 +13,6 @@ import java.util.List;
 
 public class DurationGroupImp implements DurationGroup {
 	
-	
 	private final Duration       year;
 	private final Duration       month;
 	private final Duration       day;
@@ -70,8 +69,7 @@ public class DurationGroupImp implements DurationGroup {
 		this.minute      = other.getMinute();
 		this.second      = other.getSecond();
 		this.millisecond = other.getMillisecond();
-		
-		this.durations = other.getDurations();
+		this.durations   = other.getDurations();
 	}
 	
 	@Override
@@ -130,6 +128,15 @@ public class DurationGroupImp implements DurationGroup {
 	
 	/**
 	 * Returns a string representation of this {@link DurationGroup}.<br>
+	 * <pre>
+	 *    Y --> Year
+	 *    M --> Month
+	 *    D --> Day
+	 *    H --> Hour
+	 *    M --> Minute
+	 *    S --> Second
+	 *    M --> Millisecond
+	 * </pre>
 	 *
 	 * @return a string representation
 	 */
@@ -169,36 +176,5 @@ public class DurationGroupImp implements DurationGroup {
 		return durations.iterator();
 	}
 	
-	/**
-	 * Returns a string representation of this {@link DurationGroup}.<br>
-	 * Formatted string is: <br>
-	 * <code>Y{year}M{month}D{day}H{hour}M{minute}S{second}M{millisecond}</code> respectively.<br>
-	 * The order starts from <code>1</code>
-	 * and increments by <code>1</code> until it reaches <code>7</code>.<br>
-	 * And can write like this {@code month} and {@code day} <br>
-	 * {@code '%2$d months %3$d days'} as formatted string.<br><br>
-	 *
-	 * <pre>
-	 * var dg = DurationGroup.builder()
-	 * 	.year(1)
-	 * 	.month(2)
-	 * 	.day(3)
-	 * 	.hour(4)
-	 * 	.minute(5)
-	 * 	.second(6)
-	 * 	.milliSecond(7)
-	 * 	.build();
-	 *
-	 * 	System.out.println(dg); // Y1M2D3H4M5S6M7
-	 * 	System.out.println(dg.toString("%2$d months %3$d days")); // 2 month 3 day
-	 * </pre>
-	 *
-	 * @param formatted formatted string
-	 * @return a string representation
-	 */
-	public String toString(String formatted) {
-		
-		return String.format(formatted, year.getValue(), month.getValue(), day.getValue(), hour.getValue(), minute.getValue(), second.getValue());
-	}
 	
 }

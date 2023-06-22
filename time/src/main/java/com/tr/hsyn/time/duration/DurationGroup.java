@@ -40,6 +40,54 @@ public interface DurationGroup extends Comparable<DurationGroup>, Iterable<Durat
 	Duration getDuration(@NotNull Unit unit);
 	
 	/**
+	 * @return duration of year
+	 */
+	@NotNull
+	Duration getYear();
+	
+	/**
+	 * @return duration of month
+	 */
+	@NotNull
+	Duration getMonth();
+	
+	/**
+	 * @return duration of day
+	 */
+	@NotNull
+	Duration getDay();
+	
+	/**
+	 * @return duration of hour
+	 */
+	@NotNull
+	Duration getHour();
+	
+	/**
+	 * @return duration of minute
+	 */
+	@NotNull
+	Duration getMinute();
+	
+	/**
+	 * @return duration of second
+	 */
+	@NotNull
+	Duration getSecond();
+	
+	/**
+	 * @return duration of millisecond
+	 */
+	@NotNull
+	Duration getMillisecond();
+	
+	/**
+	 * @return duration list copy
+	 */
+	@NotNull
+	List<Duration> getDurations();
+	
+	/**
 	 * Returns the duration of the specified time unit.
 	 *
 	 * @param unit      Unit
@@ -92,26 +140,32 @@ public interface DurationGroup extends Comparable<DurationGroup>, Iterable<Durat
 		throw new IllegalArgumentException("Unknown unit: " + duration.getUnit());
 	}
 	
+	/**
+	 * Adds the given {@link DurationGroup} to this {@link DurationGroup}.
+	 *
+	 * @param durationGroup {@link DurationGroup} to be added
+	 * @return new {@link DurationGroup}
+	 */
 	default DurationGroup plus(@NotNull DurationGroup durationGroup) {
 		
-		DurationGroup newDurationGroup = EMPTY;
+		Builder builder = DurationGroup.builder();
 		
 		for (Duration duration : durationGroup) {
 			
 			if (duration.isZero()) continue;
 			//@off
 			switch (duration.getUnit()) {
-				case MILLISECOND: newDurationGroup = setDuration(Duration.of(Unit.MILLISECOND, getDuration(Unit.MILLISECOND).getValue() + duration.getValue()));break;
-				case SECOND: newDurationGroup = setDuration(Duration.of(Unit.SECOND, getDuration(Unit.SECOND).getValue() + duration.getValue()));break;
-				case MINUTE: newDurationGroup = setDuration(Duration.of(Unit.MINUTE, getDuration(Unit.MINUTE).getValue() + duration.getValue()));break;
-				case HOUR: newDurationGroup = setDuration(Duration.of(Unit.HOUR, getDuration(Unit.HOUR).getValue() + duration.getValue()));break;
-				case DAY: newDurationGroup = setDuration(Duration.of(Unit.DAY, getDuration(Unit.DAY).getValue() + duration.getValue()));break;
-				case MONTH: newDurationGroup = setDuration(Duration.of(Unit.MONTH, getDuration(Unit.MONTH).getValue() + duration.getValue()));break;
-				case YEAR: newDurationGroup = setDuration(Duration.of(Unit.YEAR, getDuration(Unit.YEAR).getValue() + duration.getValue()));break;
+				case MILLISECOND: builder.millisecond(getDuration(Unit.MILLISECOND).getValue() + duration.getValue());break;
+				case SECOND:      builder.second(getDuration(Unit.SECOND).getValue() + duration.getValue());break;
+				case MINUTE:      builder.minute(getDuration(Unit.MINUTE).getValue() + duration.getValue());break;
+				case HOUR:        builder.hour(getDuration(Unit.HOUR).getValue() + duration.getValue());break;
+				case DAY:         builder.day(getDuration(Unit.DAY).getValue() + duration.getValue());break;
+				case MONTH:       builder.month(getDuration(Unit.MONTH).getValue() + duration.getValue());break;
+				case YEAR:        builder.year(getDuration(Unit.YEAR).getValue() + duration.getValue());break;
 			}//@on
 		}
 		
-		return newDurationGroup;
+		return builder.build();
 	}
 	
 	/**
@@ -213,65 +267,6 @@ public interface DurationGroup extends Comparable<DurationGroup>, Iterable<Durat
 	}
 	
 	/**
-	 * @return duration of year
-	 */
-	@NotNull
-	Duration getYear();
-	
-	/**
-	 * @return duration of month
-	 */
-	@NotNull
-	Duration getMonth();
-	
-	/**
-	 * @return duration of day
-	 */
-	@NotNull
-	Duration getDay();
-	
-	/**
-	 * @return duration of hour
-	 */
-	@NotNull
-	Duration getHour();
-	
-	/**
-	 * @return duration of minute
-	 */
-	@NotNull
-	Duration getMinute();
-	
-	/**
-	 * @return duration of second
-	 */
-	@NotNull
-	Duration getSecond();
-	
-	/**
-	 * @return duration of millisecond
-	 */
-	@NotNull
-	Duration getMillisecond();
-	
-	/**
-	 * @return duration list copy
-	 */
-	@NotNull
-	List<Duration> getDurations();
-	
-	/**
-	 * Checks if this {@link DurationGroup} has the specified time unit.
-	 *
-	 * @param unit time unit to select
-	 * @return {@code true} if the unit exists and its value is not zero
-	 */
-	default boolean isNotZeroByUnit(@NotNull Unit unit) {
-		
-		return getDuration(unit).isNotZero();
-	}
-	
-	/**
 	 * Adds all durations to {@link LocalDateTime} now.
 	 * Negative-valued durations move backwards in the calendar,
 	 * positive values move forward.<br>
@@ -325,6 +320,38 @@ public interface DurationGroup extends Comparable<DurationGroup>, Iterable<Durat
 		}
 		
 		return date;
+	}
+	
+	/**
+	 * Returns a string representation of this {@link DurationGroup}.<br>
+	 * Formatted string is: <br>
+	 * <code>Y{year}M{month}D{day}H{hour}M{minute}S{second}M{millisecond}</code> respectively.<br>
+	 * The order starts from <code>1</code>
+	 * and increments by <code>1</code> until it reaches <code>7</code>.<br>
+	 * And can write like this {@code month} and {@code day} <br>
+	 * {@code '%2$d months %3$d days'} as formatted string.<br><br>
+	 *
+	 * <pre>
+	 * var dg = DurationGroup.builder()
+	 * 	.year(1)
+	 * 	.month(2)
+	 * 	.day(3)
+	 * 	.hour(4)
+	 * 	.minute(5)
+	 * 	.second(6)
+	 * 	.milliSecond(7)
+	 * 	.build();
+	 *
+	 * 	System.out.println(dg); // Y1M2D3H4M5S6M7
+	 * 	System.out.println(dg.toString("%2$d months %3$d days")); // 2 months 3 days
+	 * </pre>
+	 *
+	 * @param formatted formatted string
+	 * @return a string representation
+	 */
+	default String toString(String formatted) {
+		
+		return String.format(formatted, getYear().getValue(), getMonth().getValue(), getDay().getValue(), getHour().getValue(), getMinute().getValue(), getSecond().getValue(), getMillisecond().getValue());
 	}
 	
 	/**
@@ -405,7 +432,7 @@ public interface DurationGroup extends Comparable<DurationGroup>, Iterable<Durat
 	@SuppressWarnings("UnusedReturnValue")
 	final class Builder {
 		
-		final LinkedList<Duration> durations = new LinkedList<>();
+		final List<Duration> durations = new ArrayList<>();
 		Duration year        = Duration.ofYear(0);
 		Duration month       = Duration.ofMonth(0);
 		Duration day         = Duration.ofDay(0);
@@ -439,6 +466,12 @@ public interface DurationGroup extends Comparable<DurationGroup>, Iterable<Durat
 			return this;
 		}
 		
+		/**
+		 * Sets the year.
+		 *
+		 * @param year year
+		 * @return {@link Builder} object for chaining
+		 */
 		public Builder year(@NotNull Duration year) {
 			
 			this.year = year;
@@ -457,6 +490,12 @@ public interface DurationGroup extends Comparable<DurationGroup>, Iterable<Durat
 			return this;
 		}
 		
+		/**
+		 * Sets the month.
+		 *
+		 * @param month month
+		 * @return {@link Builder} object for chaining
+		 */
 		public Builder month(@NotNull Duration month) {
 			
 			this.month = month;
@@ -475,6 +514,12 @@ public interface DurationGroup extends Comparable<DurationGroup>, Iterable<Durat
 			return this;
 		}
 		
+		/**
+		 * Sets the day.
+		 *
+		 * @param day day
+		 * @return {@link Builder} object for chaining
+		 */
 		public Builder day(@NotNull Duration day) {
 			
 			this.day = day;
@@ -493,6 +538,12 @@ public interface DurationGroup extends Comparable<DurationGroup>, Iterable<Durat
 			return this;
 		}
 		
+		/**
+		 * Sets the hour.
+		 *
+		 * @param hour hour
+		 * @return {@link Builder} object for chaining
+		 */
 		public Builder hour(@NotNull Duration hour) {
 			
 			this.hour = hour;
@@ -500,7 +551,7 @@ public interface DurationGroup extends Comparable<DurationGroup>, Iterable<Durat
 		}
 		
 		/**
-		 * Sets the minute
+		 * Sets the minute.
 		 *
 		 * @param minute minute
 		 * @return {@link Builder} object for chaining
@@ -512,7 +563,7 @@ public interface DurationGroup extends Comparable<DurationGroup>, Iterable<Durat
 		}
 		
 		/**
-		 * Sets the minute
+		 * Sets the minute.
 		 *
 		 * @param minute minute
 		 * @return {@link Builder} object for chaining
@@ -524,7 +575,7 @@ public interface DurationGroup extends Comparable<DurationGroup>, Iterable<Durat
 		}
 		
 		/**
-		 * Sets the second
+		 * Sets the second.
 		 *
 		 * @param second second
 		 * @return {@link Builder} object for chaining
@@ -536,7 +587,7 @@ public interface DurationGroup extends Comparable<DurationGroup>, Iterable<Durat
 		}
 		
 		/**
-		 * Sets the second
+		 * Sets the second.
 		 *
 		 * @param second second
 		 * @return {@link Builder} object for chaining
@@ -548,7 +599,7 @@ public interface DurationGroup extends Comparable<DurationGroup>, Iterable<Durat
 		}
 		
 		/**
-		 * Sets the millisecond
+		 * Sets the millisecond.
 		 *
 		 * @param mlSecond millisecond
 		 * @return {@link Builder} object for chaining
@@ -560,7 +611,7 @@ public interface DurationGroup extends Comparable<DurationGroup>, Iterable<Durat
 		}
 		
 		/**
-		 * Sets the millisecond
+		 * Sets the millisecond.
 		 *
 		 * @param mlSecond millisecond
 		 * @return {@link Builder} object for chaining
@@ -572,7 +623,7 @@ public interface DurationGroup extends Comparable<DurationGroup>, Iterable<Durat
 		}
 		
 		/**
-		 * Builds the {@link DurationGroup}
+		 * Builds the {@link DurationGroup}.
 		 *
 		 * @return {@link DurationGroup}
 		 */
@@ -585,7 +636,6 @@ public interface DurationGroup extends Comparable<DurationGroup>, Iterable<Durat
 		
 		private void setDurationList() {
 			
-			//LinkedList<Duration> durations = new LinkedList<>();
 			durations.add(year);
 			durations.add(month);
 			durations.add(day);
@@ -607,6 +657,40 @@ public interface DurationGroup extends Comparable<DurationGroup>, Iterable<Durat
 		private       int                        maxItemSize;
 		private       String                     formattedString;
 		private       Function<Duration, String> formatter;
+		
+		/**
+		 * Returns the string of the {@link DurationGroup}
+		 *
+		 * @return the string
+		 */
+		@NotNull
+		public String toString() {
+			
+			if (units.isEmpty()) {
+				//+ this is the item size to be removed
+				int itemSize = durations.size() - maxItemSize;
+				//+ remove from last until the desired size
+				Lister.loopWithout(itemSize, durations::removeLast);
+			}
+			else {
+				//+ remove undesired units
+				this.durations.removeIf(d -> !units.contains(d.getUnit()));
+			}
+			
+			//+ if zero value then remove if need be
+			if (!zeros) durations.removeIf(Duration::isZero);
+			
+			StringBuilder builder = new StringBuilder();
+			
+			for (Duration duration : durations) {
+				
+				if (formatter != null) builder.append(formatter.apply(duration)).append(" ");
+				else if (formattedString != null) builder.append(duration.toString(formattedString)).append(" ");
+				else builder.append(duration).append(" ");
+			}
+			
+			return builder.toString().trim();
+		}
 		
 		/**
 		 * Sets the formatter.
@@ -696,40 +780,6 @@ public interface DurationGroup extends Comparable<DurationGroup>, Iterable<Durat
 			this.durations.clear();
 			this.durations.addAll(durations);
 			return this;
-		}
-		
-		/**
-		 * Returns the string of the {@link DurationGroup}
-		 *
-		 * @return the string
-		 */
-		@NotNull
-		public String toString() {
-			
-			if (units.isEmpty()) {
-				//+ this is the item size to be removed
-				int itemSize = durations.size() - maxItemSize;
-				//+ remove from last until the desired size
-				Lister.loopWithout(itemSize, durations::removeLast);
-			}
-			else {
-				//+ remove undesired units
-				this.durations.removeIf(d -> !units.contains(d.getUnit()));
-			}
-			
-			//+ if zero value then remove if need be
-			if (!zeros) durations.removeIf(Duration::isZero);
-			
-			StringBuilder builder = new StringBuilder();
-			
-			for (Duration duration : durations) {
-				
-				if (formatter != null) builder.append(formatter.apply(duration)).append(" ");
-				else if (formattedString != null) builder.append(duration.toString(formattedString)).append(" ");
-				else builder.append(duration).append(" ");
-			}
-			
-			return builder.toString().trim();
 		}
 		
 		/**
