@@ -76,8 +76,14 @@ public class HistoryRanker {
 				.orElse(null);
 	}
 	
-	
-	public static int getRank(List<Map.Entry<Contact, DurationGroup>> durationList, Contact contact) {
+	/**
+	 * Returns the rank of the contact.
+	 *
+	 * @param durationList the list of duration
+	 * @param contact      the contact to get the rank
+	 * @return the rank or zero
+	 */
+	public static int getRank(@NotNull List<Map.Entry<Contact, DurationGroup>> durationList, @NotNull Contact contact) {
 		
 		for (int i = 0; i < durationList.size(); i++)
 			if (durationList.get(i).getKey().getContactId() == contact.getContactId())
