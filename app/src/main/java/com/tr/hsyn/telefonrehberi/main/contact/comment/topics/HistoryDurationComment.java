@@ -71,7 +71,7 @@ public class HistoryDurationComment implements ContactComment {
 		
 		if (callCollection == null) {
 			
-			xlog.d("callCollection is null");
+			xlog.d(getString(R.string.call_collection_is_null));
 			returnComment();
 			return;
 		}
@@ -82,6 +82,8 @@ public class HistoryDurationComment implements ContactComment {
 		List<Map.Entry<Contact, DurationGroup>> durationList = createContactHistoryDurationList(callCollection.getContacts());
 		//+ First item of this list is the winner.
 		//+ Possibly there are durations with the same or so close with each other.
+		
+		analyzeDurationList(durationList);
 		
 		//+ The object that to convert the duration to string.
 		DurationGroup.Stringer stringer = DurationGroup.Stringer.builder()
@@ -148,6 +150,11 @@ public class HistoryDurationComment implements ContactComment {
 	public @NotNull Consumer<ContactComment> getCallback() {
 		
 		return callback;
+	}
+	
+	private void analyzeDurationList(List<Map.Entry<Contact, DurationGroup>> durationList) {
+		
+		
 	}
 	
 	/**
