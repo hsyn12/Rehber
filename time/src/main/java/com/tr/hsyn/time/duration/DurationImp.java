@@ -90,9 +90,8 @@ public class DurationImp implements Duration {
 	@Override
 	public int compareTo(@NotNull Duration duration) {
 		
-		if (unit.equals(duration.getUnit())) {
+		if (unit.equals(duration.getUnit()))
 			return Long.compare(this.value, duration.getValue());
-		}
 		
 		return duration.getUnit().ordinal() - this.unit.ordinal();
 	}

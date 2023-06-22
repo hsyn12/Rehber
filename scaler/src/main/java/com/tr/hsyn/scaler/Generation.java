@@ -3,36 +3,66 @@ package com.tr.hsyn.scaler;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 
-public interface Generation<T extends Comparable<T>> extends Iterable<T> {
+/**
+ * Defines the generation of objects.
+ *
+ * @param <T> generatable object
+ */
+public interface Generation<T extends Comparable<T>> extends Iterator<T>, Iterable<T> {
+	
+	/**
+	 * @return the step for the next generation
+	 */
+	T getStep();
+	
+	/**
+	 * @return start point of the generation
+	 */
+	T getStart();
+	
+	/**
+	 * @return end point of the generation
+	 */
+	T getEnd();
 	
 	@NotNull
 	@Override
 	default Iterator<T> iterator() {
 		
-		return getGenerator().generate(this).iterator();
+		return this;
 	}
 	
-	T getStep();
-	
-	T getStart();
-	
-	T getEnd();
-	
+	/**
+	 * @return {@code true} if the generation has next
+	 */
+	@Override
 	boolean hasNext();
 	
-	T getNext();
-	
+	/**
+	 * @param i object
+	 * @return {@code true} if the given object is contained
+	 */
 	default boolean contains(T i) {
 		
 		return getStart().compareTo(i) <= 0 && i.compareTo(getEnd()) <= 0;
 	}
 	
-	default Generator<T> getGenerator() {
+	/**
+	 * Generates the list of objects by the given {@link Generation}.
+	 *
+	 * @return {@link List} of objects
+	 */
+	default List<T> generate() {
 		
-		return (start, end, step) -> Generation.this;
+		List<T> list = new ArrayList<>();
+		
+		for (var i : this) list.add(i);
+		
+		return list;
 	}
-	
 }
