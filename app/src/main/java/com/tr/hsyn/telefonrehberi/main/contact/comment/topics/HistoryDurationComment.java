@@ -129,14 +129,15 @@ public class HistoryDurationComment implements ContactComment {
 			
 			if (winner) {
 				
-				comment.append("he/she appears in the first order in the ");
+				comment.append("he/she appears in the first");
 			}
 			else {
 				
-				comment.append(fmt("he/she appears in the %d. order in the ", rank));
+				comment.append(fmt("he/she appears in the %d.", rank));
 			}
 			
-			comment.append("call history durations", getClickSpans(listener))
+			comment.append(" order in the ")
+					.append("call history durations", getClickSpans(listener))
 					.append(" list. ");
 		}
 		
