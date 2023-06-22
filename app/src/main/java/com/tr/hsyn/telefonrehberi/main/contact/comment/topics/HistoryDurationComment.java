@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.view.View;
 
 import com.tr.hsyn.contactdata.Contact;
+import com.tr.hsyn.scaler.Quantity;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallCollection;
 import com.tr.hsyn.telefonrehberi.main.call.data.hotlist.HistoryRanker;
@@ -21,9 +22,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 
 public class HistoryDurationComment implements ContactComment {
@@ -83,7 +87,6 @@ public class HistoryDurationComment implements ContactComment {
 		//+ First item of this list is the winner.
 		//+ Possibly there are durations with the same or so close with each other.
 		
-		analyzeDurationList(durationList);
 		
 		//+ The object that to convert the duration to string.
 		DurationGroup.Stringer stringer = DurationGroup.Stringer.builder()
@@ -92,7 +95,7 @@ public class HistoryDurationComment implements ContactComment {
 				.zeros(false);//_ the zero durations should not be used.
 		//+ The duration of this contact.
 		DurationGroup thisDuration = HistoryRanker.getDuration(durationList, contact);
-		
+		analyzeDurationList(durationList, thisDuration);
 		if (thisDuration == null) {
 			
 			xlog.d("Could not accessed the 'history duration' of this contact.");
@@ -152,8 +155,39 @@ public class HistoryDurationComment implements ContactComment {
 		return callback;
 	}
 	
-	private void analyzeDurationList(List<Map.Entry<Contact, DurationGroup>> durationList) {
+	private void analyzeDurationList(List<Map.Entry<Contact, DurationGroup>> durationList, DurationGroup thisDurationGroup) {
 		
+		//+ quantity -> contact --> duration
+		Map<Quantity, Map<Contact, Long>> differenceMap     = new HashMap<>();
+		long                              thisDuration      = thisDurationGroup.getTotalDurationAs(Unit.MILLISECOND).getValue();
+		long                              longest           = durationList.remove(0).getValue().getTotalDurationAs(Unit.MILLISECOND).getValue();
+		Quantity                          currentQuantity   = Quantity.MAX;
+		Map<Contact, Long>                max               = differenceMap.computeIfAbsent(currentQuantity, quantity -> new HashMap<>());
+		int                               durationListSize  = durationList.size();
+		Map<Integer, Long>                differenceIndices = new HashMap<>();
+		
+		max.put(contact, longest);
+		
+		
+		for (int i = 0; i < durationListSize; i++) {
+			
+			var entry           = durationList.get(i);
+			var currentDuration = entry.getValue().getTotalDurationAs(Unit.MILLISECOND).getValue();
+			differenceIndices.put(i, longest - currentDuration);
+			longest = currentDuration;
+		}
+		
+		//noinspection SimplifyStreamApiCallChains
+		var differenceList = differenceIndices.entrySet()
+				.stream()
+				.sorted(Comparator.comparingInt(Map.Entry::getKey))
+				.collect(Collectors.toList());
+		
+		for (int i = 0; i < differenceList.size(); i++) {
+			
+			var entry = differenceList.get(i);
+			
+		}
 		
 	}
 	
@@ -175,9 +209,9 @@ public class HistoryDurationComment implements ContactComment {
 			
 			if (duration.isZero()) continue;
 			
-			Contact contact        = entry.getKey();
-			String  durationString = stringer.durations(duration.getDurations()).toString();
-			var     data           = new MostDurationData(contact.getName(), durationString, order++);
+			Contact          contact        = entry.getKey();
+			String           durationString = stringer.durations(duration.getDurations()).toString();
+			MostDurationData data           = new MostDurationData(contact.getName(), durationString, order++);
 			
 			if (this.contact.getContactId() == contact.getContactId()) data.setSelected(true);
 			
