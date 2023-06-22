@@ -206,7 +206,7 @@ public interface Duration extends Comparable<Duration>, Generatable<Duration> {
 		
 		if (!getUnit().equals(other.getUnit())) {
 			
-			Duration d = other.getValueAs(getUnit());
+			Duration d = other.getAs(getUnit());
 			return new DurationImp(getUnit(), getValue() + d.getValue());
 		}
 		
@@ -220,7 +220,7 @@ public interface Duration extends Comparable<Duration>, Generatable<Duration> {
 	 * @return {@link Duration}
 	 */
 	@NotNull
-	default Duration getValueAs(@NotNull Unit unit) {
+	default Duration getAs(@NotNull Unit unit) {
 		
 		long value = toMilliseconds();
 		//@off

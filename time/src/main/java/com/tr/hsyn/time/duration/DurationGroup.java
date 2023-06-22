@@ -209,7 +209,7 @@ public interface DurationGroup extends Comparable<DurationGroup>, Iterable<Durat
 		long total = 0L;
 		
 		for (Duration duration : getDurations())
-			total += duration.getValueAs(unit).getValue();
+			total += duration.getAs(unit).getValue();
 		
 		return Duration.of(unit, total);
 	}
