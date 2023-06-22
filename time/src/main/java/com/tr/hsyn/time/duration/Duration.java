@@ -13,7 +13,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Consumer;
 
 
 /**
@@ -29,7 +28,7 @@ import java.util.function.Consumer;
  * So it is not treated as time, because if it were treated as time,
  * the minute value could be at most {@code 59}.<br>
  * However,
- * a <b>duration</b> can be converted to a time by calling {@link #toTimeDurationGroup()}<br><br>
+ * a <b>duration</b> can be converted to a time by calling {@link #toDurationGroup()}<br><br>
  *
  * <pre>
  * var duration = Duration.ofMinute(1981);
@@ -41,6 +40,20 @@ import java.util.function.Consumer;
  * @see DurationGroup
  */
 public interface Duration extends Comparable<Duration>, Generatable<Duration> {
+	
+	@NotNull
+	String toString(@NotNull String formatted);
+	
+	/**
+	 * @return the unit of this {@linkplain Duration} object
+	 */
+	@NotNull
+	Unit getUnit();
+	
+	/**
+	 * @return duration value of this {@linkplain Duration} object
+	 */
+	long getValue();
 	
 	@Override
 	default Generator<Duration> getGenerator() {
@@ -90,29 +103,105 @@ public interface Duration extends Comparable<Duration>, Generatable<Duration> {
 	}
 	
 	/**
+	 * Determines whether this unit of the duration is equal to given unit of the duration.
+	 *
+	 * @param duration the duration
+	 * @return {@code true} if this unit of the duration is equal to given unit of the duration.
+	 */
+	default boolean equalsByUnit(@NotNull Duration duration) {
+		
+		return getUnit().equals(duration.getUnit());
+	}
+	
+	/**
+	 * @param other duration
+	 * @return {@code true} if this {@link Duration} is less than other
+	 */
+	default boolean lessThan(@NotNull Duration other) {
+		
+		return this.compareTo(other) < 0;
+	}
+	
+	/**
+	 * Adds {@code Duration} to this {@link Duration}.
+	 * İf the given duration is negative, made subtract.
+	 * İf the given {@linkplain Duration} has a different {@linkplain Unit},
+	 * it is converted to this {@linkplain Duration} unit.
+	 * So returned {@link Duration} unit is same as this {@linkplain Duration} unit.
+	 *
+	 * <pre>
+	 *     var duration = Duration.of(Unit.MINUTE, 5);
+	 *     var duration2 = Duration.ofMinute(-1);
+	 *     var duration3 = duration.plus(duration2); // Duration{type=minute, value=4}
+	 *     var duration4 = duration.plus(-1L); // Duration{type=minute, value=4}
+	 * </pre>
+	 *
+	 * @param other Other {@linkplain Duration} object to add
+	 * @return new {@link Duration}
+	 */
+	@NotNull
+	default Duration plus(@NotNull Duration other) {
+		
+		if (!getUnit().equals(other.getUnit())) {
+			
+			Duration d = other.getValueAs(getUnit());
+			return new DurationImp(getUnit(), getValue() + d.getValue());
+		}
+		
+		return new DurationImp(getUnit(), getValue() + other.getValue());
+	}
+	
+	/**
+	 * Converts the duration to the given unit
+	 *
+	 * @param unit the unit
+	 * @return {@link Duration}
+	 */
+	@NotNull
+	default Duration getValueAs(@NotNull Unit unit) {
+		
+		long value = toMilliseconds();
+		//@off
+		switch (unit) {
+			case MILLISECOND : return new DurationImp(unit, value);
+			case SECOND      : return new DurationImp(unit, value / 1000);
+			case MINUTE      : return new DurationImp(unit, value / 60000);
+			case HOUR        : return new DurationImp(unit, value / 3600000);
+			case DAY         : return new DurationImp(unit, value / 86400000);
+			case MONTH       : return new DurationImp(unit, value / 259200000);
+			case YEAR        : return new DurationImp(unit, value / 36500000);
+		}//@on
+		
+		throw new IllegalArgumentException("Unknown unit: " + unit);
+	}
+	
+	/**
+	 * @return as milliseconds of this {@linkplain Duration}
+	 */
+	default long toMilliseconds() {
+		
+		long value = getValue();
+		
+		//@off
+		switch (getUnit()) {
+			case MILLISECOND : return value;
+			case SECOND :      return value * 1000;
+			case MINUTE :      return value * 60000;
+			case HOUR  :       return value * 3600000;
+			case DAY :         return value * 86400000;
+			case MONTH  :      return value * 259200000;
+			case YEAR :        return value * 36500000;
+		}//@on
+		
+		return 0;
+	}
+	
+	/**
 	 * @return {@code true} if duration value is zero, {@code false} otherwise
 	 */
 	default boolean isZero() {
 		
 		return getValue() == 0L;
-	}
-	
-	/**
-	 * @return {@code true} if duration value is not zero, {@code false} otherwise
-	 */
-	default boolean isNotZero() {
-		
-		return getValue() != 0L;
-	}
-	
-	/**
-	 * If this duration is not zero then calls the given {@code consumer}.
-	 *
-	 * @param consumer consumer to be called
-	 */
-	default void isNotZero(@NotNull Consumer<Duration> consumer) {
-		
-		if (getValue() != 0L) consumer.accept(this);
 	}
 	
 	/**
@@ -132,7 +221,7 @@ public interface Duration extends Comparable<Duration>, Generatable<Duration> {
 	@NotNull
 	default Duration plus(long value) {
 		
-		return new DurationImp(getUnit(), getValue() + value);
+		return of(getUnit(), getValue() + value);
 	}
 	
 	/**
@@ -145,15 +234,6 @@ public interface Duration extends Comparable<Duration>, Generatable<Duration> {
 	default Duration withValue(long value) {
 		
 		return of(getUnit(), value);
-	}
-	
-	/**
-	 * @param other duration
-	 * @return {@code true} if this {@link Duration} is less than other
-	 */
-	default boolean lessThan(@NotNull Duration other) {
-		
-		return this.compareTo(other) < 0;
 	}
 	
 	/**
@@ -184,130 +264,6 @@ public interface Duration extends Comparable<Duration>, Generatable<Duration> {
 	}
 	
 	/**
-	 * Adds {@code Duration} to this {@link Duration}.
-	 * İf the given duration is negative, made subtract.
-	 * İf the given {@linkplain Duration} has a different {@linkplain Unit},
-	 * it is converted to this {@linkplain Duration} unit.
-	 * So returned {@link Duration} unit is same as this {@linkplain Duration} unit.
-	 *
-	 * <pre>
-	 *     var duration = Duration.of(Unit.MINUTE, 5);
-	 *     var duration2 = Duration.ofMinute(-1);
-	 *     var duration3 = duration.plus(duration2); // Duration{type=minute, value=4}
-	 *     var duration4 = duration.plus(-1L); // Duration{type=minute, value=4}
-	 * </pre>
-	 *
-	 * @param other Other {@linkplain Duration} object to add
-	 * @return new {@link Duration}
-	 */
-	@NotNull
-	default Duration plus(@NotNull Duration other) {
-		
-		if (isDifferentByUnit(other)) {
-			
-			Duration d = other.getValueAs(getUnit());
-			return new DurationImp(getUnit(), getValue() + d.getValue());
-		}
-		
-		return new DurationImp(getUnit(), getValue() + other.getValue());
-	}
-	
-	@NotNull
-	String toString(@NotNull String formatted);
-	
-	/**
-	 * @return the unit of this {@linkplain Duration} object
-	 */
-	@NotNull
-	Unit getUnit();
-	
-	/**
-	 * @return duration value of this {@linkplain Duration} object
-	 */
-	long getValue();
-	
-	/**
-	 * Determines whether this <code>Duration</code> is different from other {@linkplain Duration} by unit and value.
-	 *
-	 * @param other Other {@linkplain Duration} object
-	 * @return {@code true} if this <code>Duration</code> is not equal to other {@link Duration}.
-	 */
-	default boolean isDifferent(@NotNull Duration other) {
-		
-		return !this.equals(other);
-	}
-	
-	/**
-	 * Checks whether this <code>Duration</code> unit is different
-	 * from given <code>Duration</code> {@link Unit}.
-	 *
-	 * @param other Other {@linkplain Unit}
-	 * @return {@code true} if this <code>Duration</code> unit is different
-	 * 		from given {@link Unit} by unit
-	 */
-	default boolean isDifferentByUnit(@NotNull Unit other) {
-		
-		return !getUnit().equals(other);
-	}
-	
-	/**
-	 * Determines whether this <code>Duration</code> unit is different from given <code>Duration</code> unit.
-	 *
-	 * @param other Other {@linkplain Duration} object
-	 * @return {@code true} if this <code>Duration</code> unit is different from given {@link Duration} unit
-	 */
-	default boolean isDifferentByUnit(@NotNull Duration other) {
-		
-		return isDifferentByUnit(other.getUnit());
-	}
-	
-	/**
-	 * Determines whether this <code>Duration</code> unit is greater than given {@link Unit}.
-	 *
-	 * @param other Other {@linkplain Unit}
-	 * @return {@code true} if this <code>Duration</code> unit is greater than given {@link Unit}
-	 * @see Unit#isGreaterThan(Unit)
-	 */
-	default boolean isGreaterByUnit(@NotNull Unit other) {
-		
-		return getUnit().isGreaterThan(other);
-	}
-	
-	/**
-	 * Determines whether this <code>Duration</code> unit is less than given {@link Unit}.
-	 *
-	 * @param other Other {@linkplain Unit}
-	 * @return {@code true} if this <code>Duration</code> unit is less than given {@link Unit}
-	 * @see Unit#isLessThan(Unit)
-	 */
-	default boolean isLessByUnit(@NotNull Unit other) {
-		
-		return getUnit().isLessThan(other);
-	}
-	
-	/**
-	 * Determines whether this <code>Duration</code> is equal to given {@link Unit}.
-	 *
-	 * @param unit the unit
-	 * @return {@code true} if this <code>Duration</code> is equal to given {@link Unit}
-	 */
-	default boolean isUnit(@NotNull Unit unit) {
-		
-		return getUnit().equals(unit);
-	}
-	
-	/**
-	 * Determines whether this unit of the duration is equal to given unit of the duration.
-	 *
-	 * @param duration the duration
-	 * @return {@code true} if this unit of the duration is equal to given unit of the duration.
-	 */
-	default boolean equalsByUnit(@NotNull Duration duration) {
-		
-		return getUnit().equals(duration.getUnit());
-	}
-	
-	/**
 	 * Returns exactly how long the duration is as date format.
 	 *
 	 * <pre>
@@ -319,54 +275,22 @@ public interface Duration extends Comparable<Duration>, Generatable<Duration> {
 	 * @return {@link DurationGroup}
 	 */
 	@NotNull
-	default DurationGroup toTimeDurationGroup() {
+	default DurationGroup toDurationGroup() {
 		
 		return Time.toDuration(toMilliseconds());
 	}
 	
 	/**
-	 * @return as milliseconds of this {@linkplain Duration}
-	 */
-	default long toMilliseconds() {
-		
-		long value = getValue();
-		
-		//@off
-		switch (getUnit()) {
-			case MILLISECOND : return value;
-			case SECOND :      return value * 1000;
-			case MINUTE :      return value * 60000;
-			case HOUR  :       return value * 3600000;
-			case DAY :         return value * 86400000;
-			case MONTH  :      return value * 259200000;
-			case YEAR :        return value * 36500000;
-		}//@on
-		
-		return 0;
-	}
-	
-	/**
-	 * Converts the duration to the given unit
+	 * Creates a new Duration.
 	 *
-	 * @param unit the unit
-	 * @return {@link Duration}
+	 * @param unit  Unit of time
+	 * @param value Amount of time
+	 * @return Duration
 	 */
 	@NotNull
-	default Duration getValueAs(@NotNull Unit unit) {
+	static Duration of(@NotNull Unit unit, long value) {
 		
-		long value = toMilliseconds();
-		//@off
-		switch (unit) {
-			case MILLISECOND : return new DurationImp(unit, value);
-			case SECOND      : return new DurationImp(unit, value / 1000);
-			case MINUTE      : return new DurationImp(unit, value / 60000);
-			case HOUR        : return new DurationImp(unit, value / 3600000);
-			case DAY         : return new DurationImp(unit, value / 86400000);
-			case MONTH       : return new DurationImp(unit, value / 259200000);
-			case YEAR        : return new DurationImp(unit, value / 36500000);
-		}//@on
-		
-		throw new IllegalArgumentException("Unknown unit: " + unit);
+		return new DurationImp(unit, value);
 	}
 	
 	static void main(String[] args) {
@@ -386,19 +310,6 @@ public interface Duration extends Comparable<Duration>, Generatable<Duration> {
 	static Duration ofMinute(long minutes) {
 		
 		return of(Unit.MINUTE, minutes);
-	}
-	
-	/**
-	 * Creates a new Duration.
-	 *
-	 * @param unit  Unit of time
-	 * @param value Amount of time
-	 * @return Duration
-	 */
-	@NotNull
-	static Duration of(@NotNull Unit unit, long value) {
-		
-		return new DurationImp(unit, value);
 	}
 	
 	@NotNull

@@ -61,7 +61,7 @@ public class DurationGroupImp implements DurationGroup {
 		durations   = builder.durations;
 	}
 	
-	public DurationGroupImp(DurationGroup other) {
+	public DurationGroupImp(@NotNull DurationGroup other) {
 		
 		this.year        = other.getYear();
 		this.month       = other.getMonth();
@@ -140,6 +140,34 @@ public class DurationGroupImp implements DurationGroup {
 		return String.format("Y%dM%dD%dH%dM%dS%dM%d", year.getValue(), month.getValue(), day.getValue(), hour.getValue(), minute.getValue(), second.getValue(), millisecond.getValue());
 	}
 	
+	/**
+	 * Compares this {@link DurationGroup} with another {@link DurationGroup}
+	 *
+	 * @param durationGroup {@link DurationGroup}
+	 * @return -1, 0 or 1 if this {@link DurationGroup} is less than,
+	 * 		equal to or greater than the specified {@link DurationGroup}
+	 */
+	@Override
+	public int compareTo(@NotNull DurationGroup durationGroup) {
+		
+		int comp = Long.compare(year.getValue(), durationGroup.getYear().getValue());
+		
+		if (comp == 0L) comp = Long.compare(month.getValue(), durationGroup.getMonth().getValue());
+		if (comp == 0L) comp = Long.compare(day.getValue(), durationGroup.getDay().getValue());
+		if (comp == 0L) comp = Long.compare(hour.getValue(), durationGroup.getHour().getValue());
+		if (comp == 0L) comp = Long.compare(minute.getValue(), durationGroup.getMinute().getValue());
+		if (comp == 0L) comp = Long.compare(second.getValue(), durationGroup.getSecond().getValue());
+		if (comp == 0L) comp = Long.compare(millisecond.getValue(), durationGroup.getMillisecond().getValue());
+		
+		return comp;
+	}
+	
+	@NotNull
+	@Override
+	public Iterator<Duration> iterator() {
+		
+		return durations.iterator();
+	}
 	
 	/**
 	 * Returns a string representation of this {@link DurationGroup}.<br>
@@ -171,35 +199,6 @@ public class DurationGroupImp implements DurationGroup {
 	public String toString(String formatted) {
 		
 		return String.format(formatted, year.getValue(), month.getValue(), day.getValue(), hour.getValue(), minute.getValue(), second.getValue());
-	}
-	
-	/**
-	 * Compares this {@link DurationGroup} with another {@link DurationGroup}
-	 *
-	 * @param durationGroup {@link DurationGroup}
-	 * @return -1, 0 or 1 if this {@link DurationGroup} is less than,
-	 * 		equal to or greater than the specified {@link DurationGroup}
-	 */
-	@Override
-	public int compareTo(@NotNull DurationGroup durationGroup) {
-		
-		int comp = Long.compare(year.getValue(), durationGroup.getYear().getValue());
-		
-		if (comp == 0L) comp = Long.compare(month.getValue(), durationGroup.getMonth().getValue());
-		if (comp == 0L) comp = Long.compare(day.getValue(), durationGroup.getDay().getValue());
-		if (comp == 0L) comp = Long.compare(hour.getValue(), durationGroup.getHour().getValue());
-		if (comp == 0L) comp = Long.compare(minute.getValue(), durationGroup.getMinute().getValue());
-		if (comp == 0L) comp = Long.compare(second.getValue(), durationGroup.getSecond().getValue());
-		if (comp == 0L) comp = Long.compare(millisecond.getValue(), durationGroup.getMillisecond().getValue());
-		
-		return comp;
-	}
-	
-	@NotNull
-	@Override
-	public Iterator<Duration> iterator() {
-		
-		return durations.iterator();
 	}
 	
 }

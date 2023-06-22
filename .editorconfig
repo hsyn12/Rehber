@@ -2,7 +2,7 @@ root=true
 
 
 [*]
-charset=unset
+charset=utf-8
 end_of_line=unset
 indent_size=3
 indent_style=tab
@@ -37,7 +37,7 @@ ij_java_align_multiline_records=false
 ij_java_align_multiline_resources=true
 ij_java_align_multiline_ternary_operation=false
 ij_java_align_multiline_text_blocks=true
-ij_java_align_multiline_throws_list=false
+ij_java_align_multiline_throws_list=true
 ij_java_align_subsequent_simple_methods=false
 ij_java_align_throws_keyword=false
 ij_java_annotation_parameter_wrap=off
@@ -250,6 +250,11 @@ ij_java_wrap_first_method_in_call_chain=false
 ij_java_wrap_long_lines=false
 ij_any_line_comment_add_space=true
 ij_any_block_comment_add_space=true
+ij_any_finally_on_new_line=true
+ij_any_align_consecutive_assignments=true
+ij_java_block_comment_add_space=true
+ij_java_indent_size=3
+ij_java_tab_width=3
 
 [{*.kt,*.kts}]
 ij_kotlin_align_in_columns_case_branch=true
