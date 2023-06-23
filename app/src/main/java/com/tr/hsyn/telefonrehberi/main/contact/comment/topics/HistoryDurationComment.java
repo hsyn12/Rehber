@@ -2,10 +2,10 @@ package com.tr.hsyn.telefonrehberi.main.contact.comment.topics;
 
 
 import android.app.Activity;
+import android.util.Pair;
 import android.view.View;
 
 import com.tr.hsyn.contactdata.Contact;
-import com.tr.hsyn.scaler.Quantity;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallCollection;
 import com.tr.hsyn.telefonrehberi.main.call.data.hotlist.HistoryRanker;
@@ -95,7 +95,7 @@ public class HistoryDurationComment implements ContactComment {
 				.zeros(false);//_ the zero durations should not be used.
 		//+ The duration of this contact.
 		DurationGroup thisDuration = HistoryRanker.getDuration(durationList, contact);
-		analyzeDurationList(durationList, thisDuration);
+		
 		if (thisDuration == null) {
 			
 			xlog.d("Could not accessed the 'history duration' of this contact.");
@@ -155,40 +155,62 @@ public class HistoryDurationComment implements ContactComment {
 		return callback;
 	}
 	
-	private void analyzeDurationList(List<Map.Entry<Contact, DurationGroup>> durationList, DurationGroup thisDurationGroup) {
+	/**
+	 * Groups the contacts according to the history duration difference between.
+	 *
+	 * @param durationList the contact-duration list
+	 * @return the map that grouped by history duration difference.
+	 * 		Key is the name of group,
+	 * 		value is the contact list that belongs to this group.
+	 * 		Group names (keys) are integer and start from zero and advanced by 1.
+	 * 		The most valuable group is zero and advances to less valuable one by one.
+	 */
+	private @NotNull Map<Integer, List<Contact>> groupContactsByDifference(@NotNull List<Map.Entry<Contact, DurationGroup>> durationList) {
 		
-		//+ quantity -> contact --> duration
-		Map<Quantity, Map<Contact, Long>> differenceMap     = new HashMap<>();
-		long                              thisDuration      = thisDurationGroup.getTotalDurationAs(Unit.MILLISECOND).getValue();
-		long                              longest           = durationList.remove(0).getValue().getTotalDurationAs(Unit.MILLISECOND).getValue();
-		Quantity                          currentQuantity   = Quantity.MAX;
-		Map<Contact, Long>                max               = differenceMap.computeIfAbsent(currentQuantity, quantity -> new HashMap<>());
-		int                               durationListSize  = durationList.size();
-		Map<Integer, Long>                differenceIndices = new HashMap<>();
+		long longest          = durationList.remove(0).getValue().getTotalDurationAs(Unit.MILLISECOND).getValue();
+		int  durationListSize = durationList.size();
+		//+ index --> [contact --> duration difference]
+		Map<Integer, Pair<Contact, Long>> differenceIndices = new HashMap<>();
 		
-		max.put(contact, longest);
-		
-		
+		//+ set the differences
 		for (int i = 0; i < durationListSize; i++) {
 			
-			var entry           = durationList.get(i);
-			var currentDuration = entry.getValue().getTotalDurationAs(Unit.MILLISECOND).getValue();
-			differenceIndices.put(i, longest - currentDuration);
+			Map.Entry<Contact, DurationGroup> entry           = durationList.get(i);
+			long                              currentDuration = entry.getValue().getTotalDurationAs(Unit.MILLISECOND).getValue();
+			differenceIndices.put(i, new Pair<>(entry.getKey(), Math.abs(longest - currentDuration)));
 			longest = currentDuration;
 		}
 		
 		//noinspection SimplifyStreamApiCallChains
-		var differenceList = differenceIndices.entrySet()
+		List<Map.Entry<Integer, Pair<Contact, Long>>> differenceList = differenceIndices.entrySet()
 				.stream()
 				.sorted(Comparator.comparingInt(Map.Entry::getKey))
 				.collect(Collectors.toList());
 		
+		Long minDifference    = differenceList.stream().map(Map.Entry::getValue).map(p -> p.second).min(Long::compareTo).orElse(0L);
+		Long maxDifference    = differenceList.stream().map(Map.Entry::getValue).map(p -> p.second).max(Long::compareTo).orElse(0L);
+		long middleDifference = (minDifference + maxDifference) / 2;
+		//+ group number --> [contact list] This is the difference group
+		Map<Integer, List<Contact>> group = new HashMap<>();
+		//+ group name of each difference group
+		int groupCounter = 0;
+		
+		//+ Group call histories by differences between
 		for (int i = 0; i < differenceList.size(); i++) {
 			
-			var entry = differenceList.get(i);
+			//+ index --> [contact --> difference]
+			Map.Entry<Integer, Pair<Contact, Long>> entry      = differenceList.get(i);
+			Pair<Contact, Long>                     difference = entry.getValue();
 			
+			if (difference.second >= middleDifference) {
+				groupCounter++;
+			}
+			
+			List<Contact> g = group.computeIfAbsent(groupCounter, j -> new ArrayList<>());
+			g.add(difference.first);
 		}
 		
+		return group;
 	}
 	
 	/**

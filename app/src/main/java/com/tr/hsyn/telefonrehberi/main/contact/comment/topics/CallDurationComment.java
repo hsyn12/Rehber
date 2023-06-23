@@ -107,7 +107,7 @@ public class CallDurationComment implements ContactComment {
 					
 					comment.append("Bu arama geçmişi süresi boyunca bu kişi ile aranızda toplam ")
 							.append(fmt("%s", stringer.durations(duration.getDurations()).toString()), getTextStyle())
-							.append(" konuşma gerçekleşti. Ve bu süre ")
+							.append(" konuşma gerçekleşti. Ve bu süre ile")
 							.append("en çok konuştuğun", getClickSpans(listener))
 							.append(" kişiler listesinde ")
 							.append(fmt("%s", rank), getTextStyle())

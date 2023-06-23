@@ -36,12 +36,6 @@ public class Contact extends DatBoxer implements Identity {
 		this.pic       = pic;
 	}
 	
-	@Nullable
-	public String getPic() {return pic;}
-	
-	@Nullable
-	public String getName() {return name;}
-	
 	@Override
 	public long getId() {
 		
@@ -65,7 +59,7 @@ public class Contact extends DatBoxer implements Identity {
 	public String toString() {
 		
 		StringBuilder sb = new StringBuilder("Contact {");
-		sb.append("contactId=").append(getContactId())
+		sb.append("contactId=").append(getContactId()).append(", ")
 				.append("name=").append(name);
 		
 		for (DataKey i : keySet()) {
@@ -74,6 +68,18 @@ public class Contact extends DatBoxer implements Identity {
 		}
 		
 		return sb.append("}").toString();
+	}
+	
+	@Nullable
+	public String getPic() {
+		
+		return pic;
+	}
+	
+	@Nullable
+	public String getName() {
+		
+		return name;
 	}
 	
 	public long getContactId() {
