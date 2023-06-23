@@ -106,18 +106,36 @@ public final class CallCollection {
 		return mapIdToContact.getFromKey(mapNumberToId.getFromKey(number));
 	}
 	
+	/**
+	 * Returns the contact by contact ID.
+	 *
+	 * @param id the contact ID
+	 * @return the contact
+	 */
 	@NotNull
 	public Contact getContact(long id) {
 		
 		return mapIdToContact.getFromKey(id);
 	}
 	
+	/**
+	 * Returns the contact ID by phone number.
+	 *
+	 * @param number the phone number
+	 * @return the contact ID
+	 */
 	@Nullable
 	public Long getContactId(@NotNull String number) {
 		
 		return mapNumberToId.getFromKey(number);
 	}
 	
+	/**
+	 * Returns the phone number by contact ID.
+	 *
+	 * @param id the contact ID
+	 * @return the phone number
+	 */
 	public String getNumber(long id) {
 		
 		return mapNumberToId.getFromValue(id);
@@ -158,6 +176,13 @@ public final class CallCollection {
 		return mapNumberToId;
 	}
 	
+	/**
+	 * Returns the history of the given contact.
+	 *
+	 * @param contact the contact
+	 * @return the history
+	 * @see History
+	 */
 	@NotNull
 	public History getHistoryOf(@NotNull Contact contact) {
 		
@@ -200,24 +225,56 @@ public final class CallCollection {
 		return getCallsByType(Call.OUTGOING, Call.OUTGOING_WIFI);
 	}
 	
+	/**
+	 * Returns the most incoming calls that ranked by quantity descending.
+	 * The ranking is based on the number of incoming calls.
+	 * And it starts 1, and advances one by one.
+	 * The most valuable rank is 1.
+	 *
+	 * @return the most incoming calls
+	 */
 	@NotNull
 	public Map<Integer, List<CallRank>> getMostIncoming() {
 		
 		return getMost(Call.INCOMING, Call.INCOMING_WIFI);
 	}
 	
+	/**
+	 * Returns the most outgoing calls that ranked by quantity descending.
+	 * The ranking is based on the number of outgoing calls.
+	 * And it starts 1, and advances one by one.
+	 * The most valuable rank is 1.
+	 *
+	 * @return the most outgoing calls
+	 */
 	@NotNull
 	public Map<Integer, List<CallRank>> getMostOutgoing() {
 		
 		return getMost(Call.OUTGOING, Call.OUTGOING_WIFI);
 	}
 	
+	/**
+	 * Returns the most missed calls that ranked by quantity descending.
+	 * The ranking is based on the number of missed calls.
+	 * And it starts 1, and advances one by one.
+	 * The most valuable rank is 1.
+	 *
+	 * @return the most missed calls
+	 */
 	@NotNull
 	public Map<Integer, List<CallRank>> getMostMissed() {
 		
 		return getMost(Call.MISSED);
 	}
 	
+	/**
+	 * Returns the most rejected calls that ranked by quantity descending.
+	 * The ranking is based on the number of rejected calls.
+	 * And it starts 1, and advances one by one.
+	 * The most valuable rank is 1.
+	 *
+	 * @return the most rejected calls
+	 */
 	@NotNull
 	public Map<Integer, List<CallRank>> getMostRejected() {
 		
@@ -356,6 +413,12 @@ public final class CallCollection {
 		return mapIdToCalls.getOrDefault(phoneNumber, new ArrayList<>(0));
 	}
 	
+	/**
+	 * Returns all calls with the given contact ID.
+	 *
+	 * @param id the contact id
+	 * @return calls
+	 */
 	public @NotNull List<Call> getCallsById(String id) {
 		
 		if (Stringx.isNoboe(id) || isEmpty()) return new ArrayList<>(0);
@@ -383,10 +446,18 @@ public final class CallCollection {
 		return Blue.getObject(Key.CONTACTS);
 	}
 	
+	/**
+	 * Creates a rank map for the given call types.
+	 *
+	 * @param callTypes the call types
+	 * @return the rank map that ranked by calls quantity.
+	 * 		The ranking starts 1, and advances one by one.
+	 * 		The most valuable rank is 1.
+	 */
 	@NotNull
-	public Map<Integer, List<CallRank>> getMost(int @NotNull ... callType) {
+	public Map<Integer, List<CallRank>> getMost(int @NotNull ... callTypes) {
 		
-		List<Call> calls = new ArrayList<>(getCallsByType(callType));
+		List<Call> calls = new ArrayList<>(getCallsByType(callTypes));
 		return createRankMap(CallCollection.mapIdToCalls(calls), QUANTITY_COMPARATOR);
 	}
 	
@@ -509,10 +580,13 @@ public final class CallCollection {
 	/**
 	 * Creates a ranked map from the entries.
 	 * The ranking is done by the comparator.
+	 * The ranking starts from 1.
+	 * The most valuable rank is 1 and advances one by one.
 	 *
-	 * @param entries    entries
-	 * @param comparator the comparator
-	 * @return the ranked map
+	 * @param entries    entries that mapped an ID to its calls
+	 * @param comparator the comparator that the ranking is done according to
+	 * @return the ranked map.
+	 * 		The keys are the ranks, and the values are the call rank objects.
 	 */
 	@NotNull
 	public static Map<Integer, List<CallRank>> createRankMap(@NotNull Map<String, List<Call>> entries, @NotNull Comparator<Map.Entry<String, List<Call>>> comparator) {
@@ -526,10 +600,9 @@ public final class CallCollection {
 		for (int i = 0; i < size; i++) {
 			
 			//RankList sıfırdan başlayacak
-			Map.Entry<String, List<Call>> ranked = rankList.get(i);
-			List<CallRank>                calls  = rankMap.computeIfAbsent(rank, r -> new ArrayList<>());
-			
-			CallRank callRank = new CallRank(rank, ranked.getKey(), ranked.getValue());
+			Map.Entry<String, List<Call>> ranked   = rankList.get(i);
+			List<CallRank>                calls    = rankMap.computeIfAbsent(rank, r -> new ArrayList<>());
+			CallRank                      callRank = new CallRank(rank, ranked.getKey(), ranked.getValue());
 			calls.add(callRank);
 			
 			if (i == last) break;

@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 /**
  * Describes the history of a contact and provides some methods to manage it.
- * History means the call history between a contact and the user.
+ * History means the call history between a contact and the specific user.
  */
 public interface History {
 	
@@ -34,6 +34,13 @@ public interface History {
 	@NotNull Contact getContact();
 	
 	/**
+	 * Returns all calls that between the contact and the user.
+	 *
+	 * @return the calls
+	 */
+	@NotNull List<Call> getCalls();
+	
+	/**
 	 * Returns the call at the given index
 	 *
 	 * @param index the index
@@ -43,13 +50,6 @@ public interface History {
 		
 		return getCalls().get(index);
 	}
-	
-	/**
-	 * Returns all calls that between the contact and the user.
-	 *
-	 * @return the calls
-	 */
-	@NotNull List<Call> getCalls();
 	
 	/**
 	 * Returns the duration of the call history.
@@ -120,28 +120,48 @@ public interface History {
 		return getCallsByTypes(types).stream().mapToInt(Call::getDuration).sum();
 	}
 	
+	/**
+	 * Returns the incoming calls of the contact that related to this history object.
+	 *
+	 * @return the incoming calls
+	 */
 	default List<Call> getIncomingCalls() {
 		
 		return getCallsByTypes(Call.INCOMING, Call.INCOMING_WIFI);
 	}
 	
+	/**
+	 * Returns the outgoing calls of the contact that related to this history object.
+	 *
+	 * @return the outgoing calls
+	 */
 	default List<Call> getOutgoingCalls() {
 		
 		return getCallsByTypes(Call.OUTGOING, Call.OUTGOING_WIFI);
 	}
 	
-	default List<Call> getMediaCalls() {
+	/**
+	 * Returns the missed calls of the contact that related to this history object.
+	 *
+	 * @return the missed calls
+	 */
+	default List<Call> getMissedCalls() {
 		
 		return getCallsByTypes(Call.MISSED);
 	}
 	
+	/**
+	 * Returns the rejected calls of the contact that related to this history object.
+	 *
+	 * @return the rejected calls
+	 */
 	default List<Call> getRejectCalls() {
 		
 		return getCallsByTypes(Call.REJECTED);
 	}
 	
 	/**
-	 * Returns the calls of the given call types.
+	 * Returns the calls of the contact that related to this history object by the given call types.
 	 *
 	 * @param types the call types
 	 * @return the calls
@@ -152,7 +172,7 @@ public interface History {
 	}
 	
 	/**
-	 * Returns all calls that match the given predicate.
+	 * Returns all calls of the contact that related to this history object by matching the given predicate.
 	 *
 	 * @param predicate the predicate
 	 * @return the calls
@@ -170,7 +190,7 @@ public interface History {
 	 */
 	default int size(int callType) {
 		
-		var types = Res.getCallTypes(callType);
+		int[] types = Res.getCallTypes(callType);
 		
 		if (types.length == 1) {
 			
@@ -191,24 +211,18 @@ public interface History {
 	}
 	
 	/**
-	 * Returns the history of the given contact.
+	 * Creates a new history for the given contact.
 	 *
 	 * @param contact the contact
 	 * @return the history
-	 * @deprecated use {@link CallCollection#getHistoryOf(Contact)}
 	 */
-	@Deprecated
 	static History getHistory(@NotNull Contact contact) {
 		
 		CallCollection collection = Blue.getObject(Key.CALL_COLLECTION);
 		
 		if (collection == null) return ofEmpty(contact);
 		
-		var numbers = ContactKey.getNumbers(contact);
-		
-		if (numbers == null || numbers.isEmpty()) return ofEmpty(contact);
-		
-		var calls = collection.getCallsByNumbers(numbers);
+		List<Call> calls = collection.getCallsById(String.valueOf(contact.getContactId()));
 		
 		return of(contact, calls);
 	}
@@ -229,7 +243,7 @@ public interface History {
 	 * Creates a new history for the given key.
 	 *
 	 * @param key the key used by this history
-	 * @return the history for the given contact
+	 * @return the history for the given key
 	 */
 	@NotNull
 	static History of(@NotNull String key, @NotNull List<Call> calls) {

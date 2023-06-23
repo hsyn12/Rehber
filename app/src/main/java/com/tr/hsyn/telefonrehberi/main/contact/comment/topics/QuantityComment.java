@@ -15,7 +15,6 @@ import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallCollection;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
-import com.tr.hsyn.telefonrehberi.main.call.data.Res;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostCallDialog;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostCallItemViewData;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.ShowCallsDialog;
@@ -79,14 +78,14 @@ public class QuantityComment implements ContactComment {
 		
 		if (callCollection == null) {
 			
-			xlog.d("callCollection is null");
+			xlog.d(activity.getString(R.string.call_collection_is_null));
 			returnComment();
 			return;
 		}
 		// endregion
 		
-		comment.append(getQuantityComment(isTurkish));
-		mostCall(Call.INCOMING);
+		//comment.append(getQuantityComment(isTurkish));
+		evaluateIncoming();
 		returnComment();
 		
 		/* onBackground(() -> {
@@ -147,11 +146,11 @@ public class QuantityComment implements ContactComment {
 		return callback;
 	}
 	
-	private void mostCall(int callType) {
+	private void evaluateIncoming() {
 		
 		assert callCollection != null;
 		History    history = callCollection.getHistoryOf(contact);
-		List<Call> calls   = history.getCallsByTypes(Res.getCallTypes(callType));
+		List<Call> calls   = history.getIncomingCalls();
 		
 		if (calls.isEmpty()) {
 			
