@@ -14,6 +14,7 @@ import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
 import com.tr.hsyn.telefonrehberi.main.contact.data.History;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
+import com.tr.hsyn.time.duration.DurationGroup;
 import com.tr.hsyn.xbox.Blue;
 import com.tr.hsyn.xlog.xlog;
 
@@ -25,6 +26,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -416,7 +418,7 @@ public final class CallCollection {
 	/**
 	 * Returns all calls with the given contact ID.
 	 *
-	 * @param id the contact id
+	 * @param id the contact ID
 	 * @return calls
 	 */
 	public @NotNull List<Call> getCallsById(String id) {
@@ -441,6 +443,10 @@ public final class CallCollection {
 		return callList.stream().filter(c -> c.getNumber().equals(_phoneNumber)).collect(Collectors.toList());
 	}
 	
+	/**
+	 * @return all contacts
+	 */
+	@Nullable
 	public List<Contact> getContacts() {
 		
 		return Blue.getObject(Key.CONTACTS);
@@ -548,6 +554,12 @@ public final class CallCollection {
 		}
 	}
 	
+	/**
+	 * Groups the calls by {@link #getKey(Call)}.
+	 *
+	 * @param calls the calls
+	 * @return the map of calls by key
+	 */
 	public static Map<String, List<Call>> mapIdToCalls(@NotNull List<Call> calls) {
 		
 		return calls.stream().collect(Collectors.groupingBy(CallCollection::getKey));
@@ -568,7 +580,7 @@ public final class CallCollection {
 	 * @return the key
 	 */
 	@NotNull
-	private static String getKey(@NotNull Call call) {
+	public static String getKey(@NotNull Call call) {
 		
 		long id = call.getLong(CallKey.CONTACT_ID, 0L);
 		
@@ -674,5 +686,126 @@ public final class CallCollection {
 		
 		return createRankMap(filtered, comparator);
 	}
+	
+	
+	/**
+	 * Returns the rank of the contact.
+	 *
+	 * @param durationList the list of duration
+	 * @param contact      the contact to get the rank
+	 * @return the rank or zero
+	 */
+	public static int getRank(@NotNull List<Map.Entry<Contact, DurationGroup>> durationList, @NotNull Contact contact) {
+		
+		for (int i = 0; i < durationList.size(); i++)
+			if (durationList.get(i).getKey().getContactId() == contact.getContactId())
+				return i;
+		
+		return 0;
+	}
+	
+	/**
+	 * Finds the duration of the contact.
+	 *
+	 * @param durations the map of phone number to duration
+	 * @param contact   the contact
+	 * @return the duration
+	 */
+	@Nullable
+	public static DurationGroup getDuration(@NotNull List<Map.Entry<Contact, DurationGroup>> durations, Contact contact) {
+		
+		if (contact == null) return null;
+		
+		return durations.stream()
+				.filter(e -> e.getKey().getContactId() == contact.getContactId())
+				.findFirst().map(Map.Entry::getValue)
+				.orElse(null);
+	}
+	
+	/**
+	 * Returns a map object that ranked by call duration by descending.
+	 *
+	 * @param callCollection call collection
+	 * @return a map object that ranked by calls duration by descending
+	 */
+	@NotNull
+	public static Map<Integer, List<CallRank>> createRankMapByCallDuration(@NotNull CallCollection callCollection) {
+		
+		Map<String, List<Call>> entries   = callCollection.getMapIdToCalls();
+		Set<String>             keys      = entries.keySet();
+		List<CallRank>          callRanks = new ArrayList<>();
+		
+		//_ create call rank objects
+		for (String key : keys) {
+			
+			List<Call> calls = entries.get(key);
+			
+			if (calls == null) continue;
+			
+			CallRank callRank = new CallRank(key, calls);
+			
+			long incomingDuration = 0L;
+			long outgoingDuration = 0L;
+			
+			for (Call call : calls) {
+				
+				if (call.isIncoming()) incomingDuration += call.getDuration();
+				else if (call.isOutgoing()) outgoingDuration += call.getDuration();
+			}
+			
+			callRank.setIncomingDuration(incomingDuration);
+			callRank.setOutgoingDuration(outgoingDuration);
+			callRank.setContact(callCollection.getContact(key));
+			callRanks.add(callRank);
+		}
+		
+		//_ sort by duration descending
+		callRanks.sort((c1, c2) -> Long.compare(c2.getDuration(), c1.getDuration()));
+		
+		int                              rank    = 1;
+		int                              size    = callRanks.size();
+		int                              last    = size - 1;
+		HashMap<Integer, List<CallRank>> rankMap = new HashMap<>();
+		
+		//_ set ranks
+		for (int i = 0; i < size; i++) {
+			
+			CallRank       callRank = callRanks.get(i);
+			List<CallRank> ranks    = rankMap.computeIfAbsent(rank, r -> new ArrayList<>());
+			ranks.add(callRank);
+			
+			if (i == last) break;
+			
+			CallRank next = callRanks.get(i + 1);
+			if (callRank.getDuration() > next.getDuration()) rank++;
+		}
+		
+		return rankMap;
+	}
+	
+	/**
+	 * Return the {@link CallRank} of the contact.
+	 *
+	 * @param rankMap the rank map
+	 * @param rank    the rank of the contact
+	 * @param contact the contact
+	 * @return the {@link CallRank}
+	 */
+	@Nullable
+	public static CallRank getCallRank(@NotNull Map<Integer, List<CallRank>> rankMap, int rank, Contact contact) {
+		
+		if (contact == null) return null;
+		
+		List<CallRank> ranks = rankMap.get(rank);
+		
+		if (ranks == null) return null;
+		
+		for (CallRank callRank : ranks)
+			if (callRank.getKey().equals(String.valueOf(contact.getContactId())))
+				return callRank;
+		
+		return null;
+	}
+	
 	
 }

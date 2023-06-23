@@ -9,7 +9,6 @@ import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallCollection;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
-import com.tr.hsyn.telefonrehberi.main.call.data.hotlist.DurationRanker;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationData;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationDialog;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
@@ -79,9 +78,9 @@ public class CallDurationComment implements ContactComment {
 		}
 		// endregion
 		
-		Map<Integer, List<CallRank>> rankMap      = DurationRanker.createRankMap(callCollection);
+		Map<Integer, List<CallRank>> rankMap      = CallCollection.createRankMapByCallDuration(callCollection);
 		int                          rank         = CallCollection.getRank(rankMap, contact);
-		CallRank                     thisRank     = DurationRanker.getCallRank(rankMap, rank, contact);
+		CallRank                     thisRank     = CallCollection.getCallRank(rankMap, rank, contact);
 		List<MostDurationData>       durationList = createDurationList(rankMap, callCollection.getContacts());
 		String                       title        = getString(R.string.title_speaking_durations);
 		String                       subtitle     = getString(R.string.size_contacts, durationList.size());
