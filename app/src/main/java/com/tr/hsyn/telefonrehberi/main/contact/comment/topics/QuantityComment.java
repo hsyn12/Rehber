@@ -20,12 +20,14 @@ import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostCallItemViewData;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.ShowCallsDialog;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.ContactComment;
+import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.contact.data.History;
 import com.tr.hsyn.text.Spanner;
 import com.tr.hsyn.text.Spans;
 import com.tr.hsyn.xlog.xlog;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -146,6 +148,131 @@ public class QuantityComment implements ContactComment {
 		return callback;
 	}
 	
+	/**
+	 * Returns the list of contacts with no calls.
+	 *
+	 * @return the list of contacts with no calls
+	 */
+	private @Nullable List<Contact> getContactHasNoCalls() {
+		
+		assert callCollection != null;
+		
+		List<Contact> contacts           = callCollection.getContacts();
+		List<Contact> contactsHasNoCalls = new ArrayList<>();
+		
+		if (contacts == null) {
+			
+			xlog.d(activity.getString(R.string.can_not_access_the_contacts));
+			return null;
+		}
+		
+		for (Contact contact : contacts) {
+			
+			//+ skip contacts that have no number
+			if (hasNumber(contact)) {
+				
+				var calls = callCollection.getMapIdToCalls().get(String.valueOf(contact.getId()));
+				
+				if (calls == null) contactsHasNoCalls.add(contact);
+			}
+		}
+		
+		return contactsHasNoCalls;
+	}
+	
+	private void evaluateCalls() {
+		
+		List<Contact> contactsHasNoCalls = getContactHasNoCalls();
+		
+		if (contactsHasNoCalls == null) return;
+		
+		if (contactsHasNoCalls.contains(contact)) {
+			
+			xlog.d("Contact has no any calls");
+			
+			
+			if (isTurkish) {
+				
+				
+			}
+			else {
+				
+				if (contactsHasNoCalls.size() == 1) {
+					
+					comment.append("This contact is the only contact that has no any call logs in your contacts. ");
+				}
+				else {
+					
+					
+					comment.append(fmt("The contact is the one of %d contacts that has ", contactsHasNoCalls.size()))
+							.append("no any call")
+							.append(" logs. ");
+				}
+				
+				
+			}
+			
+		}
+	}
+	
+	/**
+	 * Checks if the contact has any real phone number.
+	 *
+	 * @param contact the contact
+	 * @return {@code true} if the contact has a number
+	 */
+	private boolean hasNumber(@NotNull Contact contact) {
+		
+		var numbers = ContactKey.getNumbers(contact);
+		
+		if (numbers == null || numbers.isEmpty()) return false;
+		
+		boolean hasNumber = false;
+		for (var number : numbers) {
+			
+			if (PhoneNumbers.isPhoneNumber(number)) {
+				
+				hasNumber = true;
+				break;
+			}
+		}
+		
+		return hasNumber;
+	}
+	
+	/**
+	 * Returns the contacts that no any incoming calls.
+	 *
+	 * @return the contacts that no any incoming calls
+	 */
+	private @Nullable List<Contact> getContactsHasNoIncoming() {
+		
+		assert callCollection != null;
+		
+		List<Contact> contacts              = callCollection.getContacts();
+		List<Contact> contactsHasNoIncoming = new ArrayList<>();
+		
+		if (contacts == null) {
+			
+			xlog.d(activity.getString(R.string.can_not_access_the_contacts));
+			return null;
+		}
+		
+		List<Call> incomingCalls = callCollection.getIncomingCalls();
+		
+		for (Contact contact : contacts) {
+			
+			if (hasNumber(contact)) {
+				
+				var calls = callCollection.getMapIdToCalls().get(String.valueOf(contact.getId()));
+				
+				if (calls == null) contactsHasNoIncoming.add(contact);
+			}
+		}
+		
+		return contactsHasNoIncoming;
+	}
+	
 	private void evaluateIncoming() {
 		
 		assert callCollection != null;
@@ -157,18 +284,18 @@ public class QuantityComment implements ContactComment {
 			return;
 		}
 		
-		Map<Integer, List<CallRank>> mostCalls = callCollection.getMostIncoming();
+		Map<Integer, List<CallRank>> incomingRankMap = callCollection.getMostIncoming();
 		
-		if (!mostCalls.isEmpty()) {
+		if (!incomingRankMap.isEmpty()) {
 			
-			int            rank   = CallCollection.getRank(mostCalls, contact);
-			List<CallRank> winner = mostCalls.get(1);
+			int            rank   = CallCollection.getRank(incomingRankMap, contact);
+			List<CallRank> winner = incomingRankMap.get(1);
 			assert winner != null;
 			int rankCount = winner.size();
 			
 			if (rank == 1) {
 				
-				List<MostCallItemViewData> mostList = createMostCallItemList(mostCalls);
+				List<MostCallItemViewData> mostList = createMostCallItemList(incomingRankMap);
 				String                     title    = getString(R.string.title_most_incoming_calls);
 				String                     subtitle = getString(R.string.size_contacts, mostList.size());
 				MostCallDialog             dialog   = new MostCallDialog(activity, mostList, title, subtitle);

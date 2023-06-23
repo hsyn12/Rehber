@@ -21,11 +21,10 @@ public class PhoneNumbers {
 	 * Telefon numaraları için maximum uzunluk
 	 */
 	public static final  int    N_MAX         = 15;
-	private static final String NUMBER_TYPE_1 = "[0-9]{10}";//5434937530
-	private static final String NUMBER_TYPE_2 = "[0-9]{11}";//05434937530
-	private static final String NUMBER_TYPE_3 = "[0-9]{12}";//905434937530
-	private static final String NUMBER_TYPE_4 = "[0-9]{13}";//+905434937530
-	private static final String NUMBER_TYPE_5 = "[0-9]{13,15}";//+xxxxx5434937530
+	private static final String NUMBER_TYPE_1 = "[0-9]{10}";//543 493 7530
+	private static final String NUMBER_TYPE_2 = "[0-9]{11}";//0543 493 7530
+	private static final String NUMBER_TYPE_3 = "\\+?[0-9]{12}";//90 543 493 7530
+	private static final String NUMBER_TYPE_4 = "\\+?[0-9]{12,15}";//+xxxxx5434937530
 	
 	/**
 	 * Rakamların arasına boşluk koyarak daha okunur bir numara döndürür.<br>
@@ -120,7 +119,7 @@ public class PhoneNumbers {
 	 * Returns the type of the number
 	 *
 	 * @param number number
-	 * @return number type. Zero if invalid
+	 * @return number type. Zero if invalid.
 	 */
 	public static int getNumberType(@NotNull String number) {
 		
@@ -128,7 +127,7 @@ public class PhoneNumbers {
 		if (number.matches(NUMBER_TYPE_2)) return 2;
 		if (number.matches(NUMBER_TYPE_3)) return 3;
 		if (number.matches(NUMBER_TYPE_4)) return 4;
-		if (number.matches(NUMBER_TYPE_5)) return 5;
+		if (number.matches(NUMBER_TYPE_4)) return 5;
 		
 		return 0;
 	}

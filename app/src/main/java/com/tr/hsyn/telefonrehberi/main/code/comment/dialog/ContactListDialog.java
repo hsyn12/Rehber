@@ -13,14 +13,15 @@ import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.dev.Phone;
 import com.tr.hsyn.xrelativelayout.RelativeLayoutx;
 
-import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 
-public class MostCallDialog {
+public class ContactListDialog {
 	
 	private final AlertDialog dialog;
 	
-	public MostCallDialog(Activity activity, List<MostCallItemViewData> mostCallItemViewDataList, String title, String subTitle) {
+	
+	public ContactListDialog(@NotNull Activity activity, String title, String subtitle) {
 		
 		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 		builder.setCancelable(true);
@@ -29,12 +30,12 @@ public class MostCallDialog {
 		view.setMaxHeight((int) (Phone.getDisplaySize().y / 1.75f));
 		RecyclerView list = view.findViewById(R.id.most_call_list);
 		
-		list.setAdapter(new MostCallDialogAdapter(mostCallItemViewDataList));
+		//list.setAdapter(new MostCallDialogAdapter());
 		
 		builder.setView(view);
 		builder.setOnCancelListener(this::onCancel);
 		((TextView) view.findViewById(R.id.title)).setText(title);
-		((TextView) view.findViewById(R.id.sub_title)).setText(subTitle);
+		((TextView) view.findViewById(R.id.sub_title)).setText(subtitle);
 		view.findViewById(R.id.header_include).setBackgroundColor(Colors.getPrimaryColor());
 		dialog = builder.create();
 		
@@ -42,6 +43,7 @@ public class MostCallDialog {
 		
 		if (window != null)
 			window.getAttributes().windowAnimations = R.style.DialogAnimationBounce;
+		
 	}
 	
 	public void show() {
