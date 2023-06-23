@@ -565,6 +565,13 @@ public final class CallCollection {
 		return calls.stream().collect(Collectors.groupingBy(CallCollection::getKey));
 	}
 	
+	/**
+	 * Groups the calls of the given call type by {@link #getKey(Call)}.
+	 *
+	 * @param calls    the calls
+	 * @param callType the call type to group
+	 * @return the groups of calls by key
+	 */
 	public static Map<String, List<Call>> mapIdToCalls(@NotNull List<Call> calls, int callType) {
 		
 		if (CallType.UNKNOWN == callType) return mapIdToCalls(calls);
