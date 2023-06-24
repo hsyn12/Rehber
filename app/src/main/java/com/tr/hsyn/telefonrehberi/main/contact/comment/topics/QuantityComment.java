@@ -15,6 +15,7 @@ import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallCollection;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
+import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.ContactListDialog;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostCallDialog;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostCallItemViewData;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.ShowCallsDialog;
@@ -87,7 +88,10 @@ public class QuantityComment implements ContactComment {
 		// endregion
 		
 		//comment.append(getQuantityComment(isTurkish));
-		evaluateIncoming();
+		
+		test();
+		
+		//evaluateIncoming();
 		returnComment();
 		
 		/* onBackground(() -> {
@@ -146,6 +150,19 @@ public class QuantityComment implements ContactComment {
 	public @NotNull Consumer<ContactComment> getCallback() {
 		
 		return callback;
+	}
+	
+	private void test() {
+		
+		assert callCollection != null;
+		var contacts = callCollection.getContacts();
+		
+		if (contacts == null) return;
+		
+		ContactListDialog dialog = new ContactListDialog(activity, contacts, "Kişiler", fmt("%d Kişi", contacts.size()));
+		
+		comment.append("Kişiler listesi", getClickSpans(view -> dialog.show()))
+				.append(" test ediliyor. ");
 	}
 	
 	/**

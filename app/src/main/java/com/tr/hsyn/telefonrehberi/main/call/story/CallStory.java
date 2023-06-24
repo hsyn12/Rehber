@@ -13,7 +13,6 @@ import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.regex.Nina;
 import com.tr.hsyn.registery.cast.Database;
 import com.tr.hsyn.string.Stringx;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallCollection;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallDatabase;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
 import com.tr.hsyn.telefonrehberi.main.call.data.Calls;
@@ -83,7 +82,6 @@ public class CallStory implements Story<Call> {
 				
 				systemCalls.sort((x, y) -> Long.compare(y.getTime(), x.getTime()));
 				updateInfo(systemCalls);
-				CallCollection.create(systemCalls);
 				
 				xlog.d("Call collection created [system]");
 				return systemCalls;
@@ -102,7 +100,6 @@ public class CallStory implements Story<Call> {
 				
 				databaseCalls.forEach(c -> c.setData(CallKey.DELETED_DATE, now));
 				database.update(databaseCalls);
-				CallCollection.create(systemCalls);
 				xlog.d("Call collection created [system]");
 				return new ArrayList<>(0);
 			}
@@ -149,7 +146,6 @@ public class CallStory implements Story<Call> {
 		
 		databaseCalls.sort((x, y) -> Long.compare(y.getTime(), x.getTime()));
 		updateInfo(databaseCalls);
-		CallCollection.create(databaseCalls);
 		xlog.d("Call collection created [database]");
 		return databaseCalls;
 	}

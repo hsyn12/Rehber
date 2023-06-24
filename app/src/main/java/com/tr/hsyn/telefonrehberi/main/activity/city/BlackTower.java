@@ -30,6 +30,7 @@ import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.dev.android.dialog.Dialog;
 import com.tr.hsyn.telefonrehberi.main.activity.city.station.LoadingStation;
 import com.tr.hsyn.telefonrehberi.main.activity.color.ColorsActivity;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallCollection;
 import com.tr.hsyn.telefonrehberi.main.contact.activity.detail.ContactDetails;
 import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.contact.data.Contacts;
@@ -45,6 +46,7 @@ import com.tr.hsyn.xlog.xlog;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 /**
@@ -61,6 +63,7 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 	 * Bu süre sonunda kapı açılır.
 	 */
 	protected final long                           GATE_WAIT_DURATION   = 2000L;
+	private final   AtomicBoolean                  loadingCompleted     = new AtomicBoolean(false);
 	/**
 	 * Renk değişiminin bildirileceği callback.<br>
 	 */
@@ -126,6 +129,97 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 		//lifeStart();
 		
 		
+	}
+	
+	@Override
+	protected void onClickNewContact(View view) {
+		
+		newContactCallBack.launch(Contacts.createNewContactIntent());
+	}
+	
+	@Override
+	protected void onDestroy() {
+		
+		//lifeEnd();
+		super.onDestroy();
+	}
+	
+	@Override
+	public void onCreateMenu(@NonNull @NotNull Menu menu, @NonNull @NotNull MenuInflater menuInflater) {
+		
+		menuInflater.inflate(R.menu.activity_main_menu, menu);
+		menuManager = new MenuManager(menu, Lister.listOf(R.id.main_menu_colors));
+	}
+	
+	@SuppressLint("NonConstantResourceId")
+	@Override
+	public boolean onMenuItemSelected(@NonNull @NotNull MenuItem item) {
+		
+		int id = item.getItemId();
+		
+		//noinspection SwitchStatementWithTooFewBranches
+		switch (id) {
+			
+			case R.id.main_menu_colors:
+				
+				Intent intent = new Intent(this, ColorsActivity.class);
+				
+				colorChangeCallBack.launch(intent);
+				
+				Bungee.slideUp(this);
+				return true;
+			
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Sayfa yenileme talebi gönderildi.
+	 */
+	@Override
+	public void onRefresh() {
+		
+		if (currentPage == PAGE_CONTACTS) loadContacts();
+		else loadCalls();
+	}
+	
+	@Override
+	public void showMenu(boolean show) {
+		
+		pageContacts.showMenu(show);
+		pageCallLog.showMenu(show);
+		menuManager.setVisible(menuManager.getMenuItemResourceIds(), show);
+	}
+	
+	@Override
+	protected void onCallLogLoaded(List<Call> calls, Throwable throwable) {
+		
+		super.onCallLogLoaded(calls, throwable);
+		
+		if (loadingCompleted.getAndSet(true)) {
+			
+			CallCollection.create();
+		}
+	}
+	
+	@Override
+	protected void onContactsLoaded(List<Contact> contacts, @Nullable Throwable throwable) {
+		
+		super.onContactsLoaded(contacts, throwable);
+		
+		if (loadingCompleted.getAndSet(true)) {
+			
+			CallCollection.create();
+		}
+	}
+	
+	@Override
+	protected void onResume() {
+		
+		super.onResume();
+		
+		Use.ifNotNull(Over.Contacts.getSelectedContact(), this::checkSelectedContact);
 	}
 	
 	/**
@@ -270,87 +364,6 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 		});
 		
 		dialog.dismiss();
-	}
-	
-	@Override
-	protected void onClickNewContact(View view) {
-		
-		newContactCallBack.launch(Contacts.createNewContactIntent());
-	}
-	
-	@Override
-	protected void onDestroy() {
-		
-		//lifeEnd();
-		super.onDestroy();
-	}
-	
-	@Override
-	public void onCreateMenu(@NonNull @NotNull Menu menu, @NonNull @NotNull MenuInflater menuInflater) {
-		
-		menuInflater.inflate(R.menu.activity_main_menu, menu);
-		menuManager = new MenuManager(menu, Lister.listOf(R.id.main_menu_colors));
-	}
-	
-	@SuppressLint("NonConstantResourceId")
-	@Override
-	public boolean onMenuItemSelected(@NonNull @NotNull MenuItem item) {
-		
-		int id = item.getItemId();
-		
-		//noinspection SwitchStatementWithTooFewBranches
-		switch (id) {
-			
-			case R.id.main_menu_colors:
-				
-				Intent intent = new Intent(this, ColorsActivity.class);
-				
-				colorChangeCallBack.launch(intent);
-				
-				Bungee.slideUp(this);
-				return true;
-			
-		}
-		
-		return false;
-	}
-	
-	/**
-	 * Sayfa yenileme talebi gönderildi.
-	 */
-	@Override
-	public void onRefresh() {
-		
-		if (currentPage == PAGE_CONTACTS) loadContacts();
-		else loadCalls();
-	}
-	
-	@Override
-	public void showMenu(boolean show) {
-		
-		pageContacts.showMenu(show);
-		pageCallLog.showMenu(show);
-		menuManager.setVisible(menuManager.getMenuItemResourceIds(), show);
-	}
-	
-	@Override
-	protected void onCallLogLoaded(List<Call> calls, Throwable throwable) {
-		
-		super.onCallLogLoaded(calls, throwable);
-	}
-	
-	@Override
-	protected void onContactsLoaded(List<Contact> contacts, @Nullable Throwable throwable) {
-		
-		super.onContactsLoaded(contacts, throwable);
-	}
-	
-	@Override
-	protected void onResume() {
-		
-		super.onResume();
-		
-		Use.ifNotNull(Over.Contacts.getSelectedContact(), this::checkSelectedContact);
 	}
 	
 	/**

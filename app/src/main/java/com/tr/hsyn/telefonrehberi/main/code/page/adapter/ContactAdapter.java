@@ -51,11 +51,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> 
 		setSections();
 	}
 	
-	private void setSections() {
-		
-		secAdapter = new TopSectionAdapter(contacts.stream().map(Contact::getName).collect(Collectors.toList()));
-	}
-	
 	@NonNull
 	@Override
 	public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -116,18 +111,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> 
 	}
 	
 	@NonNull
-	private String getLetter(String str) {
-		
-		@org.jetbrains.annotations.NotNull String l = Stringx.getFirstChar(str);
-		
-		if (l.isEmpty()) return "?";
-		
-		if (Character.isAlphabetic(l.charAt(0))) return l.toUpperCase(Locale.ROOT);
-		
-		return "?";
-	}
-	
-	@NonNull
 	@Override
 	public String getSectionName(int position) {return getLetter(contacts.get(position).getName());}
 	
@@ -176,6 +159,23 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> 
 		return secAdapter.getItemCountForSection(sectionIndex);
 	}
 	
+	private void setSections() {
+		
+		secAdapter = new TopSectionAdapter(contacts.stream().map(Contact::getName).collect(Collectors.toList()));
+	}
+	
+	@NonNull
+	public static String getLetter(String str) {
+		
+		String l = Stringx.getFirstChar(str);
+		
+		if (l.isEmpty()) return "?";
+		
+		if (Character.isAlphabetic(l.charAt(0))) return l.toUpperCase(Locale.ROOT);
+		
+		return "?";
+	}
+	
 	public static class Holder extends RecyclerView.ViewHolder {
 		
 		TextView  name;
@@ -200,6 +200,29 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> 
 		public TopSectionAdapter(List<String> items) {
 			
 			setSections(items);
+		}
+		
+		@Override
+		public int getSectionsCount() {
+			
+			return sections.size();
+		}
+		
+		@NonNull
+		@Override
+		public String getSectionTitleAt(int sectionIndex) {
+			
+			return PerfectSort.sort(Lister.listOf(sections.keySet())).get(sectionIndex);
+		}
+		
+		@Override
+		public int getItemCountForSection(int sectionIndex) {
+			
+			String key = Lister.listOf(sections.keySet()).get(sectionIndex);
+			
+			List<String> sec = sections.get(key);
+			
+			return sec != null ? sec.size() : 0;
 		}
 		
 		private void setSections(List<String> items) {
@@ -232,29 +255,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> 
 		public void setItems(List<String> items) {
 			
 			setSections(items);
-		}
-		
-		@Override
-		public int getSectionsCount() {
-			
-			return sections.size();
-		}
-		
-		@NonNull
-		@Override
-		public String getSectionTitleAt(int sectionIndex) {
-			
-			return PerfectSort.sort(Lister.listOf(sections.keySet())).get(sectionIndex);
-		}
-		
-		@Override
-		public int getItemCountForSection(int sectionIndex) {
-			
-			String key = Lister.listOf(sections.keySet()).get(sectionIndex);
-			
-			List<String> sec = sections.get(key);
-			
-			return sec != null ? sec.size() : 0;
 		}
 	}
 	

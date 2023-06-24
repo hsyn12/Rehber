@@ -1,16 +1,23 @@
 package com.tr.hsyn.telefonrehberi.main.code.comment.dialog;
 
 
+import static com.tr.hsyn.telefonrehberi.main.code.page.adapter.ContactAdapter.getLetter;
+
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.telefonrehberi.R;
+import com.tr.hsyn.textdrawable.TextDrawable;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -27,11 +34,40 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
 	@Override
 	public Holder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
 		
-		return new Holder(LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_list, parent, false));
+		return new Holder(LayoutInflater.from(parent.getContext()).inflate(R.layout.contact, parent, false));
 	}
 	
 	@Override
 	public void onBindViewHolder(@NotNull ContactListAdapter.Holder holder, int position) {
+		
+		Contact contact = contacts.get(position);
+		
+		String name = contact.getName();
+		
+		if (name == null || name.trim().isEmpty()) {
+			
+			name = holder.itemView.getContext().getString(R.string.no_name);
+		}
+		
+		holder.name.setText(name);
+		
+		String pic   = contact.getPic();
+		int    color = Colors.getRandomColor();
+		
+		if (pic == null) {
+			
+			Drawable image = TextDrawable.builder()
+					.beginConfig()
+					.useFont(ResourcesCompat.getFont(holder.itemView.getContext(), com.tr.hsyn.resfont.R.font.z))
+					.endConfig()
+					.buildRound(getLetter(contact.getName()), color);
+			
+			holder.image.setImageDrawable(image);
+		}
+		else {
+			
+			holder.image.setImageURI(Uri.parse(pic));
+		}
 		
 	}
 	
@@ -49,8 +85,10 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
 		public Holder(@NotNull View itemView) {
 			
 			super(itemView);
+			name  = itemView.findViewById(R.id.contact_name);
+			image = itemView.findViewById(R.id.contact_image);
 			
-			
+			itemView.setBackgroundResource(Colors.getRipple());
 		}
 	}
 }

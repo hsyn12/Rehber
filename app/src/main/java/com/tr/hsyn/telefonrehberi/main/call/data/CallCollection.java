@@ -694,7 +694,6 @@ public final class CallCollection {
 		return createRankMap(filtered, comparator);
 	}
 	
-	
 	/**
 	 * Returns the rank of the contact.
 	 *
