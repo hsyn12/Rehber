@@ -30,7 +30,7 @@ import java.util.function.Consumer;
 
 public class CallDurationComment implements ContactComment {
 	
-	private final CallLogs                 callLogs = getCallCollection();
+	private final CallLogs                 callLogs = getCallLogs();
 	private final Spanner                  comment  = new Spanner("\n");
 	private       Activity                 activity;
 	private       Consumer<ContactComment> callback;

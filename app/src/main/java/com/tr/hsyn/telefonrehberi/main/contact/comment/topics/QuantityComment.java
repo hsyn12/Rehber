@@ -38,7 +38,7 @@ import java.util.function.Consumer;
 
 public class QuantityComment implements ContactComment {
 	
-	private final CallLogs                 callLogs = getCallCollection();
+	private final CallLogs                 callLogs = getCallLogs();
 	private final Spanner                  comment  = new Spanner();
 	private       Activity                 activity;
 	private       Consumer<ContactComment> callback;
@@ -86,11 +86,7 @@ public class QuantityComment implements ContactComment {
 		}
 		// endregion
 		
-		//comment.append(getQuantityComment(isTurkish));
-		
-		test();
-		
-		//evaluateIncoming();
+		evaluateCalls();
 		returnComment();
 		
 		/* onBackground(() -> {
@@ -175,7 +171,7 @@ public class QuantityComment implements ContactComment {
 	 *
 	 * @return the list of contacts with no calls
 	 */
-	private @Nullable List<Contact> getContactsHasNoCall(@NotNull CallLogs callLogs) {
+	private @NotNull List<Contact> getContactsHasNoCall(@NotNull CallLogs callLogs) {
 		
 		List<Contact> contacts           = CallLogs.getContactsWithNumber();
 		List<Contact> contactsHasNoCalls = new ArrayList<>();
@@ -183,7 +179,7 @@ public class QuantityComment implements ContactComment {
 		if (contacts == null) {
 			
 			xlog.d(activity.getString(R.string.can_not_access_the_contacts));
-			return null;
+			return new ArrayList<>();
 		}
 		
 		for (Contact contact : contacts) {
@@ -199,36 +195,49 @@ public class QuantityComment implements ContactComment {
 	private void evaluateCalls() {
 		
 		assert callLogs != null;
-		List<Contact> contactsHasNoCalls = getContactsHasNoCall(callLogs);
+		History history = callLogs.getHistoryOf(contact);
 		
-		if (contactsHasNoCalls == null) return;
+		if (history.isEmpty()) {
+			
+			List<Contact> contactsHasNoCall = getContactsHasNoCall(callLogs);
+			
+			if (contactsHasNoCall.contains(contact)) {
+				
+				noCallsComment(contactsHasNoCall);
+			}
+		}
 		
-		if (contactsHasNoCalls.contains(contact)) {
+		
+	}
+	
+	private void noCallsComment(List<Contact> contactsHasNoCalls) {
+		
+		if (isTurkish) {
 			
-			xlog.d("The Contact has no any calls");
-			
-			
-			if (isTurkish) {
+			if (contactsHasNoCalls.size() == 1) {
 				
-				
+				comment.append("Bu kişi, rehberdeki arama kaydı olmayan tek kişi. ");
 			}
 			else {
+				ContactListDialog dialog = createContactListDialog(contactsHasNoCalls, "Arama Kaydı Olmayanlar", fmt("%d Kişi", contactsHasNoCalls.size()));
 				
-				if (contactsHasNoCalls.size() == 1) {
-					
-					comment.append("This contact is the only contact that has no any call logs in your contacts. ");
-				}
-				else {
-					
-					
-					comment.append(fmt("The contact is the one of %d contacts that has ", contactsHasNoCalls.size()))
-							.append("no any call")
-							.append(" logs. ");
-				}
-				
-				
+				comment.append("Bu kişi, rehberde ")
+						.append("arama kaydı olmayan", getClickSpans(view -> dialog.show()))
+						.append(fmt(" %d kişiden biri. "));
 			}
-			
+		}
+		else {
+			if (contactsHasNoCalls.size() == 1) {
+				
+				comment.append("This contact is the only contact that has no any call logs in your contacts. ");
+			}
+			else {
+				ContactListDialog dialog = createContactListDialog(contactsHasNoCalls, "Contacts Without Call Log", fmt("%d Contacts", contactsHasNoCalls.size()));
+				
+				comment.append(fmt("The contact is the one of %d contacts that has ", contactsHasNoCalls.size()))
+						.append("no any call", getClickSpans(view -> dialog.show()))
+						.append(" logs. ");
+			}
 		}
 	}
 	

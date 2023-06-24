@@ -28,7 +28,7 @@ import java.util.function.Consumer;
 
 public class LastCallComment implements ContactComment {
 	
-	private final CallLogs                 callLogs = getCallCollection();
+	private final CallLogs                 callLogs = getCallLogs();
 	private final Spanner                  comment  = new Spanner();
 	private       Activity                 activity;
 	private       Consumer<ContactComment> callback;

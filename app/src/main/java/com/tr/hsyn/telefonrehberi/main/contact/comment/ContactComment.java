@@ -69,7 +69,7 @@ public interface ContactComment extends Threaded {
 	@NotNull
 	Consumer<ContactComment> getCallback();
 	
-	default @Nullable CallLogs getCallCollection() {
+	default @Nullable CallLogs getCallLogs() {
 		
 		return Blue.getObject(Key.CALL_LOGS);
 	}
