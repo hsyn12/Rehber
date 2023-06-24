@@ -371,6 +371,11 @@ public enum Phone {
 		return new Point((int) pxToDp(metrics.widthPixels), (int) pxToDp(metrics.heightPixels));
 	}
 	
+	public static float getDialogProperHeight() {
+		
+		return getDisplaySize().y / 1.75f;
+	}
+	
 	public static float pxToDp(float px) {
 		
 		Resources r = Resources.getSystem();
