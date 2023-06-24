@@ -18,19 +18,28 @@ import java.util.List;
 
 
 /**
- * Created by hsyn on 11.12.2021.
+ * The list of contacts.
  */
 public class ContactListDialog extends Dialog {
 	
 	private final AlertDialog dialog;
 	
-	public ContactListDialog(@NotNull Activity activity, @NotNull List<Contact> contactList, String title, String subtitle) {
+	/**
+	 * Creates a new instance of <{@link ContactListDialog}.
+	 *
+	 * @param activity    the activity
+	 * @param contactList the contact list
+	 * @param title       the title
+	 * @param subtitle    the subtitle
+	 */
+	public ContactListDialog(@NotNull Activity activity, @NotNull List<Contact> contactList, @NotNull String title, @NotNull String subtitle) {
 		
 		AlertDialog.Builder builder = getBuilder(activity, true, null);
 		ViewGroup           view    = inflateLayout(activity, R.layout.contact_list);
 		RecyclerView        list    = findView(view, R.id.list_contacts);
 		list.setAdapter(new ContactListAdapter(contactList));
 		setHeight(list, list.getLayoutParams());
+		
 		
 		builder.setView(view);
 		((TextView) view.findViewById(R.id.title)).setText(title);

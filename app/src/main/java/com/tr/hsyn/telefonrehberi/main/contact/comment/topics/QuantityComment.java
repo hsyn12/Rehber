@@ -13,15 +13,14 @@ import com.tr.hsyn.scaler.Quantity;
 import com.tr.hsyn.scaler.Scaler;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallCollection;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallLogs;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.ContactListDialog;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostCallDialog;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostCallItemViewData;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.ShowCallsDialog;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.ContactComment;
-import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.contact.data.History;
 import com.tr.hsyn.text.Spanner;
 import com.tr.hsyn.text.Spans;
@@ -39,8 +38,8 @@ import java.util.function.Consumer;
 
 public class QuantityComment implements ContactComment {
 	
-	private final CallCollection           callCollection = getCallCollection();
-	private final Spanner                  comment        = new Spanner();
+	private final CallLogs                 callLogs = getCallCollection();
+	private final Spanner                  comment  = new Spanner();
 	private       Activity                 activity;
 	private       Consumer<ContactComment> callback;
 	private       Contact                  contact;
@@ -79,7 +78,7 @@ public class QuantityComment implements ContactComment {
 		this.activity  = activity;
 		this.isTurkish = isTurkish;
 		
-		if (callCollection == null) {
+		if (callLogs == null) {
 			
 			xlog.d(activity.getString(R.string.call_collection_is_null));
 			returnComment();
@@ -154,8 +153,8 @@ public class QuantityComment implements ContactComment {
 	
 	private void test() {
 		
-		assert callCollection != null;
-		var contacts = callCollection.getContacts();
+		assert callLogs != null;
+		var contacts = CallLogs.getContactsWithNumber();
 		
 		if (contacts == null) return;
 		
@@ -165,6 +164,12 @@ public class QuantityComment implements ContactComment {
 				.append(" test ediliyor. ");
 	}
 	
+	@NotNull
+	private ContactListDialog createContactListDialog(@NotNull List<Contact> contacts, @NotNull String title, @NotNull String subtitle) {
+		
+		return new ContactListDialog(activity, contacts, title, subtitle);
+	}
+	
 	/**
 	 * Returns the list of contacts with no calls.
 	 *
@@ -172,9 +177,9 @@ public class QuantityComment implements ContactComment {
 	 */
 	private @Nullable List<Contact> getContactHasNoCalls() {
 		
-		assert callCollection != null;
+		assert callLogs != null;
 		
-		List<Contact> contacts           = callCollection.getContacts();
+		List<Contact> contacts           = CallLogs.getContactsWithNumber();
 		List<Contact> contactsHasNoCalls = new ArrayList<>();
 		
 		if (contacts == null) {
@@ -185,13 +190,9 @@ public class QuantityComment implements ContactComment {
 		
 		for (Contact contact : contacts) {
 			
-			//+ skip contacts that have no number
-			if (hasNumber(contact)) {
-				
-				var calls = callCollection.getMapIdToCalls().get(String.valueOf(contact.getId()));
-				
-				if (calls == null) contactsHasNoCalls.add(contact);
-			}
+			var calls = callLogs.getMapIdToCalls().get(String.valueOf(contact.getId()));
+			
+			if (calls == null) contactsHasNoCalls.add(contact);
 		}
 		
 		return contactsHasNoCalls;
@@ -232,30 +233,6 @@ public class QuantityComment implements ContactComment {
 		}
 	}
 	
-	/**
-	 * Checks if the contact has any real phone number.
-	 *
-	 * @param contact the contact
-	 * @return {@code true} if the contact has a number
-	 */
-	private boolean hasNumber(@NotNull Contact contact) {
-		
-		var numbers = ContactKey.getNumbers(contact);
-		
-		if (numbers == null || numbers.isEmpty()) return false;
-		
-		boolean hasNumber = false;
-		for (var number : numbers) {
-			
-			if (PhoneNumbers.isPhoneNumber(number)) {
-				
-				hasNumber = true;
-				break;
-			}
-		}
-		
-		return hasNumber;
-	}
 	
 	/**
 	 * Returns the contacts that no any incoming calls.
@@ -264,9 +241,9 @@ public class QuantityComment implements ContactComment {
 	 */
 	private @Nullable List<Contact> getContactsHasNoIncoming() {
 		
-		assert callCollection != null;
+		assert callLogs != null;
 		
-		List<Contact> contacts              = callCollection.getContacts();
+		List<Contact> contacts              = CallLogs.getContactsWithNumber();
 		List<Contact> contactsHasNoIncoming = new ArrayList<>();
 		
 		if (contacts == null) {
@@ -275,13 +252,13 @@ public class QuantityComment implements ContactComment {
 			return null;
 		}
 		
-		List<Call> incomingCalls = callCollection.getIncomingCalls();
+		List<Call> incomingCalls = callLogs.getIncomingCalls();
 		
 		for (Contact contact : contacts) {
 			
-			if (hasNumber(contact)) {
+			if (CallLogs.hasNumber(contact)) {
 				
-				var calls = callCollection.getMapIdToCalls().get(String.valueOf(contact.getId()));
+				var calls = callLogs.getMapIdToCalls().get(String.valueOf(contact.getId()));
 				
 				if (calls == null) contactsHasNoIncoming.add(contact);
 			}
@@ -292,8 +269,8 @@ public class QuantityComment implements ContactComment {
 	
 	private void evaluateIncoming() {
 		
-		assert callCollection != null;
-		History    history = callCollection.getHistoryOf(contact);
+		assert callLogs != null;
+		History    history = callLogs.getHistoryOf(contact);
 		List<Call> calls   = history.getIncomingCalls();
 		
 		if (calls.isEmpty()) {
@@ -301,11 +278,11 @@ public class QuantityComment implements ContactComment {
 			return;
 		}
 		
-		Map<Integer, List<CallRank>> incomingRankMap = callCollection.getMostIncoming();
+		Map<Integer, List<CallRank>> incomingRankMap = callLogs.getMostIncoming();
 		
 		if (!incomingRankMap.isEmpty()) {
 			
-			int            rank   = CallCollection.getRank(incomingRankMap, contact);
+			int            rank   = CallLogs.getRank(incomingRankMap, contact);
 			List<CallRank> winner = incomingRankMap.get(1);
 			assert winner != null;
 			int rankCount = winner.size();
@@ -360,8 +337,8 @@ public class QuantityComment implements ContactComment {
 	private CharSequence getQuantityComment(boolean isTurkish) {
 		
 		Spanner comment = new Spanner();
-		assert callCollection != null;
-		History              history  = callCollection.getHistoryOf(contact);
+		assert callLogs != null;
+		History              history  = callLogs.getHistoryOf(contact);
 		String               name     = contact.getName() != null && !PhoneNumbers.isPhoneNumber(contact.getName()) ? contact.getName() : Stringx.toTitle(getString(R.string.word_contact));
 		View.OnClickListener listener = view -> new ShowCallsDialog(activity, history.getCalls(), contact.getName(), null).show();
 		

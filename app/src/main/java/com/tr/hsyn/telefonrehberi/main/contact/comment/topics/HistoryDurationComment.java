@@ -7,7 +7,7 @@ import android.view.View;
 
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.telefonrehberi.R;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallCollection;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallLogs;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationData;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationDialog;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.ContactComment;
@@ -31,8 +31,8 @@ import java.util.stream.Collectors;
 
 public class HistoryDurationComment implements ContactComment {
 	
-	private final CallCollection           callCollection = getCallCollection();
-	private final Spanner                  comment        = new Spanner("\n");
+	private final CallLogs                 callLogs = getCallCollection();
+	private final Spanner                  comment  = new Spanner("\n");
 	private       Activity                 activity;
 	private       Consumer<ContactComment> callback;
 	private       Contact                  contact;
@@ -72,7 +72,7 @@ public class HistoryDurationComment implements ContactComment {
 		this.activity  = activity;
 		this.isTurkish = isTurkish;
 		
-		if (callCollection == null) {
+		if (callLogs == null) {
 			
 			xlog.d(getString(R.string.call_collection_is_null));
 			returnComment();
@@ -82,7 +82,7 @@ public class HistoryDurationComment implements ContactComment {
 		
 		//+ The list that has the duration of each contact.
 		//+ And the order is by descending of the duration.
-		List<Map.Entry<Contact, DurationGroup>> durationList = createContactHistoryDurationList(callCollection.getContacts());
+		List<Map.Entry<Contact, DurationGroup>> durationList = createContactHistoryDurationList(CallLogs.getContactsWithNumber());
 		//+ First item of this list is the winner.
 		//+ Possibly there are durations with the same or so close with each other.
 		
@@ -93,7 +93,7 @@ public class HistoryDurationComment implements ContactComment {
 				.units(Unit.YEAR, Unit.MONTH, Unit.DAY)//_ the units should be used.
 				.zeros(false);//_ the zero durations should not be used.
 		//+ The duration of this contact.
-		DurationGroup thisDuration = CallCollection.getDuration(durationList, contact);
+		DurationGroup thisDuration = CallLogs.getDuration(durationList, contact);
 		
 		if (thisDuration == null) {
 			
@@ -110,7 +110,7 @@ public class HistoryDurationComment implements ContactComment {
 		MostDurationDialog                dialog              = new MostDurationDialog(getActivity(), durationDataList, title, subtitle);
 		View.OnClickListener              listener            = view -> dialog.show();
 		String                            durationString      = stringer.durations(thisDuration.getDurations()).toString();//+ Duration string of this contact.
-		int                               rank                = CallCollection.getRank(durationList, contact);
+		int                               rank                = CallLogs.getRank(durationList, contact);
 		boolean                           winner              = contact.getContactId() == winnerContact.getContactId();
 		
 		if (isTurkish) {
@@ -257,8 +257,8 @@ public class HistoryDurationComment implements ContactComment {
 		
 		for (Contact contact : contacts) {
 			
-			assert callCollection != null;
-			History history = callCollection.getHistoryOf(contact);
+			assert callLogs != null;
+			History history = callLogs.getHistoryOf(contact);
 			
 			if (history.isEmpty()) {
 				

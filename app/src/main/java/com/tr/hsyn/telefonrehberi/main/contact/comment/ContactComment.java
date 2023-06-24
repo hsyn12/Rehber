@@ -9,7 +9,7 @@ import androidx.annotation.ColorInt;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.string.Stringx;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallCollection;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallLogs;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.topics.Topic;
 import com.tr.hsyn.text.Span;
 import com.tr.hsyn.text.Spans;
@@ -29,9 +29,49 @@ public interface ContactComment extends Threaded {
 	
 	boolean isTurkish();
 	
-	default @Nullable CallCollection getCallCollection() {
+	/**
+	 * Some information needs to create a dialog and needs to get text, color, etc. from the resources.
+	 *
+	 * @return the activity
+	 */
+	Activity getActivity();
+	
+	/**
+	 * Returns the created comment.
+	 *
+	 * @return the comment
+	 */
+	@NotNull CharSequence getComment();
+	
+	/**
+	 * Returns the topic of the comment.
+	 *
+	 * @return the topic
+	 * @see Topic
+	 */
+	Topic getTopic();
+	
+	/**
+	 * Creates a comment.
+	 *
+	 * @param contact   contact
+	 * @param activity  activity
+	 * @param callback  callback
+	 * @param isTurkish isTurkish
+	 */
+	void createComment(@NotNull Contact contact, @NotNull Activity activity, @NotNull Consumer<ContactComment> callback, boolean isTurkish);
+	
+	/**
+	 * Returns the callback that called when the comment created.
+	 *
+	 * @return the callback
+	 */
+	@NotNull
+	Consumer<ContactComment> getCallback();
+	
+	default @Nullable CallLogs getCallCollection() {
 		
-		return Blue.getObject(Key.CALL_COLLECTION);
+		return Blue.getObject(Key.CALL_LOGS);
 	}
 	
 	/**
@@ -114,46 +154,6 @@ public interface ContactComment extends Threaded {
 		
 		return Stringx.format(text, args);
 	}
-	
-	/**
-	 * Some information needs to create a dialog and needs to get text, color, etc. from the resources.
-	 *
-	 * @return the activity
-	 */
-	Activity getActivity();
-	
-	/**
-	 * Returns the created comment.
-	 *
-	 * @return the comment
-	 */
-	@NotNull CharSequence getComment();
-	
-	/**
-	 * Returns the topic of the comment.
-	 *
-	 * @return the topic
-	 * @see Topic
-	 */
-	Topic getTopic();
-	
-	/**
-	 * Creates a comment.
-	 *
-	 * @param contact   contact
-	 * @param activity  activity
-	 * @param callback  callback
-	 * @param isTurkish isTurkish
-	 */
-	void createComment(@NotNull Contact contact, @NotNull Activity activity, @NotNull Consumer<ContactComment> callback, boolean isTurkish);
-	
-	/**
-	 * Returns the callback that called when the comment created.
-	 *
-	 * @return the callback
-	 */
-	@NotNull
-	Consumer<ContactComment> getCallback();
 	
 	/**
 	 * Returns the comment to the callback.

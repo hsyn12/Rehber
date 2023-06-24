@@ -130,7 +130,7 @@ public abstract class CallSummary extends ContactDetailsHistory {
 		
 		super.onHistoryLoad();
 		
-		History history = callCollection.getHistoryOf(contact);
+		History history = callLogs.getHistoryOf(contact);
 		
 		// if no history, do not show anything
 		if (history.isEmpty()) {
@@ -285,7 +285,7 @@ public abstract class CallSummary extends ContactDetailsHistory {
 	 */
 	private void showCallSummary() {
 		
-		History history = callCollection.getHistoryOf(contact);
+		History history = callLogs.getHistoryOf(contact);
 		
 		setupSummaryViews(history);
 		animateCallSummary();
@@ -409,7 +409,7 @@ public abstract class CallSummary extends ContactDetailsHistory {
 	 */
 	private void updateSummary() {
 		
-		History history = callCollection.getHistoryOf(contact);
+		History history = callLogs.getHistoryOf(contact);
 		
 		setupSummaryViews(history);
 		onSummaryUpdate();

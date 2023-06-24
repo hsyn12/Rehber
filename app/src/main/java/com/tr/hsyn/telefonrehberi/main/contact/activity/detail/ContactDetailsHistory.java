@@ -23,7 +23,7 @@ import com.tr.hsyn.gate.Gate;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.call.activity.history.ActivityCallList;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallCollection;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallLogs;
 import com.tr.hsyn.telefonrehberi.main.cast.PermissionHolder;
 import com.tr.hsyn.telefonrehberi.main.contact.data.History;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
@@ -59,21 +59,21 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	/**
 	 * The request code for call log permissions
 	 */
-	protected final int            RC_CALL_LOG     = 45;
+	protected final int      RC_CALL_LOG     = 45;
 	/** Gate for accessing the history data */
-	private final   Gate           gateHistory     = DigiGate.newGate(1000L, this::hideProgress);
+	private final   Gate     gateHistory     = DigiGate.newGate(1000L, this::hideProgress);
 	/** Gate used to block input while showing history. */
-	private final   Gate           gateShowHistory = AutoGate.newGate(1000L);
-	protected       CallCollection callCollection;
-	protected       History        history;
+	private final   Gate     gateShowHistory = AutoGate.newGate(1000L);
+	protected       CallLogs callLogs;
+	protected       History  history;
 	/** Flag indicating whether the view for the contact history added to the UI. */
-	private         boolean        historyViewAdded;
+	private         boolean  historyViewAdded;
 	/** Flag indicating whether it needs to show the history, after receiving call log permissions. */
-	private         boolean        isNewHistory    = true;
+	private         boolean  isNewHistory    = true;
 	/** Flag indicating whether call log permissions get requested. */
-	private         boolean        needShowHistory;
+	private         boolean  needShowHistory;
 	/** Flag indicating whether a new history needs to get loaded. */
-	private         boolean        isPermissionsRequested;
+	private         boolean  isPermissionsRequested;
 	
 	/**
 	 * @inheritDoc Prepares this activity for display by loading the call history for the
@@ -92,6 +92,65 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 			
 			setHistory();
 		}
+	}
+	
+	/**
+	 * Callback method called when a permission requested.
+	 * Overrides the method from {@link PermissionHolder}.
+	 *
+	 * @param requestCode The request code for the permission request.
+	 * @param result      A mapping of permissions to grant/deny outcomes.
+	 * @see #RC_CALL_LOG
+	 */
+	@CallSuper
+	@Override
+	public void onPermissionsResult(int requestCode, Map<String, Boolean> result) {
+		
+		if (requestCode == RC_CALL_LOG) {
+			
+			//- Arama kayıtları izinleri var mı
+			boolean grant = result.values().stream().allMatch(Boolean::booleanValue);
+			
+			if (grant) {
+				
+				//- Gerekli izni aldık, geçmişi yenileyelim
+				if (needShowHistory) refreshHistory();
+				else setHistory();
+				
+				//- Yukarıdakileri de uyarmayı unutmayalım
+				onCallPermissionsGrant();
+			}
+			else {
+				
+				xlog.d("Arama kaydı izinleri reddedildi ");
+				needShowHistory = false;
+				onCallPermissionsDenied();
+			}
+		}
+		
+		isPermissionsRequested = false;
+	}
+	
+	@Override
+	protected void onResume() {
+		
+		super.onResume();
+		
+		//- Arama kayıtlarında bir güncelleme varsa bilgilerin tekrar düzenlenmesi gerek
+		
+		if (Over.CallLog.Calls.isUpdated(Bool.NONE).bool()) {
+			
+			xlog.d("There is an update of call log");
+			setHistory();
+		}
+	}
+	
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+		
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		
+		onPermissionResult(requestCode, permissions, grantResults);
 	}
 	
 	/**
@@ -171,7 +230,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 		
 		//- Eğer arama kayıtları en az bir kez yüklenmiş ise sorun yok
 		//- Ancak yüklenmemiş ise, kayıtların buradan yüklenmesi biraz karışıklık yaratabilir.
-		callCollection = Blue.getObject(Key.CALL_COLLECTION);
+		callLogs = Blue.getObject(Key.CALL_LOGS);
 		
 		//- Öncelikle arama kayıtları izinlerine bakılmalı
 		if (hasCallLogPermissions()) {
@@ -180,7 +239,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 			//- Ancak bu yükleme, yükleme istasyonunda mı yoksa burada mı gerçekleşti bilmiyoruz
 			//- Kullanıcı uygulamayı ilk kez açıp, kişiler listesinden bir tıkla buraya gelmiş olabilir
 			//- Durum böyle ise bu değişkenin null olması gerek
-			if (callCollection == null) {
+			if (callLogs == null) {
 				
 				//- Burada anlıyoruz ki kullanıcı yükleme istasyonuna gitmemiş
 				//- Bu durumda arama kayıtlarını buradan yüklememiz gerek
@@ -199,7 +258,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 			return History.ofEmpty(contact);
 		}
 		
-		List<Call> calls = callCollection.getCallsById(String.valueOf(contact.getContactId()));
+		List<Call> calls = callLogs.getCallsById(String.valueOf(contact.getContactId()));
 		calls.sort((x, y) -> Long.compare(y.getTime(), x.getTime()));
 		//_ This is the 'call history' of the selected contact
 		return History.of(contact, calls);
@@ -338,43 +397,6 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	}
 	
 	/**
-	 * Callback method called when a permission requested.
-	 * Overrides the method from {@link PermissionHolder}.
-	 *
-	 * @param requestCode The request code for the permission request.
-	 * @param result      A mapping of permissions to grant/deny outcomes.
-	 * @see #RC_CALL_LOG
-	 */
-	@CallSuper
-	@Override
-	public void onPermissionsResult(int requestCode, Map<String, Boolean> result) {
-		
-		if (requestCode == RC_CALL_LOG) {
-			
-			//- Arama kayıtları izinleri var mı
-			boolean grant = result.values().stream().allMatch(Boolean::booleanValue);
-			
-			if (grant) {
-				
-				//- Gerekli izni aldık, geçmişi yenileyelim
-				if (needShowHistory) refreshHistory();
-				else setHistory();
-				
-				//- Yukarıdakileri de uyarmayı unutmayalım
-				onCallPermissionsGrant();
-			}
-			else {
-				
-				xlog.d("Arama kaydı izinleri reddedildi ");
-				needShowHistory = false;
-				onCallPermissionsDenied();
-			}
-		}
-		
-		isPermissionsRequested = false;
-	}
-	
-	/**
 	 * Refreshes the call history for the contact associated with this activity.
 	 */
 	private void refreshHistory() {
@@ -410,28 +432,6 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 				Bungee.slideRight(this);
 			}, 150);
 		}
-	}
-	
-	@Override
-	protected void onResume() {
-		
-		super.onResume();
-		
-		//- Arama kayıtlarında bir güncelleme varsa bilgilerin tekrar düzenlenmesi gerek
-		
-		if (Over.CallLog.Calls.isUpdated(Bool.NONE).bool()) {
-			
-			xlog.d("There is an update of call log");
-			setHistory();
-		}
-	}
-	
-	@Override
-	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-		
-		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-		
-		onPermissionResult(requestCode, permissions, grantResults);
 	}
 	
 }

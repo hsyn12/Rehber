@@ -33,7 +33,17 @@ public class Key extends Atom {
 	/**
 	 * The object that consists of all call log calls.
 	 */
-	public static final Key CALL_COLLECTION        = Key.of(20, "Call Collection");
+	public static final Key CALL_LOGS              = Key.of(20, "Call Logs");
+	
+	public Key(long id, @NotNull String name) {
+		
+		super(id, name);
+	}
+	
+	public boolean isEmpty() {
+		
+		return this.equals(EMPTY);
+	}
 	
 	@NotNull
 	public static Key of(long id, @NotNull String name) {
@@ -45,15 +55,5 @@ public class Key extends Atom {
 	public static Key ofEmpty() {
 		
 		return EMPTY;
-	}
-	
-	public Key(long id, @NotNull String name) {
-		
-		super(id, name);
-	}
-	
-	public boolean isEmpty() {
-		
-		return this.equals(EMPTY);
 	}
 }

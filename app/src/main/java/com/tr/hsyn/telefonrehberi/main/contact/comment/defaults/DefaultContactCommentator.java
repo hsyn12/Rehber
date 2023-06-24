@@ -10,8 +10,8 @@ import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.dev.android.dialog.ShowCall;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallCollection;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallLogs;
 import com.tr.hsyn.telefonrehberi.main.call.data.Res;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationData;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationDialog;
@@ -79,7 +79,7 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 	/** The comment store */
 	protected       ContactCommentStore      commentStore;
 	protected       boolean                  isTurkish;
-	protected       CallCollection           callCollection;
+	protected       CallLogs                 callLogs;
 	private         Consumer<CharSequence>   callback;
 	
 	/**
@@ -91,7 +91,7 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 		
 		this.commentStore = commentStore;
 		isTurkish         = commentStore.isTurkishLanguage();
-		callCollection    = getCallCollection();
+		callLogs          = getCallCollection();
 	}
 	
 	/**
@@ -121,10 +121,10 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 		
 		this.callback = callback;
 		
-		if (callCollection != null) {
+		if (callLogs != null) {
 			
 			this.contact = contact;
-			this.history = callCollection.getHistoryOf(contact);
+			this.history = callLogs.getHistoryOf(contact);
 			
 			//if history is empty, no need to go any further.
 			if (history.isEmpty()) {
@@ -276,8 +276,8 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 	private CharSequence commentOnDurations() {
 		
 		Spanner                      comment      = new Spanner();
-		Map<Integer, List<CallRank>> rankMap      = CallCollection.createRankMapByCallDuration(callCollection);
-		int                          rank         = CallCollection.getRank(rankMap, contact);
+		Map<Integer, List<CallRank>> rankMap      = CallLogs.createRankMapByCallDuration(callLogs);
+		int                          rank         = CallLogs.getRank(rankMap, contact);
 		List<MostDurationData>       durationList = createDurationList(rankMap);
 		String                       title        = getString(R.string.title_speaking_durations);
 		String                       subtitle     = getString(R.string.size_contacts, durationList.size());

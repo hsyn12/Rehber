@@ -12,6 +12,7 @@ import com.tr.hsyn.key.Key;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
+import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.contact.data.History;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
 import com.tr.hsyn.time.duration.DurationGroup;
@@ -33,16 +34,15 @@ import java.util.stream.Collectors;
 
 /**
  * Collection of the call logs.
- * This class can be accessed via {@link Blue#getObject(Key)} with the key {@link Key#CALL_COLLECTION}.
+ * This class can be accessed via {@link Blue#getObject(Key)} with the key {@link Key#CALL_LOGS}.
  */
 @Keep
-public final class CallCollection {
+public final class CallLogs {
 	
 	/**
 	 * The comparator used to sort the entries by quantity descending.
 	 */
 	public static final Comparator<Map.Entry<String, List<Call>>> QUANTITY_COMPARATOR = (e1, e2) -> e2.getValue().size() - e1.getValue().size();
-	
 	
 	/**
 	 * All call log calls
@@ -59,7 +59,7 @@ public final class CallCollection {
 	/**
 	 * Creates a new empty call collection.
 	 */
-	private CallCollection() {
+	private CallLogs() {
 		
 		List<Call> c = Over.CallLog.Calls.getCalls();
 		this.calls   = c != null ? c : new ArrayList<>(0);
@@ -74,7 +74,7 @@ public final class CallCollection {
 	 *
 	 * @param calls list of calls
 	 */
-	private CallCollection(List<Call> calls) {
+	private CallLogs(List<Call> calls) {
 		
 		this.calls     = calls != null ? calls : new ArrayList<>(0);
 		mapIdToCalls   = mapIdToCalls(this.calls);
@@ -444,15 +444,6 @@ public final class CallCollection {
 	}
 	
 	/**
-	 * @return all contacts
-	 */
-	@Nullable
-	public List<Contact> getContacts() {
-		
-		return Blue.getObject(Key.CONTACTS);
-	}
-	
-	/**
 	 * Creates a rank map for the given call types.
 	 *
 	 * @param callTypes the call types
@@ -464,7 +455,56 @@ public final class CallCollection {
 	public Map<Integer, List<CallRank>> getMost(int @NotNull ... callTypes) {
 		
 		List<Call> calls = new ArrayList<>(getCallsByType(callTypes));
-		return createRankMap(CallCollection.mapIdToCalls(calls), QUANTITY_COMPARATOR);
+		return createRankMap(CallLogs.mapIdToCalls(calls), QUANTITY_COMPARATOR);
+	}
+	
+	/**
+	 * @return all contacts
+	 */
+	@Nullable
+	public static List<Contact> getContacts() {
+		
+		return Blue.getObject(Key.CONTACTS);
+	}
+	
+	/**
+	 * Returns the contacts that have any real phone number.
+	 *
+	 * @return the contacts
+	 */
+	@Nullable
+	public static List<Contact> getContactsWithNumber() {
+		
+		var contacts = getContacts();
+		
+		if (contacts == null) return null;
+		
+		return contacts.stream().filter(CallLogs::hasNumber).collect(Collectors.toList());
+	}
+	
+	/**
+	 * Checks if the contact has any real phone number.
+	 *
+	 * @param contact the contact
+	 * @return {@code true} if the contact has a number
+	 */
+	public static boolean hasNumber(@NotNull Contact contact) {
+		
+		var numbers = ContactKey.getNumbers(contact);
+		
+		if (numbers == null || numbers.isEmpty()) return false;
+		
+		boolean hasNumber = false;
+		for (var number : numbers) {
+			
+			if (PhoneNumbers.isPhoneNumber(number)) {
+				
+				hasNumber = true;
+				break;
+			}
+		}
+		
+		return hasNumber;
 	}
 	
 	/**
@@ -472,14 +512,14 @@ public final class CallCollection {
 	 * Also, stored on the blue cloud.
 	 *
 	 * @return the call collection
-	 * @see Key#CALL_COLLECTION
+	 * @see Key#CALL_LOGS
 	 */
 	@NotNull
-	public static CallCollection create() {
+	public static CallLogs create() {
 		
-		CallCollection collection = new CallCollection();
+		CallLogs collection = new CallLogs();
 		
-		Blue.box(Key.CALL_COLLECTION, collection);
+		Blue.box(Key.CALL_LOGS, collection);
 		
 		return collection;
 	}
@@ -491,11 +531,11 @@ public final class CallCollection {
 	 * @return the call collection
 	 */
 	@NotNull
-	public static CallCollection create(List<Call> calls) {
+	public static CallLogs create(List<Call> calls) {
 		
-		CallCollection collection = new CallCollection(calls);
+		CallLogs collection = new CallLogs(calls);
 		
-		Blue.box(Key.CALL_COLLECTION, collection);
+		Blue.box(Key.CALL_LOGS, collection);
 		
 		return collection;
 	}
@@ -562,7 +602,7 @@ public final class CallCollection {
 	 */
 	public static Map<String, List<Call>> mapIdToCalls(@NotNull List<Call> calls) {
 		
-		return calls.stream().collect(Collectors.groupingBy(CallCollection::getKey));
+		return calls.stream().collect(Collectors.groupingBy(CallLogs::getKey));
 	}
 	
 	/**
@@ -576,7 +616,7 @@ public final class CallCollection {
 		
 		if (CallType.UNKNOWN == callType) return mapIdToCalls(calls);
 		
-		return calls.stream().filter(c -> c.getCallType() == callType).collect(Collectors.groupingBy(CallCollection::getKey));
+		return calls.stream().filter(c -> c.getCallType() == callType).collect(Collectors.groupingBy(CallLogs::getKey));
 	}
 	
 	/**
@@ -731,13 +771,13 @@ public final class CallCollection {
 	/**
 	 * Returns a map object that ranked by call duration by descending.
 	 *
-	 * @param callCollection call collection
+	 * @param callLogs call collection
 	 * @return a map object that ranked by calls duration by descending
 	 */
 	@NotNull
-	public static Map<Integer, List<CallRank>> createRankMapByCallDuration(@NotNull CallCollection callCollection) {
+	public static Map<Integer, List<CallRank>> createRankMapByCallDuration(@NotNull CallLogs callLogs) {
 		
-		Map<String, List<Call>> entries   = callCollection.getMapIdToCalls();
+		Map<String, List<Call>> entries   = callLogs.getMapIdToCalls();
 		Set<String>             keys      = entries.keySet();
 		List<CallRank>          callRanks = new ArrayList<>();
 		
@@ -761,7 +801,7 @@ public final class CallCollection {
 			
 			callRank.setIncomingDuration(incomingDuration);
 			callRank.setOutgoingDuration(outgoingDuration);
-			callRank.setContact(callCollection.getContact(key));
+			callRank.setContact(callLogs.getContact(key));
 			callRanks.add(callRank);
 		}
 		

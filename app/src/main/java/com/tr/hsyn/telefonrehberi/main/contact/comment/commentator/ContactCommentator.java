@@ -5,7 +5,7 @@ import android.app.Activity;
 
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.key.Key;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallCollection;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallLogs;
 import com.tr.hsyn.telefonrehberi.main.code.comment.CommentEditor;
 import com.tr.hsyn.telefonrehberi.main.code.comment.Commentator;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
@@ -31,15 +31,18 @@ import java.util.List;
 public interface ContactCommentator extends Commentator<Contact>, CommentEditor {
 	
 	/**
-	 * Returns a list of all contacts.
+	 * Returns the {@link ContactCommentStore} instance associated with this {@link ContactCommentator}.
 	 *
-	 * @return a list of all contacts
+	 * @return the {@link ContactCommentStore} instance associated with this {@link ContactCommentator}
 	 */
-	@Nullable
-	default List<Contact> getContacts() {
-		
-		return Over.Contacts.getContacts();
-	}
+	ContactCommentStore getCommentStore();
+	
+	/**
+	 * Returns the contact for which the comment is being generated.
+	 *
+	 * @return current selected contact
+	 */
+	Contact getContact();
 	
 	/**
 	 * Returns the activity by calling {@link #getCommentStore()}.
@@ -51,13 +54,6 @@ public interface ContactCommentator extends Commentator<Contact>, CommentEditor 
 		
 		return getCommentStore().getActivity();
 	}
-	
-	/**
-	 * Returns the {@link ContactCommentStore} instance associated with this {@link ContactCommentator}.
-	 *
-	 * @return the {@link ContactCommentStore} instance associated with this {@link ContactCommentator}
-	 */
-	ContactCommentStore getCommentStore();
 	
 	/**
 	 * This method is responsible for commenting on a contact.
@@ -75,20 +71,24 @@ public interface ContactCommentator extends Commentator<Contact>, CommentEditor 
 	}
 	
 	/**
-	 * Returns the contact for which the comment is being generated.
+	 * Returns a list of all contacts.
 	 *
-	 * @return current selected contact
+	 * @return a list of all contacts
 	 */
-	Contact getContact();
+	@Nullable
+	default List<Contact> getContacts() {
+		
+		return Over.Contacts.getContacts();
+	}
 	
 	/**
-	 * Returns the {@link CallCollection} object.
+	 * Returns the {@link CallLogs} object.
 	 *
-	 * @return {@link CallCollection} object
+	 * @return {@link CallLogs} object
 	 */
-	default @Nullable CallCollection getCallCollection() {
+	default @Nullable CallLogs getCallCollection() {
 		
-		return Blue.getObject(Key.CALL_COLLECTION);
+		return Blue.getObject(Key.CALL_LOGS);
 	}
 	
 }
