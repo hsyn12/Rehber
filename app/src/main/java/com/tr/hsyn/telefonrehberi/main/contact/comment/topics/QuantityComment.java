@@ -171,13 +171,11 @@ public class QuantityComment implements ContactComment {
 	}
 	
 	/**
-	 * Returns the list of contacts with no calls.
+	 * Returns the list of contacts with no calls according to the given call logs.
 	 *
 	 * @return the list of contacts with no calls
 	 */
-	private @Nullable List<Contact> getContactHasNoCalls() {
-		
-		assert callLogs != null;
+	private @Nullable List<Contact> getContactsHasNoCall(@NotNull CallLogs callLogs) {
 		
 		List<Contact> contacts           = CallLogs.getContactsWithNumber();
 		List<Contact> contactsHasNoCalls = new ArrayList<>();
@@ -200,13 +198,14 @@ public class QuantityComment implements ContactComment {
 	
 	private void evaluateCalls() {
 		
-		List<Contact> contactsHasNoCalls = getContactHasNoCalls();
+		assert callLogs != null;
+		List<Contact> contactsHasNoCalls = getContactsHasNoCall(callLogs);
 		
 		if (contactsHasNoCalls == null) return;
 		
 		if (contactsHasNoCalls.contains(contact)) {
 			
-			xlog.d("Contact has no any calls");
+			xlog.d("The Contact has no any calls");
 			
 			
 			if (isTurkish) {
@@ -252,16 +251,13 @@ public class QuantityComment implements ContactComment {
 			return null;
 		}
 		
-		List<Call> incomingCalls = callLogs.getIncomingCalls();
+		CallLogs incomingCallsLog = CallLogs.create(callLogs.getIncomingCalls());
 		
 		for (Contact contact : contacts) {
 			
-			if (CallLogs.hasNumber(contact)) {
-				
-				var calls = callLogs.getMapIdToCalls().get(String.valueOf(contact.getId()));
-				
-				if (calls == null) contactsHasNoIncoming.add(contact);
-			}
+			var calls = incomingCallsLog.getMapIdToCalls().get(String.valueOf(contact.getId()));
+			
+			if (calls == null) contactsHasNoIncoming.add(contact);
 		}
 		
 		return contactsHasNoIncoming;

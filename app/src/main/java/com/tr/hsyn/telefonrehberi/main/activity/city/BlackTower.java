@@ -199,7 +199,7 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 		
 		if (loadingCompleted.getAndSet(true)) {
 			
-			CallLogs.create();
+			CallLogs.createOnTheCloud();
 		}
 	}
 	
@@ -210,7 +210,7 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 		
 		if (loadingCompleted.getAndSet(true)) {
 			
-			CallLogs.create();
+			CallLogs.createOnTheCloud();
 		}
 	}
 	

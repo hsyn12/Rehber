@@ -475,11 +475,18 @@ public final class CallLogs {
 	@Nullable
 	public static List<Contact> getContactsWithNumber() {
 		
+		return getContacts(CallLogs::hasNumber);
+	}
+	
+	public static @Nullable List<Contact> getContacts(@NotNull Predicate<Contact> predicate) {
+		
 		var contacts = getContacts();
 		
 		if (contacts == null) return null;
 		
-		return contacts.stream().filter(CallLogs::hasNumber).collect(Collectors.toList());
+		return contacts.stream()
+				.filter(predicate)
+				.collect(Collectors.toList());
 	}
 	
 	/**
@@ -515,9 +522,36 @@ public final class CallLogs {
 	 * @see Key#CALL_LOGS
 	 */
 	@NotNull
-	public static CallLogs create() {
+	public static CallLogs createOnTheCloud() {
 		
 		CallLogs collection = new CallLogs();
+		
+		Blue.box(Key.CALL_LOGS, collection);
+		
+		return collection;
+	}
+	
+	/**
+	 * Creates a new call collection.
+	 *
+	 * @return the call logs
+	 */
+	@NotNull
+	public static CallLogs create() {
+		
+		return new CallLogs();
+	}
+	
+	/**
+	 * Creates a new call collection.
+	 *
+	 * @param calls the calls
+	 * @return the call collection
+	 */
+	@NotNull
+	public static CallLogs createOnTheCloud(List<Call> calls) {
+		
+		CallLogs collection = new CallLogs(calls);
 		
 		Blue.box(Key.CALL_LOGS, collection);
 		
@@ -533,11 +567,7 @@ public final class CallLogs {
 	@NotNull
 	public static CallLogs create(List<Call> calls) {
 		
-		CallLogs collection = new CallLogs(calls);
-		
-		Blue.box(Key.CALL_LOGS, collection);
-		
-		return collection;
+		return new CallLogs(calls);
 	}
 	
 	/**
