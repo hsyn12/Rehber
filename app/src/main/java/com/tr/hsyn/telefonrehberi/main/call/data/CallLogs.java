@@ -454,8 +454,21 @@ public final class CallLogs {
 	@NotNull
 	public Map<Integer, List<CallRank>> getMost(int @NotNull ... callTypes) {
 		
-		List<Call> calls = new ArrayList<>(getCallsByType(callTypes));
+		List<Call> calls = getCallsByType(callTypes);
 		return createRankMap(CallLogs.mapIdToCalls(calls), QUANTITY_COMPARATOR);
+	}
+	
+	/**
+	 * Creates a rank map for calls that related to this {@link CallLogs} object.
+	 * Remember, a {@code CallLogs} object can be related to any list of {@link Call}.
+	 *
+	 * @return the rank map.
+	 * 		The ranking starts 1, and advances one by one.
+	 * 		The most valuable rank is 1.
+	 */
+	public @NotNull Map<Integer, List<CallRank>> makeRank() {
+		
+		return createRankMap(mapIdToCalls, QUANTITY_COMPARATOR);
 	}
 	
 	/**

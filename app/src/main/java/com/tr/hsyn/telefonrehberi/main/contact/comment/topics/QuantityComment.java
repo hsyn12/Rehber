@@ -150,7 +150,7 @@ public class QuantityComment implements ContactComment {
 	private void test() {
 		
 		assert callLogs != null;
-		var contacts = CallLogs.getContactsWithNumber();
+		List<Contact> contacts = CallLogs.getContactsWithNumber();
 		
 		if (contacts == null) return;
 		
@@ -184,7 +184,7 @@ public class QuantityComment implements ContactComment {
 		
 		for (Contact contact : contacts) {
 			
-			var calls = callLogs.getMapIdToCalls().get(String.valueOf(contact.getId()));
+			List<Call> calls = callLogs.getMapIdToCalls().get(String.valueOf(contact.getId()));
 			
 			if (calls == null) contactsHasNoCalls.add(contact);
 		}
@@ -195,7 +195,8 @@ public class QuantityComment implements ContactComment {
 	private void evaluateCalls() {
 		
 		assert callLogs != null;
-		History history = callLogs.getHistoryOf(contact);
+		History history    = callLogs.getHistoryOf(contact);
+		boolean noIncoming = false;
 		
 		if (history.isEmpty()) {
 			
@@ -206,8 +207,62 @@ public class QuantityComment implements ContactComment {
 				noCallsComment(contactsHasNoCall);
 			}
 		}
+		//+ the history is not empty
+		else {//+ looking for incoming
+			List<Call> incomingCalls = history.getIncomingCalls();
+			//+ create a call logs with only incoming calls
+			CallLogs incomingCallLogs = CallLogs.create(this.callLogs.getIncomingCalls());
+			
+			if (incomingCalls.isEmpty()) {
+				
+				noIncoming = true;
+				noIncomingComment(getContactsHasNoCall(incomingCallLogs));
+			}
+			//+ incoming calls are not empty
+			else {
+				//+ from the most callers or from the fewest callers?
+				
+				Map<Integer, List<CallRank>> rankMap = incomingCallLogs.makeRank();
+				int                          rank    = CallLogs.getRank(rankMap, contact);
+				
+				if (rank == 1) {
+					
+					
+				}
+			}
+		}
 		
+	}
+	
+	private void noIncomingComment(List<Contact> contactsHasNoCall) {
 		
+		if (isTurkish) {
+			
+			if (contactsHasNoCall.size() == 1) {
+				
+				comment.append("Bu kişi, rehberde seni aramayan tek kişi. ");
+			}
+			else {
+				ContactListDialog dialog = createContactListDialog(contactsHasNoCall, "Aramayanlar", fmt("%d Kişi", contactsHasNoCall.size()));
+				
+				comment.append("Bu kişi, rehberde ")
+						.append("seni hiç aramayan", getClickSpans(view -> dialog.show()))
+						.append(fmt(" %d kişiden biri. ", contactsHasNoCall.size()));
+			}
+		}
+		else {
+			if (contactsHasNoCall.size() == 1) {
+				
+				comment.append("This contact is the only contact who do not call you in your contacts. ");
+			}
+			else {
+				ContactListDialog dialog = createContactListDialog(contactsHasNoCall, "Contacts Who Do Not Call You", fmt("%d Contacts", contactsHasNoCall.size()));
+				
+				comment.append(fmt("The contact is the one of %d contacts who ", contactsHasNoCall.size()))
+						.append("do not call you", getClickSpans(view -> dialog.show()))
+						.append(" . ");
+			}
+		}
 	}
 	
 	private void noCallsComment(List<Contact> contactsHasNoCalls) {
@@ -223,7 +278,7 @@ public class QuantityComment implements ContactComment {
 				
 				comment.append("Bu kişi, rehberde ")
 						.append("arama kaydı olmayan", getClickSpans(view -> dialog.show()))
-						.append(fmt(" %d kişiden biri. "));
+						.append(fmt(" %d kişiden biri. ", contactsHasNoCalls.size()));
 			}
 		}
 		else {
@@ -264,7 +319,7 @@ public class QuantityComment implements ContactComment {
 		
 		for (Contact contact : contacts) {
 			
-			var calls = incomingCallsLog.getMapIdToCalls().get(String.valueOf(contact.getId()));
+			List<Call> calls = incomingCallsLog.getMapIdToCalls().get(String.valueOf(contact.getId()));
 			
 			if (calls == null) contactsHasNoIncoming.add(contact);
 		}
