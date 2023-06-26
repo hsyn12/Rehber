@@ -1,9 +1,13 @@
 package com.tr.hsyn.phone_numbers;
 
 
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.tr.hsyn.string.Stringx;
+import com.tr.hsyn.xlog.xlog;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -16,24 +20,50 @@ public class PhoneNumbers {
 	/**
 	 * Telefon numaraları için minimum uzunluk
 	 */
-	public static final  int    N_MIN         = 10;
+	public static final  int             N_MIN             = 10;
 	/**
 	 * Telefon numaraları için maximum uzunluk
 	 */
-	public static final  int    N_MAX         = 15;
-	private static final String NUMBER_TYPE_1 = "[0-9]{10}";//543 493 7530
-	private static final String NUMBER_TYPE_2 = "[0-9]{11}";//0543 493 7530
-	private static final String NUMBER_TYPE_3 = "\\+?[0-9]{12}";//90 543 493 7530
-	private static final String NUMBER_TYPE_4 = "\\+?[0-9]{12,15}";//+xxxxx5434937530
+	public static final  int             N_MAX             = 15;
+	private static final PhoneNumberUtil PHONE_NUMBER_UTIL = PhoneNumberUtil.getInstance();
+	private static final String          NUMBER_TYPE_1     = "[0-9]{10}";//543 493 7530
+	private static final String          NUMBER_TYPE_2     = "[0-9]{11}";//0543 493 7530
+	private static final String          NUMBER_TYPE_3     = "\\+?[0-9]{12}";//90 543 493 7530
+	private static final String          NUMBER_TYPE_4     = "\\+?[0-9]{12,15}";//+xxxxx5434937530
+	
+	private PhoneNumbers() {
+		
+	}
+	
+	public static PhoneNumberUtil.@Nullable PhoneNumberType getPhoneNumberType(String number) {
+		
+		if (Stringx.isNoboe(number)) return null;
+		
+		try {return PHONE_NUMBER_UTIL.getNumberType(PHONE_NUMBER_UTIL.parse(number, "ZZ"));}
+		catch (NumberParseException e) {xlog.w(e);}
+		
+		return null;
+	}
+	
+	@Nullable
+	public static String getRegionCode(String number) {
+		
+		if (Stringx.isNoboe(number)) return null;
+		
+		try {return PHONE_NUMBER_UTIL.getRegionCodeForNumber(PHONE_NUMBER_UTIL.parse(number, "ZZ"));}
+		catch (NumberParseException e) {xlog.w(e);}
+		
+		return null;
+	}
 	
 	/**
 	 * Rakamların arasına boşluk koyarak daha okunur bir numara döndürür.<br>
-	 * <p>
-	 * {@code beautifyNumber("5434937530")} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  = 543 493 7530<br>
-	 * {@code beautifyNumber("05434937530")} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  = 0543 493 7530<br>
-	 * {@code beautifyNumber("905434937530")} &nbsp;&nbsp;&nbsp; = 90 543 493 7530<br>
-	 * {@code beautifyNumber("+905434937530")} &nbsp; = +90 543 493 7530<br><br>
-	 * <p>
+	 * <pre>
+	 * {@code beautifyNumber("5434937530")}     // 543 493 7530
+	 * {@code beautifyNumber("05434937530")}    // 0543 493 7530
+	 * {@code beautifyNumber("905434937530")}   // 90 543 493 7530
+	 * {@code beautifyNumber("+905434937530")}  // +90 543 493 7530
+	 * <pre>
 	 * Bu kombinasyon dışındakiler geldiği gibi geri döner.
 	 *
 	 * @param _number Telefon numarası
@@ -119,7 +149,7 @@ public class PhoneNumbers {
 	 * Returns the type of the number
 	 *
 	 * @param number number
-	 * @return number type. Zero if invalid.
+	 * @return number type or zero if invalid.
 	 */
 	public static int getNumberType(@NotNull String number) {
 		
@@ -127,7 +157,6 @@ public class PhoneNumbers {
 		if (number.matches(NUMBER_TYPE_2)) return 2;
 		if (number.matches(NUMBER_TYPE_3)) return 3;
 		if (number.matches(NUMBER_TYPE_4)) return 4;
-		if (number.matches(NUMBER_TYPE_4)) return 5;
 		
 		return 0;
 	}

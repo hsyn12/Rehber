@@ -7,6 +7,10 @@ dependencies {
 	implementation project(path: ':string')
 	implementation project(path: ':xlog')
 	compileOnly "org.jetbrains:annotations:${rootProject.annotations}"
+
+	// https://mvnrepository.com/artifact/com.googlecode.libphonenumber/libphonenumber
+	implementation 'com.googlecode.libphonenumber:libphonenumber:8.13.15'
+
 }
 
 java {

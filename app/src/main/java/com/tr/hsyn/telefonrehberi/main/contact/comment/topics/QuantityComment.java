@@ -222,6 +222,7 @@ public class QuantityComment implements ContactComment {
 			else {
 				//+ from the most callers or from the fewest callers?
 				
+				
 				Map<Integer, List<CallRank>> rankMap = incomingCallLogs.makeRank();
 				int                          rank    = CallLogs.getRank(rankMap, contact);
 				
