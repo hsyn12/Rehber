@@ -6,6 +6,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.tr.hsyn.regex.Nina;
 import com.tr.hsyn.regex.cast.Modifier;
+import com.tr.hsyn.regex.cast.Quanta;
 import com.tr.hsyn.regex.dev.regex.Regex;
 import com.tr.hsyn.regex.dev.regex.character.Digit;
 import com.tr.hsyn.regex.dev.regex.character.Letter;
@@ -274,22 +275,22 @@ public final class Stringx {
 	}
 	
 	/**
-	 * Bir kelimenin içinde başka bir kelimenin geçtiği yerlerin başlangıç ve bitiş index'lerini verir.<br>
-	 * Eşleşme yapılırken boşluklar da hesaplanır.<br>
-	 * Mesela '543493' içinde ' 5 4 3 ' aranıyorsa eşleşecek ve [0,3] dizisi dönecek.<br>
-	 * Mesela '5 4 3 493' içinde '543' aranıyorsa eşleşecek ve [0,6] dizisi dönecek.<br>
-	 * Mesela 'Mulu Acar' içinde 'ua' aranıyorsa eşleşecek ve [4, 7] dizisi dönecek.<br>
-	 * Mesela 'Mulu Acar' içinde 'u   a' aranıyorsa eşleşecek ve yine [4, 7] dizisi dönecek.<br>
-	 * Mesela 'Mulu Acar' içinde 'U' aranıyorsa eşleşecek ve [1, 2, 4, 5] dizisi dönecek.<br><br>
+	 * Returns the start and end indexes of places in a text where another text occurs.<br>
+	 * When matching, blanks are calculated.<br>
+	 * For example, if ' 5 4 3' is searched for in '543493' it will match, and the sequence [0 3] will return.<br>
+	 * For example, if '543' is searched for in '5 4 3 493', it will match and the sequence [0,6] will be returned.<br>
+	 * For example, if 'ua' is searched in 'Mutlu Acar', it will match and the sequence [4, 7] will return.<br>
+	 * For example, if 'u a' is searched in 'Mutlu Acar', it will match and the sequence [4, 7] will return.<br>
+	 * For example, if 'U' is searched in 'Mutlu Acar', it will match and the sequence [1, 2, 4, 5] will return.<br><br>
 	 * <p>
-	 * Arama, eşleşme bulunca sonlanmaz, ne kadar eşleşme varsa bulmaya devam eder.
-	 * Dönen eşleşme dizisi, ikili eşler şeklinde düşünülmeli.
-	 * Her bir ikili, eşleşmenin başlama (dahil) ve bitiş (hariç) index'ini bildirir.
+	 * The search doesn't end when it finds a match, it continues to find as many matches as there are.
+	 * The rotating match sequence should be thought of as pairs of pairs.
+	 * Each binary reports the start (including) and ending (exclusive) index of the match.
 	 *
-	 * @param word       Aramanın yapılacağı kelime
-	 * @param searchText Aranacak kelime
-	 * @param ignoreCase Karakter küçük/büyük duyarlılığı
-	 * @return Eşleşme olmazsa boş dizi
+	 * @param word       the text that searched in
+	 * @param searchText search text
+	 * @param ignoreCase ignore case
+	 * @return the start and end indexes if matches
 	 */
 	public static Integer @NotNull [] indexOfMatches(String word, String searchText, boolean ignoreCase) {
 		
@@ -335,16 +336,15 @@ public final class Stringx {
 	}
 	
 	/**
-	 * Kelimenin ({@code word}) içinde başka bir kelime ({@code searchText}) geçiyor mu?
-	 * Yapılacak olan karşılaştırmanın özelliği string içindeki boşlukları da
-	 * hesaba katması.  Yani boşluklar eşitliği bozmaz.<br>
+	 * Tests if a string has another string.
+	 * The spaces don't break the match.
 	 * <p>
-	 * Mesela {@code '543'}  ile {@code ' 5 4 3 '} karşılaştırması {@code true} sonucu verir.
+	 * For example, {@code '543'} compared to {@code ' 5 4 3 '} yields {@code true}.
 	 *
-	 * @param word       Aramanın yapılacağı string
-	 * @param searchText Aranacak string
-	 * @param ignoreCase Karakterlerin büyük/küçük olması önemsizse {@code true}
-	 * @return {@code word} içinde {@code searchText} geçiyorsa {@code true}
+	 * @param word       the text that searched in
+	 * @param searchText search text
+	 * @param ignoreCase ignore case
+	 * @return {@code true} if matches
 	 */
 	public static boolean isMatch(String word, String searchText, boolean ignoreCase) {
 		
@@ -361,8 +361,7 @@ public final class Stringx {
 		for (int i = 0; i < searchText.length(); i++) {
 			
 			reg.with(searchText.charAt(i))
-					.whiteSpace()
-					.zeroOrMore()
+					.whiteSpace(Quanta.ZERO_OR_MORE)
 					.lazy();
 		}
 		
@@ -372,10 +371,10 @@ public final class Stringx {
 	}
 	
 	/**
-	 * Bir yazının varlığını test eder.
+	 * Tests for the absence of a string.
 	 *
-	 * @param str Yazı
-	 * @return Eğer yazı <code>null</code> veya boşluk veya boş ise <code>true</code>
+	 * @param str string to test for the absence
+	 * @return {@code true} if the string is {@code null} or blank or empty.
 	 * 		(<strong>N</strong>ull <strong>O</strong>r <strong>B</strong>lank <strong>O</strong>r <strong>E</strong>mpty)
 	 */
 	public static boolean isNoboe(String str) {
@@ -383,8 +382,9 @@ public final class Stringx {
 		return str == null || WHITE_SPACE.removeFrom(str).isEmpty();
 	}
 	
+	@Deprecated(forRemoval = true)
 	@NotNull
-	public static Integer[] _indexOfMatches(String word, String searchText) {
+	public static Integer @NotNull [] _indexOfMatches(String word, String searchText) {
 		
 		//? Gelen string'lerden herhangi biri null ya da boş ise boş dizi dönecek
 		if (word == null || searchText == null ||

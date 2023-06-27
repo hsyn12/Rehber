@@ -47,7 +47,7 @@ public interface Regex {
 	 */
 	@RegExp String WORD   = "^\\p{L}+$";
 	/**
-	 * A specific type of character for letter in a regular expression {@link Character#LETTER}
+	 * A specific type of character for a letter in a regular expression {@link Character#LETTER}
 	 *
 	 * @see Character#LETTER
 	 */
@@ -215,7 +215,7 @@ public interface Regex {
 	}
 	
 	/**
-	 * Removes all non digit characters and returns the remains
+	 * Removes all non-digit characters and returns the remains.
 	 *
 	 * @param str String
 	 * @return An object consisting only of numbers
@@ -233,7 +233,7 @@ public interface Regex {
 	 * If the input string is null, an empty string is returned.
 	 *
 	 * @param str the input string to be processed
-	 * @return a new string that contains only the letters from the original string, or an empty string if the input is null
+	 * @return a new string that has only the letters from the original string, or an empty string if the input is null
 	 */
 	@NotNull
 	static String retainLetters(String str) {
@@ -325,7 +325,7 @@ public interface Regex {
 	}
 	
 	/**
-	 * Noboe : {@code null} <strong>o</strong>r  <strong>b</strong>lank <strong>o</strong>r  <strong>e</strong>mpty.
+	 * Noboe : <strong>N</strong>ull <strong>o</strong>r  <strong>b</strong>lank <strong>o</strong>r  <strong>e</strong>mpty.
 	 *
 	 * @param text the text to test
 	 * @return {@code true} if the text is {@code null} or blank or empty, {@code false} otherwise
@@ -336,9 +336,9 @@ public interface Regex {
 	}
 	
 	/**
-	 * Test regex contains.
+	 * Test regex has.
 	 * This is the regex search.<br>
-	 * Maybe {@code text} contains spaces, maybe case sensitive or not.<br><br>
+	 * Maybe {@code text} has spaces, maybe case-sensitive or not.<br><br>
 	 * <p>
 	 * For example :<br>
 	 * {@code contains("N i   s a bebek", "nisa", true, true); // returns true}<br>
@@ -346,8 +346,8 @@ public interface Regex {
 	 * @param text         the text to search in
 	 * @param what         the text to search for
 	 * @param ignoreSpaces {@code true} if spaces should be ignored, {@code false} otherwise
-	 * @param ignoreCase   {@code true} if case should be ignored, {@code false} otherwise
-	 * @return {@code true} if the text contains the {@code what}, {@code false} otherwise
+	 * @param ignoreCase   {@code true} if the case should be ignored, {@code false} otherwise
+	 * @return {@code true} if the text has the {@code what}, {@code false} otherwise
 	 */
 	static boolean contains(String text, String what, boolean ignoreSpaces, boolean ignoreCase) {
 		
@@ -384,9 +384,9 @@ public interface Regex {
 	/**
 	 * Returns the string after the first occurrence of a given substring.
 	 *
-	 * @param text  Specify the text that will be searched for the after parameter
-	 * @param after Specify the string that is being searched for
-	 * @return The text after the first occurrence of the parameter &quot;after&quot; in the parameter &quot;text&quot;
+	 * @param text  Specify the text that will be searched
+	 * @param after specify the string that is being searched for
+	 * @return the string after the first occurrence of a given substring
 	 */
 	static @NotNull String stringAfterFirst(@NotNull String text, @NotNull String after) {
 		

@@ -19,12 +19,12 @@ public enum Quanta implements Text {
 	
 	/**
 	 * Means optional match.
-	 * It is used to match zero or one occurrence of the preceding element.
-	 * It is also used for lazy matching
+	 * It is used to match zero or one occurrences of the preceding element.
+	 * It is used for lazy matching.
 	 */
 	ZERO_OR_ONE("?"),
 	/**
-	 * Matches zero or more occurrences of the preceding character or group
+	 * Matches zero or more occurrences of the preceding character or group.
 	 */
 	ZERO_OR_MORE("*"),
 	/**
@@ -37,6 +37,23 @@ public enum Quanta implements Text {
 	Quanta(@NotNull String regex) {
 		
 		this.regex = regex;
+	}
+	
+	@Override
+	public String toString() {
+		
+		return regex;
+	}
+	
+	@Override
+	public @NotNull String getText() {
+		
+		return regex;
+	}
+	
+	public String getRegex() {
+		
+		return regex;
 	}
 	
 	/**
@@ -62,7 +79,7 @@ public enum Quanta implements Text {
 	 *    <li>{@code '+'}  bir yada daha fazla</li>
 	 * </ul>
 	 *
-	 * @param s the character to check
+	 * @param s the character to select
 	 * @return true if the character is a quantifier
 	 */
 	public static boolean isQuantifier(char s) {
@@ -79,7 +96,7 @@ public enum Quanta implements Text {
 	 *    <li>{@code '+'}  bir yada daha fazla</li>
 	 * </ul>
 	 *
-	 * @param s the string to check
+	 * @param s the string to select
 	 * @return true if the character is a quantifier
 	 */
 	public static boolean isQuantifier(@NotNull String s) {
@@ -123,22 +140,5 @@ public enum Quanta implements Text {
 	public static String exactly(int count) {
 		
 		return String.format("{%d}", count);
-	}
-	
-	public String getRegex() {
-		
-		return regex;
-	}
-	
-	@Override
-	public String toString() {
-		
-		return regex;
-	}
-	
-	@Override
-	public @NotNull String getText() {
-		
-		return regex;
 	}
 }

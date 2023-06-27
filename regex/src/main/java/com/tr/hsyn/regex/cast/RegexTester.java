@@ -58,7 +58,7 @@ public interface RegexTester extends RegexMatcher {
 	}
 	
 	/**
-	 * Tests text contains the regex or not (partial match).<br><br>
+	 * Tests created regular expression against the given text for containing (partial match).<br><br>
 	 *
 	 * <pre>
 	 * String str = "12 Nisan 1981";
@@ -75,7 +75,7 @@ public interface RegexTester extends RegexMatcher {
 	 * </pre>
 	 *
 	 * @param text the text to test
-	 * @return true if the text contains the regex
+	 * @return true if the text has the regular expression, otherwise {@code false}
 	 */
 	default boolean existIn(@NotNull String text) {
 		

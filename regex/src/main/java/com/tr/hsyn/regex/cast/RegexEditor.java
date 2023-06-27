@@ -41,7 +41,6 @@ public interface RegexEditor extends RegexFinder {
 	 */
 	default String removeFrom(@NotNull CharSequence text, int limit) {
 		
-		if (true) throw new IllegalArgumentException("Not implemented yet");
 		int     count = 0;
 		Pattern regex = Pattern.compile(getText());
 		
@@ -51,13 +50,13 @@ public interface RegexEditor extends RegexFinder {
 		
 		while (matcher.find()) {
 			
-			//matcher.appendReplacement(sb, "");
+			matcher.appendReplacement(sb, "");
 			count++;
 			
 			if (limit > 0 && count >= limit) break;
 		}
 		
-		//matcher.appendTail(sb);
+		matcher.appendTail(sb);
 		
 		return sb.toString();
 	}

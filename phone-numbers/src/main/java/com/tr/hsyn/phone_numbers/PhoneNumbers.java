@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Locale;
 
 
 /**
@@ -28,8 +29,9 @@ public class PhoneNumbers {
 	private static final PhoneNumberUtil PHONE_NUMBER_UTIL = PhoneNumberUtil.getInstance();
 	private static final String          NUMBER_TYPE_1     = "[0-9]{10}";//543 493 7530
 	private static final String          NUMBER_TYPE_2     = "[0-9]{11}";//0543 493 7530
-	private static final String          NUMBER_TYPE_3     = "\\+?[0-9]{12}";//90 543 493 7530
-	private static final String          NUMBER_TYPE_4     = "\\+?[0-9]{12,15}";//+xxxxx5434937530
+	private static final String          NUMBER_TYPE_3     = "[0-9]{12}";//90 543 493 7530
+	private static final String          NUMBER_TYPE_4     = "\\+[0-9]{12}";//+90 543 493 7530
+	private static final String          NUMBER_TYPE_5     = "\\+?[0-9]{12,15}";//+xxxxx5434937530
 	
 	private PhoneNumbers() {
 		
@@ -45,6 +47,32 @@ public class PhoneNumbers {
 		return null;
 	}
 	
+	
+	public static void main(String[] args) {
+		
+		
+		String[] numbers = {
+				"+9235434937530",
+				"+905434937530",
+				"905434937530",
+				"05434937530",
+				"5434937530",
+				"434937530",
+		};
+		
+		for (String number : numbers) {
+			
+			var code = getRegionCode(number);
+			
+			if (code != null) {
+				
+				Locale locale = Locale.forLanguageTag(code);
+				System.out.println(locale);
+				System.out.printf("%s -> %s (%s)\n", number, code, locale.getLanguage());
+			}
+		}
+	}
+	
 	@Nullable
 	public static String getRegionCode(String number) {
 		
@@ -54,16 +82,6 @@ public class PhoneNumbers {
 		catch (NumberParseException e) {xlog.w(e);}
 		
 		return null;
-	}
-	
-	public static boolean isValid(String number) {
-		
-		if (Stringx.isNoboe(number)) return false;
-		
-		try {return PHONE_NUMBER_UTIL.isValidNumber(PHONE_NUMBER_UTIL.parse(number, "ZZ"));}
-		catch (NumberParseException e) {xlog.w(e);}
-		
-		return false;
 	}
 	
 	/**
@@ -167,6 +185,7 @@ public class PhoneNumbers {
 		if (number.matches(NUMBER_TYPE_2)) return 2;
 		if (number.matches(NUMBER_TYPE_3)) return 3;
 		if (number.matches(NUMBER_TYPE_4)) return 4;
+		if (number.matches(NUMBER_TYPE_5)) return 5;
 		
 		return 0;
 	}

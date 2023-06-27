@@ -7,7 +7,8 @@ dependencies {
 	implementation project(path: ':string')
 	implementation project(path: ':xlog')
 	compileOnly "org.jetbrains:annotations:${rootProject.annotations}"
-
+	api "com.google.guava:guava:${rootProject.guava}"
+	implementation "com.google.code.gson:gson:${rootProject.gson}"
 	// https://mvnrepository.com/artifact/com.googlecode.libphonenumber/libphonenumber
 	implementation 'com.googlecode.libphonenumber:libphonenumber:8.13.15'
 

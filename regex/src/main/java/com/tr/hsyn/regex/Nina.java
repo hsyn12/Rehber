@@ -648,6 +648,17 @@ public interface Nina {
 	}
 	
 	/**
+	 * Creates a new {@link RegexBuilder} object with the {@link Character#ANY} pattern.
+	 *
+	 * @return New {@link RegexBuilder} object that matches any character.
+	 */
+	@NotNull
+	static RegexBuilder any(@NotNull Quanta quanta) {
+		
+		return new Teddy(Character.ANY).with(quanta);
+	}
+	
+	/**
 	 * Creates a new {@link RegexBuilder} object with the {@link Character#ANY} pattern with <em>one or more</em> quantity.
 	 * This means that <em><strong>any one or more character</strong></em> will match.
 	 *
