@@ -7,9 +7,11 @@ import com.google.common.base.Splitter;
 import com.tr.hsyn.regex.Nina;
 import com.tr.hsyn.regex.cast.Modifier;
 import com.tr.hsyn.regex.dev.regex.Regex;
+import com.tr.hsyn.regex.dev.regex.character.Digit;
+import com.tr.hsyn.regex.dev.regex.character.Letter;
+import com.tr.hsyn.regex.dev.regex.character.WhiteSpace;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,16 +24,21 @@ import java.util.Locale;
  */
 public final class Stringx {
 	
-	public static final int UPPER = 0;
-	public static final int LOWER = 1;
+	public static final WhiteSpace WHITE_SPACE = Regex.WHITE_SPACE;
+	public static final Letter     LETTER      = Regex.LETTER;
+	public static final Digit      DIGIT       = Regex.DIGIT;
+	
+	private Stringx() {
+		
+	}
 	
 	/**
-	 * Dizi elemanlarını belirtilen karakter ile birleştirir.
+	 * Combines array elements with the specified character.
 	 *
-	 * @param collection Dizi
-	 * @param delimiter  Birleştirme karakteri
-	 * @param <T>        Dizi elemanlarının türü
-	 * @return Birleştirilmiş string
+	 * @param collection array to combine
+	 * @param delimiter  delimiter
+	 * @param <T>        type of array
+	 * @return combined string
 	 */
 	@NotNull
 	public static <T> String joinToString(T @NotNull [] collection, @NotNull String delimiter) {
@@ -40,12 +47,12 @@ public final class Stringx {
 	}
 	
 	/**
-	 * Liste elemanlarını string olarak birleştirir.
+	 * Combines list elements into a string.
 	 *
-	 * @param collection Liste
-	 * @param delimiter  Birleştirme karakteri
-	 * @param <T>        Liste eleman türü
-	 * @return Birleştirilmiş string
+	 * @param collection list
+	 * @param delimiter  delimiter
+	 * @param <T>        type of list
+	 * @return combined string
 	 */
 	@NotNull
 	public static <T> String joinToString(@NotNull List<? extends T> collection, @NotNull String delimiter) {
@@ -54,12 +61,11 @@ public final class Stringx {
 	}
 	
 	/**
-	 * Liste elemanlarını string olarak birleştirir.
-	 * Birleştirme karakteri virgül'dür.
+	 * Combines list elements into a string. The join character is a comma.
 	 *
-	 * @param collection Liste
-	 * @param <T>        Liste eleman türü
-	 * @return Birleştirilmiş string
+	 * @param collection list
+	 * @param <T>        type of list
+	 * @return combined string
 	 */
 	@NotNull
 	public static <T> String joinToString(List<? extends T> collection) {
@@ -69,48 +75,86 @@ public final class Stringx {
 		return Joiner.on(',').join(collection);
 	}
 	
+	/**
+	 * Combines elements into a string.
+	 * The join character is a comma.
+	 *
+	 * @param collection elements
+	 * @param <T>        type of element
+	 * @return combined string
+	 */
 	@NotNull
 	public static <T> String joinToString(@NotNull Iterable<? extends T> collection) {
 		
 		return Joiner.on(',').join(collection);
 	}
 	
+	/**
+	 * Combines list elements into a string. The join character is a comma.
+	 *
+	 * @param collection list
+	 * @return combined string
+	 */
 	@NotNull
 	public static String joinToString(int[] collection) {
 		
 		return Joiner.on(',').join(Collections.singletonList(collection));
 	}
 	
+	/**
+	 * Combines list elements into a string. The join character is a comma.
+	 *
+	 * @param collection list
+	 * @return combined string
+	 */
 	@NotNull
 	public static String joinToString(long[] collection) {
 		
 		return Joiner.on(',').join(Collections.singletonList(collection));
 	}
 	
+	/**
+	 * Combines list elements into a string.
+	 *
+	 * @param collection list
+	 * @return combined string
+	 */
 	@NotNull
 	public static String joinToString(int[] collection, @NotNull String delimiter) {
 		
 		return Joiner.on(delimiter).join(Collections.singletonList(collection));
 	}
 	
+	/**
+	 * Split a string. The split character is a comma.
+	 *
+	 * @param value string to split
+	 * @return the split elements
+	 */
 	@NotNull
 	public static Iterable<String> split(@NotNull String value) {
 		
 		return Splitter.on(",").omitEmptyStrings().trimResults().split(value);
 	}
 	
+	/**
+	 * Split a string.
+	 *
+	 * @param value string to split
+	 * @return the split elements
+	 */
 	@NotNull
-	public static Iterable<String> split(@NotNull String value, String delimeter) {
+	public static Iterable<String> split(@NotNull String value, String delimiter) {
 		
-		return Splitter.on(delimeter).omitEmptyStrings().trimResults().split(value);
+		return Splitter.on(delimiter).omitEmptyStrings().trimResults().split(value);
 	}
 	
 	/**
-	 * String'in ilk karakterini döndürür.
-	 * Eğer string boş ya da {@code null} ise boş string döner.
+	 * Returns the first character of the string.
+	 * If string is empty or {@code null}, an empty string is returned.
 	 *
-	 * @param str String
-	 * @return String'in ilk karakteri
+	 * @param str string to get first character
+	 * @return first character
 	 */
 	@NotNull
 	public static String getFirstChar(String str) {
@@ -125,15 +169,15 @@ public final class Stringx {
 	}
 	
 	/**
-	 * String içindeki tüm boşluk karakterlerini siler. {@code [\r\n\t\f\v]} ve {@code ' '} boşluk.
+	 * Deletes all space characters in the string. {@code [\r\n\t\f\v]} ve {@code ' '} space.
 	 *
 	 * @param str String
-	 * @return Boşluksuz bitişik bir string. Eğer verilen string {@code null} ise boş string
+	 * @return A contiguous string without spaces. If the given string is {@code null}, then empty string
 	 */
 	@NotNull
 	public static String trimWhiteSpaces(String str) {
 		
-		if (str != null) return str.replaceAll("\\s", "");
+		if (str != null) return WHITE_SPACE.removeFrom(str);
 		
 		return "";
 	}
@@ -179,7 +223,7 @@ public final class Stringx {
 	}
 	
 	/**
-	 * Verilen string'i formatla.
+	 * Formats the given string.
 	 *
 	 * <pre>val value = Stringx.from("%d. name='$name', number='%s', type='$type', date='%s'%n")
 	 *                                     .arg(1, i)
@@ -336,7 +380,7 @@ public final class Stringx {
 	 */
 	public static boolean isNoboe(String str) {
 		
-		return str == null || str.replaceAll("\\p{Z}", "").isEmpty();
+		return str == null || WHITE_SPACE.removeFrom(str).isEmpty();
 	}
 	
 	@NotNull
@@ -475,19 +519,19 @@ public final class Stringx {
 	}
 	
 	/**
-	 * Verilen string'i, ilk ve son iki karakteri hariç yıldız (*) karakteri ile maskeler.<br>
-	 * Mesela 'ahmet' kelimesi 'ah*et' olur.<br>
-	 * Mesela 'ahmet bey' kelimesi 'ah*** *ey' olur.<br><br>
+	 * Masks the given string with the asterisk (*) character, except for the first and last two characters.<br>
+	 * For example, the word 'ahmet' becomes 'ah*et'.<br>
+	 * For example, the word 'ahmet bey' becomes 'ah*** *ey'.<br><br>
 	 * <p>
-	 * Verilen string {@code null} ise 'null' string'i döner.<br>
-	 * Verilen string boş ise tek bir yıldız '*' string'i döner.<br>
-	 * Verilen string 3 karakterden az ise karakter sayısı kadar yıldız '*' string'i döner.<br>
-	 * Verilen string 3 karakter ise, mesela 'ali', sadece orta karakteri yıldız olur, 'a*i'<br>
-	 * Verilen string 4 karakter ise, mesela 'abla', orta karakterler yıldız olur, 'a**a'<br>
-	 * Geri kalan durumlarda ilk ve son iki karakter haricindekiler yıldız olur.
+	 * If the given string is {@code null}, it returns a 'null' string.
+	 * If the given string is empty, a single asterisk returns the string '*'.
+	 * If the given string is less than 3 characters, the asterisk '*' string returns as many characters as the number of characters.<br>
+	 * If the given string is 3 characters, for example, 'ali' only the middle character becomes an asterisk, 'a*i'<br>
+	 * If the given string is 4 characters, for example, the middle characters become asterisks, 'a**a'<br>
+	 * In the remaining cases, all but the first and last two characters become stars.
 	 *
-	 * @param str String
-	 * @return Maskelenmiş string
+	 * @param str string to mask
+	 * @return masked string
 	 */
 	public static String overWrite(String str) {
 		
@@ -495,11 +539,11 @@ public final class Stringx {
 	}
 	
 	/**
-	 * String'i belirtilen karakter ile maskeler.
+	 * Masks the string with the specified character.
 	 *
-	 * @param str String
-	 * @param c   Maskeleme karakteri
-	 * @return Maskelenmiş string
+	 * @param str string
+	 * @param c   mask character
+	 * @return masked string
 	 * @see #overWrite(String)
 	 */
 	public static String overWrite(String str, char c) {
@@ -543,6 +587,7 @@ public final class Stringx {
 		
 		StringBuilder sb = new StringBuilder();
 		
+		//noinspection StringRepeatCanBeUsed
 		for (int i = 0; i < count; i++)
 		     sb.append(c);
 		
@@ -550,15 +595,14 @@ public final class Stringx {
 	}
 	
 	/**
-	 * Verilen iki string'i karşılaştırarak birinin diğerinin
-	 * içinde geçip geçmediğini tespit edecek.<br></br>
+	 * Tests whether one passes inside the other by comparing two given strings.
 	 * <p>
-	 * Mesela 'EL' ile 'hello' kelimesi eşleşir.
-	 * Eşleşmelerde büyük küçük harf ayrımı yapılmayacak.
+	 * For example, 'EL' matches the word 'hello'.
+	 * There is no case of discrimination in matches.
 	 *
 	 * @param s1 s1
 	 * @param s2 s2
-	 * @return eşeleşme var ise {@code true}
+	 * @return {@code true} if matches
 	 */
 	public static boolean matchContains(String s1, String s2) {
 		
@@ -580,6 +624,12 @@ public final class Stringx {
 		return s1.contains(s2);
 	}
 	
+	/**
+	 * Checks whether the given string is a lower case letter.
+	 *
+	 * @param string the string
+	 * @return {@code true} if the string is a lower case letter
+	 */
 	public static boolean isLowerCase(@NotNull String string) {
 		
 		for (char c : string.toCharArray()) {
@@ -590,16 +640,34 @@ public final class Stringx {
 		return true;
 	}
 	
+	/**
+	 * Checks whether the given string is null or blank.
+	 *
+	 * @param str the string
+	 * @return {@code true} if the string is null or blank
+	 */
 	public static boolean isNullOrBlank(String str) {
 		
 		return str == null || isBlank(str);
 	}
 	
+	/**
+	 * Checks whether the given string is blank.
+	 *
+	 * @param str the string
+	 * @return {@code true} if the string is blank
+	 */
 	public static boolean isBlank(@NotNull String str) {
 		
 		return str.trim().isEmpty();
 	}
 	
+	/**
+	 * Returns the upper case version of the given string.
+	 *
+	 * @param str the string
+	 * @return the upper case version of the given string
+	 */
 	@NotNull
 	public static String toUpper(@NotNull String str) {
 		
@@ -618,12 +686,10 @@ public final class Stringx {
 	}
 	
 	/**
-	 * Verilen string'i küçük harflere çevirir.
-	 * {@link String#toLowerCase()} metodundan tek farkı {@code I} ve {@code İ} harflerini
-	 * {@code ı} ve {@code i} olarak çevirir.
+	 * Returns the lower case version of the given string.
 	 *
-	 * @param str Küçük harflere çevrilecek olan string
-	 * @return Küçük harflere çevrilmiş olan string
+	 * @param str the string
+	 * @return the lower case version of the given string
 	 */
 	@NotNull
 	public static String toLower(@NotNull String str) {
@@ -642,6 +708,12 @@ public final class Stringx {
 		return new String(chars);
 	}
 	
+	/**
+	 * Returns the capitalized version of the given string.
+	 *
+	 * @param str the string
+	 * @return the capitalized version of the given string
+	 */
 	@NotNull
 	public static String toCapital(@NotNull String str) {
 		
@@ -655,69 +727,13 @@ public final class Stringx {
 		return first + str.substring(1);
 	}
 	
-	@NotNull
-	public static String setCharAt(String str, int index, char c) {
-		
-		StringBuilder stringBuilder = new StringBuilder(str);
-		
-		stringBuilder.setCharAt(index, c);
-		
-		return stringBuilder.toString();
-	}
-	
-	@NotNull
-	public static String setCharAt(String str, int index, int charType) {
-		
-		StringBuilder stringBuilder = new StringBuilder(str);
-		
-		char c = stringBuilder.charAt(index);
-		
-		if (charType == UPPER) {
-			
-			if (c == 'i') c = 'I';
-			
-			c = Character.toUpperCase(c);
-		}
-		else if (charType == LOWER) {
-			
-			if (c == 'I') c = 'i';
-			c = Character.toLowerCase(c);
-		}
-		
-		stringBuilder.setCharAt(index, c);
-		return stringBuilder.toString();
-	}
-	
 	/**
-	 * Verilen string'deki ilk büyük ya da ilk küçük harfin index'ini döndürür
+	 * Returns a string with the given number of repetitions for the given string.
 	 *
-	 * @param str      Bir string
-	 * @param charType Büyük harf için {@link #UPPER} veya küçük harf için {@link #LOWER}
-	 * @return İndex yada -1 (bulunamazsa)
+	 * @param s     the string
+	 * @param count the number of repetitions
+	 * @return a string with the given number of repetitions for the given string.
 	 */
-	public static int indexOfCase(String str, int charType) {
-		
-		switch (charType) {
-			
-			case UPPER:
-				
-				for (int i = 0; i < str.length(); i++)
-					if (Character.isUpperCase(str.charAt(i))) return i;
-				
-				return -1;
-			
-			case LOWER:
-				
-				for (int i = 0; i < str.length(); i++)
-					if (Character.isLowerCase(str.charAt(i))) return i;
-				
-				return -1;
-			
-			default:
-				return -1;
-		}
-	}
-	
 	@NotNull
 	public static String repeat(@NotNull String s, int count) {
 		
@@ -730,100 +746,10 @@ public final class Stringx {
 	}
 	
 	/**
-	 * İki string'i eşitlik için karşılaştırır.
+	 * Deletes all characters in the string except the number.
 	 *
-	 * @param s1 String
-	 * @param s2 String
-	 * @return İki string eşitse {@code true}. Eğer iki string de {@code null} ise {@code true}
-	 */
-	public static boolean equals(@Nullable String s1, @Nullable String s2) {
-		
-		if (s1 == null && s2 == null) return true;
-		if (s1 == null || s2 == null) return false;
-		
-		s1 = trimWhiteSpaces(s1);
-		s2 = trimWhiteSpaces(s2);
-		
-		return s1.equals(s2);
-	}
-	
-	/**
-	 * İki string nesnenin sayısal içeriklerini karşılaştırır.
-	 * Karşılaştırma, nesnelerin sayısal olmayan tüm karakterleri çıkarılarak yapılır.
-	 * Yani karşılaştırılacak string nesnelerin içinde sayısal olmayan karakterler bulunabilir.<br>
-	 * İki {@code null} nesne birbirine eşit değildir.<br>
-	 * İki boş string birbirine eşit değildir.
-	 * Karşılaştırmanın yapılması için
-	 * nesnelerin içinde en az bir tane sayısal karakterin olması gerek.<br>
-	 *
-	 *
-	 * <pre>
-	 * equalsNumbers(null, null); // false
-	 * equalsNumbers(null, ""); // false
-	 * equalsNumbers("", ""); // false
-	 * equalsNumbers("hsyn1204", "h1s2y0n4"); // true
-	 * </pre>
-	 *
-	 * @param s1 Sayı
-	 * @param s2 Sayı
-	 * @return İki sayı birbirine eşitse {@code true}, değilse {@code false}
-	 */
-	public static boolean equalsNumbers(String s1, String s2) {
-		
-		return equalsNumbers(s1, s2, 0);
-	}
-	
-	/**
-	 * İki sayısal değer içeren string nesneyi eşitlik için karşılaştırır.
-	 * Nesneler sayısal olmayan karakterler içerebilir,
-	 * karşılaştırma bu karakterler çıkarılarak yapılır.
-	 * Bu bir sayısal karşılaştırma olduğu için iki {@code null} nesne birbirine eşit olamaz.
-	 * Ve iki boş string de birbirine eşit olmaz.
-	 *
-	 * <pre>
-	 * equalsNumbers(null, null, 0); // false
-	 * equalsNumbers(null, "", 0); // false
-	 * equalsNumbers("", "", 0); // false
-	 * equalsNumbers("", "", 0); // false
-	 * equalsNumbers("hsyn1204", "h1s2y0n4", 0); // true
-	 * equalsNumbers("123", "2", 0); // false
-	 * equalsNumbers("123", "2", 2); // true
-	 * // tolerans değeri, nesnelerden biri diğerini içeriyorsa,
-	 * // iki nesnenin karakter sayıları arasında en fazla kaç karakter fark olması gerektiğini bildirir.
-	 *
-	 * </pre>
-	 *
-	 * @param s1        String
-	 * @param s2        String
-	 * @param tolerance Tolerans
-	 * @return İki string sayısal olarak eşitse {@code true}, değilse {@code false}
-	 */
-	public static boolean equalsNumbers(String s1, String s2, int tolerance) {
-		
-		if (s1 == null || s2 == null) return false;
-		
-		s1 = Stringx.trimNonDigits(s1);
-		s2 = Stringx.trimNonDigits(s2);
-		
-		if (isBlank(s1) || isBlank(s2)) return false;
-		
-		if (s1.equals(s2)) return true;
-		
-		int i1 = s1.length();
-		int i2 = s2.length();
-		
-		if (i1 == i2) return false;
-		
-		if (s2.contains(s1) || s1.contains(s2))
-			return Math.abs(i1 - i2) <= tolerance;
-		else return false;
-	}
-	
-	/**
-	 * String içindeki sayı harici tüm karakterleri siler.
-	 *
-	 * @param str String
-	 * @return Sadece sayılardan oluşan bitişik boşluksuz bir string. Sayı yoksa boş string.
+	 * @param str string
+	 * @return a contiguous no spaces string consisting only of numbers. Empty string if no number exists.
 	 */
 	@NotNull
 	public static String trimNonDigits(@NotNull String str) {

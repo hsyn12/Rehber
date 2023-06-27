@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 public interface Character extends Text {
 	
 	/**
-	 * An alphabetic character. {@code \p{L}}
+	 * An alphabetical character. {@code \p{L}}
 	 */
 	String LETTER          = "\\p{L}";
 	/**
@@ -54,19 +54,19 @@ public interface Character extends Text {
 	@NotNull String ANY              = String.format("[%s%s%s%s]", LETTER, DIGIT, PUNCTUATION, WHITE_SPACE);
 	@NotNull String NON_ANY          = String.format("[^%s%s%s%s]", LETTER, DIGIT, PUNCTUATION, WHITE_SPACE);
 	/**
-	 * A lowercase alphabetic character {@code [a-z]}
+	 * A lowercase alphabetical character {@code [a-z]}
 	 */
 	@NotNull String LETTER_LOWER     = "\\p{Ll}";
 	/**
-	 * Any character except lowercase alphabetic. {@code [^\p{Ll}]}
+	 * Any character except lowercase alphabetical. {@code [^\p{Ll}]}
 	 */
 	@NotNull String NON_LETTER_LOWER = "\\P{Ll}";
 	/**
-	 * An uppercase alphabetic character {@code [A-Z]}
+	 * An uppercase alphabetical character {@code [A-Z]}
 	 */
 	@NotNull String LETTER_UPPER     = "\\p{Lu}";
 	/**
-	 * Any character except uppercase alphabetic. {@code [^\p{Lu}]}
+	 * Any character except uppercase alphabetical. {@code [^\p{Lu}]}
 	 */
 	@NotNull String NON_LETTER_UPPER = "\\P{Lu}";
 	/**
@@ -91,16 +91,12 @@ public interface Character extends Text {
 	@NotNull String BACK_SLASH  = "\\\\";
 	
 	/**
-	 * Returns a <code>Character</code> object representing the specified text.
+	 * Returns a non-null character that is guaranteed to be different from any other character.
+	 * This method is useful for initializing variables that need to have a default value.
 	 *
-	 * @param text the string to be converted to a Character object
-	 * @return a Character object representing the specified text
+	 * @return a non-null character that is guaranteed to be different from any other character
 	 */
-	@NotNull
-	static Character of(@NotNull String text) {
-		
-		return new Expression(text);
-	}
+	@NotNull Character non();
 	
 	/**
 	 * Returns a new {@link Text} object that represents the current text concatenated
@@ -177,14 +173,6 @@ public interface Character extends Text {
 	}
 	
 	/**
-	 * Returns a non-null character that is guaranteed to be different from any other character.
-	 * This method is useful for initializing variables that need to have a default value.
-	 *
-	 * @return a non-null character that is guaranteed to be different from any other character
-	 */
-	@NotNull Character non();
-	
-	/**
 	 * Checks if the given text matches the current text concatenated with one or more Quanta.
 	 *
 	 * @param text the text to be checked for a match
@@ -193,6 +181,18 @@ public interface Character extends Text {
 	default boolean all(@NotNull String text) {
 		
 		return text.matches(getText() + Quanta.ONE_OR_MORE);
+	}
+	
+	/**
+	 * Returns a <code>Character</code> object representing the specified text.
+	 *
+	 * @param text the string to be converted to a Character object
+	 * @return a Character object representing the specified text
+	 */
+	@NotNull
+	static Character of(@NotNull String text) {
+		
+		return new Expression(text);
 	}
 	
 	

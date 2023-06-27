@@ -56,6 +56,16 @@ public class PhoneNumbers {
 		return null;
 	}
 	
+	public static boolean isValid(String number) {
+		
+		if (Stringx.isNoboe(number)) return false;
+		
+		try {return PHONE_NUMBER_UTIL.isValidNumber(PHONE_NUMBER_UTIL.parse(number, "ZZ"));}
+		catch (NumberParseException e) {xlog.w(e);}
+		
+		return false;
+	}
+	
 	/**
 	 * Rakamların arasına boşluk koyarak daha okunur bir numara döndürür.<br>
 	 * <pre>
