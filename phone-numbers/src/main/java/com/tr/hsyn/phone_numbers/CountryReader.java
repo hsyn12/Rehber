@@ -3,6 +3,7 @@ package com.tr.hsyn.phone_numbers;
 
 import com.google.gson.Gson;
 import com.tr.hsyn.phone_numbers.country.Country;
+import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.xlog.xlog;
 
 import org.jetbrains.annotations.Nullable;
@@ -25,7 +26,20 @@ public class CountryReader {
 		System.out.println(getCountry("TR"));
 	}
 	
+	/**
+	 * Returns the country object with the given name.
+	 *
+	 * <pre>
+	 * getCountry("TR"); // Country{name='Turkey', region='Asia', phone=[+90], timezones={Europe/Istanbul=+03:00}, emoji='🇹🇷', iso={alpha-2=TR, alpha-3=TUR, numeric=792}, image='https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/TR.svg'}
+	 * </pre>
+	 *
+	 * @param name Country name
+	 * @return Country
+	 */
+	@SuppressWarnings("JavadocLinkAsPlainText")
 	public static @Nullable Country getCountry(String name) {
+		
+		if (Stringx.isNoboe(name)) return null;
 		
 		Gson gson = new Gson();
 		
@@ -39,7 +53,6 @@ public class CountryReader {
 		
 		return null;
 	}
-	
 	
 	private static void parse() {
 		

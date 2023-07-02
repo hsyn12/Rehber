@@ -7,27 +7,26 @@ import java.util.Map;
 
 public class Country {
 	
-	private String              image;
-	private Map<String, String> timezones;
-	private Map<String, String> iso;
-	private String              emoji;
-	private String[]            phone;
 	private String              name;
 	private String              region;
+	private String[]            phone;
+	private Map<String, String> timezones;
+	private String              emoji;
+	private Map<String, String> iso;
+	private String              image;
 	
 	@Override
 	public String toString() {
 		
-		return
-				"Country{" +
-				"image ='" + image + '\'' +
-				",timezones='" + timezones + '\'' +
-				",iso='" + iso + '\'' +
-				",emoji='" + emoji + '\'' +
-				",phone='" + Arrays.toString(phone) + '\'' +
-				",name='" + name + '\'' +
-				",region='" + region + '\'' +
-				"}";
+		return "Country{" +
+		       "name='" + name + '\'' +
+		       ", region='" + region + '\'' +
+		       ", phone=" + Arrays.toString(phone) +
+		       ", timezones=" + timezones +
+		       ", emoji='" + emoji + '\'' +
+		       ", iso=" + iso +
+		       ", image='" + image + '\'' +
+		       '}';
 	}
 	
 	public String getImage() {
