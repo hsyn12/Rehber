@@ -1,0 +1,17 @@
+{
+	"name": "Philippines",
+	"region": "Asia",
+	"timezones": {
+		"Asia/Manila": "+08:00"
+	},
+	"iso": {
+		"alpha-2": "PH",
+		"alpha-3": "PHL",
+		"numeric": "608"
+	},
+	"phone": [
+		"+63"
+	],
+	"emoji": "🇵🇭",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/PH.svg"
+}

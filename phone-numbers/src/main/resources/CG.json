@@ -1,0 +1,17 @@
+{
+	"name": "Congo",
+	"region": "Africa",
+	"timezones": {
+		"Africa/Brazzaville": "+01:00"
+	},
+	"iso": {
+		"alpha-2": "CG",
+		"alpha-3": "COG",
+		"numeric": "178"
+	},
+	"phone": [
+		"+242"
+	],
+	"emoji": "🇨🇬",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/CG.svg"
+}

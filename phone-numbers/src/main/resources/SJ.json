@@ -1,0 +1,17 @@
+{
+	"name": "Svalbard and Jan Mayen",
+	"region": "Europe",
+	"timezones": {
+		"Arctic/Longyearbyen": "+02:00"
+	},
+	"iso": {
+		"alpha-2": "SJ",
+		"alpha-3": "SJM",
+		"numeric": "744"
+	},
+	"phone": [
+		"+47"
+	],
+	"emoji": "🇸🇯",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/SJ.svg"
+}

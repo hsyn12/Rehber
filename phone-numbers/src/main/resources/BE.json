@@ -1,0 +1,17 @@
+{
+	"name": "Belgium",
+	"region": "Europe",
+	"timezones": {
+		"Europe/Brussels": "+02:00"
+	},
+	"iso": {
+		"alpha-2": "BE",
+		"alpha-3": "BEL",
+		"numeric": "056"
+	},
+	"phone": [
+		"+32"
+	],
+	"emoji": "🇧🇪",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/BE.svg"
+}

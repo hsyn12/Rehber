@@ -1,0 +1,19 @@
+{
+	"name": "Micronesia, Federated States of",
+	"region": "Oceania",
+	"timezones": {
+		"Pacific/Chuuk": "+10:00",
+		"Pacific/Kosrae": "+11:00",
+		"Pacific/Pohnpei": "+11:00"
+	},
+	"iso": {
+		"alpha-2": "FM",
+		"alpha-3": "FSM",
+		"numeric": "583"
+	},
+	"phone": [
+		"+691"
+	],
+	"emoji": "🇫🇲",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/FM.svg"
+}

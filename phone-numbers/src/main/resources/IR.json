@@ -1,0 +1,17 @@
+{
+	"name": "Iran, Islamic Republic of",
+	"region": "Asia",
+	"timezones": {
+		"Asia/Tehran": "+03:30"
+	},
+	"iso": {
+		"alpha-2": "IR",
+		"alpha-3": "IRN",
+		"numeric": "364"
+	},
+	"phone": [
+		"+98"
+	],
+	"emoji": "🇮🇷",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/IR.svg"
+}

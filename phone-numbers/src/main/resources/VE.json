@@ -1,0 +1,17 @@
+{
+	"name": "Venezuela, Bolivarian Republic of",
+	"region": "Americas",
+	"timezones": {
+		"America/Caracas": "-04:00"
+	},
+	"iso": {
+		"alpha-2": "VE",
+		"alpha-3": "VEN",
+		"numeric": "862"
+	},
+	"phone": [
+		"+58"
+	],
+	"emoji": "🇻🇪",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/VE.svg"
+}

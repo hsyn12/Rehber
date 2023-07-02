@@ -1,0 +1,17 @@
+{
+	"name": "Lebanon",
+	"region": "Asia",
+	"timezones": {
+		"Asia/Beirut": "+03:00"
+	},
+	"iso": {
+		"alpha-2": "LB",
+		"alpha-3": "LBN",
+		"numeric": "422"
+	},
+	"phone": [
+		"+961"
+	],
+	"emoji": "🇱🇧",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/LB.svg"
+}

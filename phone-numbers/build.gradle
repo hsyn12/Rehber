@@ -6,6 +6,7 @@ dependencies {
 
 	implementation project(path: ':string')
 	implementation project(path: ':xlog')
+	implementation project(path: ':stack')
 	compileOnly "org.jetbrains:annotations:${rootProject.annotations}"
 	api "com.google.guava:guava:${rootProject.guava}"
 	implementation "com.google.code.gson:gson:${rootProject.gson}"

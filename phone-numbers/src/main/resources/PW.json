@@ -1,0 +1,17 @@
+{
+	"name": "Palau",
+	"region": "Oceania",
+	"timezones": {
+		"Pacific/Palau": "+09:00"
+	},
+	"iso": {
+		"alpha-2": "PW",
+		"alpha-3": "PLW",
+		"numeric": "585"
+	},
+	"phone": [
+		"+680"
+	],
+	"emoji": "🇵🇼",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/PW.svg"
+}

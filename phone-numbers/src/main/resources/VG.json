@@ -1,0 +1,17 @@
+{
+	"name": "Virgin Islands, British",
+	"region": "Americas",
+	"timezones": {
+		"America/Tortola": "-04:00"
+	},
+	"iso": {
+		"alpha-2": "VG",
+		"alpha-3": "VGB",
+		"numeric": "092"
+	},
+	"phone": [
+		"+1-284"
+	],
+	"emoji": "🇻🇬",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/VG.svg"
+}

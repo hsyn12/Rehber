@@ -1,0 +1,17 @@
+{
+	"name": "Saint Helena, Ascension and Tristan da Cunha",
+	"region": "Africa",
+	"timezones": {
+		"Atlantic/St_Helena": "+00:00"
+	},
+	"iso": {
+		"alpha-2": "SH",
+		"alpha-3": "SHN",
+		"numeric": "654"
+	},
+	"phone": [
+		"+290"
+	],
+	"emoji": "🇸🇭",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/SH.svg"
+}

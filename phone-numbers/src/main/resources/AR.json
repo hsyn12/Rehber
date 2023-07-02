@@ -1,0 +1,28 @@
+{
+	"name": "Argentina",
+	"region": "Americas",
+	"timezones": {
+		"America/Argentina/Buenos_Aires": "-03:00",
+		"America/Argentina/Catamarca": "-03:00",
+		"America/Argentina/Cordoba": "-03:00",
+		"America/Argentina/Jujuy": "-03:00",
+		"America/Argentina/La_Rioja": "-03:00",
+		"America/Argentina/Mendoza": "-03:00",
+		"America/Argentina/Rio_Gallegos": "-03:00",
+		"America/Argentina/Salta": "-03:00",
+		"America/Argentina/San_Juan": "-03:00",
+		"America/Argentina/San_Luis": "-03:00",
+		"America/Argentina/Tucuman": "-03:00",
+		"America/Argentina/Ushuaia": "-03:00"
+	},
+	"iso": {
+		"alpha-2": "AR",
+		"alpha-3": "ARG",
+		"numeric": "032"
+	},
+	"phone": [
+		"+54"
+	],
+	"emoji": "🇦🇷",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/AR.svg"
+}

@@ -1,0 +1,17 @@
+{
+	"name": "Hong Kong",
+	"region": "Asia",
+	"timezones": {
+		"Asia/Hong_Kong": "+08:00"
+	},
+	"iso": {
+		"alpha-2": "HK",
+		"alpha-3": "HKG",
+		"numeric": "344"
+	},
+	"phone": [
+		"+852"
+	],
+	"emoji": "🇭🇰",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/HK.svg"
+}

@@ -1,0 +1,17 @@
+{
+	"name": "Zambia",
+	"region": "Africa",
+	"timezones": {
+		"Africa/Lusaka": "+02:00"
+	},
+	"iso": {
+		"alpha-2": "ZM",
+		"alpha-3": "ZMB",
+		"numeric": "894"
+	},
+	"phone": [
+		"+260"
+	],
+	"emoji": "🇿🇲",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/ZM.svg"
+}

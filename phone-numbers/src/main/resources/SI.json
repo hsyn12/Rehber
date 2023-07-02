@@ -1,0 +1,17 @@
+{
+	"name": "Slovenia",
+	"region": "Europe",
+	"timezones": {
+		"Europe/Ljubljana": "+02:00"
+	},
+	"iso": {
+		"alpha-2": "SI",
+		"alpha-3": "SVN",
+		"numeric": "705"
+	},
+	"phone": [
+		"+386"
+	],
+	"emoji": "🇸🇮",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/SI.svg"
+}

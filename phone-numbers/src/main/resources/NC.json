@@ -1,0 +1,17 @@
+{
+	"name": "New Caledonia",
+	"region": "Oceania",
+	"timezones": {
+		"Pacific/Noumea": "+11:00"
+	},
+	"iso": {
+		"alpha-2": "NC",
+		"alpha-3": "NCL",
+		"numeric": "540"
+	},
+	"phone": [
+		"+687"
+	],
+	"emoji": "🇳🇨",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/NC.svg"
+}

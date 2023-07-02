@@ -1,0 +1,17 @@
+{
+	"name": "Tuvalu",
+	"region": "Oceania",
+	"timezones": {
+		"Pacific/Funafuti": "+12:00"
+	},
+	"iso": {
+		"alpha-2": "TV",
+		"alpha-3": "TUV",
+		"numeric": "798"
+	},
+	"phone": [
+		"+688"
+	],
+	"emoji": "🇹🇻",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/TV.svg"
+}

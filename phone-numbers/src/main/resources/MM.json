@@ -1,0 +1,17 @@
+{
+	"name": "Myanmar",
+	"region": "Asia",
+	"timezones": {
+		"Asia/Yangon": "+06:30"
+	},
+	"iso": {
+		"alpha-2": "MM",
+		"alpha-3": "MMR",
+		"numeric": "104"
+	},
+	"phone": [
+		"+95"
+	],
+	"emoji": "🇲🇲",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/MM.svg"
+}

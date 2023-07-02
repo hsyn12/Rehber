@@ -1,0 +1,17 @@
+{
+	"name": "Viet Nam",
+	"region": "Asia",
+	"timezones": {
+		"Asia/Ho_Chi_Minh": "+07:00"
+	},
+	"iso": {
+		"alpha-2": "VN",
+		"alpha-3": "VNM",
+		"numeric": "704"
+	},
+	"phone": [
+		"+84"
+	],
+	"emoji": "🇻🇳",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/VN.svg"
+}

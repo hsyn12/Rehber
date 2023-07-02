@@ -1,0 +1,17 @@
+{
+	"name": "Croatia",
+	"region": "Europe",
+	"timezones": {
+		"Europe/Zagreb": "+02:00"
+	},
+	"iso": {
+		"alpha-2": "HR",
+		"alpha-3": "HRV",
+		"numeric": "191"
+	},
+	"phone": [
+		"+385"
+	],
+	"emoji": "🇭🇷",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/HR.svg"
+}

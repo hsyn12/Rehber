@@ -1,0 +1,17 @@
+{
+	"name": "Niger",
+	"region": "Africa",
+	"timezones": {
+		"Africa/Niamey": "+01:00"
+	},
+	"iso": {
+		"alpha-2": "NE",
+		"alpha-3": "NER",
+		"numeric": "562"
+	},
+	"phone": [
+		"+227"
+	],
+	"emoji": "🇳🇪",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/NE.svg"
+}

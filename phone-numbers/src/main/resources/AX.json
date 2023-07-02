@@ -1,0 +1,17 @@
+{
+	"name": "Åland Islands",
+	"region": "Europe",
+	"timezones": {
+		"Europe/Mariehamn": "+03:00"
+	},
+	"iso": {
+		"alpha-2": "AX",
+		"alpha-3": "ALA",
+		"numeric": "248"
+	},
+	"phone": [
+		"+358-18"
+	],
+	"emoji": "🇦🇽",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/AX.svg"
+}

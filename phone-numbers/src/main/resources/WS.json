@@ -1,0 +1,17 @@
+{
+	"name": "Samoa",
+	"region": "Oceania",
+	"timezones": {
+		"Pacific/Apia": "+13:00"
+	},
+	"iso": {
+		"alpha-2": "WS",
+		"alpha-3": "WSM",
+		"numeric": "882"
+	},
+	"phone": [
+		"+685"
+	],
+	"emoji": "🇼🇸",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/WS.svg"
+}

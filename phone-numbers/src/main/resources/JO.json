@@ -1,0 +1,17 @@
+{
+	"name": "Jordan",
+	"region": "Asia",
+	"timezones": {
+		"Asia/Amman": "+03:00"
+	},
+	"iso": {
+		"alpha-2": "JO",
+		"alpha-3": "JOR",
+		"numeric": "400"
+	},
+	"phone": [
+		"+962"
+	],
+	"emoji": "🇯🇴",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/JO.svg"
+}

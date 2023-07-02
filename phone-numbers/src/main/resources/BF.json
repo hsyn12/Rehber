@@ -1,0 +1,17 @@
+{
+	"name": "Burkina Faso",
+	"region": "Africa",
+	"timezones": {
+		"Africa/Ouagadougou": "+00:00"
+	},
+	"iso": {
+		"alpha-2": "BF",
+		"alpha-3": "BFA",
+		"numeric": "854"
+	},
+	"phone": [
+		"+226"
+	],
+	"emoji": "🇧🇫",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/BF.svg"
+}

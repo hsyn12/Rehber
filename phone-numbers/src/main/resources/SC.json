@@ -1,0 +1,17 @@
+{
+	"name": "Seychelles",
+	"region": "Africa",
+	"timezones": {
+		"Indian/Mahe": "+04:00"
+	},
+	"iso": {
+		"alpha-2": "SC",
+		"alpha-3": "SYC",
+		"numeric": "690"
+	},
+	"phone": [
+		"+248"
+	],
+	"emoji": "🇸🇨",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/SC.svg"
+}

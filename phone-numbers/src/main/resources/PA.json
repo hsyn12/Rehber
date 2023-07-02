@@ -1,0 +1,17 @@
+{
+	"name": "Panama",
+	"region": "Americas",
+	"timezones": {
+		"America/Panama": "-05:00"
+	},
+	"iso": {
+		"alpha-2": "PA",
+		"alpha-3": "PAN",
+		"numeric": "591"
+	},
+	"phone": [
+		"+507"
+	],
+	"emoji": "🇵🇦",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/PA.svg"
+}

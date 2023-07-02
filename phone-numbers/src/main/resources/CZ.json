@@ -1,0 +1,17 @@
+{
+	"name": "Czech Republic",
+	"region": "Europe",
+	"timezones": {
+		"Europe/Prague": "+02:00"
+	},
+	"iso": {
+		"alpha-2": "CZ",
+		"alpha-3": "CZE",
+		"numeric": "203"
+	},
+	"phone": [
+		"+420"
+	],
+	"emoji": "🇨🇿",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/CZ.svg"
+}

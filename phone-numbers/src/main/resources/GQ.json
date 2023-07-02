@@ -1,0 +1,17 @@
+{
+	"name": "Equatorial Guinea",
+	"region": "Africa",
+	"timezones": {
+		"Africa/Malabo": "+01:00"
+	},
+	"iso": {
+		"alpha-2": "GQ",
+		"alpha-3": "GNQ",
+		"numeric": "226"
+	},
+	"phone": [
+		"+240"
+	],
+	"emoji": "🇬🇶",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/GQ.svg"
+}

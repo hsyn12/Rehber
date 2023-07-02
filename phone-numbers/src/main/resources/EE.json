@@ -1,0 +1,17 @@
+{
+	"name": "Estonia",
+	"region": "Europe",
+	"timezones": {
+		"Europe/Tallinn": "+03:00"
+	},
+	"iso": {
+		"alpha-2": "EE",
+		"alpha-3": "EST",
+		"numeric": "233"
+	},
+	"phone": [
+		"+372"
+	],
+	"emoji": "🇪🇪",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/EE.svg"
+}

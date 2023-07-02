@@ -1,0 +1,17 @@
+{
+	"name": "Trinidad and Tobago",
+	"region": "Americas",
+	"timezones": {
+		"America/Port_of_Spain": "-04:00"
+	},
+	"iso": {
+		"alpha-2": "TT",
+		"alpha-3": "TTO",
+		"numeric": "780"
+	},
+	"phone": [
+		"+1-868"
+	],
+	"emoji": "🇹🇹",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/TT.svg"
+}

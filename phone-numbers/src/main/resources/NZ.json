@@ -1,0 +1,18 @@
+{
+	"name": "New Zealand",
+	"region": "Oceania",
+	"timezones": {
+		"Pacific/Auckland": "+12:00",
+		"Pacific/Chatham": "+12:45"
+	},
+	"iso": {
+		"alpha-2": "NZ",
+		"alpha-3": "NZL",
+		"numeric": "554"
+	},
+	"phone": [
+		"+64"
+	],
+	"emoji": "🇳🇿",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/NZ.svg"
+}

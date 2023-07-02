@@ -1,0 +1,17 @@
+{
+	"name": "Bahamas",
+	"region": "Americas",
+	"timezones": {
+		"America/Nassau": "-04:00"
+	},
+	"iso": {
+		"alpha-2": "BS",
+		"alpha-3": "BHS",
+		"numeric": "044"
+	},
+	"phone": [
+		"+1-242"
+	],
+	"emoji": "🇧🇸",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/BS.svg"
+}

@@ -1,0 +1,17 @@
+{
+	"name": "Virgin Islands, U.S.",
+	"region": "Americas",
+	"timezones": {
+		"America/St_Thomas": "-04:00"
+	},
+	"iso": {
+		"alpha-2": "VI",
+		"alpha-3": "VIR",
+		"numeric": "850"
+	},
+	"phone": [
+		"+1-340"
+	],
+	"emoji": "🇻🇮",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/VI.svg"
+}

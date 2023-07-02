@@ -1,0 +1,17 @@
+{
+	"name": "South Africa",
+	"region": "Africa",
+	"timezones": {
+		"Africa/Johannesburg": "+02:00"
+	},
+	"iso": {
+		"alpha-2": "ZA",
+		"alpha-3": "ZAF",
+		"numeric": "710"
+	},
+	"phone": [
+		"+27"
+	],
+	"emoji": "🇿🇦",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/ZA.svg"
+}

@@ -1,0 +1,19 @@
+{
+	"name": "French Polynesia",
+	"region": "Oceania",
+	"timezones": {
+		"Pacific/Gambier": "-09:00",
+		"Pacific/Marquesas": "-09:30",
+		"Pacific/Tahiti": "-10:00"
+	},
+	"iso": {
+		"alpha-2": "PF",
+		"alpha-3": "PYF",
+		"numeric": "258"
+	},
+	"phone": [
+		"+689"
+	],
+	"emoji": "🇵🇫",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/PF.svg"
+}

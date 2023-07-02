@@ -1,0 +1,17 @@
+{
+	"name": "United Arab Emirates",
+	"region": "Asia",
+	"timezones": {
+		"Asia/Dubai": "+04:00"
+	},
+	"iso": {
+		"alpha-2": "AE",
+		"alpha-3": "ARE",
+		"numeric": "784"
+	},
+	"phone": [
+		"+971"
+	],
+	"emoji": "🇦🇪",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/AE.svg"
+}

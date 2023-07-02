@@ -1,0 +1,17 @@
+{
+	"name": "Réunion",
+	"region": "Africa",
+	"timezones": {
+		"Indian/Reunion": "+04:00"
+	},
+	"iso": {
+		"alpha-2": "RE",
+		"alpha-3": "REU",
+		"numeric": "638"
+	},
+	"phone": [
+		"+262"
+	],
+	"emoji": "🇷🇪",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/RE.svg"
+}

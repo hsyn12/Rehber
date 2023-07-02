@@ -1,0 +1,17 @@
+{
+	"name": "Serbia",
+	"region": "Europe",
+	"timezones": {
+		"Europe/Belgrade": "+02:00"
+	},
+	"iso": {
+		"alpha-2": "RS",
+		"alpha-3": "SRB",
+		"numeric": "688"
+	},
+	"phone": [
+		"+381"
+	],
+	"emoji": "🇷🇸",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/RS.svg"
+}

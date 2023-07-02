@@ -1,0 +1,17 @@
+{
+	"name": "South Georgia and the South Sandwich Islands",
+	"region": "Americas",
+	"timezones": {
+		"Atlantic/South_Georgia": "-02:00"
+	},
+	"iso": {
+		"alpha-2": "GS",
+		"alpha-3": "SGS",
+		"numeric": "239"
+	},
+	"phone": [
+		"+"
+	],
+	"emoji": "🇬🇸",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/GS.svg"
+}

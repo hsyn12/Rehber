@@ -1,0 +1,17 @@
+{
+	"name": "Côte d'Ivoire",
+	"region": "Africa",
+	"timezones": {
+		"Africa/Abidjan": "+00:00"
+	},
+	"iso": {
+		"alpha-2": "CI",
+		"alpha-3": "CIV",
+		"numeric": "384"
+	},
+	"phone": [
+		"+225"
+	],
+	"emoji": "🇨🇮",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/CI.svg"
+}

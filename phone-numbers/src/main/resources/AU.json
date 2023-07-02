@@ -1,0 +1,28 @@
+{
+	"name": "Australia",
+	"region": "Oceania",
+	"timezones": {
+		"Antarctica/Macquarie": "+10:00",
+		"Australia/Adelaide": "+09:30",
+		"Australia/Brisbane": "+10:00",
+		"Australia/Broken_Hill": "+09:30",
+		"Australia/Darwin": "+09:30",
+		"Australia/Eucla": "+08:45",
+		"Australia/Hobart": "+10:00",
+		"Australia/Lindeman": "+10:00",
+		"Australia/Lord_Howe": "+10:30",
+		"Australia/Melbourne": "+10:00",
+		"Australia/Perth": "+08:00",
+		"Australia/Sydney": "+10:00"
+	},
+	"iso": {
+		"alpha-2": "AU",
+		"alpha-3": "AUS",
+		"numeric": "036"
+	},
+	"phone": [
+		"+61"
+	],
+	"emoji": "🇦🇺",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/AU.svg"
+}

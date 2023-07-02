@@ -1,0 +1,18 @@
+{
+	"name": "Cyprus",
+	"region": "Asia",
+	"timezones": {
+		"Asia/Famagusta": "+03:00",
+		"Asia/Nicosia": "+03:00"
+	},
+	"iso": {
+		"alpha-2": "CY",
+		"alpha-3": "CYP",
+		"numeric": "196"
+	},
+	"phone": [
+		"+357"
+	],
+	"emoji": "🇨🇾",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/CY.svg"
+}

@@ -1,0 +1,17 @@
+{
+	"name": "British Indian Ocean Territory",
+	"region": "Africa",
+	"timezones": {
+		"Indian/Chagos": "+06:00"
+	},
+	"iso": {
+		"alpha-2": "IO",
+		"alpha-3": "IOT",
+		"numeric": "086"
+	},
+	"phone": [
+		"+246"
+	],
+	"emoji": "🇮🇴",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/IO.svg"
+}

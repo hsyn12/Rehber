@@ -1,0 +1,17 @@
+{
+	"name": "Albania",
+	"region": "Europe",
+	"timezones": {
+		"Europe/Tirane": "+02:00"
+	},
+	"iso": {
+		"alpha-2": "AL",
+		"alpha-3": "ALB",
+		"numeric": "008"
+	},
+	"phone": [
+		"+355"
+	],
+	"emoji": "🇦🇱",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/AL.svg"
+}

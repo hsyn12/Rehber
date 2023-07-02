@@ -1,0 +1,19 @@
+{
+	"name": "Spain",
+	"region": "Europe",
+	"timezones": {
+		"Africa/Ceuta": "+02:00",
+		"Atlantic/Canary": "+01:00",
+		"Europe/Madrid": "+02:00"
+	},
+	"iso": {
+		"alpha-2": "ES",
+		"alpha-3": "ESP",
+		"numeric": "724"
+	},
+	"phone": [
+		"+34"
+	],
+	"emoji": "🇪🇸",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/ES.svg"
+}

@@ -1,0 +1,17 @@
+{
+	"name": "Switzerland",
+	"region": "Europe",
+	"timezones": {
+		"Europe/Zurich": "+02:00"
+	},
+	"iso": {
+		"alpha-2": "CH",
+		"alpha-3": "CHE",
+		"numeric": "756"
+	},
+	"phone": [
+		"+41"
+	],
+	"emoji": "🇨🇭",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/CH.svg"
+}

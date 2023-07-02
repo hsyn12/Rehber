@@ -1,0 +1,17 @@
+{
+	"name": "Nauru",
+	"region": "Oceania",
+	"timezones": {
+		"Pacific/Nauru": "+12:00"
+	},
+	"iso": {
+		"alpha-2": "NR",
+		"alpha-3": "NRU",
+		"numeric": "520"
+	},
+	"phone": [
+		"+674"
+	],
+	"emoji": "🇳🇷",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/NR.svg"
+}

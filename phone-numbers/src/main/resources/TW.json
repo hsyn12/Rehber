@@ -1,0 +1,17 @@
+{
+	"name": "Taiwan, Province of China",
+	"region": "Asia",
+	"timezones": {
+		"Asia/Taipei": "+08:00"
+	},
+	"iso": {
+		"alpha-2": "TW",
+		"alpha-3": "TWN",
+		"numeric": "158"
+	},
+	"phone": [
+		"+886"
+	],
+	"emoji": "🇹🇼",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/TW.svg"
+}

@@ -1,0 +1,17 @@
+{
+	"name": "Saint Pierre and Miquelon",
+	"region": "Americas",
+	"timezones": {
+		"America/Miquelon": "-02:00"
+	},
+	"iso": {
+		"alpha-2": "PM",
+		"alpha-3": "SPM",
+		"numeric": "666"
+	},
+	"phone": [
+		"+508"
+	],
+	"emoji": "🇵🇲",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/PM.svg"
+}

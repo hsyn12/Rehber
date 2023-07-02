@@ -1,0 +1,17 @@
+{
+	"name": "Falkland Islands (Malvinas)",
+	"region": "Americas",
+	"timezones": {
+		"Atlantic/Stanley": "-03:00"
+	},
+	"iso": {
+		"alpha-2": "FK",
+		"alpha-3": "FLK",
+		"numeric": "238"
+	},
+	"phone": [
+		"+500"
+	],
+	"emoji": "🇫🇰",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/FK.svg"
+}

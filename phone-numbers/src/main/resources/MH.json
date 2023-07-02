@@ -1,0 +1,18 @@
+{
+	"name": "Marshall Islands",
+	"region": "Oceania",
+	"timezones": {
+		"Pacific/Kwajalein": "+12:00",
+		"Pacific/Majuro": "+12:00"
+	},
+	"iso": {
+		"alpha-2": "MH",
+		"alpha-3": "MHL",
+		"numeric": "584"
+	},
+	"phone": [
+		"+692"
+	],
+	"emoji": "🇲🇭",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/MH.svg"
+}

@@ -1,0 +1,17 @@
+{
+	"name": "Saint Kitts and Nevis",
+	"region": "Americas",
+	"timezones": {
+		"America/St_Kitts": "-04:00"
+	},
+	"iso": {
+		"alpha-2": "KN",
+		"alpha-3": "KNA",
+		"numeric": "659"
+	},
+	"phone": [
+		"+1-869"
+	],
+	"emoji": "🇰🇳",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/KN.svg"
+}

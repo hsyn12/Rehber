@@ -1,0 +1,17 @@
+{
+	"name": "Saint Martin (French part)",
+	"region": "Americas",
+	"timezones": {
+		"America/Marigot": "-04:00"
+	},
+	"iso": {
+		"alpha-2": "MF",
+		"alpha-3": "MAF",
+		"numeric": "663"
+	},
+	"phone": [
+		"+590"
+	],
+	"emoji": "🇲🇫",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/MF.svg"
+}

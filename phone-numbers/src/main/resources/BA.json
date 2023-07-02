@@ -1,0 +1,17 @@
+{
+	"name": "Bosnia and Herzegovina",
+	"region": "Europe",
+	"timezones": {
+		"Europe/Sarajevo": "+02:00"
+	},
+	"iso": {
+		"alpha-2": "BA",
+		"alpha-3": "BIH",
+		"numeric": "070"
+	},
+	"phone": [
+		"+387"
+	],
+	"emoji": "🇧🇦",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/BA.svg"
+}

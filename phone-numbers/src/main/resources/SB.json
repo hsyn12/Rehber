@@ -1,0 +1,17 @@
+{
+	"name": "Solomon Islands",
+	"region": "Oceania",
+	"timezones": {
+		"Pacific/Guadalcanal": "+11:00"
+	},
+	"iso": {
+		"alpha-2": "SB",
+		"alpha-3": "SLB",
+		"numeric": "090"
+	},
+	"phone": [
+		"+677"
+	],
+	"emoji": "🇸🇧",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/SB.svg"
+}

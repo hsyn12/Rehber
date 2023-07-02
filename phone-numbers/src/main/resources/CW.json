@@ -1,0 +1,17 @@
+{
+	"name": "Curaçao",
+	"region": "Americas",
+	"timezones": {
+		"America/Curacao": "-04:00"
+	},
+	"iso": {
+		"alpha-2": "CW",
+		"alpha-3": "CUW",
+		"numeric": "531"
+	},
+	"phone": [
+		"+599"
+	],
+	"emoji": "🇨🇼",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/CW.svg"
+}

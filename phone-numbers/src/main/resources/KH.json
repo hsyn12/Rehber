@@ -1,0 +1,17 @@
+{
+	"name": "Cambodia",
+	"region": "Asia",
+	"timezones": {
+		"Asia/Phnom_Penh": "+07:00"
+	},
+	"iso": {
+		"alpha-2": "KH",
+		"alpha-3": "KHM",
+		"numeric": "116"
+	},
+	"phone": [
+		"+855"
+	],
+	"emoji": "🇰🇭",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/KH.svg"
+}

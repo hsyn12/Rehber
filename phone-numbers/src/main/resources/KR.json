@@ -1,0 +1,17 @@
+{
+	"name": "Korea, Republic of",
+	"region": "Asia",
+	"timezones": {
+		"Asia/Seoul": "+09:00"
+	},
+	"iso": {
+		"alpha-2": "KR",
+		"alpha-3": "KOR",
+		"numeric": "410"
+	},
+	"phone": [
+		"+82"
+	],
+	"emoji": "🇰🇷",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/KR.svg"
+}

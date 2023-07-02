@@ -1,0 +1,17 @@
+{
+	"name": "Saint Barthélemy",
+	"region": "Americas",
+	"timezones": {
+		"America/St_Barthelemy": "-04:00"
+	},
+	"iso": {
+		"alpha-2": "BL",
+		"alpha-3": "BLM",
+		"numeric": "652"
+	},
+	"phone": [
+		"+590"
+	],
+	"emoji": "🇧🇱",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/BL.svg"
+}

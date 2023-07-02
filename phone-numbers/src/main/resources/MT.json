@@ -1,0 +1,17 @@
+{
+	"name": "Malta",
+	"region": "Europe",
+	"timezones": {
+		"Europe/Malta": "+02:00"
+	},
+	"iso": {
+		"alpha-2": "MT",
+		"alpha-3": "MLT",
+		"numeric": "470"
+	},
+	"phone": [
+		"+356"
+	],
+	"emoji": "🇲🇹",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/MT.svg"
+}

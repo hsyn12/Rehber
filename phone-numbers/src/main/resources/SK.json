@@ -1,0 +1,17 @@
+{
+	"name": "Slovakia",
+	"region": "Europe",
+	"timezones": {
+		"Europe/Bratislava": "+02:00"
+	},
+	"iso": {
+		"alpha-2": "SK",
+		"alpha-3": "SVK",
+		"numeric": "703"
+	},
+	"phone": [
+		"+421"
+	],
+	"emoji": "🇸🇰",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/SK.svg"
+}

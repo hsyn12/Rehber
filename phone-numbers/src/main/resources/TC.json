@@ -1,0 +1,17 @@
+{
+	"name": "Turks and Caicos Islands",
+	"region": "Americas",
+	"timezones": {
+		"America/Grand_Turk": "-04:00"
+	},
+	"iso": {
+		"alpha-2": "TC",
+		"alpha-3": "TCA",
+		"numeric": "796"
+	},
+	"phone": [
+		"+1-649"
+	],
+	"emoji": "🇹🇨",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/TC.svg"
+}

@@ -1,0 +1,17 @@
+{
+	"name": "Turkmenistan",
+	"region": "Asia",
+	"timezones": {
+		"Asia/Ashgabat": "+05:00"
+	},
+	"iso": {
+		"alpha-2": "TM",
+		"alpha-3": "TKM",
+		"numeric": "795"
+	},
+	"phone": [
+		"+993"
+	],
+	"emoji": "🇹🇲",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/TM.svg"
+}

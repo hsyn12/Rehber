@@ -1,0 +1,17 @@
+{
+	"name": "Wallis and Futuna",
+	"region": "Oceania",
+	"timezones": {
+		"Pacific/Wallis": "+12:00"
+	},
+	"iso": {
+		"alpha-2": "WF",
+		"alpha-3": "WLF",
+		"numeric": "876"
+	},
+	"phone": [
+		"+681"
+	],
+	"emoji": "🇼🇫",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/WF.svg"
+}

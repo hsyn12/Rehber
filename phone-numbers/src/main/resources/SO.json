@@ -1,0 +1,17 @@
+{
+	"name": "Somalia",
+	"region": "Africa",
+	"timezones": {
+		"Africa/Mogadishu": "+03:00"
+	},
+	"iso": {
+		"alpha-2": "SO",
+		"alpha-3": "SOM",
+		"numeric": "706"
+	},
+	"phone": [
+		"+252"
+	],
+	"emoji": "🇸🇴",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/SO.svg"
+}

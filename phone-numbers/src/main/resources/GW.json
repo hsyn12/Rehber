@@ -1,0 +1,17 @@
+{
+	"name": "Guinea-Bissau",
+	"region": "Africa",
+	"timezones": {
+		"Africa/Bissau": "+00:00"
+	},
+	"iso": {
+		"alpha-2": "GW",
+		"alpha-3": "GNB",
+		"numeric": "624"
+	},
+	"phone": [
+		"+245"
+	],
+	"emoji": "🇬🇼",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/GW.svg"
+}

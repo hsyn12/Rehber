@@ -1,0 +1,17 @@
+{
+	"name": "Ireland",
+	"region": "Europe",
+	"timezones": {
+		"Europe/Dublin": "+01:00"
+	},
+	"iso": {
+		"alpha-2": "IE",
+		"alpha-3": "IRL",
+		"numeric": "372"
+	},
+	"phone": [
+		"+353"
+	],
+	"emoji": "🇮🇪",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/IE.svg"
+}

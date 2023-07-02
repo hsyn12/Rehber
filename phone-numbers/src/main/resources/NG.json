@@ -1,0 +1,17 @@
+{
+	"name": "Nigeria",
+	"region": "Africa",
+	"timezones": {
+		"Africa/Lagos": "+01:00"
+	},
+	"iso": {
+		"alpha-2": "NG",
+		"alpha-3": "NGA",
+		"numeric": "566"
+	},
+	"phone": [
+		"+234"
+	],
+	"emoji": "🇳🇬",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/NG.svg"
+}

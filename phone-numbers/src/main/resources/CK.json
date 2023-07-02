@@ -1,0 +1,17 @@
+{
+	"name": "Cook Islands",
+	"region": "Oceania",
+	"timezones": {
+		"Pacific/Rarotonga": "-10:00"
+	},
+	"iso": {
+		"alpha-2": "CK",
+		"alpha-3": "COK",
+		"numeric": "184"
+	},
+	"phone": [
+		"+682"
+	],
+	"emoji": "🇨🇰",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/CK.svg"
+}

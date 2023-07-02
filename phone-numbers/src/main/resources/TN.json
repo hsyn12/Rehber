@@ -1,0 +1,17 @@
+{
+	"name": "Tunisia",
+	"region": "Africa",
+	"timezones": {
+		"Africa/Tunis": "+01:00"
+	},
+	"iso": {
+		"alpha-2": "TN",
+		"alpha-3": "TUN",
+		"numeric": "788"
+	},
+	"phone": [
+		"+216"
+	],
+	"emoji": "🇹🇳",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/TN.svg"
+}

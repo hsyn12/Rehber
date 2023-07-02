@@ -1,0 +1,17 @@
+{
+	"name": "Ghana",
+	"region": "Africa",
+	"timezones": {
+		"Africa/Accra": "+00:00"
+	},
+	"iso": {
+		"alpha-2": "GH",
+		"alpha-3": "GHA",
+		"numeric": "288"
+	},
+	"phone": [
+		"+233"
+	],
+	"emoji": "🇬🇭",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/GH.svg"
+}

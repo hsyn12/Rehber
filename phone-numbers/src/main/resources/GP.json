@@ -1,0 +1,17 @@
+{
+	"name": "Guadeloupe",
+	"region": "Americas",
+	"timezones": {
+		"America/Guadeloupe": "-04:00"
+	},
+	"iso": {
+		"alpha-2": "GP",
+		"alpha-3": "GLP",
+		"numeric": "312"
+	},
+	"phone": [
+		"+590"
+	],
+	"emoji": "🇬🇵",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/GP.svg"
+}

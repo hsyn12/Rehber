@@ -1,0 +1,17 @@
+{
+	"name": "Rwanda",
+	"region": "Africa",
+	"timezones": {
+		"Africa/Kigali": "+02:00"
+	},
+	"iso": {
+		"alpha-2": "RW",
+		"alpha-3": "RWA",
+		"numeric": "646"
+	},
+	"phone": [
+		"+250"
+	],
+	"emoji": "🇷🇼",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/RW.svg"
+}

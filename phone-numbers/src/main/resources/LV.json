@@ -1,0 +1,17 @@
+{
+	"name": "Latvia",
+	"region": "Europe",
+	"timezones": {
+		"Europe/Riga": "+03:00"
+	},
+	"iso": {
+		"alpha-2": "LV",
+		"alpha-3": "LVA",
+		"numeric": "428"
+	},
+	"phone": [
+		"+371"
+	],
+	"emoji": "🇱🇻",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/LV.svg"
+}

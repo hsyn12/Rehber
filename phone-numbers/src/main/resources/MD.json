@@ -1,0 +1,17 @@
+{
+	"name": "Moldova, Republic of",
+	"region": "Europe",
+	"timezones": {
+		"Europe/Chisinau": "+03:00"
+	},
+	"iso": {
+		"alpha-2": "MD",
+		"alpha-3": "MDA",
+		"numeric": "498"
+	},
+	"phone": [
+		"+373"
+	],
+	"emoji": "🇲🇩",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/MD.svg"
+}

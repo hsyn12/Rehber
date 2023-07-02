@@ -1,0 +1,17 @@
+{
+	"name": "Tajikistan",
+	"region": "Asia",
+	"timezones": {
+		"Asia/Dushanbe": "+05:00"
+	},
+	"iso": {
+		"alpha-2": "TJ",
+		"alpha-3": "TJK",
+		"numeric": "762"
+	},
+	"phone": [
+		"+992"
+	],
+	"emoji": "🇹🇯",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/TJ.svg"
+}

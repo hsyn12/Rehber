@@ -1,0 +1,17 @@
+{
+	"name": "Faroe Islands",
+	"region": "Europe",
+	"timezones": {
+		"Atlantic/Faroe": "+01:00"
+	},
+	"iso": {
+		"alpha-2": "FO",
+		"alpha-3": "FRO",
+		"numeric": "234"
+	},
+	"phone": [
+		"+298"
+	],
+	"emoji": "🇫🇴",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/FO.svg"
+}

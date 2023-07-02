@@ -1,0 +1,17 @@
+{
+	"name": "Mauritius",
+	"region": "Africa",
+	"timezones": {
+		"Indian/Mauritius": "+04:00"
+	},
+	"iso": {
+		"alpha-2": "MU",
+		"alpha-3": "MUS",
+		"numeric": "480"
+	},
+	"phone": [
+		"+230"
+	],
+	"emoji": "🇲🇺",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/MU.svg"
+}

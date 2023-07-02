@@ -1,0 +1,17 @@
+{
+	"name": "Oman",
+	"region": "Asia",
+	"timezones": {
+		"Asia/Muscat": "+04:00"
+	},
+	"iso": {
+		"alpha-2": "OM",
+		"alpha-3": "OMN",
+		"numeric": "512"
+	},
+	"phone": [
+		"+968"
+	],
+	"emoji": "🇴🇲",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/OM.svg"
+}

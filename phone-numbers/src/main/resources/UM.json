@@ -1,0 +1,18 @@
+{
+	"name": "United States Minor Outlying Islands",
+	"region": "Oceania",
+	"timezones": {
+		"Pacific/Midway": "-11:00",
+		"Pacific/Wake": "+12:00"
+	},
+	"iso": {
+		"alpha-2": "UM",
+		"alpha-3": "UMI",
+		"numeric": "581"
+	},
+	"phone": [
+		"+1"
+	],
+	"emoji": "🇺🇲",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/UM.svg"
+}

@@ -1,0 +1,17 @@
+{
+	"name": "Belarus",
+	"region": "Europe",
+	"timezones": {
+		"Europe/Minsk": "+03:00"
+	},
+	"iso": {
+		"alpha-2": "BY",
+		"alpha-3": "BLR",
+		"numeric": "112"
+	},
+	"phone": [
+		"+375"
+	],
+	"emoji": "🇧🇾",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/BY.svg"
+}

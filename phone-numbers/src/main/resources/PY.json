@@ -1,0 +1,17 @@
+{
+	"name": "Paraguay",
+	"region": "Americas",
+	"timezones": {
+		"America/Asuncion": "-04:00"
+	},
+	"iso": {
+		"alpha-2": "PY",
+		"alpha-3": "PRY",
+		"numeric": "600"
+	},
+	"phone": [
+		"+595"
+	],
+	"emoji": "🇵🇾",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/PY.svg"
+}

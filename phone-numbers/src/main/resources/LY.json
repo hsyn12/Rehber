@@ -1,0 +1,17 @@
+{
+	"name": "Libya",
+	"region": "Africa",
+	"timezones": {
+		"Africa/Tripoli": "+02:00"
+	},
+	"iso": {
+		"alpha-2": "LY",
+		"alpha-3": "LBY",
+		"numeric": "434"
+	},
+	"phone": [
+		"+218"
+	],
+	"emoji": "🇱🇾",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/LY.svg"
+}

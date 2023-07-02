@@ -1,0 +1,17 @@
+{
+	"name": "Togo",
+	"region": "Africa",
+	"timezones": {
+		"Africa/Lome": "+00:00"
+	},
+	"iso": {
+		"alpha-2": "TG",
+		"alpha-3": "TGO",
+		"numeric": "768"
+	},
+	"phone": [
+		"+228"
+	],
+	"emoji": "🇹🇬",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/TG.svg"
+}

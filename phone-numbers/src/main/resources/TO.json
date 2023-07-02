@@ -1,0 +1,17 @@
+{
+	"name": "Tonga",
+	"region": "Oceania",
+	"timezones": {
+		"Pacific/Tongatapu": "+13:00"
+	},
+	"iso": {
+		"alpha-2": "TO",
+		"alpha-3": "TON",
+		"numeric": "776"
+	},
+	"phone": [
+		"+676"
+	],
+	"emoji": "🇹🇴",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/TO.svg"
+}

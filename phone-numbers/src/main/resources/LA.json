@@ -1,0 +1,17 @@
+{
+	"name": "Lao People's Democratic Republic",
+	"region": "Asia",
+	"timezones": {
+		"Asia/Vientiane": "+07:00"
+	},
+	"iso": {
+		"alpha-2": "LA",
+		"alpha-3": "LAO",
+		"numeric": "418"
+	},
+	"phone": [
+		"+856"
+	],
+	"emoji": "🇱🇦",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/LA.svg"
+}

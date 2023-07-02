@@ -1,0 +1,17 @@
+{
+	"name": "Bulgaria",
+	"region": "Europe",
+	"timezones": {
+		"Europe/Sofia": "+03:00"
+	},
+	"iso": {
+		"alpha-2": "BG",
+		"alpha-3": "BGR",
+		"numeric": "100"
+	},
+	"phone": [
+		"+359"
+	],
+	"emoji": "🇧🇬",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/BG.svg"
+}

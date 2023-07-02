@@ -1,0 +1,17 @@
+{
+	"name": "Armenia",
+	"region": "Asia",
+	"timezones": {
+		"Asia/Yerevan": "+04:00"
+	},
+	"iso": {
+		"alpha-2": "AM",
+		"alpha-3": "ARM",
+		"numeric": "051"
+	},
+	"phone": [
+		"+374"
+	],
+	"emoji": "🇦🇲",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/AM.svg"
+}

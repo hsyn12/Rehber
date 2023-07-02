@@ -1,0 +1,17 @@
+{
+	"name": "Haiti",
+	"region": "Americas",
+	"timezones": {
+		"America/Port-au-Prince": "-04:00"
+	},
+	"iso": {
+		"alpha-2": "HT",
+		"alpha-3": "HTI",
+		"numeric": "332"
+	},
+	"phone": [
+		"+509"
+	],
+	"emoji": "🇭🇹",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/HT.svg"
+}

@@ -1,0 +1,17 @@
+{
+	"name": "Cape Verde",
+	"region": "Africa",
+	"timezones": {
+		"Atlantic/Cape_Verde": "-01:00"
+	},
+	"iso": {
+		"alpha-2": "CV",
+		"alpha-3": "CPV",
+		"numeric": "132"
+	},
+	"phone": [
+		"+238"
+	],
+	"emoji": "🇨🇻",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/CV.svg"
+}

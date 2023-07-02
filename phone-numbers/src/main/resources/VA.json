@@ -1,0 +1,17 @@
+{
+	"name": "Holy See (Vatican City State)",
+	"region": "Europe",
+	"timezones": {
+		"Europe/Vatican": "+02:00"
+	},
+	"iso": {
+		"alpha-2": "VA",
+		"alpha-3": "VAT",
+		"numeric": "336"
+	},
+	"phone": [
+		"+379"
+	],
+	"emoji": "🇻🇦",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/VA.svg"
+}

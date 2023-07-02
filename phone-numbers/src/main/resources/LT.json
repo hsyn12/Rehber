@@ -1,0 +1,17 @@
+{
+	"name": "Lithuania",
+	"region": "Europe",
+	"timezones": {
+		"Europe/Vilnius": "+03:00"
+	},
+	"iso": {
+		"alpha-2": "LT",
+		"alpha-3": "LTU",
+		"numeric": "440"
+	},
+	"phone": [
+		"+370"
+	],
+	"emoji": "🇱🇹",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/LT.svg"
+}

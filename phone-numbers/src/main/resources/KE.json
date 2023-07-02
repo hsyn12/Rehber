@@ -1,0 +1,17 @@
+{
+	"name": "Kenya",
+	"region": "Africa",
+	"timezones": {
+		"Africa/Nairobi": "+03:00"
+	},
+	"iso": {
+		"alpha-2": "KE",
+		"alpha-3": "KEN",
+		"numeric": "404"
+	},
+	"phone": [
+		"+254"
+	],
+	"emoji": "🇰🇪",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/KE.svg"
+}

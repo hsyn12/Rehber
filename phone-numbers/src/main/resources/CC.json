@@ -1,0 +1,17 @@
+{
+	"name": "Cocos (Keeling) Islands",
+	"region": "Oceania",
+	"timezones": {
+		"Indian/Cocos": "+06:30"
+	},
+	"iso": {
+		"alpha-2": "CC",
+		"alpha-3": "CCK",
+		"numeric": "166"
+	},
+	"phone": [
+		"+61"
+	],
+	"emoji": "🇨🇨",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/CC.svg"
+}

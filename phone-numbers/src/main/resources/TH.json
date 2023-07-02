@@ -1,0 +1,17 @@
+{
+	"name": "Thailand",
+	"region": "Asia",
+	"timezones": {
+		"Asia/Bangkok": "+07:00"
+	},
+	"iso": {
+		"alpha-2": "TH",
+		"alpha-3": "THA",
+		"numeric": "764"
+	},
+	"phone": [
+		"+66"
+	],
+	"emoji": "🇹🇭",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/TH.svg"
+}

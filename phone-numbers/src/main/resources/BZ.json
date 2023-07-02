@@ -1,0 +1,17 @@
+{
+	"name": "Belize",
+	"region": "Americas",
+	"timezones": {
+		"America/Belize": "-06:00"
+	},
+	"iso": {
+		"alpha-2": "BZ",
+		"alpha-3": "BLZ",
+		"numeric": "084"
+	},
+	"phone": [
+		"+501"
+	],
+	"emoji": "🇧🇿",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/BZ.svg"
+}

@@ -1,0 +1,17 @@
+{
+	"name": "South Sudan",
+	"region": "Africa",
+	"timezones": {
+		"Africa/Juba": "+02:00"
+	},
+	"iso": {
+		"alpha-2": "SS",
+		"alpha-3": "SSD",
+		"numeric": "728"
+	},
+	"phone": [
+		"+211"
+	],
+	"emoji": "🇸🇸",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/SS.svg"
+}

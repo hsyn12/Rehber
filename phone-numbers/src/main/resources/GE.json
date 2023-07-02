@@ -1,0 +1,17 @@
+{
+	"name": "Georgia",
+	"region": "Asia",
+	"timezones": {
+		"Asia/Tbilisi": "+04:00"
+	},
+	"iso": {
+		"alpha-2": "GE",
+		"alpha-3": "GEO",
+		"numeric": "268"
+	},
+	"phone": [
+		"+995"
+	],
+	"emoji": "🇬🇪",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/GE.svg"
+}

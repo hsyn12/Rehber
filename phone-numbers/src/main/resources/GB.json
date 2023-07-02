@@ -1,0 +1,17 @@
+{
+	"name": "United Kingdom",
+	"region": "Europe",
+	"timezones": {
+		"Europe/London": "+01:00"
+	},
+	"iso": {
+		"alpha-2": "GB",
+		"alpha-3": "GBR",
+		"numeric": "826"
+	},
+	"phone": [
+		"+44"
+	],
+	"emoji": "🇬🇧",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/GB.svg"
+}

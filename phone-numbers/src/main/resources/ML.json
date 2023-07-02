@@ -1,0 +1,17 @@
+{
+	"name": "Mali",
+	"region": "Africa",
+	"timezones": {
+		"Africa/Bamako": "+00:00"
+	},
+	"iso": {
+		"alpha-2": "ML",
+		"alpha-3": "MLI",
+		"numeric": "466"
+	},
+	"phone": [
+		"+223"
+	],
+	"emoji": "🇲🇱",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/ML.svg"
+}

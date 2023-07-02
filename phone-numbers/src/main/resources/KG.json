@@ -1,0 +1,17 @@
+{
+	"name": "Kyrgyzstan",
+	"region": "Asia",
+	"timezones": {
+		"Asia/Bishkek": "+06:00"
+	},
+	"iso": {
+		"alpha-2": "KG",
+		"alpha-3": "KGZ",
+		"numeric": "417"
+	},
+	"phone": [
+		"+996"
+	],
+	"emoji": "🇰🇬",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/KG.svg"
+}

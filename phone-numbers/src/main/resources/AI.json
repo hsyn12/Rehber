@@ -1,0 +1,17 @@
+{
+	"name": "Anguilla",
+	"region": "Americas",
+	"timezones": {
+		"America/Anguilla": "-04:00"
+	},
+	"iso": {
+		"alpha-2": "AI",
+		"alpha-3": "AIA",
+		"numeric": "660"
+	},
+	"phone": [
+		"+1-264"
+	],
+	"emoji": "🇦🇮",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/AI.svg"
+}

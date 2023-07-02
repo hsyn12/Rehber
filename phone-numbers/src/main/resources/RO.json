@@ -1,0 +1,17 @@
+{
+	"name": "Romania",
+	"region": "Europe",
+	"timezones": {
+		"Europe/Bucharest": "+03:00"
+	},
+	"iso": {
+		"alpha-2": "RO",
+		"alpha-3": "ROU",
+		"numeric": "642"
+	},
+	"phone": [
+		"+40"
+	],
+	"emoji": "🇷🇴",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/RO.svg"
+}

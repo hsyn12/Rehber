@@ -1,0 +1,17 @@
+{
+	"name": "Mayotte",
+	"region": "Africa",
+	"timezones": {
+		"Indian/Mayotte": "+03:00"
+	},
+	"iso": {
+		"alpha-2": "YT",
+		"alpha-3": "MYT",
+		"numeric": "175"
+	},
+	"phone": [
+		"+262"
+	],
+	"emoji": "🇾🇹",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/YT.svg"
+}

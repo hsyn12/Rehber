@@ -1,0 +1,17 @@
+{
+	"name": "Finland",
+	"region": "Europe",
+	"timezones": {
+		"Europe/Helsinki": "+03:00"
+	},
+	"iso": {
+		"alpha-2": "FI",
+		"alpha-3": "FIN",
+		"numeric": "246"
+	},
+	"phone": [
+		"+358"
+	],
+	"emoji": "🇫🇮",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/FI.svg"
+}

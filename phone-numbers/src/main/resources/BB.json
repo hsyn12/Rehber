@@ -1,0 +1,17 @@
+{
+	"name": "Barbados",
+	"region": "Americas",
+	"timezones": {
+		"America/Barbados": "-04:00"
+	},
+	"iso": {
+		"alpha-2": "BB",
+		"alpha-3": "BRB",
+		"numeric": "052"
+	},
+	"phone": [
+		"+1-246"
+	],
+	"emoji": "🇧🇧",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/BB.svg"
+}

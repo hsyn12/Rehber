@@ -1,0 +1,17 @@
+{
+	"name": "Bahrain",
+	"region": "Asia",
+	"timezones": {
+		"Asia/Bahrain": "+03:00"
+	},
+	"iso": {
+		"alpha-2": "BH",
+		"alpha-3": "BHR",
+		"numeric": "048"
+	},
+	"phone": [
+		"+973"
+	],
+	"emoji": "🇧🇭",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/BH.svg"
+}

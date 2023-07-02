@@ -1,0 +1,17 @@
+{
+	"name": "Madagascar",
+	"region": "Africa",
+	"timezones": {
+		"Indian/Antananarivo": "+03:00"
+	},
+	"iso": {
+		"alpha-2": "MG",
+		"alpha-3": "MDG",
+		"numeric": "450"
+	},
+	"phone": [
+		"+261"
+	],
+	"emoji": "🇲🇬",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/MG.svg"
+}

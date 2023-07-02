@@ -1,0 +1,17 @@
+{
+	"name": "Dominica",
+	"region": "Americas",
+	"timezones": {
+		"America/Dominica": "-04:00"
+	},
+	"iso": {
+		"alpha-2": "DM",
+		"alpha-3": "DMA",
+		"numeric": "212"
+	},
+	"phone": [
+		"+1-767"
+	],
+	"emoji": "🇩🇲",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/DM.svg"
+}

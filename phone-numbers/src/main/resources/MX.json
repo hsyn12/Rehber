@@ -1,0 +1,28 @@
+{
+	"name": "Mexico",
+	"region": "Americas",
+	"timezones": {
+		"America/Bahia_Banderas": "-06:00",
+		"America/Cancun": "-05:00",
+		"America/Chihuahua": "-06:00",
+		"America/Ciudad_Juarez": "-06:00",
+		"America/Hermosillo": "-07:00",
+		"America/Matamoros": "-05:00",
+		"America/Mazatlan": "-07:00",
+		"America/Merida": "-06:00",
+		"America/Mexico_City": "-06:00",
+		"America/Monterrey": "-06:00",
+		"America/Ojinaga": "-05:00",
+		"America/Tijuana": "-07:00"
+	},
+	"iso": {
+		"alpha-2": "MX",
+		"alpha-3": "MEX",
+		"numeric": "484"
+	},
+	"phone": [
+		"+52"
+	],
+	"emoji": "🇲🇽",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/MX.svg"
+}

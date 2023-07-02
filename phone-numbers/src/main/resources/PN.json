@@ -1,0 +1,17 @@
+{
+	"name": "Pitcairn",
+	"region": "Oceania",
+	"timezones": {
+		"Pacific/Pitcairn": "-08:00"
+	},
+	"iso": {
+		"alpha-2": "PN",
+		"alpha-3": "PCN",
+		"numeric": "612"
+	},
+	"phone": [
+		"+870"
+	],
+	"emoji": "🇵🇳",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/PN.svg"
+}

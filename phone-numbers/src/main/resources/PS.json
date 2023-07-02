@@ -1,0 +1,18 @@
+{
+	"name": "Palestine, State of",
+	"region": "Asia",
+	"timezones": {
+		"Asia/Gaza": "+02:00",
+		"Asia/Hebron": "+02:00"
+	},
+	"iso": {
+		"alpha-2": "PS",
+		"alpha-3": "PSE",
+		"numeric": "275"
+	},
+	"phone": [
+		"+970"
+	],
+	"emoji": "🇵🇸",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/PS.svg"
+}

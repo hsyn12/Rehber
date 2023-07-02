@@ -1,0 +1,17 @@
+{
+	"name": "Luxembourg",
+	"region": "Europe",
+	"timezones": {
+		"Europe/Luxembourg": "+02:00"
+	},
+	"iso": {
+		"alpha-2": "LU",
+		"alpha-3": "LUX",
+		"numeric": "442"
+	},
+	"phone": [
+		"+352"
+	],
+	"emoji": "🇱🇺",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/LU.svg"
+}

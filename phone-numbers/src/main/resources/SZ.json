@@ -1,0 +1,17 @@
+{
+	"name": "Swaziland",
+	"region": "Africa",
+	"timezones": {
+		"Africa/Mbabane": "+02:00"
+	},
+	"iso": {
+		"alpha-2": "SZ",
+		"alpha-3": "SWZ",
+		"numeric": "748"
+	},
+	"phone": [
+		"+268"
+	],
+	"emoji": "🇸🇿",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/SZ.svg"
+}

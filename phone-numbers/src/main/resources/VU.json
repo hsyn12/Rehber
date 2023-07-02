@@ -1,0 +1,17 @@
+{
+	"name": "Vanuatu",
+	"region": "Oceania",
+	"timezones": {
+		"Pacific/Efate": "+11:00"
+	},
+	"iso": {
+		"alpha-2": "VU",
+		"alpha-3": "VUT",
+		"numeric": "548"
+	},
+	"phone": [
+		"+678"
+	],
+	"emoji": "🇻🇺",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/VU.svg"
+}

@@ -1,0 +1,17 @@
+{
+	"name": "Pakistan",
+	"region": "Asia",
+	"timezones": {
+		"Asia/Karachi": "+05:00"
+	},
+	"iso": {
+		"alpha-2": "PK",
+		"alpha-3": "PAK",
+		"numeric": "586"
+	},
+	"phone": [
+		"+92"
+	],
+	"emoji": "🇵🇰",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/PK.svg"
+}

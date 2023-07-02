@@ -1,0 +1,17 @@
+{
+	"name": "Iceland",
+	"region": "Europe",
+	"timezones": {
+		"Atlantic/Reykjavik": "+00:00"
+	},
+	"iso": {
+		"alpha-2": "IS",
+		"alpha-3": "ISL",
+		"numeric": "352"
+	},
+	"phone": [
+		"+354"
+	],
+	"emoji": "🇮🇸",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/IS.svg"
+}

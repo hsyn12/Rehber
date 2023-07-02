@@ -1,0 +1,17 @@
+{
+	"name": "Montserrat",
+	"region": "Americas",
+	"timezones": {
+		"America/Montserrat": "-04:00"
+	},
+	"iso": {
+		"alpha-2": "MS",
+		"alpha-3": "MSR",
+		"numeric": "500"
+	},
+	"phone": [
+		"+1-664"
+	],
+	"emoji": "🇲🇸",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/MS.svg"
+}

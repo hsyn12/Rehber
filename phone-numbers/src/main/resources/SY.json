@@ -1,0 +1,17 @@
+{
+	"name": "Syrian Arab Republic",
+	"region": "Asia",
+	"timezones": {
+		"Asia/Damascus": "+03:00"
+	},
+	"iso": {
+		"alpha-2": "SY",
+		"alpha-3": "SYR",
+		"numeric": "760"
+	},
+	"phone": [
+		"+963"
+	],
+	"emoji": "🇸🇾",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/SY.svg"
+}

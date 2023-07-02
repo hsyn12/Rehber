@@ -1,0 +1,17 @@
+{
+	"name": "Kuwait",
+	"region": "Asia",
+	"timezones": {
+		"Asia/Kuwait": "+03:00"
+	},
+	"iso": {
+		"alpha-2": "KW",
+		"alpha-3": "KWT",
+		"numeric": "414"
+	},
+	"phone": [
+		"+965"
+	],
+	"emoji": "🇰🇼",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/KW.svg"
+}

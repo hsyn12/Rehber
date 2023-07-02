@@ -1,0 +1,17 @@
+{
+	"name": "Sudan",
+	"region": "Africa",
+	"timezones": {
+		"Africa/Khartoum": "+02:00"
+	},
+	"iso": {
+		"alpha-2": "SD",
+		"alpha-3": "SDN",
+		"numeric": "729"
+	},
+	"phone": [
+		"+249"
+	],
+	"emoji": "🇸🇩",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/SD.svg"
+}

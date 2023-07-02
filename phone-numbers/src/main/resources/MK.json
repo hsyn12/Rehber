@@ -1,0 +1,17 @@
+{
+	"name": "Macedonia, the Former Yugoslav Republic of",
+	"region": "Europe",
+	"timezones": {
+		"Europe/Skopje": "+02:00"
+	},
+	"iso": {
+		"alpha-2": "MK",
+		"alpha-3": "MKD",
+		"numeric": "807"
+	},
+	"phone": [
+		"+389"
+	],
+	"emoji": "🇲🇰",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/MK.svg"
+}

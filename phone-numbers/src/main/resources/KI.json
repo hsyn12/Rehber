@@ -1,0 +1,19 @@
+{
+	"name": "Kiribati",
+	"region": "Oceania",
+	"timezones": {
+		"Pacific/Kanton": "+13:00",
+		"Pacific/Kiritimati": "+14:00",
+		"Pacific/Tarawa": "+12:00"
+	},
+	"iso": {
+		"alpha-2": "KI",
+		"alpha-3": "KIR",
+		"numeric": "296"
+	},
+	"phone": [
+		"+686"
+	],
+	"emoji": "🇰🇮",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/KI.svg"
+}

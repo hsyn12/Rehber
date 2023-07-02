@@ -1,0 +1,17 @@
+{
+	"name": "Eritrea",
+	"region": "Africa",
+	"timezones": {
+		"Africa/Asmara": "+03:00"
+	},
+	"iso": {
+		"alpha-2": "ER",
+		"alpha-3": "ERI",
+		"numeric": "232"
+	},
+	"phone": [
+		"+291"
+	],
+	"emoji": "🇪🇷",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/ER.svg"
+}

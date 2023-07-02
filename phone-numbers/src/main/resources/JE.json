@@ -1,0 +1,17 @@
+{
+	"name": "Jersey",
+	"region": "Europe",
+	"timezones": {
+		"Europe/Jersey": "+01:00"
+	},
+	"iso": {
+		"alpha-2": "JE",
+		"alpha-3": "JEY",
+		"numeric": "832"
+	},
+	"phone": [
+		"+44-1534"
+	],
+	"emoji": "🇯🇪",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/JE.svg"
+}

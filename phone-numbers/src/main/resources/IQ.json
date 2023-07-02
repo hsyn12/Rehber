@@ -1,0 +1,17 @@
+{
+	"name": "Iraq",
+	"region": "Asia",
+	"timezones": {
+		"Asia/Baghdad": "+03:00"
+	},
+	"iso": {
+		"alpha-2": "IQ",
+		"alpha-3": "IRQ",
+		"numeric": "368"
+	},
+	"phone": [
+		"+964"
+	],
+	"emoji": "🇮🇶",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/IQ.svg"
+}

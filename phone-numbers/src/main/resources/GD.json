@@ -1,0 +1,17 @@
+{
+	"name": "Grenada",
+	"region": "Americas",
+	"timezones": {
+		"America/Grenada": "-04:00"
+	},
+	"iso": {
+		"alpha-2": "GD",
+		"alpha-3": "GRD",
+		"numeric": "308"
+	},
+	"phone": [
+		"+1-473"
+	],
+	"emoji": "🇬🇩",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/GD.svg"
+}

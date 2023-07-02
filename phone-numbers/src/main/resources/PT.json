@@ -1,0 +1,19 @@
+{
+	"name": "Portugal",
+	"region": "Europe",
+	"timezones": {
+		"Atlantic/Azores": "+00:00",
+		"Atlantic/Madeira": "+01:00",
+		"Europe/Lisbon": "+01:00"
+	},
+	"iso": {
+		"alpha-2": "PT",
+		"alpha-3": "PRT",
+		"numeric": "620"
+	},
+	"phone": [
+		"+351"
+	],
+	"emoji": "🇵🇹",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/PT.svg"
+}

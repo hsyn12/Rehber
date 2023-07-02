@@ -1,0 +1,17 @@
+{
+	"name": "American Samoa",
+	"region": "Oceania",
+	"timezones": {
+		"Pacific/Pago_Pago": "-11:00"
+	},
+	"iso": {
+		"alpha-2": "AS",
+		"alpha-3": "ASM",
+		"numeric": "016"
+	},
+	"phone": [
+		"+1-684"
+	],
+	"emoji": "🇦🇸",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/AS.svg"
+}

@@ -1,0 +1,17 @@
+{
+	"name": "Qatar",
+	"region": "Asia",
+	"timezones": {
+		"Asia/Qatar": "+03:00"
+	},
+	"iso": {
+		"alpha-2": "QA",
+		"alpha-3": "QAT",
+		"numeric": "634"
+	},
+	"phone": [
+		"+974"
+	],
+	"emoji": "🇶🇦",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/QA.svg"
+}

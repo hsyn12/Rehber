@@ -1,0 +1,17 @@
+{
+	"name": "Niue",
+	"region": "Oceania",
+	"timezones": {
+		"Pacific/Niue": "-11:00"
+	},
+	"iso": {
+		"alpha-2": "NU",
+		"alpha-3": "NIU",
+		"numeric": "570"
+	},
+	"phone": [
+		"+683"
+	],
+	"emoji": "🇳🇺",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/NU.svg"
+}

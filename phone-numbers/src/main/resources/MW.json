@@ -1,0 +1,17 @@
+{
+	"name": "Malawi",
+	"region": "Africa",
+	"timezones": {
+		"Africa/Blantyre": "+02:00"
+	},
+	"iso": {
+		"alpha-2": "MW",
+		"alpha-3": "MWI",
+		"numeric": "454"
+	},
+	"phone": [
+		"+265"
+	],
+	"emoji": "🇲🇼",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/MW.svg"
+}

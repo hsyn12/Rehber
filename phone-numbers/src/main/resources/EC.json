@@ -1,0 +1,18 @@
+{
+	"name": "Ecuador",
+	"region": "Americas",
+	"timezones": {
+		"America/Guayaquil": "-05:00",
+		"Pacific/Galapagos": "-06:00"
+	},
+	"iso": {
+		"alpha-2": "EC",
+		"alpha-3": "ECU",
+		"numeric": "218"
+	},
+	"phone": [
+		"+593"
+	],
+	"emoji": "🇪🇨",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/EC.svg"
+}

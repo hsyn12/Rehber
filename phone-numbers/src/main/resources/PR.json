@@ -1,0 +1,18 @@
+{
+	"name": "Puerto Rico",
+	"region": "Americas",
+	"timezones": {
+		"America/Puerto_Rico": "-04:00"
+	},
+	"iso": {
+		"alpha-2": "PR",
+		"alpha-3": "PRI",
+		"numeric": "630"
+	},
+	"phone": [
+		"+1-787",
+		"+1-939"
+	],
+	"emoji": "🇵🇷",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/PR.svg"
+}

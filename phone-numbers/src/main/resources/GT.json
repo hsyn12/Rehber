@@ -1,0 +1,17 @@
+{
+	"name": "Guatemala",
+	"region": "Americas",
+	"timezones": {
+		"America/Guatemala": "-06:00"
+	},
+	"iso": {
+		"alpha-2": "GT",
+		"alpha-3": "GTM",
+		"numeric": "320"
+	},
+	"phone": [
+		"+502"
+	],
+	"emoji": "🇬🇹",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/GT.svg"
+}

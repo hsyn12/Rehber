@@ -36,12 +36,10 @@ public class Register {
 	
 	public Register(@NonNull final Object objectFromContext, @NonNull String name) {
 		
-		if (!(objectFromContext instanceof Context)) {
+		if (!(objectFromContext instanceof Context context)) {
 			
 			throw new IllegalArgumentException("Object must have context : " + objectFromContext.getClass().getCanonicalName());
 		}
-		
-		Context context = (Context) objectFromContext;
 		
 		mSharedPreferences = context.getSharedPreferences(name, Context.MODE_PRIVATE);
 		editor             = mSharedPreferences.edit();
@@ -230,13 +228,13 @@ public class Register {
 		return mSharedPreferences.getAll().keySet();
 	}
 	
-	public static Register on(@NonNull final Context context, @NonNull String prefName) {
-		
-		return new Register(context, prefName);
-	}
-	
 	public Map<String, ?> getAll() {
 		
 		return mSharedPreferences.getAll();
+	}
+	
+	public static Register on(@NonNull final Context context, @NonNull String prefName) {
+		
+		return new Register(context, prefName);
 	}
 }

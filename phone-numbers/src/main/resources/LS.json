@@ -1,0 +1,17 @@
+{
+	"name": "Lesotho",
+	"region": "Africa",
+	"timezones": {
+		"Africa/Maseru": "+02:00"
+	},
+	"iso": {
+		"alpha-2": "LS",
+		"alpha-3": "LSO",
+		"numeric": "426"
+	},
+	"phone": [
+		"+266"
+	],
+	"emoji": "🇱🇸",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/LS.svg"
+}

@@ -10,7 +10,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Locale;
 
 
 /**
@@ -47,7 +46,6 @@ public class PhoneNumbers {
 		return null;
 	}
 	
-	
 	public static void main(String[] args) {
 		
 		
@@ -66,12 +64,11 @@ public class PhoneNumbers {
 			
 			if (code != null) {
 				
-				Locale locale = Locale.forLanguageTag(code);
-				System.out.println(locale);
-				System.out.printf("%s -> %s (%s)\n", number, code, locale.getLanguage());
+				System.out.printf("%s -> %s\n", number, getRegionCode(number));
 			}
 		}
 	}
+	
 	
 	@Nullable
 	public static String getRegionCode(String number) {

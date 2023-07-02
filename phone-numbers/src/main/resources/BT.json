@@ -1,0 +1,17 @@
+{
+	"name": "Bhutan",
+	"region": "Asia",
+	"timezones": {
+		"Asia/Thimphu": "+06:00"
+	},
+	"iso": {
+		"alpha-2": "BT",
+		"alpha-3": "BTN",
+		"numeric": "064"
+	},
+	"phone": [
+		"+975"
+	],
+	"emoji": "🇧🇹",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/BT.svg"
+}

@@ -1,0 +1,17 @@
+{
+	"name": "Cuba",
+	"region": "Americas",
+	"timezones": {
+		"America/Havana": "-04:00"
+	},
+	"iso": {
+		"alpha-2": "CU",
+		"alpha-3": "CUB",
+		"numeric": "192"
+	},
+	"phone": [
+		"+53"
+	],
+	"emoji": "🇨🇺",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/CU.svg"
+}

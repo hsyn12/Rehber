@@ -1,0 +1,17 @@
+{
+	"name": "French Guiana",
+	"region": "Americas",
+	"timezones": {
+		"America/Cayenne": "-03:00"
+	},
+	"iso": {
+		"alpha-2": "GF",
+		"alpha-3": "GUF",
+		"numeric": "254"
+	},
+	"phone": [
+		"+594"
+	],
+	"emoji": "🇬🇫",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/GF.svg"
+}

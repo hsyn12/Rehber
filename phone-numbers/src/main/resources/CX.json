@@ -1,0 +1,17 @@
+{
+	"name": "Christmas Island",
+	"region": "Oceania",
+	"timezones": {
+		"Indian/Christmas": "+07:00"
+	},
+	"iso": {
+		"alpha-2": "CX",
+		"alpha-3": "CXR",
+		"numeric": "162"
+	},
+	"phone": [
+		"+61"
+	],
+	"emoji": "🇨🇽",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/CX.svg"
+}

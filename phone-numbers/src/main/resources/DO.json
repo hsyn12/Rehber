@@ -1,0 +1,18 @@
+{
+	"name": "Dominican Republic",
+	"region": "Americas",
+	"timezones": {
+		"America/Santo_Domingo": "-04:00"
+	},
+	"iso": {
+		"alpha-2": "DO",
+		"alpha-3": "DOM",
+		"numeric": "214"
+	},
+	"phone": [
+		"+1-809",
+		"+1-829"
+	],
+	"emoji": "🇩🇴",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/DO.svg"
+}

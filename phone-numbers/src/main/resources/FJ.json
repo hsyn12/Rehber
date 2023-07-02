@@ -1,0 +1,17 @@
+{
+	"name": "Fiji",
+	"region": "Oceania",
+	"timezones": {
+		"Pacific/Fiji": "+12:00"
+	},
+	"iso": {
+		"alpha-2": "FJ",
+		"alpha-3": "FJI",
+		"numeric": "242"
+	},
+	"phone": [
+		"+679"
+	],
+	"emoji": "🇫🇯",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/FJ.svg"
+}

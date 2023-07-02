@@ -1,0 +1,17 @@
+{
+	"name": "Gabon",
+	"region": "Africa",
+	"timezones": {
+		"Africa/Libreville": "+01:00"
+	},
+	"iso": {
+		"alpha-2": "GA",
+		"alpha-3": "GAB",
+		"numeric": "266"
+	},
+	"phone": [
+		"+241"
+	],
+	"emoji": "🇬🇦",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/GA.svg"
+}

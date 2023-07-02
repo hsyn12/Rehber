@@ -1,0 +1,19 @@
+{
+	"name": "Chile",
+	"region": "Americas",
+	"timezones": {
+		"America/Punta_Arenas": "-03:00",
+		"America/Santiago": "-04:00",
+		"Pacific/Easter": "-06:00"
+	},
+	"iso": {
+		"alpha-2": "CL",
+		"alpha-3": "CHL",
+		"numeric": "152"
+	},
+	"phone": [
+		"+56"
+	],
+	"emoji": "🇨🇱",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/CL.svg"
+}

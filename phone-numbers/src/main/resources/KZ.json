@@ -1,0 +1,23 @@
+{
+	"name": "Kazakhstan",
+	"region": "Asia",
+	"timezones": {
+		"Asia/Almaty": "+06:00",
+		"Asia/Aqtau": "+05:00",
+		"Asia/Aqtobe": "+05:00",
+		"Asia/Atyrau": "+05:00",
+		"Asia/Oral": "+05:00",
+		"Asia/Qostanay": "+06:00",
+		"Asia/Qyzylorda": "+05:00"
+	},
+	"iso": {
+		"alpha-2": "KZ",
+		"alpha-3": "KAZ",
+		"numeric": "398"
+	},
+	"phone": [
+		"+7"
+	],
+	"emoji": "🇰🇿",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/KZ.svg"
+}

@@ -1,0 +1,17 @@
+{
+	"name": "Timor-Leste",
+	"region": "Asia",
+	"timezones": {
+		"Asia/Dili": "+09:00"
+	},
+	"iso": {
+		"alpha-2": "TL",
+		"alpha-3": "TLS",
+		"numeric": "626"
+	},
+	"phone": [
+		"+670"
+	],
+	"emoji": "🇹🇱",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/TL.svg"
+}

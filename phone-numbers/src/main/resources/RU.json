@@ -1,0 +1,42 @@
+{
+	"name": "Russian Federation",
+	"region": "Europe",
+	"timezones": {
+		"Asia/Anadyr": "+12:00",
+		"Asia/Barnaul": "+07:00",
+		"Asia/Chita": "+09:00",
+		"Asia/Irkutsk": "+08:00",
+		"Asia/Kamchatka": "+12:00",
+		"Asia/Khandyga": "+09:00",
+		"Asia/Krasnoyarsk": "+07:00",
+		"Asia/Magadan": "+11:00",
+		"Asia/Novokuznetsk": "+07:00",
+		"Asia/Novosibirsk": "+07:00",
+		"Asia/Omsk": "+06:00",
+		"Asia/Sakhalin": "+11:00",
+		"Asia/Srednekolymsk": "+11:00",
+		"Asia/Tomsk": "+07:00",
+		"Asia/Ust-Nera": "+10:00",
+		"Asia/Vladivostok": "+10:00",
+		"Asia/Yakutsk": "+09:00",
+		"Asia/Yekaterinburg": "+05:00",
+		"Europe/Astrakhan": "+04:00",
+		"Europe/Kaliningrad": "+02:00",
+		"Europe/Kirov": "+03:00",
+		"Europe/Moscow": "+03:00",
+		"Europe/Samara": "+04:00",
+		"Europe/Saratov": "+04:00",
+		"Europe/Ulyanovsk": "+04:00",
+		"Europe/Volgograd": "+03:00"
+	},
+	"iso": {
+		"alpha-2": "RU",
+		"alpha-3": "RUS",
+		"numeric": "643"
+	},
+	"phone": [
+		"+7"
+	],
+	"emoji": "🇷🇺",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/RU.svg"
+}

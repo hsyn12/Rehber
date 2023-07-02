@@ -1,0 +1,17 @@
+{
+	"name": "Norway",
+	"region": "Europe",
+	"timezones": {
+		"Europe/Oslo": "+02:00"
+	},
+	"iso": {
+		"alpha-2": "NO",
+		"alpha-3": "NOR",
+		"numeric": "578"
+	},
+	"phone": [
+		"+47"
+	],
+	"emoji": "🇳🇴",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/NO.svg"
+}

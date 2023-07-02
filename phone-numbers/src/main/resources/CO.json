@@ -1,0 +1,17 @@
+{
+	"name": "Colombia",
+	"region": "Americas",
+	"timezones": {
+		"America/Bogota": "-05:00"
+	},
+	"iso": {
+		"alpha-2": "CO",
+		"alpha-3": "COL",
+		"numeric": "170"
+	},
+	"phone": [
+		"+57"
+	],
+	"emoji": "🇨🇴",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/CO.svg"
+}

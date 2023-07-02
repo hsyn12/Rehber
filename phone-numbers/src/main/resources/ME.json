@@ -1,0 +1,17 @@
+{
+	"name": "Montenegro",
+	"region": "Europe",
+	"timezones": {
+		"Europe/Podgorica": "+02:00"
+	},
+	"iso": {
+		"alpha-2": "ME",
+		"alpha-3": "MNE",
+		"numeric": "499"
+	},
+	"phone": [
+		"+382"
+	],
+	"emoji": "🇲🇪",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/ME.svg"
+}

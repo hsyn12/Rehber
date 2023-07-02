@@ -1,0 +1,17 @@
+{
+	"name": "Botswana",
+	"region": "Africa",
+	"timezones": {
+		"Africa/Gaborone": "+02:00"
+	},
+	"iso": {
+		"alpha-2": "BW",
+		"alpha-3": "BWA",
+		"numeric": "072"
+	},
+	"phone": [
+		"+267"
+	],
+	"emoji": "🇧🇼",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/BW.svg"
+}

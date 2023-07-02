@@ -1,0 +1,17 @@
+{
+	"name": "Honduras",
+	"region": "Americas",
+	"timezones": {
+		"America/Tegucigalpa": "-06:00"
+	},
+	"iso": {
+		"alpha-2": "HN",
+		"alpha-3": "HND",
+		"numeric": "340"
+	},
+	"phone": [
+		"+504"
+	],
+	"emoji": "🇭🇳",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/HN.svg"
+}

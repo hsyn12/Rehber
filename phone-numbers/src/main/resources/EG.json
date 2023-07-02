@@ -1,0 +1,17 @@
+{
+	"name": "Egypt",
+	"region": "Africa",
+	"timezones": {
+		"Africa/Cairo": "+02:00"
+	},
+	"iso": {
+		"alpha-2": "EG",
+		"alpha-3": "EGY",
+		"numeric": "818"
+	},
+	"phone": [
+		"+20"
+	],
+	"emoji": "🇪🇬",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/EG.svg"
+}

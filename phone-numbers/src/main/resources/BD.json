@@ -1,0 +1,17 @@
+{
+	"name": "Bangladesh",
+	"region": "Asia",
+	"timezones": {
+		"Asia/Dhaka": "+06:00"
+	},
+	"iso": {
+		"alpha-2": "BD",
+		"alpha-3": "BGD",
+		"numeric": "050"
+	},
+	"phone": [
+		"+880"
+	],
+	"emoji": "🇧🇩",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/BD.svg"
+}

@@ -1,0 +1,39 @@
+{
+	"name": "Canada",
+	"region": "Americas",
+	"timezones": {
+		"America/Atikokan": "-05:00",
+		"America/Blanc-Sablon": "-04:00",
+		"America/Cambridge_Bay": "-06:00",
+		"America/Creston": "-07:00",
+		"America/Dawson": "-07:00",
+		"America/Dawson_Creek": "-07:00",
+		"America/Edmonton": "-06:00",
+		"America/Fort_Nelson": "-07:00",
+		"America/Glace_Bay": "-03:00",
+		"America/Goose_Bay": "-03:00",
+		"America/Halifax": "-03:00",
+		"America/Inuvik": "-06:00",
+		"America/Iqaluit": "-04:00",
+		"America/Moncton": "-03:00",
+		"America/Rankin_Inlet": "-05:00",
+		"America/Regina": "-06:00",
+		"America/Resolute": "-05:00",
+		"America/St_Johns": "-02:30",
+		"America/Swift_Current": "-06:00",
+		"America/Toronto": "-04:00",
+		"America/Vancouver": "-07:00",
+		"America/Whitehorse": "-07:00",
+		"America/Winnipeg": "-05:00"
+	},
+	"iso": {
+		"alpha-2": "CA",
+		"alpha-3": "CAN",
+		"numeric": "124"
+	},
+	"phone": [
+		"+1"
+	],
+	"emoji": "🇨🇦",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/CA.svg"
+}

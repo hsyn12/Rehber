@@ -1,0 +1,17 @@
+{
+	"name": "Austria",
+	"region": "Europe",
+	"timezones": {
+		"Europe/Vienna": "+02:00"
+	},
+	"iso": {
+		"alpha-2": "AT",
+		"alpha-3": "AUT",
+		"numeric": "040"
+	},
+	"phone": [
+		"+43"
+	],
+	"emoji": "🇦🇹",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/AT.svg"
+}

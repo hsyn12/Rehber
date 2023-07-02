@@ -1,0 +1,17 @@
+{
+	"name": "Antigua and Barbuda",
+	"region": "Americas",
+	"timezones": {
+		"America/Antigua": "-04:00"
+	},
+	"iso": {
+		"alpha-2": "AG",
+		"alpha-3": "ATG",
+		"numeric": "028"
+	},
+	"phone": [
+		"+1-268"
+	],
+	"emoji": "🇦🇬",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/AG.svg"
+}

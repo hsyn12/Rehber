@@ -1,0 +1,17 @@
+{
+	"name": "Bermuda",
+	"region": "Americas",
+	"timezones": {
+		"Atlantic/Bermuda": "-03:00"
+	},
+	"iso": {
+		"alpha-2": "BM",
+		"alpha-3": "BMU",
+		"numeric": "060"
+	},
+	"phone": [
+		"+1-441"
+	],
+	"emoji": "🇧🇲",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/BM.svg"
+}

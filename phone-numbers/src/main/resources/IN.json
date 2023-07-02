@@ -1,0 +1,17 @@
+{
+	"name": "India",
+	"region": "Asia",
+	"timezones": {
+		"Asia/Kolkata": "+05:30"
+	},
+	"iso": {
+		"alpha-2": "IN",
+		"alpha-3": "IND",
+		"numeric": "356"
+	},
+	"phone": [
+		"+91"
+	],
+	"emoji": "🇮🇳",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/IN.svg"
+}

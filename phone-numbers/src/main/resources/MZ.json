@@ -1,0 +1,17 @@
+{
+	"name": "Mozambique",
+	"region": "Africa",
+	"timezones": {
+		"Africa/Maputo": "+02:00"
+	},
+	"iso": {
+		"alpha-2": "MZ",
+		"alpha-3": "MOZ",
+		"numeric": "508"
+	},
+	"phone": [
+		"+258"
+	],
+	"emoji": "🇲🇿",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/MZ.svg"
+}

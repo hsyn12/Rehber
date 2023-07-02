@@ -1,0 +1,17 @@
+{
+	"name": "Nepal",
+	"region": "Asia",
+	"timezones": {
+		"Asia/Kathmandu": "+05:45"
+	},
+	"iso": {
+		"alpha-2": "NP",
+		"alpha-3": "NPL",
+		"numeric": "524"
+	},
+	"phone": [
+		"+977"
+	],
+	"emoji": "🇳🇵",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/NP.svg"
+}

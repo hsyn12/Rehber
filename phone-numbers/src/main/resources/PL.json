@@ -1,0 +1,17 @@
+{
+	"name": "Poland",
+	"region": "Europe",
+	"timezones": {
+		"Europe/Warsaw": "+02:00"
+	},
+	"iso": {
+		"alpha-2": "PL",
+		"alpha-3": "POL",
+		"numeric": "616"
+	},
+	"phone": [
+		"+48"
+	],
+	"emoji": "🇵🇱",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/PL.svg"
+}

@@ -1,0 +1,17 @@
+{
+	"name": "Bolivia, Plurinational State of",
+	"region": "Americas",
+	"timezones": {
+		"America/La_Paz": "-04:00"
+	},
+	"iso": {
+		"alpha-2": "BO",
+		"alpha-3": "BOL",
+		"numeric": "068"
+	},
+	"phone": [
+		"+591"
+	],
+	"emoji": "🇧🇴",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/BO.svg"
+}

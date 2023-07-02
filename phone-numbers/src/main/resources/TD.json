@@ -1,0 +1,17 @@
+{
+	"name": "Chad",
+	"region": "Africa",
+	"timezones": {
+		"Africa/Ndjamena": "+01:00"
+	},
+	"iso": {
+		"alpha-2": "TD",
+		"alpha-3": "TCD",
+		"numeric": "148"
+	},
+	"phone": [
+		"+235"
+	],
+	"emoji": "🇹🇩",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/TD.svg"
+}

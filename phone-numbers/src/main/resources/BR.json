@@ -1,0 +1,32 @@
+{
+	"name": "Brazil",
+	"region": "Americas",
+	"timezones": {
+		"America/Araguaina": "-03:00",
+		"America/Bahia": "-03:00",
+		"America/Belem": "-03:00",
+		"America/Boa_Vista": "-04:00",
+		"America/Campo_Grande": "-04:00",
+		"America/Cuiaba": "-04:00",
+		"America/Eirunepe": "-05:00",
+		"America/Fortaleza": "-03:00",
+		"America/Maceio": "-03:00",
+		"America/Manaus": "-04:00",
+		"America/Noronha": "-02:00",
+		"America/Porto_Velho": "-04:00",
+		"America/Recife": "-03:00",
+		"America/Rio_Branco": "-05:00",
+		"America/Santarem": "-03:00",
+		"America/Sao_Paulo": "-03:00"
+	},
+	"iso": {
+		"alpha-2": "BR",
+		"alpha-3": "BRA",
+		"numeric": "076"
+	},
+	"phone": [
+		"+55"
+	],
+	"emoji": "🇧🇷",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/BR.svg"
+}

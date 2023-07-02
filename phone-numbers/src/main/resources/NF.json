@@ -1,0 +1,17 @@
+{
+	"name": "Norfolk Island",
+	"region": "Oceania",
+	"timezones": {
+		"Pacific/Norfolk": "+11:00"
+	},
+	"iso": {
+		"alpha-2": "NF",
+		"alpha-3": "NFK",
+		"numeric": "574"
+	},
+	"phone": [
+		"+672"
+	],
+	"emoji": "🇳🇫",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/NF.svg"
+}

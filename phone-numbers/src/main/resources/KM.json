@@ -1,0 +1,17 @@
+{
+	"name": "Comoros",
+	"region": "Africa",
+	"timezones": {
+		"Indian/Comoro": "+03:00"
+	},
+	"iso": {
+		"alpha-2": "KM",
+		"alpha-3": "COM",
+		"numeric": "174"
+	},
+	"phone": [
+		"+269"
+	],
+	"emoji": "🇰🇲",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/KM.svg"
+}

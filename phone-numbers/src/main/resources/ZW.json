@@ -1,0 +1,17 @@
+{
+	"name": "Zimbabwe",
+	"region": "Africa",
+	"timezones": {
+		"Africa/Harare": "+02:00"
+	},
+	"iso": {
+		"alpha-2": "ZW",
+		"alpha-3": "ZWE",
+		"numeric": "716"
+	},
+	"phone": [
+		"+263"
+	],
+	"emoji": "🇿🇼",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/ZW.svg"
+}

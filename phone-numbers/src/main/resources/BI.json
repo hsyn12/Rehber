@@ -1,0 +1,17 @@
+{
+	"name": "Burundi",
+	"region": "Africa",
+	"timezones": {
+		"Africa/Bujumbura": "+02:00"
+	},
+	"iso": {
+		"alpha-2": "BI",
+		"alpha-3": "BDI",
+		"numeric": "108"
+	},
+	"phone": [
+		"+257"
+	],
+	"emoji": "🇧🇮",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/BI.svg"
+}

@@ -1,0 +1,17 @@
+{
+	"name": "Guyana",
+	"region": "Americas",
+	"timezones": {
+		"America/Guyana": "-04:00"
+	},
+	"iso": {
+		"alpha-2": "GY",
+		"alpha-3": "GUY",
+		"numeric": "328"
+	},
+	"phone": [
+		"+592"
+	],
+	"emoji": "🇬🇾",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/GY.svg"
+}

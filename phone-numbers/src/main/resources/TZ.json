@@ -1,0 +1,17 @@
+{
+	"name": "Tanzania, United Republic of",
+	"region": "Africa",
+	"timezones": {
+		"Africa/Dar_es_Salaam": "+03:00"
+	},
+	"iso": {
+		"alpha-2": "TZ",
+		"alpha-3": "TZA",
+		"numeric": "834"
+	},
+	"phone": [
+		"+255"
+	],
+	"emoji": "🇹🇿",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/TZ.svg"
+}

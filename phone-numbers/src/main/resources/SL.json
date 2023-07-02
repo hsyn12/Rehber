@@ -1,0 +1,17 @@
+{
+	"name": "Sierra Leone",
+	"region": "Africa",
+	"timezones": {
+		"Africa/Freetown": "+00:00"
+	},
+	"iso": {
+		"alpha-2": "SL",
+		"alpha-3": "SLE",
+		"numeric": "694"
+	},
+	"phone": [
+		"+232"
+	],
+	"emoji": "🇸🇱",
+	"image": "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/SL.svg"
+}
