@@ -20,17 +20,14 @@ public class PhoneNumbers {
 	/**
 	 * Telefon numaraları için minimum uzunluk
 	 */
-	public static final  int             N_MIN             = 10;
+	public static final  int             N_MIN                = 10;
 	/**
 	 * Telefon numaraları için maximum uzunluk
 	 */
-	public static final  int             N_MAX             = 15;
-	private static final PhoneNumberUtil PHONE_NUMBER_UTIL = PhoneNumberUtil.getInstance();
-	private static final String          NUMBER_TYPE_1     = "[0-9]{10}";//543 493 7530
-	private static final String          NUMBER_TYPE_2     = "[0-9]{11}";//0543 493 7530
-	private static final String          NUMBER_TYPE_3     = "[0-9]{12}";//90 543 493 7530
-	private static final String          NUMBER_TYPE_4     = "\\+[0-9]{12}";//+90 543 493 7530
-	private static final String          NUMBER_TYPE_5     = "\\+?[0-9]{12,15}";//+xxxxx5434937530
+	public static final  int             N_MAX                = 15;
+	public static final  String          NUMBER_TYPE_LOCAL    = "[0-9]{10,15}";// 0 543 493 7530
+	public static final  String          NUMBER_TYPE_NATIONAL = "\\+[0-9]{12,15}";//+xxxxx5434937530
+	private static final PhoneNumberUtil PHONE_NUMBER_UTIL    = PhoneNumberUtil.getInstance();
 	
 	private PhoneNumbers() {
 		
@@ -69,7 +66,18 @@ public class PhoneNumbers {
 		}
 	}
 	
-	
+	/**
+	 * Returns the region code that consists of two upper case letters for the given number.
+	 * The given phone number must be having the region number.<br><br>
+	 *
+	 * <pre>
+	 *    {@code getRegionCode("05434937530");} // null
+	 *    {@code getRegionCode("+905434937530");} // 'TR'
+	 * </pre>
+	 *
+	 * @param number number
+	 * @return region code
+	 */
 	@Nullable
 	public static String getRegionCode(String number) {
 		
@@ -82,17 +90,16 @@ public class PhoneNumbers {
 	}
 	
 	/**
-	 * Rakamların arasına boşluk koyarak daha okunur bir numara döndürür.<br>
+	 * Returns a more legible number by inserting a space between numbers.<br>
 	 * <pre>
 	 * {@code beautifyNumber("5434937530")}     // 543 493 7530
 	 * {@code beautifyNumber("05434937530")}    // 0543 493 7530
 	 * {@code beautifyNumber("905434937530")}   // 90 543 493 7530
 	 * {@code beautifyNumber("+905434937530")}  // +90 543 493 7530
 	 * <pre>
-	 * Bu kombinasyon dışındakiler geldiği gibi geri döner.
 	 *
-	 * @param _number Telefon numarası
-	 * @return Formatlı numara
+	 * @param _number number
+	 * @return formatted number
 	 */
 	public static String beautifyNumber(@NotNull String _number) {
 		
@@ -123,46 +130,22 @@ public class PhoneNumbers {
 	}
 	
 	/**
-	 * Verilen string'in telefon numarası olup olmadığını kontrol eder.<br><br>
+	 * Checks if the string is a phone number.
+	 * For a string to be a phone number, it must fit certain models.
 	 *
-	 * <strong>Kurallar</strong><br>
-	 * <strong>----------</strong><br>
-	 * <ol>
-	 *    <li>Rakam harici bir karakteri olan string elbette bir telefon numarası olamaz. Ancak aşağıda tek tırnak içindeki karakterleri görmezden gelir.<br>
-	 * 		<pre>	'+', '(', ')', ' ' boşluk karakteri</pre></li>
-	 *    <li>Yukarıdaki karakterler hariç bir string'in telefon numarası olabilmesi için en az on (10) en fazla on beş (15) haneli
-	 * 	 olması gerektiğini varsayar.</li>
-	 * </ol>
-	 * <br>
-	 * <strong>Sonuçlar</strong><br>
-	 * <strong>----------</strong><br>
-	 * <ol>
-	 *    <li>Yukarıdaki görmezden gelinen karakterler haricinde
-	 * 	  rakam olmayan bir karakterle karşılaşılırsa {@code false} döner.</li>
-	 *    <li>Yukarıdaki görmezden gelinen karakterler string'ten çıkarıldıktan sonra
-	 * 	  geriye kalan ve sadece rakamlardan oluşan string'in uzunluğu
-	 * 	  10'dan küçükse yada 15'ten büyükse {@code false} döner.</li>
-	 * </ol>
-	 *
-	 * @param number String
-	 * @return Telefon numarası ise {@code true}
-	 * @see #N_MIN
-	 * @see #N_MAX
+	 * @param number phone number
+	 * @return {@code true} if the string is a phone number
 	 */
 	public static boolean isPhoneNumber(@NotNull String number) {
 		
-		number = getRealNumber(number);
-		
-		if (number.trim().isEmpty()) return false;
-		
-		return getNumberType(number) != 0;
+		return !getPhoneNumberFormatType(number).equals(PhoneNumberType.INVALID);
 	}
 	
 	/**
-	 * Eliminates all non-numeric characters except {@code +} sign.
+	 * Eliminates all non-numeric characters except {@code '+'} sign.
 	 *
-	 * @param number String
-	 * @return Eliminated string
+	 * @param number string
+	 * @return eliminated string
 	 */
 	@NotNull
 	public static String getRealNumber(@NotNull String number) {
@@ -171,28 +154,29 @@ public class PhoneNumbers {
 	}
 	
 	/**
-	 * Returns the type of the number
+	 * Returns the type of the number format.
 	 *
 	 * @param number number
 	 * @return number type or zero if invalid.
+	 * @see #NUMBER_TYPE_LOCAL
+	 * @see #NUMBER_TYPE_NATIONAL
 	 */
-	public static int getNumberType(@NotNull String number) {
+	public static PhoneNumberType getPhoneNumberFormatType(@NotNull String number) {
 		
-		if (number.matches(NUMBER_TYPE_1)) return 1;
-		if (number.matches(NUMBER_TYPE_2)) return 2;
-		if (number.matches(NUMBER_TYPE_3)) return 3;
-		if (number.matches(NUMBER_TYPE_4)) return 4;
-		if (number.matches(NUMBER_TYPE_5)) return 5;
+		number = getRealNumber(number);
 		
-		return 0;
+		if (PhoneNumberType.LOCAL.matches(number)) return PhoneNumberType.LOCAL;
+		if (PhoneNumberType.NATIONAL.matches(number)) return PhoneNumberType.NATIONAL;
+		return PhoneNumberType.INVALID;
 	}
 	
 	/**
-	 * Bir listedeki numaraların içinde bir numara aranmasını sağlar.
+	 * Checks if the list of numbers has the given number.
+	 * Equality is done with {@link #equalsOrContains(String, String)}.
 	 *
-	 * @param numbers Numara listesi
-	 * @param number  Aranan numara
-	 * @return Aranan numara listede varsa {@code true}
+	 * @param numbers list of numbers
+	 * @param number  number
+	 * @return {@code true} if the list has the number
 	 */
 	public static boolean containsNumber(List<String> numbers, String number) {
 		
@@ -206,6 +190,14 @@ public class PhoneNumbers {
 		return false;
 	}
 	
+	/**
+	 * Checks if the list of numbers has the given number.
+	 * Equality is done with {@link #equals(String, String)}.
+	 *
+	 * @param numbers list of numbers
+	 * @param number  number
+	 * @return {@code true} if the list has the number
+	 */
 	public static boolean existsNumber(List<String> numbers, String number) {
 		
 		if (numbers == null || number == null) return false;
@@ -219,9 +211,9 @@ public class PhoneNumbers {
 	}
 	
 	/**
-	 * İki numarayı eşitlik yada içerme için karşılaştırır.<br>
-	 * Aradaki boşluk ve sayısal olmayan karakterler önemli değil,
-	 * sadece sayısal bölümler karşılaştırılır.<br><br>
+	 * Compares two numbers for equality or inclusion.<br>
+	 * Spaces and non-numeric characters are not important,
+	 * only numerical sections are compared.<br><br>
 	 *
 	 *
 	 * <pre>equalsNumbers("+90543 4937530", "5 4 3 4 9 3 7 5 3 0");// true</pre>
@@ -230,13 +222,14 @@ public class PhoneNumbers {
 	 * <pre>equalsNumbers("90(543)s 4937530", "05 4 3 4 (9 3) 7 5 3 0";// true</pre>
 	 * <pre>equalsNumbers("5 ", " 5");// true</pre><br>
 	 *
-	 * @param number1 Number1
-	 * @param number2 Number2
-	 * @return İki numara eşitse yada biri diğerini içeriyorsa {@code true}
+	 * @param number1 number1
+	 * @param number2 number2
+	 * @return {@code true} if numbers are equal or contained in each other
 	 */
 	public static boolean equalsOrContains(@NotNull String number1, @NotNull String number2) {
 		
-		if (number1.equals(number2)) return true;
+		if (number1.contains(number2) || number2.contains(number1))
+			return true;
 		
 		@NotNull String n1 = formatNumber(number1, 10);
 		@NotNull String n2 = formatNumber(number2, 10);
@@ -249,15 +242,12 @@ public class PhoneNumbers {
 	}
 	
 	/**
-	 * Verilen telefon numarasını belirtilen uzunlukta formatlar.
-	 * String içindeki sayı harici tüm karakterler (boşluk dahil) silinir.
-	 * Sonuçta sadece sayılardan oluşan boşluksuz bitişik bir string kalır.
-	 * Telefon numarası eğer belirtilen uzunluğu aşmıyorsa sonuç string döner,
-	 * aşıyorsa uzunluğu eşitlemek için baştaki karakterler kırpılır.<br><br>
+	 * Formats the number to the given size.
+	 * Eliminates all non-numeric characters and
+	 * trims the number from the left to the given size.<br><br>
 	 * <p>
-	 * Örnek olarak <br>
-	 * {@code format("+90 543 493 7530", 10)} = "5434937530"<br>
-	 * {@code format("+90 543 493 7530", 7)} = "4937530"<br>
+	 * {@code format("+90 543 493 7530", 10);} // "5434937530"<br>
+	 * {@code format("+90 543 493 7530", 7);} //  "4937530"<br>
 	 *
 	 * @param number Telefon numarası
 	 * @param size   İstenen uzunluk
@@ -275,6 +265,10 @@ public class PhoneNumbers {
 	
 	/**
 	 * Checks if two numbers are equal.
+	 * Spaces and non-numeric characters are not important,
+	 * only numerical sections are compared.
+	 * Minimum length must be {@link #N_MIN},
+	 * and maximum length must be {@link #N_MAX} after eliminated non-numeric characters.
 	 *
 	 * @param number1 number
 	 * @param number2 number
@@ -282,7 +276,13 @@ public class PhoneNumbers {
 	 */
 	public static boolean equals(@NotNull String number1, @NotNull String number2) {
 		
-		if (number1.equals(number2)) return true;
+		String rNum  = getRealNumber(number1);
+		String rNum2 = getRealNumber(number2);
+		
+		if (rNum.length() < N_MIN || rNum.length() > N_MAX) return false;
+		if (rNum2.length() < N_MIN || rNum2.length() > N_MAX) return false;
+		
+		if (rNum.equals(rNum2)) return true;
 		
 		String n1 = formatNumber(number1, N_MIN);
 		String n2 = formatNumber(number2, N_MIN);
@@ -293,9 +293,8 @@ public class PhoneNumbers {
 	}
 	
 	/**
-	 * İki telefon numarası listesini eşitlik için kontrol eder.
-	 * Telefon numaralarının liste içindeki yeri önemli değildir.
-	 * Eğer iki liste de aynı telefon numaralarını tutuyorsa {@code true} döner.<br><br>
+	 * Checks two phone number lists for equality.
+	 * The location of phone numbers in the list does not matter.<br><br>
 	 *
 	 * <pre>
 	 * String n1 = "05434937530";
@@ -305,9 +304,9 @@ public class PhoneNumbers {
 	 * List<String> l2 = Lists.newArrayList("5", n2);
 	 * equals(l1, l2); // true</pre>
 	 *
-	 * @param numbers1 Numbers
-	 * @param numbers2 Numbers
-	 * @return İki liste eşitse {@code true}
+	 * @param numbers1 numbers
+	 * @param numbers2 numbers
+	 * @return {@code true} if lists are equal
 	 */
 	public static boolean equalsOrContains(@NotNull List<String> numbers1, @NotNull List<String> numbers2) {
 		
@@ -350,6 +349,55 @@ public class PhoneNumbers {
 		}
 		
 		return Stringx.overWrite(number, over);
+	}
+	
+	/**
+	 * Types of phone numbers.
+	 */
+	public enum PhoneNumberType {
+		/**
+		 * Local number type.
+		 */
+		LOCAL(NUMBER_TYPE_LOCAL),
+		/**
+		 * National number type.
+		 */
+		NATIONAL(NUMBER_TYPE_NATIONAL),
+		/**
+		 * Invalid number type.
+		 */
+		INVALID("");
+		
+		/**
+		 * Format of the phone number. This is a regular expression.
+		 */
+		private final String format;
+		
+		PhoneNumberType(String format) {
+			
+			this.format = format;
+		}
+		
+		/**
+		 * Returns the format of the phone number.
+		 *
+		 * @return format (regular expression)
+		 */
+		public String getFormat() {
+			
+			return format;
+		}
+		
+		/**
+		 * Checks if the number matches the format.
+		 *
+		 * @param number number
+		 * @return {@code true} if the number matches
+		 */
+		public boolean matches(@NotNull String number) {
+			
+			return number.matches(format);
+		}
 	}
 	
 	
