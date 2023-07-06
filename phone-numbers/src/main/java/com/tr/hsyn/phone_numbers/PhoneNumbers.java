@@ -50,7 +50,7 @@ import java.util.List;
  *
  * <p>
  * Phone numbers are numbers.
- * This is enough for us.
+ * This is enough for a lot of situations.
  */
 public class PhoneNumbers {
 	
