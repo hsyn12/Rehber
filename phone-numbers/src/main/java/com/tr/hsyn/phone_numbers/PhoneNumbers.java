@@ -13,21 +13,38 @@ import java.util.List;
 
 
 /**
- * Telefon numaraları üzerinde yapılan bazı işlemler sağlar.
+ * Provides some helper methods for phone numbers to format, validate and compare.
+ * According to the <a href="https://en.wikipedia.org/wiki/E.164">E.164</a> standard,<br>
+ *
+ * <table style="padding:15px; border-collapse:collapse;">
+ *    <tr style="border-bottom:1px solid #ccc;border-collapse:collapse;">
+ *       <th style="text-align:center;padding:10px">Country Code</th>
+ *       <th style="text-align:center;padding:10px">Subscriber Number</th>
+ *    </tr>
+ *    <tr style="border-right:0 solid #ccc;">
+ *       <td style="text-align:center;">1 to 3 digits</td>
+ *       <td style="text-align:center;">12 to 14 digits</td>
+ *    </tr>
+ * </table>
+ * <br>
+ * <p>
+ *    So, the maximum phone number length is 15 digits with country code,
+ *     and the minimum length is 12 digits without country code.
+ *     A string with 12 digits can be phone number.
  */
 public class PhoneNumbers {
 	
 	/**
 	 * Telefon numaraları için minimum uzunluk
 	 */
-	public static final  int             N_MIN                = 10;
+	public static final  int             N_MIN                    = 10;
 	/**
 	 * Telefon numaraları için maximum uzunluk
 	 */
-	public static final  int             N_MAX                = 15;
-	public static final  String          NUMBER_TYPE_LOCAL    = "[0-9]{10,15}";// 0 543 493 7530
-	public static final  String          NUMBER_TYPE_NATIONAL = "\\+[0-9]{12,15}";//+xxxxx5434937530
-	private static final PhoneNumberUtil PHONE_NUMBER_UTIL    = PhoneNumberUtil.getInstance();
+	public static final  int             N_MAX                    = 15;
+	public static final  String          NUMBER_FORMAT_TYPE_LOCAL = "0?[0-9]{10}";// (0) 543 493 7530
+	public static final  String          PHONE_NUMBER_REGEX       = "\\+[0-9]{12,15}";//+xxxxx5434937530
+	private static final PhoneNumberUtil PHONE_NUMBER_UTIL        = PhoneNumberUtil.getInstance();
 	
 	private PhoneNumbers() {
 		
@@ -158,15 +175,15 @@ public class PhoneNumbers {
 	 *
 	 * @param number number
 	 * @return number type or zero if invalid.
-	 * @see #NUMBER_TYPE_LOCAL
-	 * @see #NUMBER_TYPE_NATIONAL
+	 * @see #NUMBER_FORMAT_TYPE_LOCAL
+	 * @see #PHONE_NUMBER_REGEX
 	 */
 	public static PhoneNumberType getPhoneNumberFormatType(@NotNull String number) {
 		
 		number = getRealNumber(number);
 		
 		if (PhoneNumberType.LOCAL.matches(number)) return PhoneNumberType.LOCAL;
-		if (PhoneNumberType.NATIONAL.matches(number)) return PhoneNumberType.NATIONAL;
+		if (PhoneNumberType.INTERNATIONAL.matches(number)) return PhoneNumberType.INTERNATIONAL;
 		return PhoneNumberType.INVALID;
 	}
 	
@@ -358,11 +375,11 @@ public class PhoneNumbers {
 		/**
 		 * Local number type.
 		 */
-		LOCAL(NUMBER_TYPE_LOCAL),
+		LOCAL(NUMBER_FORMAT_TYPE_LOCAL),
 		/**
-		 * National number type.
+		 * International number type.
 		 */
-		NATIONAL(NUMBER_TYPE_NATIONAL),
+		INTERNATIONAL(PHONE_NUMBER_REGEX),
 		/**
 		 * Invalid number type.
 		 */
