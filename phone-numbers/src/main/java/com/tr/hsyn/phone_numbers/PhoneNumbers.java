@@ -258,9 +258,9 @@ public class PhoneNumbers {
 	 * {@code format("+90 543 493 7530", 10);} // "5434937530"<br>
 	 * {@code format("+90 543 493 7530", 7);} //  "4937530"<br>
 	 *
-	 * @param number Telefon numarası
-	 * @param size   İstenen uzunluk
-	 * @return Formatlı numara
+	 * @param number phone number
+	 * @param size   number size
+	 * @return formatted number
 	 */
 	@NotNull
 	public static String formatNumber(@NotNull String number, int size) {
@@ -339,11 +339,24 @@ public class PhoneNumbers {
 		return false;
 	}
 	
+	/**
+	 * Returns the phone number with the masked until the last four digits.
+	 *
+	 * @param number phone number
+	 * @return masked phone number
+	 */
 	public static String overWrite(@NotNull String number) {
 		
 		return overWrite(number, '*');
 	}
 	
+	/**
+	 * Returns the phone number with the masked until the last four digits.
+	 *
+	 * @param number phone number
+	 * @param over   character to mask
+	 * @return masked phone number
+	 */
 	public static String overWrite(@NotNull String number, char over) {
 		
 		if (isPhoneNumber(number)) {
