@@ -26,7 +26,6 @@ import com.tr.hsyn.textdrawable.TextDrawable;
 import com.tr.hsyn.time.Time;
 
 import java.util.List;
-import java.util.Locale;
 
 
 public class ShowCallsAdapter extends FastAdapter<Call> {
@@ -72,7 +71,7 @@ public class ShowCallsAdapter extends FastAdapter<Call> {
 		holder.ringingDuration.setText(Files.formatMilliSeconds(call.getLong(CallKey.RINGING_DURATION, 0L)));
 		holder.date.setText(Time.toString(call.getTime(), "d MMMM yyyy HH:mm"));
 		
-		String letter = getLeter(name);
+		String letter = Stringx.getLetter(name);
 		int    color  = Colors.getRandomColor();
 		
 		Colors.setTintDrawable(holder.action.getDrawable(), color);
@@ -111,18 +110,6 @@ public class ShowCallsAdapter extends FastAdapter<Call> {
 		}
 		
 		return R.drawable.incoming_call;
-	}
-	
-	@NonNull
-	private String getLeter(String str) {
-		
-		@org.jetbrains.annotations.NotNull String l = Stringx.getFirstChar(str);
-		
-		if (l.isEmpty()) return "?";
-		
-		if (Character.isAlphabetic(l.charAt(0))) return l.toUpperCase(Locale.ROOT);
-		
-		return "?";
 	}
 	
 	public static final class Holder extends FastHolder {

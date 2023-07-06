@@ -38,37 +38,6 @@ public class AdapterSelectContacts extends RecyclerView.Adapter<AdapterSelectCon
 		this.selectedIndexes = selectedIndexes;
 	}
 	
-	public void selectAll(boolean isSelect) {
-		
-		if (isSelect) {
-			
-			for (int i = 0; i < contacts.size(); i++) {
-				
-				Contact c = contacts.get(i);
-				
-				if (!selectedIndexes.contains(String.valueOf(c.getContactId()))) {
-					
-					selectedIndexes.add(String.valueOf(c.getContactId()));
-					notifyItemChanged(i);
-				}
-			}
-		}
-		else {
-			
-			for (int i = 0; i < contacts.size(); ) {
-				
-				Contact c = contacts.get(i);
-				
-				if (selectedIndexes.contains(String.valueOf(c.getContactId()))) {
-					
-					selectedIndexes.remove(String.valueOf(c.getContactId()));
-					notifyItemChanged(i);
-				}
-				else i++;
-			}
-		}
-	}
-	
 	@Override
 	public void onChecked(boolean isCheck, int index) {
 		
@@ -101,7 +70,7 @@ public class AdapterSelectContacts extends RecyclerView.Adapter<AdapterSelectCon
 				.beginConfig()
 				.useFont(ResourcesCompat.getFont(holder.itemView.getContext(), com.tr.hsyn.resfont.R.font.z))
 				.endConfig()
-				.buildRound(Stringx.getFirstChar(contact.getName()), Colors.getRandomColor());
+				.buildRound(Stringx.getLetter(contact.getName()), Colors.getRandomColor());
 		
 		holder.image.setImageDrawable(img);
 	}
@@ -110,6 +79,37 @@ public class AdapterSelectContacts extends RecyclerView.Adapter<AdapterSelectCon
 	public int getItemCount() {
 		
 		return contacts.size();
+	}
+	
+	public void selectAll(boolean isSelect) {
+		
+		if (isSelect) {
+			
+			for (int i = 0; i < contacts.size(); i++) {
+				
+				Contact c = contacts.get(i);
+				
+				if (!selectedIndexes.contains(String.valueOf(c.getContactId()))) {
+					
+					selectedIndexes.add(String.valueOf(c.getContactId()));
+					notifyItemChanged(i);
+				}
+			}
+		}
+		else {
+			
+			for (int i = 0; i < contacts.size(); ) {
+				
+				Contact c = contacts.get(i);
+				
+				if (selectedIndexes.contains(String.valueOf(c.getContactId()))) {
+					
+					selectedIndexes.remove(String.valueOf(c.getContactId()));
+					notifyItemChanged(i);
+				}
+				else i++;
+			}
+		}
 	}
 	
 	static class Holder extends RecyclerView.ViewHolder {

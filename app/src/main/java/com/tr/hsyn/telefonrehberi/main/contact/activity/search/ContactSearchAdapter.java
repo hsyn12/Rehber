@@ -19,8 +19,6 @@ import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.execution.Runny;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
-import com.tr.hsyn.regex.dev.regex.Regex;
-import com.tr.hsyn.regex.dev.regex.character.Character;
 import com.tr.hsyn.selection.ItemIndexListener;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
@@ -35,7 +33,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 
@@ -55,21 +52,6 @@ public class ContactSearchAdapter extends RecyclerView.Adapter<ContactSearchAdap
 		this.contacts       = contacts;
 		this.selectListener = selectListener;
 		filteredContacts.addAll(contacts);
-	}
-	
-	public List<Contact> getFilteredContacts() {
-		
-		return filteredContacts;
-	}
-	
-	public void setFilterCompleteListener(Runnable filterCompleteListener) {
-		
-		this.filterCompleteListener = filterCompleteListener;
-	}
-	
-	public void setFilterStartListener(Runnable filterStartListener) {
-		
-		this.filterStartListener = filterStartListener;
 	}
 	
 	@NonNull
@@ -115,7 +97,7 @@ public class ContactSearchAdapter extends RecyclerView.Adapter<ContactSearchAdap
 					.beginConfig()
 					.useFont(ResourcesCompat.getFont(holder.itemView.getContext(), com.tr.hsyn.resfont.R.font.z))
 					.endConfig()
-					.buildRound(getLetter(contact.getName()), color);
+					.buildRound(Stringx.getLetter(contact.getName()), color);
 			
 			holder.image.setImageDrawable(image);
 		}
@@ -133,16 +115,56 @@ public class ContactSearchAdapter extends RecyclerView.Adapter<ContactSearchAdap
 		return filteredContacts.size();
 	}
 	
-	@NonNull
-	private String getLetter(String str) {
+	@SuppressLint("NotifyDataSetChanged")
+	@Override
+	public void onTextChanged(String text) {
 		
-		@NotNull String l = Stringx.getFirstChar(str);
+		if (filterStartListener != null) filterStartListener.run();
 		
-		if (l.isEmpty()) return "?";
+		Runny.run(() -> {
+			
+			searchText = CharMatcher.whitespace().removeFrom(text);
+			
+			if (searchText.isEmpty()) {
+				
+				filteredContacts.clear();
+				filteredContacts.addAll(contacts);
+			}
+			else {
+				
+				if (Stringx.isNotNumber(searchText)) {
+					
+					isNumber         = false;
+					filteredContacts = searchByName(searchText.toLowerCase());
+				}
+				else {
+					isNumber         = true;
+					filteredContacts = searchByNumber(searchText);
+				}
+			}
+			
+			Runny.run(() -> {
+				
+				notifyDataSetChanged();
+				
+				if (filterCompleteListener != null) filterCompleteListener.run();
+			});
+		}, false);
+	}
+	
+	public List<Contact> getFilteredContacts() {
 		
-		if (Regex.isLetter(String.valueOf(l.charAt(0)))) return l.toUpperCase(Locale.ROOT);
+		return filteredContacts;
+	}
+	
+	public void setFilterCompleteListener(Runnable filterCompleteListener) {
 		
-		return "?";
+		this.filterCompleteListener = filterCompleteListener;
+	}
+	
+	public void setFilterStartListener(Runnable filterStartListener) {
+		
+		this.filterStartListener = filterStartListener;
 	}
 	
 	private void setHighlight(Holder holder) {
@@ -183,43 +205,6 @@ public class ContactSearchAdapter extends RecyclerView.Adapter<ContactSearchAdap
 			holder.number.setText(spanner);
 		}
 		
-	}
-	
-	@SuppressLint("NotifyDataSetChanged")
-	@Override
-	public void onTextChanged(String text) {
-		
-		if (filterStartListener != null) filterStartListener.run();
-		
-		Runny.run(() -> {
-			
-			searchText = CharMatcher.whitespace().removeFrom(text);
-			
-			if (searchText.isEmpty()) {
-				
-				filteredContacts.clear();
-				filteredContacts.addAll(contacts);
-			}
-			else {
-				
-				if (Stringx.test(searchText).isNot(Character.DIGITS)) {
-					
-					isNumber         = false;
-					filteredContacts = searchByName(searchText.toLowerCase());
-				}
-				else {
-					isNumber         = true;
-					filteredContacts = searchByNumber(searchText);
-				}
-			}
-			
-			Runny.run(() -> {
-				
-				notifyDataSetChanged();
-				
-				if (filterCompleteListener != null) filterCompleteListener.run();
-			});
-		}, false);
 	}
 	
 	private List<Contact> searchByName(String searchText) {

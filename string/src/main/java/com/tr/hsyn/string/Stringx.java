@@ -15,7 +15,6 @@ import com.tr.hsyn.regex.dev.regex.character.WhiteSpace;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -34,49 +33,6 @@ public final class Stringx {
 	}
 	
 	/**
-	 * Combines array elements with the specified character.
-	 *
-	 * @param collection array to combine
-	 * @param delimiter  delimiter
-	 * @param <T>        type of array
-	 * @return combined string
-	 */
-	@NotNull
-	public static <T> String joinToString(T @NotNull [] collection, @NotNull String delimiter) {
-		
-		return Joiner.on(delimiter).join(collection);
-	}
-	
-	/**
-	 * Combines list elements into a string.
-	 *
-	 * @param collection list
-	 * @param delimiter  delimiter
-	 * @param <T>        type of list
-	 * @return combined string
-	 */
-	@NotNull
-	public static <T> String joinToString(@NotNull List<? extends T> collection, @NotNull String delimiter) {
-		
-		return Joiner.on(delimiter).join(collection);
-	}
-	
-	/**
-	 * Combines list elements into a string. The join character is a comma.
-	 *
-	 * @param collection list
-	 * @param <T>        type of list
-	 * @return combined string
-	 */
-	@NotNull
-	public static <T> String joinToString(List<? extends T> collection) {
-		
-		if (collection == null) return "";
-		
-		return Joiner.on(',').join(collection);
-	}
-	
-	/**
 	 * Combines elements into a string.
 	 * The join character is a comma.
 	 *
@@ -91,89 +47,51 @@ public final class Stringx {
 	}
 	
 	/**
-	 * Combines list elements into a string. The join character is a comma.
-	 *
-	 * @param collection list
-	 * @return combined string
-	 */
-	@NotNull
-	public static String joinToString(int[] collection) {
-		
-		return Joiner.on(',').join(Collections.singletonList(collection));
-	}
-	
-	/**
-	 * Combines list elements into a string. The join character is a comma.
-	 *
-	 * @param collection list
-	 * @return combined string
-	 */
-	@NotNull
-	public static String joinToString(long[] collection) {
-		
-		return Joiner.on(',').join(Collections.singletonList(collection));
-	}
-	
-	/**
-	 * Combines list elements into a string.
-	 *
-	 * @param collection list
-	 * @return combined string
-	 */
-	@NotNull
-	public static String joinToString(int[] collection, @NotNull String delimiter) {
-		
-		return Joiner.on(delimiter).join(Collections.singletonList(collection));
-	}
-	
-	/**
 	 * Split a string. The split character is a comma.
 	 *
-	 * @param value string to split
+	 * @param string string to split
 	 * @return the split elements
 	 */
 	@NotNull
-	public static Iterable<String> split(@NotNull String value) {
+	public static Iterable<String> split(@NotNull String string) {
 		
-		return Splitter.on(",").omitEmptyStrings().trimResults().split(value);
+		return Splitter.on(",").omitEmptyStrings().trimResults().split(string);
 	}
 	
 	/**
 	 * Split a string.
 	 *
-	 * @param value string to split
+	 * @param string string to split
 	 * @return the split elements
 	 */
 	@NotNull
-	public static Iterable<String> split(@NotNull String value, String delimiter) {
+	public static Iterable<String> split(@NotNull String string, String delimiter) {
 		
-		return Splitter.on(delimiter).omitEmptyStrings().trimResults().split(value);
+		return Splitter.on(delimiter).omitEmptyStrings().trimResults().split(string);
 	}
 	
 	/**
-	 * Returns the first character of the string.
-	 * If string is empty or {@code null}, an empty string is returned.
+	 * Returns the first letter of the string.
 	 *
-	 * @param str string to get first character
-	 * @return first character
+	 * @param str string
+	 * @return if the string is empty or {@code null}, then '?' is returns, or the first letter.
 	 */
-	@NotNull
-	public static String getFirstChar(String str) {
+	public static @NotNull String getLetter(String str) {
 		
-		if (str == null) {str = "";}
+		if (Stringx.isNoboe(str)) return "?";
 		
-		str = trimWhiteSpaces(str);
+		String l = String.valueOf(str.trim().charAt(0));
 		
-		if (str.isEmpty()) {return "";}
+		if (Character.isAlphabetic(l.charAt(0))) return l.toUpperCase(Locale.getDefault());
 		
-		return String.valueOf(str.charAt(0));
+		return l;
 	}
 	
 	/**
 	 * Deletes all space characters in the string. {@code [\r\n\t\f\v]} ve {@code ' '} space.
 	 *
 	 * @param str String
-	 * @return A contiguous string without spaces. If the given string is {@code null}, then empty string
+	 * @return A contiguous string without spaces. If the given string is {@code null}, then empty string.
 	 */
 	@NotNull
 	public static String trimWhiteSpaces(String str) {
@@ -183,10 +101,26 @@ public final class Stringx {
 		return "";
 	}
 	
-	@NotNull
-	public static Tester test(@NotNull String text) {
+	/**
+	 * Test if the given string is consists of only digits.
+	 *
+	 * @param str the string to test
+	 * @return true if the string is consists of only digits, false otherwise.
+	 */
+	public static boolean isNumber(@NotNull String str) {
 		
-		return new Tester(text);
+		return str.matches(Regex.NUMBER);
+	}
+	
+	/**
+	 * Test if the given string is not consists of only digits.
+	 *
+	 * @param str the string to test
+	 * @return true if the string is not consists of only digits, false otherwise.
+	 */
+	public static boolean isNotNumber(@NotNull String str) {
+		
+		return !isNumber(str);
 	}
 	
 	/**
@@ -227,12 +161,12 @@ public final class Stringx {
 	 * Formats the given string.
 	 *
 	 * <pre>val value = Stringx.from("%d. name='$name', number='%s', type='$type', date='%s'%n")
-	 *                                     .arg(1, i)
-	 *                                     .key("name", name)
-	 *                                     .arg(2, noted.getNumber())
-	 *                                     .key("type", Type.getTypeStr(noted.getType()))
-	 *                                     .arg(3, Time.getDate(noted.getDate()))
-	 *                                     .format();</pre>
+	 *     .arg(1, i)
+	 *     .key("name", name)
+	 *     .arg(2, noted.getNumber())
+	 *     .key("type", Type.getTypeStr(noted.getType()))
+	 *     .arg(3, Time.getDate(noted.getDate()))
+	 *     .format();</pre>
 	 *
 	 * @param str string
 	 * @return string
@@ -256,9 +190,9 @@ public final class Stringx {
 	 * Eşleşme yapılırken boşluklar da hesaplanır.<br>
 	 * Mesela '543493' içinde ' 5 4 3 ' aranıyorsa eşleşecek ve [0,3] dizisi dönecek.<br>
 	 * Mesela '5 4 3 493' içinde '543' aranıyorsa eşleşecek ve [0,6] dizisi dönecek.<br>
-	 * Mesela 'Mulu Acar' içinde 'ua' aranıyorsa eşleşecek ve [4, 7] dizisi dönecek.<br>
-	 * Mesela 'Mulu Acar' içinde 'u   a' aranıyorsa eşleşecek ve yine [4, 7] dizisi dönecek.<br>
-	 * Mesela 'Mulu Acar' içinde 'U' aranıyorsa eşleşecek ve [1, 2, 4, 5] dizisi dönecek.<br><br>
+	 * Mesela 'Mutlu Acar' içinde 'ua' aranıyorsa eşleşecek ve [4, 7] dizisi dönecek.<br>
+	 * Mesela 'Mutlu Acar' içinde 'u   a' aranıyorsa eşleşecek ve yine [4, 7] dizisi dönecek.<br>
+	 * Mesela 'Mutlu Acar' içinde 'U' aranıyorsa eşleşecek ve [1, 2, 4, 5] dizisi dönecek.<br><br>
 	 * <p>
 	 * Arama, eşleşme bulunca sonlanmaz, ne kadar eşleşme varsa bulmaya devam eder.
 	 * Dönen eşleşme dizisi, ikili eşler şeklinde düşünülmeli.

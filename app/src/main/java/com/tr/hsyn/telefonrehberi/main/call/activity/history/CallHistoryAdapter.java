@@ -28,7 +28,6 @@ import com.tr.hsyn.time.Time;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Locale;
 
 
 public class CallHistoryAdapter extends RecyclerView.Adapter<CallHistoryAdapter.Holder> {
@@ -68,7 +67,7 @@ public class CallHistoryAdapter extends RecyclerView.Adapter<CallHistoryAdapter.
 		holder.ringingDuration.setText(Files.formatMilliSeconds(call.getLong(CallKey.RINGING_DURATION, 0L)));
 		holder.date.setText(Time.toString(call.getTime(), "d MMMM yyyy HH:mm"));
 		
-		String letter = getLetter(name);
+		String letter = Stringx.getLetter(name);
 		int    color  = Colors.getRandomColor();
 		
 		Colors.setTintDrawable(holder.action.getDrawable(), color);
@@ -113,18 +112,6 @@ public class CallHistoryAdapter extends RecyclerView.Adapter<CallHistoryAdapter.
 		}
 		
 		return R.drawable.incoming_call;
-	}
-	
-	@NonNull
-	private static String getLetter(String str) {
-		
-		@NotNull String l = Stringx.getFirstChar(str);
-		
-		if (l.isEmpty()) return "?";
-		
-		if (Character.isAlphabetic(l.charAt(0))) return l.toUpperCase(Locale.ROOT);
-		
-		return "?";
 	}
 	
 	public static final class Holder extends RecyclerView.ViewHolder {

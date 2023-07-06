@@ -36,7 +36,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 
 public class CallAdapter extends RecyclerView.Adapter<CallAdapter.Holder> implements FastScrollRecyclerView.SectionedAdapter, ItemAdapter<Call> {
@@ -60,32 +59,6 @@ public class CallAdapter extends RecyclerView.Adapter<CallAdapter.Holder> implem
 		this.longClickListener = longClickListener;
 		this.selectionListener = selectionListener;
 		setHasStableIds(true);
-	}
-	
-	public boolean isSelectionMode() {
-		
-		return selectionMode;
-	}
-	
-	public void cancelSelection() {
-		
-		selectionMode = false;
-		selectedCalls.clear();
-	}
-	
-	public void selectAllItem(boolean select) {
-		
-		selectedCalls.clear();
-		
-		if (select) selectedCalls.addAll(calls);
-	}
-	
-	private void makeSelection(Call call, boolean select) {
-		
-		if (select) selectedCalls.add(call);
-		else selectedCalls.remove(call);
-		
-		if (selectionListener != null) selectionListener.onSelection(select);
 	}
 	
 	@NonNull
@@ -119,7 +92,7 @@ public class CallAdapter extends RecyclerView.Adapter<CallAdapter.Holder> implem
 		holder.ringingDuration.setText(Files.formatMilliSeconds(call.getLong(CallKey.RINGING_DURATION, 0L)));
 		holder.date.setText(Time.toString(call.getTime(), "d MMMM yyyy HH:mm"));
 		
-		String letter = getLetter(name);
+		String letter = Stringx.getLetter(name);
 		int    color  = Colors.getRandomColor();
 		
 		Colors.setTintDrawable(holder.action.getDrawable(), color);
@@ -182,23 +155,6 @@ public class CallAdapter extends RecyclerView.Adapter<CallAdapter.Holder> implem
 		}
 	}
 	
-	private int getTypeIcon(int type) {
-		
-		return Calls.getCallTypeIcon(type);
-	}
-	
-	@NonNull
-	private String getLetter(String str) {
-		
-		@NotNull String l = Stringx.getFirstChar(str);
-		
-		if (l.isEmpty()) return "?";
-		
-		if (Character.isAlphabetic(l.charAt(0))) return l.toUpperCase(Locale.ROOT);
-		
-		return "?";
-	}
-	
 	@NonNull
 	@Override
 	public String getSectionName(int position) {
@@ -232,6 +188,37 @@ public class CallAdapter extends RecyclerView.Adapter<CallAdapter.Holder> implem
 		
 		calls.clear();
 		notifyDataSetChanged();
+	}
+	
+	public boolean isSelectionMode() {
+		
+		return selectionMode;
+	}
+	
+	public void cancelSelection() {
+		
+		selectionMode = false;
+		selectedCalls.clear();
+	}
+	
+	public void selectAllItem(boolean select) {
+		
+		selectedCalls.clear();
+		
+		if (select) selectedCalls.addAll(calls);
+	}
+	
+	private void makeSelection(Call call, boolean select) {
+		
+		if (select) selectedCalls.add(call);
+		else selectedCalls.remove(call);
+		
+		if (selectionListener != null) selectionListener.onSelection(select);
+	}
+	
+	private int getTypeIcon(int type) {
+		
+		return Calls.getCallTypeIcon(type);
 	}
 	
 	public final class Holder extends RecyclerView.ViewHolder {

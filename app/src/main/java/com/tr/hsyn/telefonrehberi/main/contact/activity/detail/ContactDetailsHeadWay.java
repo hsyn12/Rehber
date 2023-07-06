@@ -95,7 +95,12 @@ public abstract class ContactDetailsHeadWay extends ContactDetailsView implement
 			
 			final int fontSize = 256;
 			
-			TextDrawable drawable = TextDrawable.builder().beginConfig().useFont(font).fontSize(fontSize).endConfig().buildRect(Stringx.toUpper(Stringx.getFirstChar(contact.getName())), color);
+			TextDrawable drawable = TextDrawable.builder()
+					.beginConfig()
+					.useFont(font)
+					.fontSize(fontSize)
+					.endConfig()
+					.buildRect(Stringx.toUpper(Stringx.getLetter(contact.getName())), color);
 			
 			image.setImageDrawable(drawable);
 		}

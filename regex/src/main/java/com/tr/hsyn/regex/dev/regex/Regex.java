@@ -39,7 +39,7 @@ import java.util.regex.Matcher;
 public interface Regex {
 	
 	/**
-	 * Regular expression for digits.
+	 * Regular expression for number.
 	 */
 	@RegExp String NUMBER = "^\\p{N}+$";
 	/**
@@ -105,12 +105,13 @@ public interface Regex {
 	
 	/**
 	 * This method removes all occurrences of a given regex character from a given string.
-	 * The input string and the character to be removed must not be null.
+	 * The input text and the character to be removed must not be null.
 	 *
-	 * @param text      the input string from which the character is to be removed
+	 * @param text      the input string from which the character is to be removed.
 	 * @param regexChar the regex character to be removed from the input string
-	 * @return an unmodifiable string with all occurrences of the given character removed
+	 * @return the string with all occurrences of the given character removed.
 	 */
+	@SuppressWarnings("GrazieInspection")
 	@NotNull
 	static @Unmodifiable String removeAll(@NotNull String text, @NotNull Character regexChar) {
 		

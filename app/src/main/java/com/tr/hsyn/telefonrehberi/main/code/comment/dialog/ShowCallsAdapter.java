@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,7 +26,6 @@ import com.tr.hsyn.time.Time;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Locale;
 
 
 public class ShowCallsAdapter extends RecyclerView.Adapter<ShowCallsAdapter.Holder> {
@@ -65,7 +63,7 @@ public class ShowCallsAdapter extends RecyclerView.Adapter<ShowCallsAdapter.Hold
 		holder.ringingDuration.setText(Files.formatMilliSeconds(call.getLong(CallKey.RINGING_DURATION, 0L)));
 		holder.date.setText(Time.toString(call.getTime(), "d MMMM yyyy HH:mm"));
 		
-		String letter = getLeter(name);
+		String letter = Stringx.getLetter(name);
 		int    color  = Colors.getRandomColor();
 		
 		Drawable image = TextDrawable.builder()
@@ -108,18 +106,6 @@ public class ShowCallsAdapter extends RecyclerView.Adapter<ShowCallsAdapter.Hold
 		}
 		
 		return R.drawable.incoming_call;
-	}
-	
-	@NonNull
-	private String getLeter(String str) {
-		
-		@NotNull String l = Stringx.getFirstChar(str);
-		
-		if (l.isEmpty()) return "?";
-		
-		if (Character.isAlphabetic(l.charAt(0))) return l.toUpperCase(Locale.ROOT);
-		
-		return "?";
 	}
 	
 	static class Holder extends RecyclerView.ViewHolder {

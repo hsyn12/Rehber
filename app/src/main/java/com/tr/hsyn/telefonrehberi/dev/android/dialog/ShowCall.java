@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
@@ -27,12 +26,10 @@ import com.tr.hsyn.xlog.xlog;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Locale;
-
 
 public class ShowCall {
 	
-	private AlertDialog dialog;
+	private final AlertDialog dialog;
 	
 	@SuppressLint("InflateParams")
 	public ShowCall(@NotNull Activity activity, @NotNull Call call) {
@@ -45,7 +42,8 @@ public class ShowCall {
 		builder.setView(view);
 		
 		try {
-			dialog                                              = builder.create();
+			dialog = builder.create();
+			//noinspection DataFlowIssue
 			dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimationBounce;
 		}
 		catch (Exception e) {
@@ -83,7 +81,7 @@ public class ShowCall {
 		ringingDuration.setText(Files.formatMilliSeconds(call.getLong(CallKey.RINGING_DURATION, 0L)));
 		date.setText(Time.toString(call.getTime(), "d MMMM yyyy HH:mm"));
 		
-		String letter = getLetter(_name);
+		String letter = Stringx.getLetter(_name);
 		int    color  = Colors.getRandomColor();
 		
 		Drawable _image = TextDrawable.builder()
@@ -98,18 +96,6 @@ public class ShowCall {
 	private int getTypeIcon(int type) {
 		
 		return Calls.getCallTypeIcon(type);
-	}
-	
-	@NonNull
-	private String getLetter(String str) {
-		
-		@NotNull String l = Stringx.getFirstChar(str);
-		
-		if (l.isEmpty()) return "?";
-		
-		if (Character.isAlphabetic(l.charAt(0))) return l.toUpperCase(Locale.ROOT);
-		
-		return "?";
 	}
 	
 	private void onCancel() {

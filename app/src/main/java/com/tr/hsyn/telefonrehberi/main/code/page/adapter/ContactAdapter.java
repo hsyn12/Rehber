@@ -29,7 +29,6 @@ import com.tr.hsyn.textdrawable.TextDrawable;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -112,7 +111,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> 
 	
 	@NonNull
 	@Override
-	public String getSectionName(int position) {return getLetter(contacts.get(position).getName());}
+	public String getSectionName(int position) {return Stringx.getLetter(contacts.get(position).getName());}
 	
 	@Override
 	public int getSize() {
@@ -162,18 +161,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> 
 	private void setSections() {
 		
 		secAdapter = new TopSectionAdapter(contacts.stream().map(Contact::getName).collect(Collectors.toList()));
-	}
-	
-	@NonNull
-	public static String getLetter(String str) {
-		
-		String l = Stringx.getFirstChar(str);
-		
-		if (l.isEmpty()) return "?";
-		
-		if (Character.isAlphabetic(l.charAt(0))) return l.toUpperCase(Locale.ROOT);
-		
-		return "?";
 	}
 	
 	public static class Holder extends RecyclerView.ViewHolder {

@@ -91,7 +91,7 @@ android {
 	}
 
 	kotlinOptions {
-		jvmTarget = "17"
+		jvmTarget = rootProject.kotlin_jvm_target
 		freeCompilerArgs = ['-Xjvm-default=all']
 	}
 }
@@ -197,7 +197,7 @@ dependencies {
 
 	//------------------------- mail -------------------------------------------------------------
 	//def work_version = '1.0.1'
-	implementation 'com.google.android.gms:play-services-auth:20.5.0'
+	implementation 'com.google.android.gms:play-services-auth:20.6.0'
 	implementation('com.google.api-client:google-api-client-android:2.2.0') {
 		exclude group: 'org.apache.httpcomponents'
 	}

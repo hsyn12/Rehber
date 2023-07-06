@@ -20,8 +20,6 @@ import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.execution.Runny;
 import com.tr.hsyn.files.Files;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
-import com.tr.hsyn.regex.dev.regex.Regex;
-import com.tr.hsyn.regex.dev.regex.character.Character;
 import com.tr.hsyn.selection.ItemIndexListener;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
@@ -37,7 +35,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 
@@ -86,31 +83,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> im
 		filteredCalls.addAll(calls);
 	}
 	
-	public void setFilterCompleteListener(Runnable filterCompleteListener) {
-		
-		this.filterCompleteListener = filterCompleteListener;
-	}
-	
-	public void setFilterStartListener(Runnable filterStartListener) {
-		
-		this.filterStartListener = filterStartListener;
-	}
-	
-	public List<Call> getCalls() {
-		
-		return calls;
-	}
-	
-	public List<Call> getFilteredCalls() {
-		
-		return filteredCalls;
-	}
-	
-	public String getSearchText() {
-		
-		return searchText;
-	}
-	
 	@SuppressLint("NotifyDataSetChanged")
 	@Override
 	public void onTextChanged(String text) {
@@ -134,7 +106,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> im
 			}
 			else {
 				
-				if (Stringx.test(searchText).isNot(Regex.NUMBER)) {
+				if (Stringx.isNotNumber(searchText)) {
 					
 					isNumber = false;
 					filteredCalls.clear();
@@ -156,16 +128,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> im
 			});
 			
 		}, false);
-	}
-	
-	private List<Call> searchByName(String searchText) {
-		
-		return calls.stream().filter(c -> Stringx.isMatch(c.getName() != null ? c.getName() : "", searchText)).collect(Collectors.toList());
-	}
-	
-	private List<Call> searchByNumber(String searchText) {
-		
-		return calls.stream().filter(c -> Stringx.isMatch(c.getNumber(), searchText)).collect(Collectors.toList());
 	}
 	
 	@NonNull
@@ -194,7 +156,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> im
 		holder.ringingDuration.setText(Files.formatMilliSeconds(call.getLong(CallKey.RINGING_DURATION, 0L)));
 		holder.date.setText(Time.toString(call.getTime(), "d MMMM yyyy HH:mm"));
 		
-		String letter = getLeter(name);
+		String letter = Stringx.getLetter(name);
 		int    color  = Colors.getRandomColor();
 		
 		Colors.setTintDrawable(holder.action.getDrawable(), color);
@@ -207,7 +169,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> im
 		
 		holder.image.setImageDrawable(image);
 		
-		setHightlight(holder);
+		setHighlight(holder);
 	}
 	
 	@Override
@@ -216,25 +178,47 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> im
 		return filteredCalls.size();
 	}
 	
+	public void setFilterCompleteListener(Runnable filterCompleteListener) {
+		
+		this.filterCompleteListener = filterCompleteListener;
+	}
+	
+	public void setFilterStartListener(Runnable filterStartListener) {
+		
+		this.filterStartListener = filterStartListener;
+	}
+	
+	public List<Call> getCalls() {
+		
+		return calls;
+	}
+	
+	public List<Call> getFilteredCalls() {
+		
+		return filteredCalls;
+	}
+	
+	public String getSearchText() {
+		
+		return searchText;
+	}
+	
+	private List<Call> searchByName(String searchText) {
+		
+		return calls.stream().filter(c -> Stringx.isMatch(c.getName() != null ? c.getName() : "", searchText)).collect(Collectors.toList());
+	}
+	
+	private List<Call> searchByNumber(String searchText) {
+		
+		return calls.stream().filter(c -> Stringx.isMatch(c.getNumber(), searchText)).collect(Collectors.toList());
+	}
+	
 	private int getTypeIcon(int type) {
 		
 		return Calls.getCallTypeIcon(type);
 	}
 	
-	@NonNull
-	private String getLeter(String str) {
-		
-		@NotNull String l = Stringx.getFirstChar(str);
-		
-		if (l.isEmpty()) return "?";
-		
-		if (String.valueOf(l.charAt(0)).matches(Character.LETTER))
-			return l.toUpperCase(Locale.ROOT);
-		
-		return "?";
-	}
-	
-	private void setHightlight(Holder holder) {
+	private void setHighlight(Holder holder) {
 		
 		if (searchText.isEmpty()) {return;}
 		
