@@ -28,36 +28,45 @@ import java.util.List;
  * </table>
  * <br>
  * <p>
- *    So, the maximum phone number length is 15 digits with country code,
- *     and the minimum length is 12 digits without country code.
- *     A string with 12 digits can be phone number.
+ * So, the maximum phone number length is 15 digits with country code,
+ * and the minimum length is 12 digits without country code.
+ * A string with 12 digits can be a phone number.
+ * And we do not care about the other options,
+ * we are not an operator.<br><br>
+ * <p>
+ * This class was considered for phone numbers that are in <strong>Turkey</strong> especially.
+ * For example, in Turkey, the subscriber number length is 10 digits.
+ * Caution, the above table shows only country code and subscriber number length,
+ * there is another code number between these two numbers.
+ * It is area code.
+ * The above table combines the area code and subscriber number.
+ * So the subscriber number includes the area code.
+ * If we remove the area code from the subscriber number,
+ * only the subscriber number left that consists of 10 digits.
+ * So, the {@link #MINIMUM_NUMBER_LENGTH} constant have been set to 10.
+ * In this way, we can create a unique value from a phone number with 10 digits.
+ * The last 10 digits from a number in Turkey are unique.
+ * Maybe other countries are proper for this too, or not.<br><br>
+ *
+ * <p>
+ * Phone numbers are numbers.
+ * This is enough for us.
  */
 public class PhoneNumbers {
 	
 	/**
-	 * Telefon numaraları için minimum uzunluk
+	 * The minimum phone number length.
 	 */
-	public static final  int             N_MIN                    = 10;
+	public static final  int             MINIMUM_NUMBER_LENGTH = 10;
 	/**
-	 * Telefon numaraları için maximum uzunluk
+	 * The maximum phone number length.
 	 */
-	public static final  int             N_MAX                    = 15;
-	public static final  String          NUMBER_FORMAT_TYPE_LOCAL = "0?[0-9]{10}";// (0) 543 493 7530
-	public static final  String          PHONE_NUMBER_REGEX       = "\\+[0-9]{12,15}";//+xxxxx5434937530
-	private static final PhoneNumberUtil PHONE_NUMBER_UTIL        = PhoneNumberUtil.getInstance();
+	public static final  int             MAXIMUM_NUMBER_LENGTH = 15;
+	public static final  String          PHONE_NUMBER_REGEX    = "\\+[0-9]{10,15}";//+xxxxx5434937530
+	private static final PhoneNumberUtil PHONE_NUMBER_UTIL     = PhoneNumberUtil.getInstance();
 	
 	private PhoneNumbers() {
 		
-	}
-	
-	public static PhoneNumberUtil.@Nullable PhoneNumberType getPhoneNumberType(String number) {
-		
-		if (Stringx.isNoboe(number)) return null;
-		
-		try {return PHONE_NUMBER_UTIL.getNumberType(PHONE_NUMBER_UTIL.parse(number, "ZZ"));}
-		catch (NumberParseException e) {xlog.w(e);}
-		
-		return null;
 	}
 	
 	public static void main(String[] args) {
@@ -148,43 +157,26 @@ public class PhoneNumbers {
 	
 	/**
 	 * Checks if the string is a phone number.
-	 * For a string to be a phone number, it must fit certain models.
 	 *
 	 * @param number phone number
 	 * @return {@code true} if the string is a phone number
+	 * @see #PHONE_NUMBER_REGEX
 	 */
 	public static boolean isPhoneNumber(@NotNull String number) {
 		
-		return !getPhoneNumberFormatType(number).equals(PhoneNumberType.INVALID);
+		return normalize(number).matches(PHONE_NUMBER_REGEX);
 	}
 	
 	/**
-	 * Eliminates all non-numeric characters except {@code '+'} sign.
+	 * Removes all non-numeric characters except {@code '+'} sign.
 	 *
 	 * @param number string
 	 * @return eliminated string
 	 */
 	@NotNull
-	public static String getRealNumber(@NotNull String number) {
+	public static String normalize(@NotNull String number) {
 		
 		return number.replaceAll("[^0-9+]", "");
-	}
-	
-	/**
-	 * Returns the type of the number format.
-	 *
-	 * @param number number
-	 * @return number type or zero if invalid.
-	 * @see #NUMBER_FORMAT_TYPE_LOCAL
-	 * @see #PHONE_NUMBER_REGEX
-	 */
-	public static PhoneNumberType getPhoneNumberFormatType(@NotNull String number) {
-		
-		number = getRealNumber(number);
-		
-		if (PhoneNumberType.LOCAL.matches(number)) return PhoneNumberType.LOCAL;
-		if (PhoneNumberType.INTERNATIONAL.matches(number)) return PhoneNumberType.INTERNATIONAL;
-		return PhoneNumberType.INVALID;
 	}
 	
 	/**
@@ -284,8 +276,8 @@ public class PhoneNumbers {
 	 * Checks if two numbers are equal.
 	 * Spaces and non-numeric characters are not important,
 	 * only numerical sections are compared.
-	 * Minimum length must be {@link #N_MIN},
-	 * and maximum length must be {@link #N_MAX} after eliminated non-numeric characters.
+	 * Minimum length must be {@link #MINIMUM_NUMBER_LENGTH},
+	 * and maximum length must be {@link #MAXIMUM_NUMBER_LENGTH} after eliminated non-numeric characters.
 	 *
 	 * @param number1 number
 	 * @param number2 number
@@ -293,16 +285,18 @@ public class PhoneNumbers {
 	 */
 	public static boolean equals(@NotNull String number1, @NotNull String number2) {
 		
-		String rNum  = getRealNumber(number1);
-		String rNum2 = getRealNumber(number2);
+		String rNum  = normalize(number1);
+		String rNum2 = normalize(number2);
 		
-		if (rNum.length() < N_MIN || rNum.length() > N_MAX) return false;
-		if (rNum2.length() < N_MIN || rNum2.length() > N_MAX) return false;
+		if (rNum.length() < MINIMUM_NUMBER_LENGTH || rNum.length() > MAXIMUM_NUMBER_LENGTH)
+			return false;
+		if (rNum2.length() < MINIMUM_NUMBER_LENGTH || rNum2.length() > MAXIMUM_NUMBER_LENGTH)
+			return false;
 		
 		if (rNum.equals(rNum2)) return true;
 		
-		String n1 = formatNumber(number1, N_MIN);
-		String n2 = formatNumber(number2, N_MIN);
+		String n1 = formatNumber(number1, MINIMUM_NUMBER_LENGTH);
+		String n2 = formatNumber(number2, MINIMUM_NUMBER_LENGTH);
 		
 		if (n1.length() != n2.length()) return false;
 		
@@ -366,55 +360,6 @@ public class PhoneNumbers {
 		}
 		
 		return Stringx.overWrite(number, over);
-	}
-	
-	/**
-	 * Types of phone numbers.
-	 */
-	public enum PhoneNumberType {
-		/**
-		 * Local number type.
-		 */
-		LOCAL(NUMBER_FORMAT_TYPE_LOCAL),
-		/**
-		 * International number type.
-		 */
-		INTERNATIONAL(PHONE_NUMBER_REGEX),
-		/**
-		 * Invalid number type.
-		 */
-		INVALID("");
-		
-		/**
-		 * Format of the phone number. This is a regular expression.
-		 */
-		private final String format;
-		
-		PhoneNumberType(String format) {
-			
-			this.format = format;
-		}
-		
-		/**
-		 * Returns the format of the phone number.
-		 *
-		 * @return format (regular expression)
-		 */
-		public String getFormat() {
-			
-			return format;
-		}
-		
-		/**
-		 * Checks if the number matches the format.
-		 *
-		 * @param number number
-		 * @return {@code true} if the number matches
-		 */
-		public boolean matches(@NotNull String number) {
-			
-			return number.matches(format);
-		}
 	}
 	
 	

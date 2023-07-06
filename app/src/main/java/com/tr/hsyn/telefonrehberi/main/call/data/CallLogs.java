@@ -676,7 +676,7 @@ public final class CallLogs {
 		
 		if (id != 0L) return id + "";
 		
-		return PhoneNumbers.formatNumber(call.getNumber(), PhoneNumbers.N_MIN);
+		return PhoneNumbers.formatNumber(call.getNumber(), PhoneNumbers.MINIMUM_NUMBER_LENGTH);
 	}
 	
 	/**

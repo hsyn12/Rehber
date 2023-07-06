@@ -342,7 +342,7 @@ public class CallStory implements Story<Call> {
 			
 			if (id == 0L || Stringx.isNoboe(call.getName())) {
 				
-				String  number   = PhoneNumbers.formatNumber(call.getNumber(), PhoneNumbers.N_MIN);
+				String  number   = PhoneNumbers.formatNumber(call.getNumber(), PhoneNumbers.MINIMUM_NUMBER_LENGTH);
 				Long    _id      = ids.get(number);
 				boolean isUpdate = false;
 				
