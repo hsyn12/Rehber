@@ -1,9 +1,6 @@
 package com.tr.hsyn.integer;
 
 
-/**
- * {@link Integer}
- */
 public class Integer implements Int {
 	
 	private final int val;
@@ -16,7 +13,7 @@ public class Integer implements Int {
 	@Override
 	public final int getInt() {
 		
-		return 0;
+		return val;
 	}
 	
 	@Override
@@ -31,11 +28,10 @@ public class Integer implements Int {
 		return obj instanceof Int && val == ((Int) obj).getInt();
 	}
 	
+	@SuppressWarnings("DefaultLocale")
 	@Override
 	public String toString() {
 		
-		return "Int{" +
-		       "val=" + val +
-		       '}';
+		return String.format("Int{val=%d}", val);
 	}
 }

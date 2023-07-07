@@ -7,56 +7,57 @@ import org.jetbrains.annotations.NotNull;
 
 
 /**
- * Veri anahtarı.<br>
- * Nesnelerin bir veri yapısı içinde saklanmasını ve erişilmesini sağlar.
+ * Defines the key of data.<br>
  */
-public interface DataKey extends DataAccessStatus, Int {
+public interface DataKey extends AccessState, Int {
 	
 	/**
-	 * Okuma ve yazmaya açık yeni bir anahtar oluşturur.
+	 * Gets the name of the data/key.
 	 *
-	 * @param key  Anahtar değeri
-	 * @param name Anahtar adı
-	 * @return Yeni bir veri anahtarı
+	 * @return name of the data/key
+	 */
+	String getName();
+	
+	/**
+	 * Creates a new data key with has read and write access right.
+	 *
+	 * @param key  key value
+	 * @param name name of the data/key
+	 * @return new data key with read and write access
 	 */
 	@NotNull
 	static DataKey of(int key, @NotNull String name) {
 		
-		return new IntKey(key, name, true, true);
+		return of(key, name, true, true);
 	}
 	
 	/**
-	 * Yazmaya açık yeni bir anahtar oluşturur.
+	 * Creates a new data key have write access right.
 	 *
-	 * @param key      Anahtar değeri
-	 * @param name     Anahtar adı
-	 * @param readable Okunabilirlik durumu
-	 * @return Yeni bir veri anahtarı
+	 * @param key      key value
+	 * @param name     name of the data/key
+	 * @param readable read access right
+	 * @return new data key with write access
 	 */
 	@NotNull
 	static DataKey of(int key, @NotNull String name, boolean readable) {
 		
-		return new IntKey(key, name, readable, true);
+		return of(key, name, readable, true);
 	}
 	
 	/**
-	 * Yeni bir anahtar oluşturur.
+	 * Creates a new data key.
 	 *
-	 * @param key      Anahtar değeri
-	 * @param name     Anahtar adı
-	 * @param readable Okunabilirlik durumu
-	 * @param writable Yazılabilirlik durumu
-	 * @return Yeni bir veri anahtarı
+	 * @param key      key value
+	 * @param name     name of the data/key
+	 * @param readable read access right
+	 * @param writable write access right
+	 * @return new data key
 	 */
 	@NotNull
 	static DataKey of(int key, @NotNull String name, boolean readable, boolean writable) {
 		
 		return new IntKey(key, name, readable, writable);
 	}
-	
-	/**
-	 * @return Veri adı
-	 */
-	String getName();
 	
 }

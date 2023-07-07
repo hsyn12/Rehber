@@ -3,13 +3,12 @@ package com.tr.hsyn.datakey;
 
 import com.tr.hsyn.integer.Integer;
 
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 
 /**
  * Int data key.<br>
- * Bir veri anahtarı tanımlar.
+ * Provides the key of data by int value.<br>
  */
 public final class IntKey extends Integer implements DataKey {
 	
@@ -47,7 +46,6 @@ public final class IntKey extends Integer implements DataKey {
 		return writable;
 	}
 	
-	@Contract(pure = true)
 	@Override
 	public @NotNull String toString() {
 		
