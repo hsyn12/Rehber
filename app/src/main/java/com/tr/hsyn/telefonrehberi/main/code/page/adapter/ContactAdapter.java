@@ -218,7 +218,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> 
 			
 			for (String n : items) {
 				
-				String m = Stringx.trimWhiteSpaces(n);
+				String m = Stringx.removeAllWhiteSpaces(n);
 				
 				if (!m.isEmpty()) {
 					

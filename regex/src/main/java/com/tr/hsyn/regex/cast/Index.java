@@ -5,26 +5,35 @@ import org.jetbrains.annotations.NotNull;
 
 
 /**
- * Bir string içinde bir yer bildirir.
+ * Represents a place in a string, (or something like)
+ * that pointing to the start and end indexes.
+ * The object points to the part of something.
+ * This 'something' is a string mostly.
+ * Moreover, there are methods to work directly with the strings.<br><br>
+ * <p>
+ * As like be {@link String}, {@code -1} represents an invalid index.
  */
 public class Index {
 	
+	/**
+	 * Invalid index.
+	 */
 	public static final Index INVALID_INDEX = new Index(-1, -1);
 	
 	/**
-	 * Başlangıç index'i (dahil)
+	 * Start index. (inclusive)
 	 */
 	public final int start;
 	/**
-	 * Bitiş index'i (hariç)
+	 * End index. (exclusive)
 	 */
 	public final int end;
 	
 	/**
-	 * Yeni bir index nesnesi oluturur.
+	 * Creates a new index.
 	 *
-	 * @param start Başlangıç index'i  (dahil)
-	 * @param end   Bitiş index'i (hariç)
+	 * @param start start index
+	 * @param end   end index
 	 */
 	public Index(int start, int end) {
 		
@@ -32,44 +41,31 @@ public class Index {
 		this.end   = end;
 	}
 	
-	/**
-	 * Yeni bir index nesnesi oluturur.
-	 *
-	 * @param start Başlangıç index'i  (dahil)
-	 * @param end   Bitiş index'i (hariç)
-	 */
 	@NotNull
-	public static Index of(int start, int end) {
+	@Override
+	public String toString() {
 		
-		return new Index(start, end);
+		return "Index{" + "start=" + start + ", end=" + end + '}';
 	}
 	
 	/**
-	 * Yeni bir index nesnesi oluturur.
-	 */
-	@NotNull
-	public static Index ofInvalid() {
-		
-		return INVALID_INDEX;
-	}
-	
-	/**
-	 * String içinden index'lerin bildirdiği yeri döndürür.
+	 * Returns a substring of the input.
 	 *
-	 * @param str String
-	 * @return İndex'lerin bildirdiği yerdeki string
+	 * @param str the input string
+	 * @return the substring or empty string if the index is invalid
 	 */
-	public String stringOf(@NotNull String str) {
+	public String substringOf(@NotNull String str) {
 		
 		if (isInvalid()) return "";
 		return str.substring(start, end);
 	}
 	
 	/**
-	 * Returns a substring of the input string starting from the specified index.
+	 * Returns a substring of the input string starting from the specified index to the end of the string.
+	 * Like {@link String#substring(int, int)}.
 	 *
 	 * @param str the input string to extract the substring from
-	 * @return the substring of the input string starting from the specified index
+	 * @return the substring of the input string starting from the specified index to the end of the string.
 	 */
 	public String stringAfterStart(@NotNull String str) {
 		
@@ -77,10 +73,11 @@ public class Index {
 	}
 	
 	/**
-	 * Returns a substring of the input string after the specified end index.
+	 * Returns a substring of the input string after the end index to the end of the string.
+	 * Like {@link String#substring(int)}
 	 *
 	 * @param str the input string to extract the substring from
-	 * @return the substring of the input string after the specified end index
+	 * @return the substring of the input string after the specified end index to the end of the string.
 	 */
 	public String stringAfterEnd(@NotNull String str) {
 		
@@ -88,31 +85,39 @@ public class Index {
 	}
 	
 	/**
-	 * Returns a boolean value indicating whether the start and end indices of a string are valid.
-	 * The method checks if either the start or end index is not equal to -1, which indicates that the indices are valid.
+	 * Tests if the start index and end index are valid.
 	 *
-	 * @return true if the start and end indices are valid, false otherwise.
+	 * @return {@code true} if the start index and end index are valid, false otherwise.
 	 */
 	public boolean isValid() {
 		
 		return start != -1 && end != -1;
 	}
 	
+	/**
+	 * Tests if the start index is valid.
+	 *
+	 * @return {@code true} if the start index is valid, false otherwise.
+	 */
 	public boolean isValidStart() {
 		
 		return start != -1;
 	}
 	
+	/**
+	 * Tests if the end index is valid.
+	 *
+	 * @return {@code true} if the end index is valid, false otherwise.
+	 */
 	public boolean isValidEnd() {
 		
 		return end != -1;
 	}
 	
 	/**
-	 * Returns a boolean value indicating whether the start and end values are both -1.
-	 * If both values are -1, it means that the object is invalid.
+	 * Tests if the index is invalid.
 	 *
-	 * @return true if the start and end values are both -1, false otherwise.
+	 * @return {@code true} if the index is invalid, false otherwise.
 	 */
 	public boolean isInvalid() {
 		
@@ -120,7 +125,7 @@ public class Index {
 	}
 	
 	/**
-	 * Başlangıç ve bitiş index'lerini istenen formatta dmndürür.<br>
+	 * Returns a formatted string.
 	 *
 	 * <pre>
 	 *    var index = Index.of(1,3);
@@ -137,10 +142,25 @@ public class Index {
 		return String.format(format, start, end);
 	}
 	
+	/**
+	 * Creates a new index.
+	 *
+	 * @param start start index
+	 * @param end   end index
+	 * @return new index object
+	 */
 	@NotNull
-	@Override
-	public String toString() {
+	public static Index of(int start, int end) {
 		
-		return "Index{" + "start=" + start + ", end=" + end + '}';
+		return new Index(start, end);
+	}
+	
+	/**
+	 * Returns the invalid index object.
+	 */
+	@NotNull
+	public static Index ofInvalid() {
+		
+		return INVALID_INDEX;
 	}
 }

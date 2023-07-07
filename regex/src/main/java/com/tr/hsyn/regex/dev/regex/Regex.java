@@ -47,49 +47,49 @@ public interface Regex {
 	 */
 	@RegExp String WORD   = "^\\p{L}+$";
 	/**
-	 * A specific type of character for a letter in a regular expression {@link Character#LETTER}
+	 * Type of character for a letter in a regular expression {@link Character#LETTER}
 	 *
 	 * @see Character#LETTER
 	 */
 	Letter      LETTER          = new RegexLetter(Character.LETTER);
 	/**
-	 * A specific type of character for non-letter in a regular expression {@link Character#NON_LETTER}
+	 * Type of character for non-letter in a regular expression {@link Character#NON_LETTER}
 	 *
 	 * @see Character#NON_LETTER
 	 */
 	Letter      NON_LETTER      = new RegexLetter(Character.NON_LETTER, true);
 	/**
-	 * A specific type of character for digit in a regular expression {@link Character#DIGIT}
+	 * Type of character for digit in a regular expression {@link Character#DIGIT}
 	 *
 	 * @see Character#DIGIT
 	 */
 	Digit       DIGIT           = new RegexDigit(Character.DIGIT);
 	/**
-	 * A specific type of character for non-digit in a regular expression {@link Character#NON_DIGIT}
+	 * Type of character for non-digit in a regular expression {@link Character#NON_DIGIT}
 	 *
 	 * @see Character#NON_DIGIT
 	 */
 	Digit       NON_DIGIT       = new RegexDigit(Character.NON_DIGIT);
 	/**
-	 * A specific type of character for white space in a regular expression {@link Character#WHITE_SPACE}
+	 * Type of character for white space in a regular expression {@link Character#WHITE_SPACE}
 	 *
 	 * @see Character#WHITE_SPACE
 	 */
 	WhiteSpace  WHITE_SPACE     = new RegexWhiteSpace(Character.WHITE_SPACE);
 	/**
-	 * A specific type of character for non-white space in a regular expression {@link Character#NON_WHITE_SPACE}
+	 * Type of character for non-white space in a regular expression {@link Character#NON_WHITE_SPACE}
 	 *
 	 * @see Character#NON_WHITE_SPACE
 	 */
 	WhiteSpace  NON_WHITE_SPACE = new RegexWhiteSpace(Character.NON_WHITE_SPACE);
 	/**
-	 * A specific type of character for punctuation in a regular expression {@link Character#PUNCTUATION}
+	 * Type of character for punctuation in a regular expression {@link Character#PUNCTUATION}
 	 *
 	 * @see Character#PUNCTUATION
 	 */
 	Punctuation PUNCTUATION     = new RegexPunctuation(Character.PUNCTUATION, true);
 	/**
-	 * A specific type of character for non-punctuation in a regular expression {@link Character#NON_PUNCTUATION}
+	 * Type of character for non-punctuation in a regular expression {@link Character#NON_PUNCTUATION}
 	 *
 	 * @see Character#NON_PUNCTUATION
 	 */

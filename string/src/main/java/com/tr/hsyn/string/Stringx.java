@@ -5,8 +5,10 @@ import com.google.common.base.CharMatcher;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.tr.hsyn.regex.Nina;
+import com.tr.hsyn.regex.cast.Index;
 import com.tr.hsyn.regex.cast.Modifier;
 import com.tr.hsyn.regex.cast.Quanta;
+import com.tr.hsyn.regex.cast.RegexBuilder;
 import com.tr.hsyn.regex.dev.regex.Regex;
 import com.tr.hsyn.regex.dev.regex.character.Digit;
 import com.tr.hsyn.regex.dev.regex.character.Letter;
@@ -20,12 +22,21 @@ import java.util.Locale;
 
 
 /**
- * String işlemleri için fonksiyonlar içerir.
+ * Provides a set of static methods and constants for working with strings.
  */
 public final class Stringx {
 	
+	/**
+	 * Regular expression that represents a white space.
+	 */
 	public static final WhiteSpace WHITE_SPACE = Regex.WHITE_SPACE;
+	/**
+	 * Regular expression that represents a letter.
+	 */
 	public static final Letter     LETTER      = Regex.LETTER;
+	/**
+	 * Regular expression that represents a digit.
+	 */
 	public static final Digit      DIGIT       = Regex.DIGIT;
 	
 	private Stringx() {
@@ -34,16 +45,30 @@ public final class Stringx {
 	
 	/**
 	 * Combines elements into a string.
-	 * The join character is a comma.
+	 * The joining character is the comma.
 	 *
 	 * @param collection elements
 	 * @param <T>        type of element
 	 * @return combined string
 	 */
 	@NotNull
-	public static <T> String joinToString(@NotNull Iterable<? extends T> collection) {
+	public static <T> String join(@NotNull Iterable<? extends T> collection) {
 		
-		return Joiner.on(',').join(collection);
+		return join(collection, ",");
+	}
+	
+	/**
+	 * Combines elements into a string.
+	 *
+	 * @param collection elements
+	 * @param delimiter  delimiter
+	 * @param <T>        type of element
+	 * @return combined string
+	 */
+	@NotNull
+	public static <T> String join(@NotNull Iterable<? extends T> collection, String delimiter) {
+		
+		return Joiner.on(delimiter != null ? delimiter : ",").join(collection);
 	}
 	
 	/**
@@ -55,19 +80,23 @@ public final class Stringx {
 	@NotNull
 	public static Iterable<String> split(@NotNull String string) {
 		
-		return Splitter.on(",").omitEmptyStrings().trimResults().split(string);
+		return split(string, ",");
 	}
 	
 	/**
 	 * Split a string.
 	 *
-	 * @param string string to split
+	 * @param string    string to split
+	 * @param delimiter delimiter
 	 * @return the split elements
 	 */
 	@NotNull
 	public static Iterable<String> split(@NotNull String string, String delimiter) {
 		
-		return Splitter.on(delimiter).omitEmptyStrings().trimResults().split(string);
+		return Splitter.on(delimiter != null ? delimiter : ",")
+				.omitEmptyStrings()
+				.trimResults()
+				.split(string);
 	}
 	
 	/**
@@ -88,13 +117,13 @@ public final class Stringx {
 	}
 	
 	/**
-	 * Deletes all space characters in the string. {@code [\r\n\t\f\v]} ve {@code ' '} space.
+	 * Removes all space characters in the string. {@code [\r\n\t\f\v]} ve {@code ' '} space.
 	 *
-	 * @param str String
-	 * @return A contiguous string without spaces. If the given string is {@code null}, then empty string.
+	 * @param str string
+	 * @return a contiguous string without spaces. If the given string is {@code null}, then empty string.
 	 */
 	@NotNull
-	public static String trimWhiteSpaces(String str) {
+	public static String removeAllWhiteSpaces(String str) {
 		
 		if (str != null) return WHITE_SPACE.removeFrom(str);
 		
@@ -102,10 +131,10 @@ public final class Stringx {
 	}
 	
 	/**
-	 * Test if the given string is consists of only digits.
+	 * Test if a string is consists of only digits.
 	 *
 	 * @param str the string to test
-	 * @return true if the string is consists of only digits, false otherwise.
+	 * @return {@code true} if the string is consists of only digits, false otherwise.
 	 */
 	public static boolean isNumber(@NotNull String str) {
 		
@@ -113,10 +142,10 @@ public final class Stringx {
 	}
 	
 	/**
-	 * Test if the given string is not consists of only digits.
+	 * Test if a string is not consists of only digits.
 	 *
 	 * @param str the string to test
-	 * @return true if the string is not consists of only digits, false otherwise.
+	 * @return {@code true} if the string is not consists of only digits, false otherwise.
 	 */
 	public static boolean isNotNumber(@NotNull String str) {
 		
@@ -124,10 +153,10 @@ public final class Stringx {
 	}
 	
 	/**
-	 * Verilen string'in baş harfini büyütür.
+	 * Converts a string to a title case.
 	 *
-	 * @param text String
-	 * @return Baş harfi büyük string
+	 * @param text string
+	 * @return title cased string
 	 */
 	@NotNull
 	public static String toTitle(@NotNull String text) {
@@ -145,8 +174,7 @@ public final class Stringx {
 	}
 	
 	/**
-	 * Verilen string'i formatla. Aynen {@link String#format(String, Object...)} fonksiyonu gibi.
-	 * Tek farkı, dil olarak türkçe kullanması.
+	 * Formats the given string like {@link String#format(String, Object...)}.
 	 *
 	 * @param text text
 	 * @param args args
@@ -171,68 +199,66 @@ public final class Stringx {
 	 * @param str string
 	 * @return string
 	 */
+	@NotNull
 	public static IFormatter from(String str) {
 		
 		return IFormatter.create(str);
 	}
 	
-	public static boolean _isMatch(String word, String searchText) {
-		
-		if (word == null || searchText == null) return false;
-		
-		if (word.length() < searchText.length()) return false;
-		
-		return indexOfMatches(word, searchText).length != 0;
-	}
-	
 	/**
-	 * Bir kelimenin içinde başka bir kelimenin geçtiği yerlerin başlangıç ve bitiş index'lerini verir.<br>
-	 * Eşleşme yapılırken boşluklar da hesaplanır.<br>
-	 * Mesela '543493' içinde ' 5 4 3 ' aranıyorsa eşleşecek ve [0,3] dizisi dönecek.<br>
-	 * Mesela '5 4 3 493' içinde '543' aranıyorsa eşleşecek ve [0,6] dizisi dönecek.<br>
-	 * Mesela 'Mutlu Acar' içinde 'ua' aranıyorsa eşleşecek ve [4, 7] dizisi dönecek.<br>
-	 * Mesela 'Mutlu Acar' içinde 'u   a' aranıyorsa eşleşecek ve yine [4, 7] dizisi dönecek.<br>
-	 * Mesela 'Mutlu Acar' içinde 'U' aranıyorsa eşleşecek ve [1, 2, 4, 5] dizisi dönecek.<br><br>
+	 * Returns the start and end indexes of places in a text where another text occurs.<br>
+	 * When matching, blanks are calculated.<br>
 	 * <p>
-	 * Arama, eşleşme bulunca sonlanmaz, ne kadar eşleşme varsa bulmaya devam eder.
-	 * Dönen eşleşme dizisi, ikili eşler şeklinde düşünülmeli.
-	 * Her bir ikili, eşleşmenin başlama (dahil) ve bitiş (hariç) index'ini bildirir.
+	 * For example, if ' 5 4 3' is searched for in '543493'
+	 * it will match, and the sequence {@code [0, 3]} will return.<br>
+	 * For example, if '543' is searched for in '5 4 3 493',
+	 * it will match and the sequence [0, 6] will be returned.<br>
+	 * For example, if 'ua' is searched in 'Mutlu Acar',
+	 * it will match and the sequence [4, 7] will return.<br>
+	 * For example, if 'u a' is searched in 'Mutlu Acar',
+	 * it will match and the sequence [4, 7] will return.<br>
+	 * For example, if 'U' is searched in 'Mutlu Acar',
+	 * it will match and the sequence [1, 2, 4, 5] will return.<br><br>
+	 * <p>
+	 * The search doesn't end when it finds a match, it continues to find as many matches as there are.
 	 *
-	 * @param word       Aramanın yapılacağı kelime
-	 * @param searchText Aranacak kelime
-	 * @return Eşleşme olmazsa boş dizi
+	 * @param word       the text that searched in
+	 * @param searchText search text
+	 * @return the start and end indexes if matches
 	 */
-	@NotNull
-	public static Integer[] indexOfMatches(String word, String searchText) {
+	public static List<Index> findIndexes(String word, String searchText) {
 		
-		return indexOfMatches(word, searchText, true);
+		return findIndexes(word, searchText, true);
 	}
 	
 	/**
 	 * Returns the start and end indexes of places in a text where another text occurs.<br>
 	 * When matching, blanks are calculated.<br>
-	 * For example, if ' 5 4 3' is searched for in '543493' it will match, and the sequence [0 3] will return.<br>
-	 * For example, if '543' is searched for in '5 4 3 493', it will match and the sequence [0,6] will be returned.<br>
-	 * For example, if 'ua' is searched in 'Mutlu Acar', it will match and the sequence [4, 7] will return.<br>
-	 * For example, if 'u a' is searched in 'Mutlu Acar', it will match and the sequence [4, 7] will return.<br>
-	 * For example, if 'U' is searched in 'Mutlu Acar', it will match and the sequence [1, 2, 4, 5] will return.<br><br>
+	 * For example, if ' 5 4 3' is searched for in '543493'
+	 * it will match, and the sequence [0, 3] will return.<br>
+	 * For example, if '543' is searched for in '5 4 3 493',
+	 * it will match and the sequence [0,6] will be returned.<br>
+	 * For example, if 'ua' is searched in 'Mutlu Acar',
+	 * it will match and the sequence [4, 7] will return.<br>
+	 * For example, if 'u a' is searched in 'Mutlu Acar',
+	 * it will match and the sequence [4, 7] will return.<br>
+	 * For example, if 'U' is searched in 'Mutlu Acar',
+	 * it will match and the sequence [1, 2, 4, 5] will return.<br><br>
 	 * <p>
 	 * The search doesn't end when it finds a match, it continues to find as many matches as there are.
-	 * The rotating match sequence should be thought of as pairs of pairs.
-	 * Each binary reports the start (including) and ending (exclusive) index of the match.
 	 *
 	 * @param word       the text that searched in
 	 * @param searchText search text
 	 * @param ignoreCase ignore case
 	 * @return the start and end indexes if matches
 	 */
-	public static Integer @NotNull [] indexOfMatches(String word, String searchText, boolean ignoreCase) {
+	public static List<Index> findIndexes(String word, String searchText, boolean ignoreCase) {
 		
-		if (Regex.isNoboe(word) || Regex.isNoboe(searchText)) return new Integer[0];
+		if (Regex.isNoboe(word) || Regex.isNoboe(searchText)) return new ArrayList<>(0);
 		
 		searchText = Regex.removeWhiteSpaces(searchText);
 		
-		com.tr.hsyn.regex.cast.@NotNull RegexBuilder reg = Nina.whiteSpace().zeroOrMore();
+		RegexBuilder reg = Nina.whiteSpace().zeroOrMore();
 		
 		if (ignoreCase) reg = reg.ignoreCase();
 		
@@ -241,14 +267,10 @@ public final class Stringx {
 		
 		List<com.tr.hsyn.regex.cast.Index> indexes = reg.findAll(word);
 		
-		Integer[] result = new Integer[indexes.size() * 2];
-		
-		int x = 0;
-		for (com.tr.hsyn.regex.cast.Index i : indexes) {
-			
-			result[x++] = i.start;
-			result[x++] = i.end;
-		}
+		List<Index> result = new ArrayList<>(indexes.size());
+		//result[x++] = i.start;
+		//result[x++] = i.end;
+		result.addAll(indexes);
 		
 		return result;
 	}

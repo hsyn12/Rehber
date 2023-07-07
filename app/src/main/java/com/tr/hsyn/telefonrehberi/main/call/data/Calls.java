@@ -191,7 +191,7 @@ public interface Calls {
 	static int delete(@NonNull final ContentResolver contentResolver, @NonNull List<? extends Call> calls) {
 		
 		List<String> dates       = calls.stream().map(call -> String.valueOf(call.getTime())).collect(Collectors.toList());
-		String       selectionIn = Stringx.joinToString(dates);
+		String       selectionIn = Stringx.join(dates);
 		
 		return contentResolver.delete(
 				CallLog.Calls.CONTENT_URI,

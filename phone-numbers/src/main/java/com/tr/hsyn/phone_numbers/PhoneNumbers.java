@@ -135,7 +135,7 @@ public class PhoneNumbers {
 		
 		if (!isPhoneNumber(_number)) return _number;
 		
-		@NotNull String number = Stringx.trimWhiteSpaces(_number);
+		@NotNull String number = Stringx.removeAllWhiteSpaces(_number);
 		
 		if (number.length() == 11) {
 			

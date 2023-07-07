@@ -227,15 +227,14 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> im
 		
 		if (!isNumber) {//- Arama sırasında set edilmiş olmalı
 			
-			Integer[] indexes = Stringx.indexOfMatches(name, searchText);
+			var indexes = Stringx.findIndexes(name, searchText);
 			
 			//xlog.d(Arrays.toString(indexes));
 			
 			Spanner spanner = new Spanner(name);
 			
-			for (int i = 0; i < indexes.length - 1; i += 2) {
-				
-				spanner.setSpans(indexes[i], indexes[i + 1], Spans.background(markColor));
+			for (var index : indexes) {
+				spanner.setSpans(index.start, index.end, Spans.background(markColor));
 			}
 			
 			holder.name.setText(spanner);
@@ -243,13 +242,13 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> im
 		}
 		else {
 			
-			Integer[] indexes = Stringx.indexOfMatches(number, searchText);
+			var indexes = Stringx.findIndexes(number, searchText);
 			//xlog.d(Arrays.toString(indexes));
 			Spanner spanner = new Spanner(number);
 			
-			for (int i = 0; i < indexes.length - 1; i += 2) {
+			for (var index : indexes) {
 				
-				spanner.setSpans(indexes[i], indexes[i + 1], Spans.background(markColor));
+				spanner.setSpans(index.start, index.end, Spans.background(markColor));
 			}
 			
 			holder.name.setText(name);

@@ -136,7 +136,7 @@ public class ContactStory {
 	private static int deleteContacts(@NotNull final ContentResolver contentResolver, @NotNull final List<String> contactIds) {
 		
 		Uri    contactUri  = ContactsContract.RawContacts.CONTENT_URI.buildUpon().appendQueryParameter(ContactsContract.CALLER_IS_SYNCADAPTER, "true").build();
-		String whereClause = Stringx.format("%s in (%s)", ContactsContract.RawContacts.CONTACT_ID, Stringx.joinToString(contactIds));
+		String whereClause = Stringx.format("%s in (%s)", ContactsContract.RawContacts.CONTACT_ID, Stringx.join(contactIds));
 		
 		return contentResolver.delete(contactUri, whereClause, null);
 	}

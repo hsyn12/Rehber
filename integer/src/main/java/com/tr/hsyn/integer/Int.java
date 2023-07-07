@@ -5,26 +5,59 @@ import org.jetbrains.annotations.NotNull;
 
 
 /**
- * {@link Integer}
+ * Holds an integer value like {@link java.lang.Integer}.
  */
 public interface Int {
 	
 	/**
-	 * Yeni bir {@code Int} nesnesi oluşturur.
+	 * Gets the value.
 	 *
-	 * @param val {@code Int} nesnesinin tutacağı {@code int} değer
-	 * @return Yeni bir {@link Int} nesnesi
+	 * @return integer
+	 */
+	int getInt();
+	
+	default boolean isZero() {
+		
+		return getInt() == 0;
+	}
+	
+	default boolean isPositive() {
+		
+		return getInt() > 0;
+	}
+	
+	default boolean isNegative() {
+		
+		return getInt() < 0;
+	}
+	
+	default boolean equals(Int other) {
+		
+		if (other == null) return false;
+		
+		return getInt() == other.getInt();
+	}
+	
+	default boolean greaterThan(@NotNull Int other) {
+		
+		return getInt() > other.getInt();
+	}
+	
+	default boolean lessThan(@NotNull Int other) {
+		
+		return getInt() < other.getInt();
+	}
+	
+	/**
+	 * Create a new {@link Int} instance.
+	 *
+	 * @param val the value
+	 * @return {@link Int} instance
 	 */
 	@NotNull
 	static Int of(int val) {
 		
 		return new Integer(val);
 	}
-	
-	/**
-	 * @return int bir değer
-	 */
-	int getInt();
-	
 	
 }

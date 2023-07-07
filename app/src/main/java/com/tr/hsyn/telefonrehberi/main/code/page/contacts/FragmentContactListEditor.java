@@ -48,7 +48,7 @@ public abstract class FragmentContactListEditor extends FragmentPageList impleme
 	
 	private int insert(@NotNull Contact contact) {
 		
-		String name = Stringx.trimWhiteSpaces(contact.getName());
+		String name = Stringx.removeAllWhiteSpaces(contact.getName());
 		
 		if (name.isEmpty()) {
 			

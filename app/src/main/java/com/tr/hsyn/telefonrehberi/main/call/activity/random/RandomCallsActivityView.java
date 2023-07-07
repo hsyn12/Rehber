@@ -58,6 +58,11 @@ public abstract class RandomCallsActivityView extends ActivityView {
 	 */
 	protected       HTextView   textDescription;
 	
+	/**
+	 * @return the number of generations
+	 */
+	protected abstract int getGenerationCount();
+	
 	@Override
 	protected final int getLayoutId() {
 		
@@ -100,11 +105,6 @@ public abstract class RandomCallsActivityView extends ActivityView {
 	}
 	
 	/**
-	 * @return the number of generations
-	 */
-	protected abstract int getGenerationCount();
-	
-	/**
 	 * Called when the start button is clicked.
 	 *
 	 * @param view the start button
@@ -133,7 +133,7 @@ public abstract class RandomCallsActivityView extends ActivityView {
 			
 			String count = editable.toString();
 			
-			if (!Stringx.trimWhiteSpaces(count).isEmpty()) {
+			if (!Stringx.removeAllWhiteSpaces(count).isEmpty()) {
 				
 				try {
 					return Integer.parseInt(count);

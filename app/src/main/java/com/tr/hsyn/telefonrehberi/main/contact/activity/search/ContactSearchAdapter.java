@@ -31,7 +31,6 @@ import com.tr.hsyn.xlog.xlog;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -176,15 +175,15 @@ public class ContactSearchAdapter extends RecyclerView.Adapter<ContactSearchAdap
 		
 		if (!isNumber) {
 			
-			Integer[] indexes = Stringx.indexOfMatches(name, searchText);
+			var indexes = Stringx.findIndexes(name, searchText);
 			
 			//xlog.d(Arrays.toString(indexes));
 			
 			Spanner spanner = new Spanner(name);
 			
-			for (int i = 0; i < indexes.length - 1; i += 2) {
+			for (var index : indexes) {
 				
-				spanner.setSpans(indexes[i], indexes[i + 1], Spans.background(markColor));
+				spanner.setSpans(index.start, index.end, Spans.background(markColor));
 			}
 			
 			holder.name.setText(spanner);
@@ -192,13 +191,12 @@ public class ContactSearchAdapter extends RecyclerView.Adapter<ContactSearchAdap
 		}
 		else {
 			
-			Integer[] indexes = Stringx.indexOfMatches(number, searchText);
-			xlog.d(Arrays.toString(indexes));
+			var     indexes = Stringx.findIndexes(number, searchText);
 			Spanner spanner = new Spanner(number);
 			
-			for (int i = 0; i < indexes.length - 1; i += 2) {
+			for (var index : indexes) {
 				
-				spanner.setSpans(indexes[i], indexes[i + 1], Spans.background(markColor));
+				spanner.setSpans(index.start, index.end, Spans.background(markColor));
 			}
 			
 			holder.name.setText(name);

@@ -2,7 +2,7 @@ package com.tr.hsyn.integer;
 
 
 /**
- * Daha hafif bir {@link java.lang.Integer} sınıfı
+ * {@link Integer}
  */
 public class Integer implements Int {
 	
@@ -20,20 +20,15 @@ public class Integer implements Int {
 	}
 	
 	@Override
-	public boolean equals(Object obj) {
-		
-		return obj instanceof Int && val == ((Int) obj).getInt();
-	}
-	
-	public boolean equals(Int obj) {
-		
-		return obj != null && val == obj.getInt();
-	}
-	
-	@Override
 	public int hashCode() {
 		
 		return val;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		
+		return obj instanceof Int && val == ((Int) obj).getInt();
 	}
 	
 	@Override
