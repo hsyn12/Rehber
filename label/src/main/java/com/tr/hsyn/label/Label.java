@@ -1,33 +1,29 @@
 package com.tr.hsyn.label;
 
 
-import com.tr.hsyn.atom.Atom;
+import com.tr.hsyn.atom.AtomImpl;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Locale;
-import java.util.Set;
 
 
 /**
- * Etiket.<br>
- * Nesnelerin işareti.
+ * Label of things.
  */
-public class Label extends Atom {
+public class Label extends AtomImpl {
 	
 	/**
-	 * Geçersiz id değeri. Bu değeri taşıyan tek etiket {@link #INVALID_LABEL} nesnesidir ve
-	 * bu id başka hiçbir etiket için kullanılmamalıdır.
+	 * The invalid label.
 	 */
-	public static final int INVALID_LABEL_ID = -1;
+	public static final Label INVALID_LABEL = of(-1, "");
 	
 	/**
-	 * Geçersiz etiket
+	 * Constructor for label.
+	 *
+	 * @param id   id
+	 * @param name name
 	 */
-	public static final Label INVALID_LABEL = newLabel(-1, "");
-	
 	public Label(long id, @NotNull String name) {
 		
 		super(id, name);
@@ -40,7 +36,7 @@ public class Label extends Atom {
 	}
 	
 	/**
-	 * @return Etiket geçerli bir etiket ise {@code true}, değilse {@code false}
+	 * @return {@code true} if label is valid, {@code false} otherwise
 	 */
 	public boolean isValid() {
 		
@@ -48,23 +44,24 @@ public class Label extends Atom {
 	}
 	
 	/**
-	 * @return Etiket geçersiz ise {@code true}, geçerli ise {@code false}
+	 * @return {@code true} if label is invalid, {@code false} otherwise
 	 */
 	public boolean isInValid() {
 		
 		return this.equals(INVALID_LABEL);
 	}
 	
+	/**
+	 * Creates a new label.
+	 *
+	 * @param id   id
+	 * @param name name
+	 * @return new {@code Label}
+	 */
 	@NotNull
-	public static Label newLabel(long id, @NotNull String name) {
+	public static Label of(long id, @NotNull String name) {
 		
 		return new Label(id, name);
-	}
-	
-	@NotNull
-	public static Set<Label> of(Label... labels) {
-		
-		return new HashSet<>(Arrays.asList(labels));
 	}
 	
 	/**
@@ -75,16 +72,16 @@ public class Label extends Atom {
 	 * @return {@code Label} nesnesi
 	 */
 	@NotNull
-	public static Label fromString(@NotNull String label) {
+	public static Label of(@NotNull String label) {
 		
 		try {
 			
 			String[] parts = label.split(":");
 			
-			return newLabel(Integer.parseInt(parts[0]), parts[1]);
+			return of(Integer.parseInt(parts[0]), parts[1]);
 		}
 		catch (Exception ignore) {}
 		
-		return Label.newLabel(-1, "-");
+		return Label.of(-1, "-");
 	}
 }

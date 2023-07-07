@@ -102,6 +102,36 @@ public class CallDatabase extends DBBase<Call> implements DBCalls {
 		return call;
 	}
 	
+	@Override
+	@NonNull
+	public Values contentValuesOf(@NonNull final Call call) {
+		
+		Values values = new Values();
+		
+		if (call.getName() != null) values.put(NAME, call.getName());
+		else values.putNull(Values.TYPE_STRING, NAME);
+		
+		values.put(NUMBER, call.getNumber());
+		values.put(DATE, call.getTime());
+		values.put(TYPE, call.getCallType());
+		values.put(DURATION, call.getDuration());
+		values.put(CONTACT_ID, call.getLong(CallKey.CONTACT_ID, 0L));
+		values.put(DELETED_DATE, call.getLong(CallKey.DELETED_DATE, 0L));
+		values.put(RINGING_DURATION, call.getLong(CallKey.RINGING_DURATION, 0L));
+		values.put(EXTRA, call.getExtra());
+		
+		if (call.exist(CallKey.NOTE)) //noinspection ConstantConditions
+			values.put(NOTE, call.getData(CallKey.NOTE));
+		else values.putNull(Values.TYPE_STRING, NOTE);
+		
+		Set<Label> labels = call.getData(CallKey.LABELS);
+		
+		if (labels == null || labels.isEmpty()) values.putNull(Values.TYPE_STRING, LABELS);
+		else values.put(LABELS, getLabels(labels));
+		
+		return values;
+	}
+	
 	private @NotNull Set<Label> getLabels(String labels) {
 		
 		Set<Label> labelSet = new HashSet<>();
@@ -112,7 +142,7 @@ public class CallDatabase extends DBBase<Call> implements DBCalls {
 		
 		for (String part : parts) {
 			
-			@NotNull Label label = Label.fromString(part);
+			Label label = Label.of(part);
 			
 			if (label.isValid())
 				labelSet.add(label);
@@ -159,36 +189,6 @@ public class CallDatabase extends DBBase<Call> implements DBCalls {
 		catch (Exception ignore) {}
 		
 		return false;
-	}
-	
-	@Override
-	@NonNull
-	public Values contentValuesOf(@NonNull final Call call) {
-		
-		Values values = new Values();
-		
-		if (call.getName() != null) values.put(NAME, call.getName());
-		else values.putNull(Values.TYPE_STRING, NAME);
-		
-		values.put(NUMBER, call.getNumber());
-		values.put(DATE, call.getTime());
-		values.put(TYPE, call.getCallType());
-		values.put(DURATION, call.getDuration());
-		values.put(CONTACT_ID, call.getLong(CallKey.CONTACT_ID, 0L));
-		values.put(DELETED_DATE, call.getLong(CallKey.DELETED_DATE, 0L));
-		values.put(RINGING_DURATION, call.getLong(CallKey.RINGING_DURATION, 0L));
-		values.put(EXTRA, call.getExtra());
-		
-		if (call.exist(CallKey.NOTE)) //noinspection ConstantConditions
-			values.put(NOTE, call.getData(CallKey.NOTE));
-		else values.putNull(Values.TYPE_STRING, NOTE);
-		
-		Set<Label> labels = call.getData(CallKey.LABELS);
-		
-		if (labels == null || labels.isEmpty()) values.putNull(Values.TYPE_STRING, LABELS);
-		else values.put(LABELS, getLabels(labels));
-		
-		return values;
 	}
 	
 	/**

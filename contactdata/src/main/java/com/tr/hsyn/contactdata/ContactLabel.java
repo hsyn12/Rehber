@@ -1,7 +1,7 @@
 package com.tr.hsyn.contactdata;
 
 
-import static com.tr.hsyn.label.Label.newLabel;
+import static com.tr.hsyn.label.Label.of;
 
 import com.tr.hsyn.label.Label;
 import com.tr.hsyn.label.Mabel;
@@ -60,35 +60,35 @@ public interface ContactLabel extends Mabel {
 	/**
 	 * Bu etiket kişinin aileden biri olduğunu gösterir
 	 */
-	Label LABEL_FAMILY         = newLabel(0, "Aile");
+	Label LABEL_FAMILY         = of(0, "Aile");
 	/**
 	 * Bu etikete tek bir kişi sahip olabilir ve kişinin annesi olduğunu gösterir
 	 */
-	Label LABEL_MY_MUM         = newLabel(1, "Annem");
+	Label LABEL_MY_MUM         = of(1, "Annem");
 	/**
 	 * Bu etikete tek bir kişi sahip olabilir ve kişinin babası olduğunu gösterir
 	 */
-	Label LABEL_MY_DAD         = newLabel(2, "Babam");
+	Label LABEL_MY_DAD         = of(2, "Babam");
 	/**
 	 * Bu etiket kişinin kız kardeşi olduğunu gösterir
 	 */
-	Label LABEL_MY_SISTER      = newLabel(3, "Kız Kardeşim");
+	Label LABEL_MY_SISTER      = of(3, "Kız Kardeşim");
 	/**
 	 * Bu etiket kişinin erkek kardeşi olduğunu gösterir
 	 */
-	Label LABEL_MY_BROTHER     = newLabel(4, "Erkek Kardeşim");
+	Label LABEL_MY_BROTHER     = of(4, "Erkek Kardeşim");
 	/**
 	 * Bu etiket kişinin en iyi arkadaşı olduğunu gösterir
 	 */
-	Label LABEL_MY_BEST_FRIEND = newLabel(5, "En İyi Arkadaşım");
+	Label LABEL_MY_BEST_FRIEND = of(5, "En İyi Arkadaşım");
 	/**
 	 * Bu etikete tek bir kişi sahip olabilir ve kişinin sevgilisi olduğunu gösterir
 	 */
-	Label LABEL_MY_DARLING     = newLabel(6, "Sevgilim");
+	Label LABEL_MY_DARLING     = of(6, "Sevgilim");
 	/**
 	 * Bu etiket kişinin normal arkadaşı olduğunu gösterir
 	 */
-	Label LABEL_MY_FRIEND      = newLabel(7, "Arkadaşım");
+	Label LABEL_MY_FRIEND      = of(7, "Arkadaşım");
 	
 	default long @Nullable [] getLabelIds() {
 		

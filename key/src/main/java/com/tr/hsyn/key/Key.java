@@ -1,12 +1,12 @@
 package com.tr.hsyn.key;
 
 
-import com.tr.hsyn.atom.Atom;
+import com.tr.hsyn.atom.AtomImpl;
 
 import org.jetbrains.annotations.NotNull;
 
 
-public class Key extends Atom {
+public class Key extends AtomImpl {
 	
 	public static final Key EMPTY                  = Key.of(0, "-");
 	public static final Key CONTACTS               = Key.of(1, "Contacts");

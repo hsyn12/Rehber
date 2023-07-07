@@ -6,45 +6,25 @@ import com.tr.hsyn.identity.Identity;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
-
 
 /**
- * Kimlik oluşturur
+ * The entity contract.
+ * Provides a name, and an ID for the entity.
  */
-public class Atom implements Identity, Entity {
+public interface Atom extends Identity, Entity {
 	
-	private final long   id;
-	private final String name;
-	
-	public Atom(long id, @NotNull String name) {
+	@Override
+	default @NotNull String getName() {
 		
-		this.id   = id;
-		this.name = name;
+		return getClass().getCanonicalName();
 	}
 	
 	@Override
-	public final @NotNull String getName() {return name;}
-	
-	@Override
-	public long getId() {return id;}
-	
-	@Override
-	public boolean equals(Object obj) {
-		
-		return obj instanceof Atom && id == ((Atom) obj).getId();
-	}
-	
-	@Override
-	public int hashCode() {return Objects.hash(id);}
+	default long getId() {return getName().hashCode();}
 	
 	@NotNull
-	@Override
-	public String toString() {
+	static Atom create(long id, @NotNull String name) {
 		
-		return "Atom{" +
-		       "id=" + id +
-		       ", name='" + name + '\'' +
-		       '}';
+		return new AtomImpl(id, name);
 	}
 }
