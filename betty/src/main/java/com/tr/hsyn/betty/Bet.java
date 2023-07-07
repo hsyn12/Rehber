@@ -9,22 +9,23 @@ import java.util.function.Consumer;
 
 
 /**
- * {@link Betty}'nin izleyeceği adımları tanımlar.
+ * Provides practical handling of code that is likely to produce errors.
  */
-public abstract class Bet<R> {
+public class Bet<R> {
 	
 	/**
-	 * Çalıştırılan işin hatası
+	 * The error if there is one.
 	 */
 	@Nullable
-	protected final Exception e;
+	protected final Exception exception;
 	/**
-	 * Çalıştırılan işin döndürdüğü nesne
+	 * Object to be returned from the job.
 	 */
 	@Nullable
-	protected final R         v;
+	protected final R         returnValue;
 	/**
-	 * Bu değişken {@code false} değerinde ise verilen iş çalıştırılmaz.
+	 * Indicates whether the job will run or not.
+	 * If this variable is {@code false}, the given job will not run.
 	 */
 	@Nullable
 	protected final Boolean   out;
@@ -39,77 +40,66 @@ public abstract class Bet<R> {
 		this(null, null, out);
 	}
 	
-	protected Bet(@Nullable final Exception e) {
+	protected Bet(@Nullable final Exception exception) {
 		
-		this(e, null, null);
+		this(exception, null, null);
 	}
 	
-	protected Bet(@Nullable final Exception e, boolean out) {
+	protected Bet(@Nullable final Exception exception, boolean out) {
 		
-		this(e, null, out);
+		this(exception, null, out);
 	}
 	
-	protected Bet(@Nullable R v) {
+	protected Bet(@Nullable R returnValue) {
 		
-		this(null, v, null);
+		this(null, returnValue, null);
 	}
 	
-	protected Bet(@Nullable R v, boolean out) {
+	protected Bet(@Nullable R returnValue, boolean out) {
 		
-		this(null, v, out);
+		this(null, returnValue, out);
 	}
 	
-	protected Bet(@Nullable final Exception e, @Nullable R v) {
+	protected Bet(@Nullable final Exception exception, @Nullable R returnValue) {
 		
-		this(e, v, null);
-	}
-	
-	protected Bet(@Nullable final Exception e, @Nullable R v, @Nullable Boolean out) {
-		
-		this.e   = e;
-		this.v   = v;
-		this.out = out;
+		this(exception, returnValue, null);
 	}
 	
 	/**
-	 * Verilen iş çalıştırılırken bir hata meydana gelse de gelmese de {@link #call(Runnable)}
-	 * metoduna yönlenerek her iki durumda da çalışması gereken kodun tanımlanmasını sağlar.
-	 * Bu metot düzgün bir akış için ilk metottur. (Yada {@link #care(Callable)})<br>
-	 * {@code care(Runnable)} --> {@link #call(Runnable)} --> {@link #onError(Consumer)}.<br>
-	 * Akış bu sıra ile ilerler.<br>
+	 * Creates a Bet.
 	 *
-	 * <ol>
-	 *    <li>{@code care(Runnable)} ile çalıştırılacak iş belirtilir</li>
-	 *    <li>Sonra {@link #call(Runnable)} metodu verilen iş tamamlandığında (hata olsa bile) çağrılır</li>
-	 *    <li>En son, verilen iş çalıştırılırken bir hata olmuşsa {@link #onError(Consumer)} metodu hata ile çağrılır. Hata olmadıysa çağrılmaz.</li>
-	 * </ol>
+	 * @param exception   exception
+	 * @param returnValue return value
+	 * @param out         out flag
+	 */
+	protected Bet(@Nullable final Exception exception, @Nullable R returnValue, @Nullable Boolean out) {
+		
+		this.exception   = exception;
+		this.returnValue = returnValue;
+		this.out         = out;
+	}
+	
+	/**
+	 * Executes the runnable.
 	 *
-	 * @param runnable Çalıştırılacak iş
-	 * @return Bet
+	 * @param runnable runnable to be executed
+	 * @return if the runnable executed then returns a new {@code Bet} object
+	 * 		that holds the result for the further processing chain.
+	 * 		If the runnable does not execute, then returns this Bet object.
+	 * 		To be able to execute the runnable, when creating this Bet object,
+	 * 		the constructor must take the {@code true} value for the {@code out} variable.
 	 */
 	@NotNull
 	public Bet<R> care(@NotNull final Runnable runnable) {
 		
-		if (out != null) {
-			
-			if (out) {
-				
-				Exception e = null;
-				
-				try {runnable.run();}
-				catch (Exception ex) {e = ex;}
-				
-				return new BetRun<>(e, null, true);
-			}
-		}
-		else {
+		if (out == null || out) {
 			
 			Exception e = null;
 			
 			try {runnable.run();}
 			catch (Exception ex) {e = ex;}
 			
-			return new BetRun<>(e, null, null);
+			return new Bet<>(e, null, out);
 		}
 		
 		return this;
@@ -203,7 +193,13 @@ public abstract class Bet<R> {
 	 * @param action İş
 	 * @return Bet
 	 */
-	public Bet<R> onSuccess(@NotNull final Runnable action) {return this;}
+	public Bet<R> onSuccess(@NotNull final Runnable action) {
+		
+		if (out == null || (out && exception == null))
+			action.run();
+		
+		return this;
+	}
 	
 	/**
 	 * Verilen iş hata üretmeden tamamlandıysa bu metoda verilen nesne sonuç ile çağrılır.
@@ -230,8 +226,8 @@ public abstract class Bet<R> {
 	@NotNull//Exeptional
 	public Bet<R> onError(@NotNull final Consumer<@NotNull Throwable> consumer) {
 		
-		if (e != null)
-			consumer.accept(e);
+		if (exception != null)
+			consumer.accept(exception);
 		
 		return this;
 	}

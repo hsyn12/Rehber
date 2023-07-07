@@ -14,7 +14,7 @@ public class BetCall<R> extends Bet<R> {
 		super(e, v, out);
 	}
 	
-	@Override 
+	@Override
 	public Bet<R> onSuccess(@NotNull final Consumer<R> consumer) {
 		
 		//- Eğer kontrol edilecek birşey varsa ve bu false ise çağrılmayacak
@@ -22,12 +22,12 @@ public class BetCall<R> extends Bet<R> {
 		
 		if (out != null) {
 			
-			if (out && e == null) consumer.accept(v);
+			if (out && exception == null) consumer.accept(returnValue);
 		}
 		else {
 			
-			if (e == null)
-				consumer.accept(v);
+			if (exception == null)
+				consumer.accept(returnValue);
 		}
 		
 		return this;

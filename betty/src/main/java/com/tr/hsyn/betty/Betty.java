@@ -11,8 +11,7 @@ import java.util.concurrent.Callable;
 
 
 /**
- * Betty. Kötü durum senaryosu işleyicisi.
- * Hata üretmesi muhtemel kodların pratik biçimde ele alınmasını sağlar.
+ * Betty. Worst case scenario handler.
  */
 @SuppressWarnings("UseOfSystemOutOrSystemErr")
 public class Betty<R> extends Bet<R> {
