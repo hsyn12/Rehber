@@ -7,7 +7,6 @@ import com.tr.hsyn.xlog.xlog;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -15,83 +14,94 @@ import java.util.function.Supplier;
 
 
 /**
- * Basit ve en temel fonksiyonları (fonksiyon nesnelerini (Functional Interfaces)) saklar ve erişim sağlar.
+ * Definition of the <strong>function holder</strong>.<br>
+ * The classes that implement this interface can hold and use function objects.<br>
+ * The stored functions are registered with {@link DataKey}.
+ * In this way, all accesses to the functions are safe and under control.
+ *
+ * @see DataKey
  */
 @SuppressWarnings("unchecked")
-public class FuncBuster {
-	
-	protected final Map<DataKey, Object> funcMap = new HashMap<>();
+public interface FuncBuster {
 	
 	/**
-	 * İstenen fonksiyon nesnesini döndürür.
+	 * The {@link Map} object that holds the function objects.
 	 *
-	 * @param key Nesnenin kayıtlı olduğu anahtar
-	 * @param <P> Fonksiyonun parametre türü
-	 * @param <R> Fonksiyonun dönüş türü
-	 * @return Verilen anahtarla kayıtlı {@link Function}, yoksa {@code null}
+	 * @return The {@link Map} object to hold the functions
+	 */
+	@NotNull
+	Map<DataKey, Object> getFuncMap();
+	
+	/**
+	 * Returns the function object for the given key.
+	 *
+	 * @param key data key of the function
+	 * @param <P> type of the parameter
+	 * @param <R> type of the return value
+	 * @return the function object or {@code null} if the key is not readable or does not exist.
 	 */
 	@Nullable
-	public <P, R> Function<P, R> getFunction(@NotNull DataKey key) {
+	default <P, R> Function<P, R> getFunction(@NotNull DataKey key) {
 		
-		if (key.isReadable()) return (Function<P, R>) funcMap.get(key);
+		if (key.isReadable()) return (Function<P, R>) getFuncMap().get(key);
 		else xlog.i("Data is not readable : %s", key);
 		
 		return null;
 	}
 	
 	/**
-	 * Parametre almayan, değer döndüren fonksiyon nesnesini döndürür.
+	 * Returns the supplier function object for the given key.
 	 *
-	 * @param key Nesnenin kayıtlı olduğu anahtar
-	 * @param <R> Fonksiyonun dönüş türü
-	 * @return Verilen anahtarla kayıtlı {@link Supplier}, yoksa {@code null}
+	 * @param key data key of the function
+	 * @param <R> type of the return value
+	 * @return the supplier function object or {@code null} if the key is not readable or does not exist.
 	 */
 	@Nullable
-	public <R> Supplier<R> getSupplier(@NotNull DataKey key) {
+	default <R> Supplier<R> getSupplier(@NotNull DataKey key) {
 		
-		if (key.isReadable()) return (Supplier<R>) funcMap.get(key);
+		if (key.isReadable()) return (Supplier<R>) getFuncMap().get(key);
 		else xlog.i("Data is not readable : %s", key);
 		
 		return null;
 	}
 	
 	/**
-	 * Parametre alan, değer döndürmeyen fonksiyon nesnesini döndürür.
+	 * Returns the consumer function object for the given key.
 	 *
-	 * @param key Nesnenin kayıtlı olduğu anahtar
-	 * @param <P> Fonksiyonun parametre türü
-	 * @return Verilen anahtarla kayıtlı {@link Consumer}, yoksa {@code null}
+	 * @param key data key of the function
+	 * @param <P> type of the parameter for the consumer function
+	 * @return the consumer function object or {@code null} if the key is not readable or does not exist.
 	 */
 	@Nullable
-	public <P> Consumer<P> getConsumer(@NotNull DataKey key) {
+	default <P> Consumer<P> getConsumer(@NotNull DataKey key) {
 		
-		if (key.isReadable()) return (Consumer<P>) funcMap.get(key);
+		if (key.isReadable()) return (Consumer<P>) getFuncMap().get(key);
 		else xlog.i("Data is not readable : %s", key);
 		
 		return null;
 	}
 	
 	/**
-	 * Parametre almayan ve değer döndürmeyen fonksiyon nesnesini döndürür.
+	 * Returns the runnable function object for the given key.
 	 *
-	 * @param key Nesnenin kayıtlı olduğu anahtar
-	 * @return Verilen anahtarla kayıtlı {@link Runnable}, yoksa {@code null}
+	 * @param key data key of the function
+	 * @return the runnable function object or {@code null} if the key is not readable or does not exist.
 	 */
 	@Nullable
-	public Runnable getRunnable(@NotNull DataKey key) {
+	default Runnable getRunnable(@NotNull DataKey key) {
 		
-		if (key.isReadable()) return (Runnable) funcMap.get(key);
+		if (key.isReadable()) return (Runnable) getFuncMap().get(key);
 		else xlog.i("Data is not readable : %s", key);
 		
 		return null;
 	}
 	
 	/**
-	 * Fonksiyon nesnesinin ilgili metodunu çağırır.
+	 * Calls the runnable function object for the given key.
 	 *
-	 * @param key Nesnenin kayıtlı olduğu anahtar
+	 * @param key data key of the function
 	 */
-	public void callRunnable(@NotNull DataKey key) {
+	default void callRunnable(@NotNull DataKey key) {
 		
 		if (key.isReadable()) {
 			
@@ -99,18 +109,19 @@ public class FuncBuster {
 			
 			if (func != null) func.run();
 		}
-		else xlog.i("Data is not writable : %s", key);
+		else xlog.i("Data is not readable : %s", key);
 	}
 	
 	/**
-	 * Fonksiyon nesnesinin ilgili metodunu çağırır.
+	 * Calls the supplier function object for the given key.
 	 *
-	 * @param key Nesnenin kayıtlı olduğu anahtar
-	 * @param <R> Dönüş türü
-	 * @return Çağrıdan elde edilen nesne
+	 * @param key data key of the function
+	 * @param <R> type of the return value
+	 * @return the returned value of the function object or {@code null} if the key is not readable
+	 * 		or does not exist.
 	 */
 	@Nullable
-	public <R> R callSupplier(@NotNull DataKey key) {
+	default <R> R callSupplier(@NotNull DataKey key) {
 		
 		if (key.isReadable()) {
 			
@@ -118,39 +129,40 @@ public class FuncBuster {
 			
 			if (func != null) return func.get();
 		}
-		else xlog.i("Data is not writable : %s", key);
+		else xlog.i("Data is not readable : %s", key);
 		
 		return null;
 	}
 	
 	/**
-	 * Fonksiyon nesnesinin ilgili metodunu çağırır.
+	 * Calls the consumer function object for the given key.
 	 *
-	 * @param key Nesnenin kayıtlı olduğu anahtar
-	 * @param p   Parametre değişkeni
-	 * @param <P> Parametre türü
+	 * @param key data key of the function
+	 * @param p   the parameter
+	 * @param <P> type of the parameter
 	 */
-	public <P> void callConsumer(@NotNull DataKey key, @Nullable P p) {
+	default <P> void callConsumer(@NotNull DataKey key, @Nullable P p) {
 		
 		if (key.isReadable()) {
 			
 			Consumer<P> func = getConsumer(key);
 			if (func != null) func.accept(p);
 		}
-		else xlog.i("Data is not writable : %s", key);
+		else xlog.i("Data is not readable : %s", key);
 	}
 	
 	/**
-	 * Fonksiyon nesnesinin ilgili metodunu çağırır.
+	 * Calls the function object for the given key.
 	 *
-	 * @param key Nesnenin kayıtlı olduğu anahtar
-	 * @param p   Parametre değişkeni
-	 * @param <P> Parametre türü
-	 * @param <R> Dönüş türü
-	 * @return Çağrılan metodun döndürdüğü nesne
+	 * @param key data key of the function
+	 * @param p   the parameter
+	 * @param <P> type of the parameter
+	 * @param <R> type of the return value
+	 * @return the returned value of the function object or {@code null} if the key is not readable
+	 * 		or does not exist.
 	 */
 	@Nullable
-	public <P, R> R callFunction(@NotNull DataKey key, @Nullable P p) {
+	default <P, R> R callFunction(@NotNull DataKey key, @Nullable P p) {
 		
 		if (key.isReadable()) {
 			
@@ -158,28 +170,34 @@ public class FuncBuster {
 			
 			if (func != null) return func.apply(p);
 		}
-		else xlog.i("Data is not writable : %s", key);
+		else xlog.i("Data is not readable : %s", key);
 		
 		return null;
 	}
 	
 	/**
-	 * Fonksiyonu kaydeder veya siler.
+	 * Stores or remove the function object for the given key.
 	 *
-	 * @param key  Nesnenin kayıt edileceği anahtar
-	 * @param func Fonksiyon nesnesi veya {@code null} (kayıtlı nesneyi silmek için)
-	 * @param <P>  Parametre türü
-	 * @param <R>  Dönüş türü
-	 * @return Kaydedilmek istenen fonksiyon {@code null} değilse kaydedilir ve önceki kayıtlı nesne döndürülür.
-	 * 		Kaydedilmek istenen fonksiyon {@code null} ise ve verilen anahtarla kayıtlı bir nesne varsa bu nesne silinir ve silinen nesne döner, kayıtlı nesne yoksa {@code null}
+	 * @param key  data key of the function
+	 * @param func function object to store or {@code null} to remove the existing function
+	 * @param <P>  type of the parameter
+	 * @param <R>  type of the return value
+	 * @return if the function to be registered is not {@code null},
+	 * 		it is saved,
+	 * 		and returns the earlier registered object or {@code null} if the key does not exist.
+	 * 		If the function to be registered is {@code null}
+	 * 		and there is an object registered with the given key,
+	 * 		that object is deleted,
+	 * 		and the deleted object is returned,
+	 * 		if there is no registered object then returns {@code null}
 	 */
 	@Nullable
-	public <P, R> Function<P, R> setFunction(@NotNull DataKey key, @Nullable Function<P, R> func) {
+	default <P, R> Function<P, R> setFunction(@NotNull DataKey key, @Nullable Function<P, R> func) {
 		
 		if (key.isWritable()) {
 			
-			if (func != null) return (Function<P, R>) funcMap.put(key, func);
-			if (getFunction(key) != null) return (Function<P, R>) funcMap.remove(key);
+			if (func != null) return (Function<P, R>) getFuncMap().put(key, func);
+			if (getFunction(key) != null) return (Function<P, R>) getFuncMap().remove(key);
 		}
 		else xlog.i("Data is not writable : %s", key);
 		
@@ -187,21 +205,27 @@ public class FuncBuster {
 	}
 	
 	/**
-	 * Verilen fonksiyon nesnesini kaydeder veya siler.
+	 * Stores or remove the supplier function object for the given key.
 	 *
-	 * @param key  Nesnenin kayıt edileceği anahtar
-	 * @param func Fonksiyon nesnesi veya {@code null} (kayıtlı nesneyi silmek için)
-	 * @param <R>  Dönüş türü
-	 * @return Kaydedilmek istenen fonksiyon {@code null} değilse kaydedilir ve önceki kayıtlı nesne döndürülür.
-	 * 		Kaydedilmek istenen fonksiyon {@code null} ise ve verilen anahtarla kayıtlı bir nesne varsa bu nesne silinir vesilinen nesne döner, kayıtlı nesne yoksa {@code null}
+	 * @param key  data key of the function
+	 * @param func function object to store or {@code null} to remove the existing function
+	 * @param <R>  type of the return value
+	 * @return if the function to be registered is not {@code null},
+	 * 		it is saved,
+	 * 		and returns the earlier registered object or {@code null} if the key does not exist.
+	 * 		If the function to be registered is {@code null}
+	 * 		and there is an object registered with the given key,
+	 * 		that object is deleted,
+	 * 		and the deleted object is returned,
+	 * 		if there is no registered object then returns {@code null}
 	 */
 	@Nullable
-	public <R> Supplier<R> setSupplier(@NotNull DataKey key, @Nullable Supplier<R> func) {
+	default <R> Supplier<R> setSupplier(@NotNull DataKey key, @Nullable Supplier<R> func) {
 		
 		if (key.isWritable()) {
 			
-			if (func != null) return (Supplier<R>) funcMap.put(key, func);
-			if (getFunction(key) != null) return (Supplier<R>) funcMap.remove(key);
+			if (func != null) return (Supplier<R>) getFuncMap().put(key, func);
+			if (getFunction(key) != null) return (Supplier<R>) getFuncMap().remove(key);
 		}
 		else xlog.i("Data is not writable : %s", key);
 		
@@ -209,21 +233,27 @@ public class FuncBuster {
 	}
 	
 	/**
-	 * Verilen fonksiyon nesnesini kaydeder veya siler.
+	 * Stores or remove the consumer function object for the given key.
 	 *
-	 * @param key  Nesnenin kayıt edileceği anahtar
-	 * @param func Fonksiyon nesnesi veya {@code null} (kayıtlı nesneyi silmek için)
-	 * @param <P>  Parametre türü
-	 * @return Kaydedilmek istenen fonksiyon {@code null} değilse kaydedilir ve önceki kayıtlı nesne döndürülür.
-	 * 		Kaydedilmek istenen fonksiyon {@code null} ise ve verilen anahtarla kayıtlı bir nesne varsa bu nesne silinir ve silinen nesne döner, kayıtlı nesne yoksa {@code null}
+	 * @param key  data key of the function
+	 * @param func function object to store or {@code null} to remove the existing function
+	 * @param <P>  type of the parameter
+	 * @return if the function to be registered is not {@code null},
+	 * 		it is saved,
+	 * 		and returns the earlier registered object or {@code null} if the key does not exist.
+	 * 		If the function to be registered is {@code null}
+	 * 		and there is an object registered with the given key,
+	 * 		that object is deleted,
+	 * 		and the deleted object is returned,
+	 * 		if there is no registered object then returns {@code null}
 	 */
 	@Nullable
-	public <P> Consumer<P> setConsumer(@NotNull DataKey key, @Nullable Consumer<P> func) {
+	default <P> Consumer<P> setConsumer(@NotNull DataKey key, @Nullable Consumer<P> func) {
 		
 		if (key.isWritable()) {
 			
-			if (func != null) return (Consumer<P>) funcMap.put(key, func);
-			if (getFunction(key) != null) return (Consumer<P>) funcMap.remove(key);
+			if (func != null) return (Consumer<P>) getFuncMap().put(key, func);
+			if (getFunction(key) != null) return (Consumer<P>) getFuncMap().remove(key);
 		}
 		else xlog.i("Data is not writable : %s", key);
 		
@@ -231,20 +261,26 @@ public class FuncBuster {
 	}
 	
 	/**
-	 * Verilen fonksiyon nesnesini kaydeder veya siler.
+	 * Stores or remove the runnable function object for the given key.
 	 *
-	 * @param key  Nesnenin kayıt edileceği anahtar
-	 * @param func Fonksiyon nesnesi veya {@code null} (kayıtlı nesneyi silmek için)
-	 * @return Kaydedilmek istenen fonksiyon {@code null} değilse kaydedilir ve önceki kayıtlı nesne döndürülür (Kayıt yoksa {@code null}).
-	 * 		Kaydedilmek istenen fonksiyon {@code null} ise ve verilen anahtarla kayıtlı bir nesne varsa bu nesne silinir ve silinen nesne döner, kayıtlı nesne yoksa {@code null}
+	 * @param key  data key of the function
+	 * @param func function object to store or {@code null} to remove the existing function
+	 * @return if the function to be registered is not {@code null},
+	 * 		it is saved,
+	 * 		and returns the earlier registered object or {@code null} if the key does not exist.
+	 * 		If the function to be registered is {@code null}
+	 * 		and there is an object registered with the given key,
+	 * 		that object is deleted,
+	 * 		and the deleted object is returned,
+	 * 		if there is no registered object then returns {@code null}
 	 */
 	@Nullable
-	public Runnable setRunnable(@NotNull DataKey key, @Nullable Runnable func) {
+	default Runnable setRunnable(@NotNull DataKey key, @Nullable Runnable func) {
 		
 		if (key.isWritable()) {
 			
-			if (func != null) return (Runnable) funcMap.put(key, func);
-			if (getFunction(key) != null) return (Runnable) funcMap.remove(key);
+			if (func != null) return (Runnable) getFuncMap().put(key, func);
+			if (getFunction(key) != null) return (Runnable) getFuncMap().remove(key);
 		}
 		else xlog.i("Data is not writable : %s", key);
 		
