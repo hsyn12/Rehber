@@ -22,6 +22,7 @@ import java.util.function.Supplier;
  * @see DataKey
  */
 @SuppressWarnings("unchecked")
+@FunctionalInterface
 public interface FuncBuster {
 	
 	/**

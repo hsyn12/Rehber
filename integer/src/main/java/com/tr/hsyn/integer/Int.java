@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Holds an integer value like {@link java.lang.Integer}.
  */
+@FunctionalInterface
 public interface Int {
 	
 	/**

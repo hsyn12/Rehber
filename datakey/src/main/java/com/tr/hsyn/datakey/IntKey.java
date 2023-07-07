@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Int data key.<br>
- * Provides the key of data by int value.<br>
+ * Provides the key of data by integer value.<br>
  */
 public final class IntKey extends Integer implements DataKey {
 	
