@@ -292,7 +292,7 @@ public final class Stringx {
 	}
 	
 	/**
-	 * Tests if a string has another string.
+	 * Tests if a string has another string or equal to others.
 	 * The spaces don't break the match.
 	 * <p>
 	 * For example, {@code '543'} compared to {@code ' 5 4 3 '} yields {@code true}.
@@ -538,6 +538,13 @@ public final class Stringx {
 		return stringBuilder.toString();
 	}
 	
+	/**
+	 * Repeats the given character the given number of times.
+	 *
+	 * @param c     character
+	 * @param count number of times
+	 * @return repeated character
+	 */
 	@NotNull
 	public static String repeat(char c, int count) {
 		
@@ -702,13 +709,13 @@ public final class Stringx {
 	}
 	
 	/**
-	 * Deletes all characters in the string except the number.
+	 * Removes all characters in the string except the number.
 	 *
 	 * @param str string
 	 * @return a contiguous no spaces string consisting only of numbers. Empty string if no number exists.
 	 */
 	@NotNull
-	public static String trimNonDigits(@NotNull String str) {
+	public static String removeAllNonDigits(@NotNull String str) {
 		
 		return str.replaceAll("[^0-9]", "");
 	}

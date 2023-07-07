@@ -269,7 +269,7 @@ public class PhoneNumbers {
 	@NotNull
 	public static String formatNumber(@NotNull String number, int size) {
 		
-		number = Stringx.trimNonDigits(number);
+		number = Stringx.removeAllNonDigits(number);
 		
 		if (number.length() <= size) return number;
 		
@@ -365,7 +365,7 @@ public class PhoneNumbers {
 		
 		if (isPhoneNumber(number)) {
 			
-			number = Stringx.trimNonDigits(number);
+			number = Stringx.removeAllNonDigits(number);
 			StringBuilder builder = new StringBuilder();
 			
 			for (int i = 0; i < number.length() - 4; i++) {
