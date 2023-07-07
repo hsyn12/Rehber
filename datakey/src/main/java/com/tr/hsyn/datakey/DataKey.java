@@ -23,7 +23,7 @@ public interface DataKey extends AccessState, Int {
 	 *
 	 * @param key  key value
 	 * @param name name of the data/key
-	 * @return new data key with read and write access
+	 * @return new data key with read and write access right
 	 */
 	@NotNull
 	static DataKey of(int key, @NotNull String name) {
@@ -37,7 +37,7 @@ public interface DataKey extends AccessState, Int {
 	 * @param key      key value
 	 * @param name     name of the data/key
 	 * @param readable read access right
-	 * @return new data key with write access
+	 * @return new data key with write access right
 	 */
 	@NotNull
 	static DataKey of(int key, @NotNull String name, boolean readable) {
