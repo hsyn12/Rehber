@@ -6,6 +6,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 
+/**
+ * Provides more functional approach to the boolean objects.
+ */
 public class Bool implements Any<Boolean> {
 	
 	public static final     Bool    FALSE = new Bool();
@@ -81,6 +84,26 @@ public class Bool implements Any<Boolean> {
 	}
 	
 	/**
+	 * Calls the runnable if the object is true.
+	 *
+	 * @param runnable runnable
+	 */
+	public void ifTrue(Runnable runnable) {
+		
+		if (bool()) runnable.run();
+	}
+	
+	/**
+	 * Calls the runnable if the object is false.
+	 *
+	 * @param runnable runnable
+	 */
+	public void ifFalse(Runnable runnable) {
+		
+		if (!bool()) runnable.run();
+	}
+	
+	/**
 	 * Creates a new Bool instance.
 	 *
 	 * @param value value
@@ -134,5 +157,11 @@ public class Bool implements Any<Boolean> {
 	public static <T> Bool of(T value) {
 		
 		return of(value != null);
+	}
+	
+	public static void main(String[] args) {
+		
+		Bool bool = Bool.TRUE;
+		
 	}
 }
