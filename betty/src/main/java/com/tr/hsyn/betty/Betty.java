@@ -4,15 +4,29 @@ package com.tr.hsyn.betty;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 
 
 /**
- * Provides practical handling of code that is likely to produce errors.
+ * Provides practical handling of code that is likely to produce errors.<br><br>
+ *
+ * <pre>
+ * Runnable runnable1 = () -> {throw new IllegalArgumentException("runnable1");};
+ * Runnable runnable2 = () -> System.out.println("runnable2");
+ * String   name      = "Betty";
+ *
+ * var betty = Betty.bet(!name.isBlank())// control point. This is optional
+ * 		.care(runnable1) // error part. This is the work
+ * 		.call(runnable2) // direct call. This is optional
+ * 		.onSuccess(() -> System.out.println("success1"))
+ * 		.onError((e) -> System.out.println("Error1 :" + e));
+ *
+ * System.out.println(betty);
+ * // runnable2
+ * // Error1 :java.lang.IllegalArgumentException: runnable1
+ * // Betty{exception=java.lang.IllegalArgumentException: runnable1, returnValue=null, checkOut=true}
+ * </pre>
  */
 public class Betty<R> {
 	
@@ -33,43 +47,68 @@ public class Betty<R> {
 	@Nullable
 	protected final Boolean   checkOut;
 	
+	/**
+	 * Creates a new {@code Betty} instance.
+	 */
 	protected Betty() {
 		
 		this(null, null, null);
 	}
 	
+	/**
+	 * Creates a new {@code Betty} instance.
+	 *
+	 * @param checkOut control variable. If this variable is {@code false}, the job will not run.
+	 */
 	protected Betty(boolean checkOut) {
 		
 		this(null, null, checkOut);
 	}
 	
+	/**
+	 * Creates a new {@code Betty} instance.
+	 *
+	 * @param exception exception
+	 */
 	protected Betty(@Nullable final Exception exception) {
 		
 		this(exception, null, null);
 	}
 	
+	/**
+	 * Creates a new {@code Betty} instance.
+	 *
+	 * @param exception exception
+	 * @param checkOut  control variable. If this variable is {@code false}, the job will not run.
+	 */
 	protected Betty(@Nullable final Exception exception, boolean checkOut) {
 		
 		this(exception, null, checkOut);
 	}
 	
+	/**
+	 * Creates a new {@code Betty} instance.
+	 *
+	 * @param returnValue return value
+	 */
 	protected Betty(@Nullable R returnValue) {
 		
 		this(null, returnValue, null);
 	}
 	
-	protected Betty(@Nullable R returnValue, boolean checkOut) {
-		
-		this(null, returnValue, checkOut);
-	}
-	
+	/**
+	 * Creates a new {@code Betty} instance.
+	 *
+	 * @param exception   exception
+	 * @param returnValue return value
+	 */
 	protected Betty(@Nullable final Exception exception, @Nullable R returnValue) {
 		
 		this(exception, returnValue, null);
 	}
 	
 	/**
-	 * Creates a Bet.
+	 * Creates a new {@code Betty} instance.
 	 *
 	 * @param exception   exception
 	 * @param returnValue return value
@@ -80,6 +119,17 @@ public class Betty<R> {
 		this.exception   = exception;
 		this.returnValue = returnValue;
 		this.checkOut    = checkOut;
+	}
+	
+	@NotNull
+	@Override
+	public String toString() {
+		
+		return "Betty{" +
+		       "exception=" + exception +
+		       ", returnValue=" + returnValue +
+		       ", checkOut=" + checkOut +
+		       '}';
 	}
 	
 	/**
@@ -195,7 +245,7 @@ public class Betty<R> {
 	 */
 	public Betty<R> onSuccess(@NotNull final Runnable action) {
 		
-		if (checkOut == null || (checkOut && exception == null))
+		if (exception == null && (checkOut == null || checkOut))
 			action.run();
 		
 		return this;
@@ -236,17 +286,38 @@ public class Betty<R> {
 		return this;
 	}
 	
+	/**
+	 * Creates a new {@code Betty} instance.
+	 *
+	 * @param runnable runnable
+	 * @param <R>      return type
+	 * @return this Bet object
+	 */
 	@NotNull
 	public static <R> Betty<R> bet(@NotNull final Runnable runnable) {
 		
 		return new Betty<R>().care(runnable);
 	}
 	
+	/**
+	 * Creates a new {@code Betty} instance.
+	 *
+	 * @param out control variable
+	 * @param <R> return type
+	 * @return this Bet object
+	 */
 	public static <R> Betty<R> bet(boolean out) {
 		
 		return new Betty<R>().checkOut(out);
 	}
 	
+	/**
+	 * Creates a new {@code Betty} instance.
+	 *
+	 * @param callable callable
+	 * @param <R>      return type
+	 * @return new Bet object
+	 */
 	@NotNull
 	public static <R> Betty<R> bet(@NotNull final Callable<R> callable) {
 		
@@ -255,22 +326,17 @@ public class Betty<R> {
 	
 	public static void main(String... args) {
 		
-		List<Long> list = new ArrayList<>();
-		Runnable runnable = () -> {
-			
-			Long l = Collections.max(list);
-			
-			System.out.printf("Max element : %d\n", l);
-		};
-		Runnable runnable2 = () -> {System.out.println("runnable2 run");};
-		Runnable runnable3 = () -> {System.out.println("runnable3 run");};
-		Runnable runnable4 = () -> {System.out.println("runnable4 run");};
+		Runnable runnable1 = () -> {throw new IllegalArgumentException("runnable1");};
+		Runnable runnable2 = () -> System.out.println("runnable2");
+		String   name      = "Betty";
 		
+		var betty = Betty.bet(!name.isBlank())// control point
+				.care(runnable1) // error part
+				.call(runnable2) // direct call
+				.onSuccess(() -> System.out.println("success1"))
+				.onError((e) -> System.out.println("Error1 :" + e));
 		
-		Betty.bet(runnable)
-				.call(runnable2)
-				.onError((e) -> {System.out.println("Şakir göğüs çiğdem error " + e);});
-		
+		System.out.println(betty);
 		
 	}
 }
