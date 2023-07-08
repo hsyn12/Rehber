@@ -77,6 +77,13 @@ public class MostCallsActivity extends ActivityView {
 		
 	}
 	
+	@Override
+	public void onBackPressed() {
+		
+		super.onBackPressed();
+		Bungee.slideUp(this);
+	}
+	
 	private void setTitle() {
 		
 		Toolbar toolbar = findView(R.id.most_calls_toolbar);
@@ -183,13 +190,6 @@ public class MostCallsActivity extends ActivityView {
 		}
 		
 		hideProgress();
-	}
-	
-	@Override
-	public void onBackPressed() {
-		
-		super.onBackPressed();
-		Bungee.slideUp(this);
 	}
 	
 	@NotNull
