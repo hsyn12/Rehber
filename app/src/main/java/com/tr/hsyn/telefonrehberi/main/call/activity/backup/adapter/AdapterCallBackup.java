@@ -35,6 +35,25 @@ public final class AdapterCallBackup extends RecyclerView.Adapter<AdapterCallBac
 		this.deleteListener = deleteListener;
 	}
 	
+	@NonNull
+	@Override
+	public final Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+		
+		return new Holder(LayoutInflater.from(parent.getContext()).inflate(R.layout.backup_item, parent, false), selectListener, deleteListener);
+	}
+	
+	@Override
+	public final void onBindViewHolder(@NonNull Holder holder, int position) {
+		
+		holder.bind(callBackups.get(position));
+	}
+	
+	@Override
+	public final int getItemCount() {
+		
+		return callBackups.size();
+	}
+	
 	public List<Backup<Call>> getCallBackups() {
 		
 		return callBackups != null ? callBackups : new ArrayList<>(0);
@@ -64,7 +83,7 @@ public final class AdapterCallBackup extends RecyclerView.Adapter<AdapterCallBac
 	
 	public void removeBackup(int index) {
 		
-		if (Lister.isIndex(this.callBackups, index)) {
+		if (Lister.isValidIndex(this.callBackups, index)) {
 			
 			this.callBackups.remove(index);
 			
@@ -75,25 +94,6 @@ public final class AdapterCallBackup extends RecyclerView.Adapter<AdapterCallBac
 	public Backup<Call> getBackup(int index) {
 		
 		return callBackups.get(index);
-	}
-	
-	@NonNull
-	@Override
-	public final Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-		
-		return new Holder(LayoutInflater.from(parent.getContext()).inflate(R.layout.backup_item, parent, false), selectListener, deleteListener);
-	}
-	
-	@Override
-	public final void onBindViewHolder(@NonNull Holder holder, int position) {
-		
-		holder.bind(callBackups.get(position));
-	}
-	
-	@Override
-	public final int getItemCount() {
-		
-		return callBackups.size();
 	}
 	
 	static final class Holder extends RecyclerView.ViewHolder {

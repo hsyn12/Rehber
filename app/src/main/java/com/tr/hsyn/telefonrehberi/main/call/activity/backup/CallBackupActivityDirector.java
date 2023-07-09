@@ -23,6 +23,18 @@ public abstract class CallBackupActivityDirector extends CallBackupActivitySelec
 	protected abstract List<Call> getCallLogCalls();
 	
 	@Override
+	protected void deleteBackup(int index) {
+		
+		//- Hem seçilerek hem de ikona dokunma olayı gerçekleşebileceği için bunu burada da kaydetmemiz gerek
+		selectedBackup = index;
+		
+		if (Lister.isValidIndex(adapter.getCallBackups(), index)) {
+			
+			deleteBackup(getSelectedBackup().getName());
+		}
+	}
+	
+	@Override
 	protected void addNewBackup() {
 		
 		if (callBackupDirectory == null) {
@@ -72,18 +84,6 @@ public abstract class CallBackupActivityDirector extends CallBackupActivitySelec
 		else {
 			
 			xlog.i("Yedek oluşturma işlemi devam ederken yeni bir yedek oluşturma isteği kabul edilmiyor");
-		}
-	}
-	
-	@Override
-	protected void deleteBackup(int index) {
-		
-		//- Hem seçilerek hem de ikona dokunma olayı gerçekleşebileceği için bunu burada da kaydetmemiz gerek
-		selectedBackup = index;
-		
-		if (Lister.isIndex(adapter.getCallBackups(), index)) {
-			
-			deleteBackup(getSelectedBackup().getName());
 		}
 	}
 	
