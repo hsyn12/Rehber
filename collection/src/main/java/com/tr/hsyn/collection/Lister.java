@@ -496,6 +496,45 @@ public final class Lister {
 		return list != null && !list.isEmpty();
 	}
 	
+	/**
+	 * Returns the count of the given item in the given list.
+	 *
+	 * @param list list
+	 * @param item item
+	 * @param <T>  element type
+	 * @return count
+	 */
+	public static <T> long count(@NotNull Iterable<T> list, T item) {
+		
+		long count = 0L;
+		
+		for (T t : list)
+			if (t.equals(item)) count++;
+		
+		return count;
+	}
+	
+	/**
+	 * Returns the count of the given item in the given list.
+	 *
+	 * @param list   list
+	 * @param item   item
+	 * @param mapper function to extract the specific information from the item to count its equality.
+	 * @param <T>    element type
+	 * @param <R>    return type
+	 * @return count
+	 */
+	public static <T, R> long count(@NotNull Iterable<T> list, @NotNull T item, @NotNull Function<T, R> mapper) {
+		
+		long count = 0L;
+		R    r     = mapper.apply(item);
+		
+		for (T t : list)
+			if (mapper.apply(t).equals(r)) count++;
+		
+		return count;
+	}
+	
 	public interface IntArray {
 		
 		static boolean contains(int @NotNull [] array, int value) {
