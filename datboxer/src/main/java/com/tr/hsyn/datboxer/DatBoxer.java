@@ -13,19 +13,18 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 
+/**
+ * Object Box.<br>
+ * Implements {@link Objext} interface and can hold data and be accessed by key.
+ */
 @SuppressWarnings("unchecked")
 public class DatBoxer implements Objext {
 	
 	/**
-	 * Object Box.<br>
-	 * Alt sınıfların kendine özel bilgiler saklaması için protected kalmalı.
+	 * Data storage.
+	 * Must remain protected for the subclasses to store own private information.
 	 */
 	protected final Map<DataKey, Object> datamap = new HashMap<>();
-	
-	public <T> T call(DataKey key, Object... args) {
-		
-		return null;
-	}
 	
 	@Override
 	@Nullable
@@ -106,6 +105,7 @@ public class DatBoxer implements Objext {
 		return 0;
 	}
 	
+	@Override
 	public long getLong(@NotNull DataKey key) {
 		
 		if (key.isReadable()) {
@@ -135,7 +135,7 @@ public class DatBoxer implements Objext {
 	@NotNull
 	public Set<DataKey> keySet() {
 		
-		return datamap.keySet().stream().filter(key -> key.isReadable() || key.isWritable()).collect(Collectors.toSet());
+		return datamap.keySet().stream().filter(key -> key.isReadable() && key.isWritable()).collect(Collectors.toSet());
 	}
 	
 	@Override

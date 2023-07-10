@@ -10,70 +10,77 @@ import java.util.Set;
 
 
 /**
- * Veri saklayıcısı.<br>
- * Verileri bir anahtar ile saklar ve aynı anahtar ile erişim sağlar.
+ * An advanced object that can hold data and can be accessed by key.
+ * The accessing the data by {@link DataKey} and under control.
  *
  * @see DataKey
  */
 public interface Objext {
 	
 	/**
-	 * Kayıtlı veriyi döndürür.
+	 * Returns the data for the given key.
+	 * To be able to read the data, the key must be readable.
 	 *
-	 * @param key Anahtar
-	 * @param <T> Kayıtlı veri türü
-	 * @return Veri, yoksa {@code null}
+	 * @param key key of the data
+	 * @param <T> data type
+	 * @return the data
 	 */
 	<T> T getData(@NotNull DataKey key);
 	
 	/**
-	 * Veriyi hem saklamayı hem silmeyi sağlar.
+	 * Adds or remove data for the given key.
+	 * To be able to write the data, the key must be writable.
 	 *
-	 * @param key  Anahtar
-	 * @param data Veri
-	 * @param <T>  Veri türü
-	 * @return Eğer veri {@code null} değilse kaydedilir ve aynı yerde saklanan önceki veri döndürülür.
-	 * 		Daha önce veri kaydedilmemişse {@code null} döner.<br>
-	 * 		Eğer veri {@code null} ise ve verilen anahtarla bir kayıt tutuluyorsa bu kayıt silinir ve silinen kayıt döndürülür.
+	 * @param key  key of the data
+	 * @param data data to be added or removed
+	 * @param <T>  data type
+	 * @return If the given data is not null, it is stored and returns the earlier data.
+	 * 		If the given data is null, and exists the data for the given key,
+	 * 		it is removed and returns the removed data.
 	 */
 	<T> T setData(@NotNull DataKey key, @Nullable T data);
 	
 	/**
-	 * Bool veriler için {@code null} kontrolü yapar.
+	 * Returns the boolean value of the given key.
+	 * To be able to read the data, the key must be readable.
 	 *
-	 * @param key Anahtar
-	 * @return Eğer istenen veri yoksa {@code false}, varsa bool veri
+	 * @param key key of the data
+	 * @return {@code false} if the data is null or data value.
 	 */
 	boolean getBool(@NotNull DataKey key);
 	
 	/**
-	 * Bool veriler için {@code null} kontrolü yapar.
+	 * Returns the boolean value of the given key.
+	 * To be able to read the data, the key must be readable.
 	 *
-	 * @param key          Anahtar
-	 * @param defaultValue Verilen anahtarla kayıtlı bir veri yoksa döndürülecek değer
-	 * @return Eğer istenen veri yoksa varsayılan değer, varsa bool veri
+	 * @param key          key of the data
+	 * @param defaultValue default value if the data is null
+	 * @return default value if the data is null or data value
 	 */
 	boolean getBool(@NotNull DataKey key, boolean defaultValue);
 	
 	/**
-	 * Integer veriler için {@code null} kontrolü yapar.
+	 * Returns the int value of the given key.
+	 * To be able to read the data, the key must be readable.
 	 *
-	 * @param key          Anahtar
-	 * @param defaultValue Verilen anahtarla kayıtlı bir veri yoksa döndürülecek değer
-	 * @return Eğer istenen veri yoksa varsayılan değer, varsa int veri
+	 * @param key          key of the data
+	 * @param defaultValue default value if the data is null
+	 * @return default value if the data is null or data value
 	 */
 	int getInt(@NotNull DataKey key, int defaultValue);
 	
 	/**
-	 * Returns the int value of the given key.
+	 * Returns the long value of the given key.
+	 * To be able to read the data, the key must be readable.
 	 *
-	 * @param key Key
-	 * @return Int or {@code 0}
+	 * @param key key of the data
+	 * @return default value if the data is null or data value. The default value is {@code 0L}.
 	 */
 	int getInt(@NotNull DataKey key);
 	
 	/**
 	 * Returns the long value of the given key.
+	 * To be able to read the data, the key must be readable.
 	 *
 	 * @param key Key
 	 * @return Long or {@code 0L}
@@ -81,24 +88,25 @@ public interface Objext {
 	long getLong(@NotNull DataKey key);
 	
 	/**
-	 * Long veriler için {@code null} kontrolü yapar.
+	 * Returns the long value of the given key.
+	 * To be able to read the data, the key must be readable.
 	 *
-	 * @param key          Anahtar
-	 * @param defaultValue Verilen anahtarla kayıtlı bir veri yoksa döndürülecek değer
-	 * @return Eğer istenen veri yoksa varsayılan değer, varsa long veri
+	 * @param key          key of the data
+	 * @param defaultValue default value if the data is null
+	 * @return default value if the data is null or data value
 	 */
 	long getLong(@NotNull DataKey key, long defaultValue);
 	
 	/**
-	 * @return Tüm okunabilir yada yazılabilir veri anahtarları
+	 * @return All readable and writable keys.
 	 */
 	Set<DataKey> keySet();
 	
 	/**
-	 * Verilen anahtarla kayıtlı bir veri olup olmadığını kontrol eder.
+	 * Checks if the given key exists.
 	 *
-	 * @param key Veri anahtarı
-	 * @return Anahtarda okuma yetkisi varsa ve bu anahtarla bir veri kayıtlıysa {@code true}, aksi {@code false}
+	 * @param key key
+	 * @return {@code true} if the key is readable and exists.
 	 */
 	boolean exist(@NotNull DataKey key);
 	

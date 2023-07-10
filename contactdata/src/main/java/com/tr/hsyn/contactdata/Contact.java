@@ -13,7 +13,7 @@ import java.util.Objects;
 
 
 /**
- * Rehberdeki bir kişiyi temsil eder.
+ * Represents a contact in the contacts.
  */
 @Keep
 public class Contact extends DatBoxer implements Identity {
