@@ -1,7 +1,7 @@
 package com.tr.hsyn.telefonrehberi.main.code.page.contacts;
 
 
-import com.tr.hsyn.collection.Editor;
+import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.page.ListEditor;
 import com.tr.hsyn.perfectsort.PerfectSort;
@@ -30,7 +30,7 @@ public abstract class FragmentContactListEditor extends FragmentPageList impleme
 	@Override
 	public Contact deleteItem(int index) {
 		
-		@org.jetbrains.annotations.Nullable Contact contact = Editor.remove(getList(), index);
+		@org.jetbrains.annotations.Nullable Contact contact = Lister.remove(getList(), index);
 		
 		if (contact != null) {
 			

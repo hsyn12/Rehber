@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 public final class Lister {
 	
 	/**
-	 * Checks if the given list contains the given value.
+	 * Checks if the given list has the given value.
 	 *
 	 * @param list  list
 	 * @param value value
@@ -515,16 +515,19 @@ public final class Lister {
 	}
 	
 	/**
-	 * Returns the count of the given item in the given list.
+	 * Counts an item in a list.
 	 *
 	 * @param list   list
 	 * @param item   item
 	 * @param mapper function to extract the specific information from the item to count its equality.
+	 *               If this function is {@code null} the items are compared by their equality.
 	 * @param <T>    element type
 	 * @param <R>    return type
 	 * @return count
 	 */
-	public static <T, R> long count(@NotNull Iterable<T> list, @NotNull T item, @NotNull Function<T, R> mapper) {
+	public static <T, R> long count(@NotNull Iterable<T> list, @NotNull T item, @Nullable Function<T, R> mapper) {
+		
+		if (mapper == null) return count(list, item);
 		
 		long count = 0L;
 		R    r     = mapper.apply(item);
@@ -533,6 +536,23 @@ public final class Lister {
 			if (mapper.apply(t).equals(r)) count++;
 		
 		return count;
+	}
+	
+	/**
+	 * Removes the given item at the given index.
+	 * This action never throws an {@link IndexOutOfBoundsException}.
+	 *
+	 * @param list  list
+	 * @param index index
+	 * @param <T>   element type
+	 * @return removed item or {@code null}
+	 */
+	@Nullable
+	public static <T> T remove(List<T> list, int index) {
+		
+		if (isValidIndex(list, index)) return list.remove(index);
+		
+		return null;
 	}
 	
 	public interface IntArray {
