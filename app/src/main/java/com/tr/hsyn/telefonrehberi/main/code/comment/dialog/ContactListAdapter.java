@@ -1,8 +1,6 @@
 package com.tr.hsyn.telefonrehberi.main.code.comment.dialog;
 
 
-import static com.tr.hsyn.telefonrehberi.main.code.page.adapter.ContactAdapter.getLetter;
-
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -16,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.contactdata.Contact;
+import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.textdrawable.TextDrawable;
 
@@ -60,7 +59,7 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
 					.beginConfig()
 					.useFont(ResourcesCompat.getFont(holder.itemView.getContext(), com.tr.hsyn.resfont.R.font.z))
 					.endConfig()
-					.buildRound(getLetter(contact.getName()), color);
+					.buildRound(Stringx.getLetter(contact.getName()), color);
 			
 			holder.image.setImageDrawable(image);
 		}

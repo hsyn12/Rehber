@@ -85,7 +85,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> 
 					.beginConfig()
 					.useFont(ResourcesCompat.getFont(holder.itemView.getContext(), com.tr.hsyn.resfont.R.font.z))
 					.endConfig()
-					.buildRound(getLetter(contact.getName()), color);
+					.buildRound(Stringx.getLetter(contact.getName()), color);
 			
 			holder.image.setImageDrawable(image);
 		}

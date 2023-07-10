@@ -2,7 +2,6 @@ package com.tr.hsyn.telefonrehberi.main.dev.atom;
 
 
 import com.tr.hsyn.collection.Lister;
-import com.tr.hsyn.counter.Counter;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -35,8 +34,7 @@ public class Ranker<T> {
 	 */
 	public Map<Long, T> makeRank() {
 		
-		Map<Long, T> ranks   = new HashMap<>();
-		Counter<T>   counter = new Counter<>(list);
+		Map<Long, T> ranks = new HashMap<>();
 		
 		for (int i = 0; i < list.size(); i++) {
 			
@@ -58,8 +56,7 @@ public class Ranker<T> {
 	 */
 	public <X> Map<Long, List<T>> makeRank(@NotNull Function<T, X> mapper) {
 		
-		Map<Long, List<T>> ranks   = new HashMap<>();
-		var                counter = new Counter<>(list);
+		Map<Long, List<T>> ranks = new HashMap<>();
 		
 		for (int i = 0; i < list.size(); i++) {
 			

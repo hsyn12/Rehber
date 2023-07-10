@@ -8,11 +8,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class PriorityThreadFactory implements ThreadFactory {
 	
+	private static final AtomicInteger poolNumber   = new AtomicInteger(1);
 	private final        int           priority;
 	private final        boolean       daemon;
 	private final        String        namePrefix;
 	private final        AtomicInteger threadNumber = new AtomicInteger(1);
-	private static final AtomicInteger poolNumber   = new AtomicInteger(1);
 	
 	public PriorityThreadFactory(int priority) {
 		

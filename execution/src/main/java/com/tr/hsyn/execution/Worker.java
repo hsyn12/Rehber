@@ -1,6 +1,8 @@
 package com.tr.hsyn.execution;
 
 
+import static com.tr.hsyn.executors.Executors.NORM_PRIORITY_EXECUTOR;
+
 import com.tr.hsyn.executors.MainExecutor;
 import com.tr.hsyn.executors.MinExecutor;
 import com.tr.hsyn.executors.NormExecutor;
@@ -16,7 +18,7 @@ import java.util.function.Consumer;
 /**
  * Defines the work that will run on the background.
  *
- * @param <T>
+ * @param <T> return type
  */
 public class Worker<T> implements Work<T> {
 	
@@ -119,7 +121,7 @@ public class Worker<T> implements Work<T> {
 		catch (Exception e) {
 			
 			ex = e;
-			xlog.e(e);
+			xlog.w(e);
 		}
 		
 		T         finalResult = result;
@@ -131,14 +133,16 @@ public class Worker<T> implements Work<T> {
 		}
 		else {
 			
-			if (onSuccess != null) {
+			if (ex == null && onSuccess != null) {
 				
 				MainExecutor.run(() -> onSuccess.accept(finalResult));
 			}
-			
-			if (finalEx != null && onError != null) {
+			else {
 				
-				MainExecutor.run(() -> onError.accept(finalEx));
+				if (finalEx != null && onError != null) {
+					
+					MainExecutor.run(() -> onError.accept(finalEx));
+				}
 			}
 		}
 		
@@ -146,15 +150,28 @@ public class Worker<T> implements Work<T> {
 	}
 	
 	@NotNull
-	public static <T> Worker<T> on(@NotNull Callable<T> callable) {
+	static <T> Worker<T> on(@NotNull Callable<T> callable) {
 		
 		return new Worker<>(callable);
 	}
 	
 	@NotNull
-	public static <T> Worker<T> on(@NotNull Runnable runnable) {
+	static <T> Worker<T> on(@NotNull Runnable runnable) {
 		
 		return new Worker<>(runnable);
+	}
+	
+	public static void main(String[] args) {
+		
+		Runnable r = () -> System.out.println("work");
+		
+		Work.on(r)
+				.onError(e -> System.out.println("Error : " + e))
+				.onSuccess(n -> System.out.println("Success : " + n))
+				.execute();
+		
+		
+		NORM_PRIORITY_EXECUTOR.execute(() -> System.out.println("work"));
 	}
 	
 }

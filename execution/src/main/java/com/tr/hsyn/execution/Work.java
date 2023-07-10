@@ -11,7 +11,15 @@ import java.util.function.Consumer;
 /**
  * Defines a work to be executed on a background thread,
  * and take the result on the main thread.
- * The result and the exception are on the main thread.
+ * The result and the exception are on the main thread.<br><br>
+ *
+ * <pre>
+ * Runnable r = () -> System.out.println("work");
+ * Work.on(r)
+ *    .onError(e -> System.out.println("Error : " + e))
+ *    .onSuccess(n -> System.out.println("Success : " + n))
+ *    .execute();
+ * </pre>
  *
  * @param <T> return type
  */

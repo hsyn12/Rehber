@@ -15,6 +15,5 @@ public class Black extends BlackTower {
 		
 		super.onCreate();
 		
-		
 	}
 }

@@ -14,14 +14,14 @@ import java.util.concurrent.TimeUnit;
 public interface MinExecutor extends ExExecutor, Scheduler {
 	
 	/**
-	 * Executes the command.
+	 * Executes the runnable.
 	 *
-	 * @param command Runnable
+	 * @param runnable Runnable
 	 */
 	@Override
-	default void execute(@NotNull Runnable command) {
+	default void execute(@NotNull Runnable runnable) {
 		
-		run(command);
+		run(runnable);
 	}
 	
 	/**
@@ -47,14 +47,14 @@ public interface MinExecutor extends ExExecutor, Scheduler {
 	}
 	
 	/**
-	 * Executes the command with low-priority.
+	 * Executes the runnable with low-priority.
 	 *
-	 * @param command Runnable to execute
-	 * @param delay   Delay in milliseconds
+	 * @param runnable Runnable to execute
+	 * @param delay    Delay in milliseconds
 	 */
-	static void run(@NotNull Runnable command, long delay) {
+	static void run(@NotNull Runnable runnable, long delay) {
 		
-		if (delay > 0) MIN_PRIORITY_EXECUTOR.schedule(command, delay, TimeUnit.MILLISECONDS);
-		else run(command);
+		if (delay > 0) MIN_PRIORITY_EXECUTOR.schedule(runnable, delay, TimeUnit.MILLISECONDS);
+		else run(runnable);
 	}
 }
