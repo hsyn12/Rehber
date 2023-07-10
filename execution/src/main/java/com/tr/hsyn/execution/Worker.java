@@ -14,7 +14,8 @@ import java.util.function.Consumer;
 
 
 /**
- * Defines the work that will run on the background.
+ * Defines the work that will run on the background.<br>
+ * This class does not work without Android.
  *
  * @param <T> return type
  */

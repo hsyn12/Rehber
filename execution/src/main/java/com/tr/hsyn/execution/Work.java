@@ -19,7 +19,7 @@ import java.util.function.Consumer;
  *    .onError(e -> System.out.println("Error : " + e))
  *    .onSuccess(n -> System.out.println("Success : " + n))
  *    .execute();
- * </pre>
+ * </pre><br>
  *
  * @param <T> return type
  */
