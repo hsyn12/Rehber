@@ -150,7 +150,7 @@ public enum Runny {
 		return CompletableFuture.supplyAsync(() -> {
 			
 			try {
-				return minPriority ? Scheduler.schedule(delay, callable).get() : Scheduler.scheduleNorm(delay, callable).get();
+				return minPriority ? Scheduler.scheduleMin(delay, callable).get() : Scheduler.scheduleNorm(delay, callable).get();
 			}
 			catch (InterruptedException | ExecutionException e) {e.printStackTrace();}
 			
