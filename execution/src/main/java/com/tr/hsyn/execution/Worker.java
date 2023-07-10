@@ -2,8 +2,7 @@ package com.tr.hsyn.execution;
 
 
 import com.tr.hsyn.executors.MainExecutor;
-import com.tr.hsyn.executors.MinExecutor;
-import com.tr.hsyn.executors.NormExecutor;
+import com.tr.hsyn.executors.Scheduler;
 import com.tr.hsyn.xlog.xlog;
 
 import org.jetbrains.annotations.NotNull;
@@ -82,8 +81,7 @@ public class Worker<T> implements Work<T> {
 	@Override
 	public void execute() {
 		
-		if (minPriority) MinExecutor.run(this::executeWork, delayOnWork);
-		else NormExecutor.run(this::executeWork, delayOnWork);
+		Scheduler.schedule(delayOnWork, minPriority, this::executeWork);
 	}
 	
 	@Override
