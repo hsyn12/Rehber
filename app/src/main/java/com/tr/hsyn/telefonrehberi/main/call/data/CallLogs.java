@@ -105,7 +105,7 @@ public final class CallLogs {
 	@NotNull
 	public Contact getContact(@NotNull String number) {
 		
-		return mapIdToContact.getFromKey(mapNumberToId.getFromKey(number));
+		return mapIdToContact.get(mapNumberToId.get(number));
 	}
 	
 	/**
@@ -117,7 +117,7 @@ public final class CallLogs {
 	@NotNull
 	public Contact getContact(long id) {
 		
-		return mapIdToContact.getFromKey(id);
+		return mapIdToContact.get(id);
 	}
 	
 	/**
@@ -129,7 +129,7 @@ public final class CallLogs {
 	@Nullable
 	public Long getContactId(@NotNull String number) {
 		
-		return mapNumberToId.getFromKey(number);
+		return mapNumberToId.get(number);
 	}
 	
 	/**
@@ -140,7 +140,7 @@ public final class CallLogs {
 	 */
 	public String getNumber(long id) {
 		
-		return mapNumberToId.getFromValue(id);
+		return mapNumberToId.getKey(id);
 	}
 	
 	/**

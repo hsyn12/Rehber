@@ -10,19 +10,19 @@ import java.util.Map;
 import java.util.function.Function;
 
 
+/**
+ * Provides helper methods for maps.
+ */
 public class Mapper {
 	
 	/**
-	 * Verilen listeyi ({@code iterable}) verilen fonksiyonu
-	 * ({@code mapper}) kullanarak anahtar-değer
-	 * çiftine çevirir. Fonksiyon anahtar üretir,
-	 * anahtarın üretildiği nesne üretilen anahtarın değeri olur.
+	 * Creates a new {@link Map} from the given list by the given function.
 	 *
-	 * @param iterable Values
-	 * @param mapper   Anahtar üretecek fonksiyon
+	 * @param iterable list of elements
+	 * @param mapper   function to map each element
 	 * @param <K>      Key
 	 * @param <V>      Value
-	 * @return Map&lt;K,V&gt;
+	 * @return {@link Map}
 	 */
 	@NotNull
 	public static <K, V> Map<K, V> toMap(@NotNull Iterable<V> iterable, @NotNull Function<V, K> mapper) {

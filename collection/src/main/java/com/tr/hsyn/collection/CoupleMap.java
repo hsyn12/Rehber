@@ -2,9 +2,10 @@ package com.tr.hsyn.collection;
 
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 
 /**
@@ -12,33 +13,14 @@ import java.util.Set;
  * This class makes this access bidirectional.
  * That is, it provides access to the value with the key and provides access to the key with the value.
  *
- * @param <K>
- * @param <V>
+ * @param <K> Key
+ * @param <V> Value
  */
-public class CoupleMap<K, V> {
+public class CoupleMap<K, V> extends HashMap<K, V> {
 	
-	/** The map */
-	private final Map<K, V> map;
-	
-	/**
-	 * Creates a new couple map.
-	 *
-	 * @param map the map to create the couple map from
-	 */
-	public CoupleMap(@NotNull Map<K, V> map) {
+	public CoupleMap(Map<? extends K, ? extends V> m) {
 		
-		this.map = map;
-	}
-	
-	/**
-	 * Returns the value for the given key.
-	 *
-	 * @param key the key
-	 * @return the value
-	 */
-	public V getFromKey(@NotNull K key) {
-		
-		return map.get(key);
+		super(m);
 	}
 	
 	/**
@@ -47,9 +29,10 @@ public class CoupleMap<K, V> {
 	 * @param value the value
 	 * @return the key
 	 */
-	public K getFromValue(@NotNull V value) {
+	@Nullable
+	public K getKey(@NotNull V value) {
 		
-		for (Map.Entry<K, V> entry : map.entrySet()) {
+		for (Map.Entry<K, V> entry : this.entrySet()) {
 			
 			if (entry.getValue().equals(value)) {
 				
@@ -58,16 +41,5 @@ public class CoupleMap<K, V> {
 		}
 		
 		return null;
-	}
-	
-	public Set<Map.Entry<K, V>> getEntries() {
-		
-		return map.entrySet();
-		
-	}
-	
-	public Map<K, V> getMap() {
-		
-		return map;
 	}
 }
