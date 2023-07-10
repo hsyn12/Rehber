@@ -21,18 +21,19 @@ import java9.util.concurrent.CompletableFuture;
 
 
 /**
- * Bu sınıf, iş yürütmek için metotlar sağlar.
+ * Provides methods to work on a background or foreground thread.
  */
 public enum Runny {
 	;
 	
 	/**
-	 * Metodu, bildirildiği şekilde (ön planda yada arka planda) çalıştırır.
-	 * Eğer bir çalışma şekli bildirilmemiş ise metodun çağrıldığı yerden direk çağrılır.
+	 * Executes a method.
 	 *
-	 * @param methodOwner Metodun ait olduğu sınıfın örneği (static metotlar için {@code null} olabilir)
-	 * @param method      Metot
-	 * @param args        Metodun argümanları
+	 * @param methodOwner method owner
+	 * @param method      method
+	 * @param args        method args
+	 * @see OnMain
+	 * @see OnBackground
 	 */
 	public static void run(@Nullable Object methodOwner, @NotNull Method method, Object... args) {
 		
@@ -48,11 +49,11 @@ public enum Runny {
 	}
 	
 	/**
-	 * Verilen isimdeki metodu çalıştır.
+	 * Executes a method.
 	 *
-	 * @param methodOwner Method owner
-	 * @param methodName  Method name
-	 * @param args        Method args
+	 * @param methodOwner method owner
+	 * @param methodName  method name
+	 * @param args        method args
 	 */
 	public static void run(@Nullable Object methodOwner, @NotNull String methodName, Object... args) {
 		
@@ -65,12 +66,12 @@ public enum Runny {
 	}
 	
 	/**
-	 * Verilen işi koştur.
+	 * Executes a runnable.
 	 *
-	 * @param runnable İş
-	 * @param onMain   UI Thread mi?
-	 * @param delay    Erteleme süresi (milisaniye)
-	 * @param reason   İşin amacı
+	 * @param runnable runnable
+	 * @param onMain   {@code true} if UI Thread, {@code false} background thread
+	 * @param delay    delay in milliseconds
+	 * @param reason   reason
 	 */
 	public static void run(@NotNull Runnable runnable, boolean onMain, long delay, @Nullable String reason) {
 		
@@ -79,11 +80,11 @@ public enum Runny {
 	}
 	
 	/**
-	 * Verilen işi koştur.
+	 * Executes a runnable.
 	 *
-	 * @param runnable İş
-	 * @param onMain   UI Thread mi?
-	 * @param delay    Erteleme süresi (milisaniye)
+	 * @param runnable runnable
+	 * @param onMain   {@code true} if UI Thread, {@code false} background thread
+	 * @param delay    delay in milliseconds
 	 */
 	public static void run(@NotNull Runnable runnable, boolean onMain, long delay) {
 		
@@ -91,10 +92,10 @@ public enum Runny {
 	}
 	
 	/**
-	 * Verilen işi koştur.
+	 * Executes a runnable.
 	 *
-	 * @param runnable İş
-	 * @param onMain   UI Thread mi?
+	 * @param runnable runnable
+	 * @param onMain   {@code true} if UI Thread, {@code false} background thread
 	 */
 	public static void run(@NotNull Runnable runnable, boolean onMain) {
 		
@@ -102,10 +103,10 @@ public enum Runny {
 	}
 	
 	/**
-	 * Verilen işi ui thread üzerinde koştur.
+	 * Executes a runnable.
 	 *
-	 * @param runnable İş
-	 * @param delay    Erteleme süresi (milisaniye)
+	 * @param runnable runnable
+	 * @param delay    delay in milliseconds
 	 */
 	public static void run(@NotNull Runnable runnable, long delay) {
 		
@@ -113,9 +114,9 @@ public enum Runny {
 	}
 	
 	/**
-	 * Verilen işi ui thread üzerinde koştur.
+	 * Executes a runnable on UI Thread.
 	 *
-	 * @param runnable İş
+	 * @param runnable runnable
 	 */
 	public static void run(@NotNull Runnable runnable) {
 		
@@ -123,11 +124,10 @@ public enum Runny {
 	}
 	
 	/**
-	 * İşi iptal et.
-	 * Eğer iş çalışmaya başlamış ise iptal edilemez.
+	 * Cancels a runnable.
 	 *
-	 * @param runnable     İş
-	 * @param isBackground İptal edilmek istenen iş için belirtilmiş olan thread
+	 * @param runnable     runnable
+	 * @param isBackground the thread that runnable belongs to
 	 */
 	public static void cancel(@NotNull Runnable runnable, boolean isBackground) {
 		
@@ -136,12 +136,12 @@ public enum Runny {
 	}
 	
 	/**
-	 * Verilen işi koştur.
+	 * Executes a callable.
 	 *
-	 * @param delay       Erteleme süresi
-	 * @param minPriority Öncelik
-	 * @param callable    İş
-	 * @param <R>         İş dönüş türü
+	 * @param delay       delay in milliseconds
+	 * @param minPriority {@code true} if low priority, {@code false} normal priority
+	 * @param callable    callable
+	 * @param <R>         return type
 	 * @return CompletableFuture
 	 */
 	@NotNull
@@ -159,11 +159,11 @@ public enum Runny {
 	}
 	
 	/**
-	 * Verilen işi koştur.
+	 * Executes a callable.
 	 *
-	 * @param minPriority Öncelik
-	 * @param callable    İş
-	 * @param <R>         İş dönüş türü
+	 * @param minPriority {@code true} if low priority, {@code false} normal priority
+	 * @param callable    callable
+	 * @param <R>         return type
 	 * @return CompletableFuture
 	 */
 	@NotNull
@@ -173,11 +173,11 @@ public enum Runny {
 	}
 	
 	/**
-	 * Verilen işi koştur.
+	 * Executes a callable.
 	 *
-	 * @param delay    Erteleme süresi
-	 * @param callable İş
-	 * @param <R>      İş dönüş türü
+	 * @param delay    delay in milliseconds
+	 * @param callable callable
+	 * @param <R>      return type
 	 * @return CompletableFuture
 	 */
 	@NotNull
@@ -187,10 +187,10 @@ public enum Runny {
 	}
 	
 	/**
-	 * Verilen işi koştur.
+	 * Executes a callable with normal priority.
 	 *
-	 * @param callable İş
-	 * @param <R>      İş dönüş türü
+	 * @param callable callable
+	 * @param <R>      return type
 	 * @return CompletableFuture
 	 */
 	@NotNull

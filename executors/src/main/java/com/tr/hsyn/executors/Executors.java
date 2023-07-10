@@ -5,15 +5,37 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 
 /**
- * Executors
+ * Defines executors for normal-priority and low-priority threads.<br>
+ * {@link #NORM_PRIORITY_EXECUTOR} executes the works on normal-priority threads.<br>
+ * {@link #MIN_PRIORITY_EXECUTOR} executes the works on low-priority threads.<br>
+ * <p>
+ * All threads of these executors are on background and can be schedule with desired delays.<br>
  */
 public interface Executors {
 	
+	/**
+	 * Low-priority thread pool counts.
+	 */
 	int                         THREAD_POOL_SIZE_FOR_EXECUTOR_WITH_LOW_PRIORITY  = 8;
+	/**
+	 * Normal-priority thread pool counts.
+	 */
 	int                         THREAD_POOL_SIZE_FOR_EXECUTOR_WITH_NORM_PRIORITY = 8;
-	int                         THREAD_PRIORITY_BACKGROUND                       = Thread.NORM_PRIORITY;
-	int                         THREAD_PRIORITY_LOWEST                           = Thread.MIN_PRIORITY;
-	ScheduledThreadPoolExecutor NORM_PRIORITY_EXECUTOR                           = new ScheduledThreadPoolExecutor(THREAD_POOL_SIZE_FOR_EXECUTOR_WITH_NORM_PRIORITY, new PriorityThreadFactory(THREAD_PRIORITY_BACKGROUND));
-	ScheduledThreadPoolExecutor MIN_PRIORITY_EXECUTOR                            = new ScheduledThreadPoolExecutor(THREAD_POOL_SIZE_FOR_EXECUTOR_WITH_LOW_PRIORITY, new PriorityThreadFactory(THREAD_PRIORITY_LOWEST));
+	/**
+	 * The normal-priority thread priority.
+	 */
+	int                         NORM_PRIORITY                                    = Thread.NORM_PRIORITY;
+	/**
+	 * The low-priority thread priority.
+	 */
+	int                         MIN_PRIORITY                                     = Thread.MIN_PRIORITY;
+	/**
+	 * The executor for normal priority.
+	 */
+	ScheduledThreadPoolExecutor NORM_PRIORITY_EXECUTOR                           = new ScheduledThreadPoolExecutor(THREAD_POOL_SIZE_FOR_EXECUTOR_WITH_NORM_PRIORITY, new PriorityThreadFactory(NORM_PRIORITY));
+	/**
+	 * The executor for low priority.
+	 */
+	ScheduledThreadPoolExecutor MIN_PRIORITY_EXECUTOR                            = new ScheduledThreadPoolExecutor(THREAD_POOL_SIZE_FOR_EXECUTOR_WITH_LOW_PRIORITY, new PriorityThreadFactory(MIN_PRIORITY));
 	
 }
