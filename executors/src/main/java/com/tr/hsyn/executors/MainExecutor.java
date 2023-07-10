@@ -7,13 +7,13 @@ package com.tr.hsyn.executors;
 public interface MainExecutor extends ExExecutor {
 	
 	/**
-	 * Holder of Main (system ui) Executor.
-	 * You must set very first.
+	 * Holder of the Main (system ui) Executor.
+	 * Must be set first.
 	 */
 	Holder HOLDER = new Holder();
 	
 	/**
-	 * This is default method to execute the command on main thread.
+	 * Executes the command on the main thread.
 	 *
 	 * @param command Runnable to execute
 	 */
@@ -23,7 +23,7 @@ public interface MainExecutor extends ExExecutor {
 	}
 	
 	/**
-	 * This is default method to execute the command on main thread.
+	 * Executes the command on the main thread.
 	 *
 	 * @param command Runnable to execute
 	 * @param delay   Delay in milliseconds
@@ -34,17 +34,19 @@ public interface MainExecutor extends ExExecutor {
 	}
 	
 	/**
-	 * Holder of Main (system ui) Executor
+	 * Holder of Main the (system ui) Executor
 	 */
 	class Holder {
 		
 		private MainExecutor mainExecutor;
 		
 		public MainExecutor getMainExecutor() {
+			
 			return mainExecutor;
 		}
 		
 		public void setMainExecutor(MainExecutor mainExecutor) {
+			
 			this.mainExecutor = mainExecutor;
 		}
 	}

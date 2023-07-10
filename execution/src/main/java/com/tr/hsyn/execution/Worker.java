@@ -1,8 +1,6 @@
 package com.tr.hsyn.execution;
 
 
-import static com.tr.hsyn.executors.Executors.NORM_PRIORITY_EXECUTOR;
-
 import com.tr.hsyn.executors.MainExecutor;
 import com.tr.hsyn.executors.MinExecutor;
 import com.tr.hsyn.executors.NormExecutor;
@@ -159,19 +157,6 @@ public class Worker<T> implements Work<T> {
 	static <T> Worker<T> on(@NotNull Runnable runnable) {
 		
 		return new Worker<>(runnable);
-	}
-	
-	public static void main(String[] args) {
-		
-		Runnable r = () -> System.out.println("work");
-		
-		Work.on(r)
-				.onError(e -> System.out.println("Error : " + e))
-				.onSuccess(n -> System.out.println("Success : " + n))
-				.execute();
-		
-		
-		NORM_PRIORITY_EXECUTOR.execute(() -> System.out.println("work"));
 	}
 	
 }
