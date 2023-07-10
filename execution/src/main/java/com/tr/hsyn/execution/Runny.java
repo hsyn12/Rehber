@@ -42,9 +42,10 @@ public enum Runny {
 		Runnable     work   = () -> Clazz.invoke(methodOwner, method, args);
 		
 		if (onMain != null && onBack != null)
-			throw new IllegalArgumentException("Her iki çalışma modu kullanılamaz");
-		else if (onMain != null) MainExecutor.run(work);
-		else if (onBack != null) NormExecutor.run(work);
+			throw new IllegalArgumentException("Cannot use both @OnMain and @OnBackground : " + method);
+		
+		else if (onMain != null) run(work, true);
+		else if (onBack != null) run(work, false);
 		else work.run();
 	}
 	
@@ -114,7 +115,7 @@ public enum Runny {
 	}
 	
 	/**
-	 * Executes a runnable on UI Thread.
+	 * Executes the runnable on UI Thread.
 	 *
 	 * @param runnable runnable
 	 */
@@ -124,7 +125,7 @@ public enum Runny {
 	}
 	
 	/**
-	 * Cancels a runnable.
+	 * Cancels the runnable.
 	 *
 	 * @param runnable     runnable
 	 * @param isBackground the thread that runnable belongs to
@@ -136,7 +137,7 @@ public enum Runny {
 	}
 	
 	/**
-	 * Executes a callable.
+	 * Executes the callable.
 	 *
 	 * @param delay       delay in milliseconds
 	 * @param minPriority {@code true} if low priority, {@code false} normal priority
@@ -187,7 +188,7 @@ public enum Runny {
 	}
 	
 	/**
-	 * Executes a callable with normal priority.
+	 * Executes the callable with normal priority.
 	 *
 	 * @param callable callable
 	 * @param <R>      return type
@@ -200,11 +201,11 @@ public enum Runny {
 	}
 	
 	/**
-	 * Verilen işi koştur.
+	 * Executes the runnable.
 	 *
-	 * @param delay       Erteleme süresi
-	 * @param minPriority Öncelik
-	 * @param runnable    İş
+	 * @param delay       delay in milliseconds
+	 * @param minPriority {@code true} if low priority, {@code false} normal priority
+	 * @param runnable    runnable
 	 * @return CompletableFuture
 	 */
 	@NotNull
@@ -218,9 +219,9 @@ public enum Runny {
 	}
 	
 	/**
-	 * Verilen işi koştur.
+	 * Executes the runnable.
 	 *
-	 * @param runnable İş
+	 * @param runnable runnable
 	 * @return CompletableFuture
 	 */
 	@NotNull
@@ -230,52 +231,36 @@ public enum Runny {
 	}
 	
 	/**
-	 * Verilen işi koştur.
+	 * Executes the work.
 	 *
-	 * @param execution İş nesnesi
+	 * @param execution execution
 	 */
 	public static void run(@NotNull Execution execution) {
 		
 		if (execution.runnable != null) {
 			
-			run(execution.runnable, execution.onMain, execution.delay, execution.reason);
+			if (!execution.onMain) {
+				
+				Scheduler.schedule(execution.delay, execution.minPriority, execution.runnable);
+			}
+			else {
+				
+				run(execution.runnable, true, execution.delay, execution.reason);
+			}
 		}
 	}
 	
+	/**
+	 * @return a new builder for execution
+	 */
 	@NotNull
 	public static Execution.Builder builder() {
 		
 		return new Execution.Builder();
 	}
 	
-	@NotNull
-	public static Runner onBackgroundRunner(@NotNull final Runnable runnable) {
-		
-		try {
-			return new Runner() {
-				
-				@Override
-				public @NotNull Runnable getRunnable() {
-					
-					return runnable;
-				}
-				
-				@Override
-				public void run() {
-					
-					Runny.run(runnable, false);
-				}
-			};
-		}
-		catch (Exception e) {
-			
-			e.printStackTrace();
-			throw new IllegalArgumentException("madafaka");
-		}
-	}
-	
 	/**
-	 * İş
+	 * Work information.
 	 */
 	static class Execution {
 		
@@ -283,44 +268,91 @@ public enum Runny {
 		private final long     delay;
 		private final Runnable runnable;
 		private final boolean  onMain;
+		private final boolean  minPriority;
 		
+		/**
+		 * Constructor of {@link Execution}.
+		 *
+		 * @param builder the builder
+		 */
 		private Execution(@NotNull Builder builder) {
 			
-			reason   = builder.reason;
-			delay    = builder.delay;
-			runnable = builder.runnable;
-			onMain   = builder.onMain;
+			reason      = builder.reason;
+			delay       = builder.delay;
+			runnable    = builder.runnable;
+			onMain      = builder.onMain;
+			minPriority = builder.minPriority;
 		}
 		
+		/**
+		 * @return {@code true} if this work has delay
+		 */
+		public boolean hasDelay() {
+			
+			return delay > 0L;
+		}
+		
+		/**
+		 * @return {@code true} if this work has low-priority
+		 */
+		public boolean isMinPriority() {
+			
+			return minPriority;
+		}
+		
+		/**
+		 * @return the reason to this work
+		 */
 		public String getReason() {
 			
 			return reason;
 		}
 		
+		/**
+		 * @return the delay
+		 */
 		public long getDelay() {
 			
 			return delay;
 		}
 		
+		/**
+		 * @return the runnable to this work
+		 */
 		public Runnable getRunnable() {
 			
 			return runnable;
 		}
 		
+		/**
+		 * Executes this work
+		 */
 		public void run() {
 			
 			Runny.run(this);
 		}
 		
+		/**
+		 * The builder for {@link Execution}.
+		 */
 		public static final class Builder {
 			
 			private String   reason;
 			private long     delay;
 			private Runnable runnable;
 			private boolean  onMain;
+			private boolean  minPriority;
 			
+			/**
+			 * Constructor of {@link Execution.Builder}.
+			 */
 			public Builder() {}
 			
+			/**
+			 * Creates a new builder from {@link Execution}.
+			 *
+			 * @param copy execution
+			 */
 			public Builder(@NotNull Execution copy) {
 				
 				this.reason   = copy.getReason();
@@ -329,6 +361,34 @@ public enum Runny {
 				onMain        = copy.onMain;
 			}
 			
+			/**
+			 * Sets the priority for low.
+			 *
+			 * @return builder to chain
+			 */
+			public Builder minPriority() {
+				
+				this.minPriority = true;
+				return this;
+			}
+			
+			/**
+			 * Sets the priority.
+			 *
+			 * @param min {@code true} if low priority, {@code false} normal priority
+			 * @return builder to chain
+			 */
+			public Builder minPriority(boolean min) {
+				
+				this.minPriority = min;
+				return this;
+			}
+			
+			/**
+			 * Sets the UI Thread.
+			 *
+			 * @return builder to chain
+			 */
 			@NotNull
 			public Builder onMain() {
 				
@@ -336,6 +396,12 @@ public enum Runny {
 				return this;
 			}
 			
+			/**
+			 * Sets the reason.
+			 *
+			 * @param reason the reason
+			 * @return builder to chain
+			 */
 			@NotNull
 			public Builder reason(@NotNull String reason) {
 				
@@ -343,6 +409,12 @@ public enum Runny {
 				return this;
 			}
 			
+			/**
+			 * Sets the delay.
+			 *
+			 * @param delay the delay
+			 * @return builder to chain
+			 */
 			@NotNull
 			public Builder delay(long delay) {
 				
@@ -350,6 +422,12 @@ public enum Runny {
 				return this;
 			}
 			
+			/**
+			 * Sets the runnable.
+			 *
+			 * @param runnable the runnable
+			 * @return builder to chain
+			 */
 			@NotNull
 			public Builder runnable(@NotNull Runnable runnable) {
 				
@@ -357,6 +435,11 @@ public enum Runny {
 				return this;
 			}
 			
+			/**
+			 * Builds the execution.
+			 *
+			 * @return execution
+			 */
 			@NotNull
 			public Execution build() {
 				

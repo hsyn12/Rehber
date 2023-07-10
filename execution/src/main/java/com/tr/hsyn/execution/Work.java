@@ -1,82 +1,98 @@
 package com.tr.hsyn.execution;
 
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.concurrent.Callable;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 
 /**
- * Bir işi arka planda çalıştırıp, ana thread üzerinde sonucu veren bir yapı sunar.
- * Sadece verilen iş arka planda çalışır, işin sonucu (varsa) veya hata (varsa) ana
- * thread üzerinde işlenir.
+ * Defines a work to be executed on a background thread,
+ * and take the result on the main thread.
+ * The result and the exception are on the main thread.
  *
- * @param <T>
+ * @param <T> return type
  */
-public interface Work<T> extends WorkType<T> {
+public interface Work<T> {
 	
 	/**
-	 * Sonucu başarı ve hata olarak ayrı ayrı almak yerine,
-	 * ikisini birsen almayı sağlar.
-	 * Ana thread üzerinde çağrılır.
-	 * Bu metot diğer iki metodu devre dışı bırakır.
-	 * Yani bu metot tanımlanırsa, {@link #onError(Consumer)} ve {@link #onSuccess(Consumer)}
-	 * metotları çağrılmaz.
+	 * Instead of taking the result separately as success and failure,
+	 * it allows getting both of them together.
+	 * It is invoked on the main thread.
+	 * This method disables the other two methods.
+	 * This means that if this method is defined,
+	 * the {@link #onError(Consumer)} and {@link #onSuccess(Consumer)} methods are not called.
 	 *
-	 * @param onResult Sonucu işleyecek olan nesne
+	 * @param onResult consumer to take the result
 	 * @return Work
 	 */
 	Work<T> onResult(BiConsumer<T, Throwable> onResult);
 	
 	/**
-	 * İşlemin başarısı durumunda ön planda çalışacak olan işi alır.
-	 * Ana thread üzerinde.
+	 * It takes the work that will run in the foreground in case of the success of the operation.
+	 * On the main thread.
 	 *
-	 * @param onSuccess İşleyici
+	 * @param onSuccess consumer to take the result
 	 * @return Work
 	 */
 	Work<T> onSuccess(Consumer<T> onSuccess);
 	
 	/**
-	 * Hata işleyicisini tanımla.
-	 * Ana thread üzerinde.
+	 * Sets the error handler.
 	 *
-	 * @param onError Hata işleyicisi
+	 * @param onError consumer to take the error
 	 * @return Work
 	 */
 	Work<T> onError(Consumer<Throwable> onError);
 	
 	/**
-	 * Verilen iş hata ile yada hatasız tamamlandıktan sonra en son çalıştırılmak istenen iş.
-	 * Ana thread üzerinde.
+	 * Sets the work to run whether it is success or failure after the operation.
+	 * On the main thread.
 	 *
-	 * @param onLast İş
+	 * @param onLast runnable
 	 * @return Work
 	 */
-	Work<T> onLast(Runnable onLast);
+	Work<T> onLast(@NotNull Runnable onLast);
 	
 	/**
-	 * Verilen iş hata ile yada hatasız tamamlandıktan sonra en son çalıştırılmak istenen iş.
-	 * Ana thread üzerinde.
+	 * It takes the work that will run in the foreground in case of the success of the operation.
+	 * On the main thread.
 	 *
-	 * @param onLast İş
-	 * @param delay  Gecikme süresi
+	 * @param onLast runnable
+	 * @param delay  delay in milliseconds
 	 * @return Work
 	 */
-	Work<T> onLast(Runnable onLast, long delay);
+	Work<T> onLast(@NotNull Runnable onLast, long delay);
 	
 	/**
-	 * Verilen işin çalışmasını sağlar.
-	 * Bu çağrı olmazsa hiçbir işlem yapılmaz.
+	 * Executes the work.
 	 */
 	void execute();
 	
 	/**
-	 * İşi gecikmeli başlatır
+	 * Executes the work.
 	 *
-	 * @param delay Gecikme süresi
+	 * @param delay delay in milliseconds
 	 */
 	void execute(long delay);
+	
+	/**
+	 * Sets the priority.
+	 *
+	 * @param minPriority whether to execute the works on low-priority threads
+	 * @return Work
+	 */
+	Work<T> priority(boolean minPriority);
+	
+	/**
+	 * Sets the delay.
+	 *
+	 * @param delay delay in milliseconds
+	 * @return Work
+	 */
+	Work<T> delay(long delay);
 	
 	/**
 	 * Creates a new {@code Work} instance with the given {@code callable}.
@@ -85,7 +101,8 @@ public interface Work<T> extends WorkType<T> {
 	 * @param <T>      the return type
 	 * @return a new {@code Work} instance
 	 */
-	static <T> Work<T> on(Callable<T> callable) {
+	@NotNull
+	static <T> Work<T> on(@NotNull Callable<T> callable) {
 		
 		return Worker.on(callable);
 	}
@@ -97,7 +114,8 @@ public interface Work<T> extends WorkType<T> {
 	 * @param <T>      the return type
 	 * @return a new {@code Work} instance
 	 */
-	static <T> Work<T> on(Runnable runnable) {
+	@NotNull
+	static <T> Work<T> on(@NotNull Runnable runnable) {
 		
 		return Worker.on(runnable);
 	}

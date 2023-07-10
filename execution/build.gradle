@@ -6,13 +6,8 @@ dependencies {
 	implementation project(path: ':executors')
 	compileOnly "org.jetbrains:annotations:${rootProject.annotations}"
 	implementation project(path: ':reflection')
-	// implementation project(path: ':worker')
 	implementation project(path: ':xlog')
-
 	implementation 'net.sourceforge.streamsupport:android-retrofuture:1.7.4'
-	// implementation 'net.sourceforge.streamsupport:streamsupport:1.7.4'
-
-
 }
 
 java {
