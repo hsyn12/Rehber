@@ -2,7 +2,8 @@ package com.tr.hsyn.executors;
 
 
 /**
- * UI thread runner
+ * UI thread executor.<br>
+ * This is the bridge between Java and Android.
  */
 public interface MainExecutor extends ExExecutor {
 	
