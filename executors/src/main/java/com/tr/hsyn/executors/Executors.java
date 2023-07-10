@@ -30,11 +30,11 @@ public interface Executors {
 	 */
 	int                         MIN_PRIORITY                                     = Thread.MIN_PRIORITY;
 	/**
-	 * The executor for normal priority.
+	 * The executor, which {@link ScheduledThreadPoolExecutor} with normal priority.<br>
 	 */
 	ScheduledThreadPoolExecutor NORM_PRIORITY_EXECUTOR                           = new ScheduledThreadPoolExecutor(THREAD_POOL_SIZE_FOR_EXECUTOR_WITH_NORM_PRIORITY, new PriorityThreadFactory(NORM_PRIORITY));
 	/**
-	 * The executor for low priority.
+	 * The executor, which {@link ScheduledThreadPoolExecutor} with low priority.
 	 */
 	ScheduledThreadPoolExecutor MIN_PRIORITY_EXECUTOR                            = new ScheduledThreadPoolExecutor(THREAD_POOL_SIZE_FOR_EXECUTOR_WITH_LOW_PRIORITY, new PriorityThreadFactory(MIN_PRIORITY));
 	
