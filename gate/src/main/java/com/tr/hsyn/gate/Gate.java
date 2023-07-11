@@ -7,28 +7,35 @@ import org.jetbrains.annotations.NotNull;
 
 
 /**
- * Kapı.
- * Giriş-çıkış noktası.
+ * Gate.<br>
+ * Entry-output point.
  */
 public interface Gate {
 	
 	/**
-	 * @return Kapı açıksa {@code true}, kapalıysa {@code false}
+	 * @return {@code true} if the gate is open
 	 */
 	boolean isOpen();
 	
 	/**
-	 * Kapıdan giriş yapılmasını sağlar.
+	 * Enters through the gate and close it.
 	 *
-	 * @return Çağrı yapıldığında kapı açıksa kapanır ve {@code true} döner, kapı kapalıysa giriş yapılamaz ve {@code false} döner.
+	 * @return {@code true} if the gate is open, and the gate is closed, entering is successful.
+	 *      {@code false} if it is closed already and entering is not successful.
 	 */
 	boolean enter();
 	
 	/**
-	 * Çıkış yapar ve kapı açılır
+	 * Exits through the gate and open it.
+	 * Returns {@code true} from {@link #isOpen()} call after this call.
 	 */
 	void exit();
 	
+	/**
+	 * Creates a new gate.
+	 *
+	 * @return a new gate
+	 */
 	@NotNull
 	static Gate newGate() {
 		
