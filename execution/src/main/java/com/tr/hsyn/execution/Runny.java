@@ -104,6 +104,31 @@ public enum Runny {
 	}
 	
 	/**
+	 * Executes the runnable on the background.
+	 *
+	 * @param minPriority whether to execute the works on low-priority threads
+	 * @param delay       delay in milliseconds
+	 * @param runnable    runnable
+	 */
+	public static void run(boolean minPriority, long delay, @NotNull Runnable runnable) {
+		
+		if (minPriority) MinExecutor.run(runnable, delay);
+		else NormExecutor.run(runnable, delay);
+	}
+	
+	/**
+	 * Executes the runnable on the background.
+	 *
+	 * @param minPriority whether to execute the works on low-priority threads
+	 * @param runnable    runnable
+	 */
+	public static void run(boolean minPriority, @NotNull Runnable runnable) {
+		
+		if (minPriority) MinExecutor.run(runnable);
+		else NormExecutor.run(runnable);
+	}
+	
+	/**
 	 * Executes a runnable.
 	 *
 	 * @param runnable runnable
