@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
  * This interface extends {@link AutoGate},
  * and adds a cyclic structure and provides to execute a runnable at the exit.
  */
-public interface DigiGate extends AutoGate, Looply {
+public interface DigiGate extends AutoGate {
 	
 	/**
 	 * Enters through the gate and close it if it is open.
@@ -26,6 +26,11 @@ public interface DigiGate extends AutoGate, Looply {
 	 * @param onExit work to do on exit
 	 */
 	void setOnExit(Runnable onExit);
+	
+	/**
+	 * @return this digital gate with loop structure
+	 */
+	DigiGate loop();
 	
 	/**
 	 * Creates a new digital gate with zero intervals.
@@ -79,6 +84,5 @@ public interface DigiGate extends AutoGate, Looply {
 		
 		return new SimpleDigiGate(passInterval, onExit);
 	}
-	
 	
 }
