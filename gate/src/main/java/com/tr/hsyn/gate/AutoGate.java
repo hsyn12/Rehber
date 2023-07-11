@@ -7,33 +7,33 @@ import org.jetbrains.annotations.NotNull;
 
 
 /**
- * Otomatik Kapı.<br>
- * Giriş yapıldıktan sonra kapının belirli bir süre sonunda otomatik açılmasını sağlar.<br>
- * {@link #enter()} metodu {@link #getInterval()} metodundan aldığı süreyi kullanır.<br>
- * {@link #enter(long)} metodu ise farklı süreler belirtilerek çıkış yapılmasını sağlar.<br>
+ * Auto Gate.<br>
+ * This interface extends {@link Gate}.<br>
+ * And allows the gate to open automatically after a certain time after enter.
+ * So not need to call {@link #exit()} to open the gate.
  *
  * @see Gate
  */
 public interface AutoGate extends Gate {
 	
 	/**
-	 * @return Otomatik çıkış süresi (milisaniye)
+	 * @return duration for getting to open the gate after entering
 	 */
 	long getInterval();
 	
 	/**
-	 * Eğer kapı açıksa {@code true} döner ve verilen süre boyunca kapıyı kapalı tutar.
+	 * Enters through the gate and close it if it is open.
 	 *
-	 * @param outAfterMillis Kapının kapalı kalacağı süre.
-	 * @return Çağrı yapıldığında kapı açıksa kapanır ve {@code true} döner.Yani içeri girilirse {@code true} döner, girilemezse {@code false} döner ve hiç bir işlem yapılmaz.
+	 * @param outAfterMillis duration for keeping closed the gate.
+	 * @return {@code true} if the gate is open, and the gate is closed, entering is successful.
+	 *      {@code false} if it is closed already and entering is not successful.
 	 */
 	boolean enter(long outAfterMillis);
 	
 	/**
-	 * Kapının otomatik açılma süresi sıfır olarak ayarlanmış yeni bir kapı oluşturur.
-	 * Yani eğer {@link #enter()} metodu ile giriş yapılırsa, hemen ardından çıkış yapılır.
-	 * {@link #enter(long)} metodu kullanılarak giriş yapılırsa yada
-	 * {@link #getInterval()} ile uygun bir süre döndürülürse istenen zamanda otomatik çıkış yapılır.
+	 * Creates a new auto gate with zero intervals.
+	 * So, after entering, will exit immediately.
+	 * Or call {@link #enter(long)} to enter with a certain interval.
 	 */
 	@NotNull
 	static AutoGate newGate() {
@@ -42,11 +42,10 @@ public interface AutoGate extends Gate {
 	}
 	
 	/**
-	 * Verilen süre, varsayılan çıkış süresi olarak ayarlanmış yeni bir kapı döndürür.
-	 * {@link #enter()} metodu bu varsayılan süreyi kullanarak kapıyı otomatik açar.
-	 * Yine de {@link #enter(long)} metodu ile farklı bir süre kullanılabilir.
+	 * Creates a new auto gate with the given interval.
 	 *
-	 * @param passInterval Kapının tekrar açılması için geçmesi gereken süre
+	 * @param passInterval the time it takes to automatic exit after entering
+	 * @return a new auto gate
 	 */
 	@NotNull
 	static AutoGate newGate(long passInterval) {
