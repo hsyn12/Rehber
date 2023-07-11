@@ -2,7 +2,7 @@ package com.tr.hsyn.gate;
 
 
 /**
- * Bir kapının döngüsel bir yapıya sahip olduğunu bildirir.<br>
+ * It informs that a gate has a cyclic structure.
  */
 public interface Looply extends Gate {
 	

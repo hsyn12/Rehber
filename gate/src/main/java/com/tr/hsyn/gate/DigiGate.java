@@ -7,26 +7,32 @@ import org.jetbrains.annotations.NotNull;
 
 
 /**
- * Dijital kapı.<br>
- * Otomatik çıkış yapılmasını ve çıkışta bir iş ({@code Runnable}) çalıştırılmasını sağlar.<br>
+ * Digital Gate.<br>
+ * This interface extends {@link AutoGate},
+ * and adds a cyclic structure and provides to execute a runnable at the exit.
  */
 public interface DigiGate extends AutoGate, Looply {
 	
 	/**
-	 * Kapıdan giriş talep eder.
+	 * Enters through the gate and close it if it is open.
 	 *
-	 * @param onExit Çıkış yapıldıktan sonra çalıştırılacak iş
-	 * @return Giriş başarılı ise {@code true}, aksi halde {@code false}
+	 * @param onExit work to do on exit
+	 * @return {@code true} if the gate is open, and the gate is closed, entering is successful.
+	 *      {@code false} if it is closed already and entering is not successful.
 	 */
 	boolean enter(@NotNull Runnable onExit);
 	
 	/**
-	 * @param onExit Çıkış işlemi
+	 * @param onExit work to do on exit
 	 */
 	void setOnExit(Runnable onExit);
 	
 	/**
-	 * Otomatik çıkış süresi {@code 0L} olarak kaydedilir.
+	 * Creates a new digital gate with zero intervals.
+	 * So, after entering, will exit immediately.
+	 * Or call {@link #enter(long)} to enter with a certain interval.
+	 *
+	 * @return a new digital gate
 	 */
 	@NotNull
 	static DigiGate newGate() {
@@ -35,9 +41,13 @@ public interface DigiGate extends AutoGate, Looply {
 	}
 	
 	/**
-	 * Otomatik çıkış süresi {@code 0L} olarak kaydedilir.
+	 * Creates a new digital gate with the given work to do on the exit.
+	 * Interval is zero.
+	 * So, after entering, will exit immediately.
+	 * Or call {@link #enter(long)} to enter with a certain interval.
 	 *
-	 * @param onExit Çıkışta çalıştırılması istenen iş
+	 * @param onExit work to do on exit
+	 * @return a new digital gate
 	 */
 	@NotNull
 	static DigiGate newGate(Runnable onExit) {
@@ -46,10 +56,10 @@ public interface DigiGate extends AutoGate, Looply {
 	}
 	
 	/**
-	 * Sınıf bu kurucu ile oluşturulduğunda {@link #enter()} ve {@link #enter(Runnable)} metotları
-	 * buradaki verilen süreyi otomatik çıkış süresi olarak kullanır.
+	 * Creates a new digital gate with the given interval.
 	 *
-	 * @param passInterval Giriş yapıldıktan sonra otomatik olarak çıkış yapılması için geçmesi gereken süre
+	 * @param passInterval the time it takes to automatic exit after entering
+	 * @return a new digital gate
 	 */
 	@NotNull
 	static DigiGate newGate(long passInterval) {
@@ -58,10 +68,11 @@ public interface DigiGate extends AutoGate, Looply {
 	}
 	
 	/**
-	 * Çıkış süresini ve çıkış işlemini belirler.
+	 * Creates a new digital gate.
 	 *
-	 * @param passInterval Çıkış süresi
-	 * @param onExit       Çıkış işlemi
+	 * @param passInterval the time it takes to automatic exit after entering
+	 * @param onExit       work to do on exit
+	 * @return a new digital gate
 	 */
 	@NotNull
 	static DigiGate newGate(long passInterval, Runnable onExit) {
