@@ -6,11 +6,37 @@ import org.jetbrains.annotations.Nullable;
 
 
 /**
- * Object holder.
+ * Object holder.<br>
+ * Provides to hold a value of any type T.
+ * Maybe the best way to use it is to use in an interface.
+ * Unchangeable interface variables become changeable.
+ * Or whatever else.
  *
  * @param <T> the type of the object
  */
 public interface Holder<T> {
+	
+	/**
+	 * Gets the value.
+	 *
+	 * @return the value
+	 */
+	@Nullable T getValue();
+	
+	/**
+	 * Sets the value.
+	 *
+	 * @param t the value
+	 */
+	void setValue(@Nullable T t);
+	
+	/**
+	 * @return {@code true} if the object is null
+	 */
+	default boolean isNull() {
+		
+		return getValue() == null;
+	}
 	
 	/**
 	 * Creates a new {@link Holder} object.
@@ -36,26 +62,4 @@ public interface Holder<T> {
 		
 		return new Holo<>(obj);
 	}
-	
-	/**
-	 * @return {@code true} if the object is null
-	 */
-	default boolean isNull() {
-		
-		return getValue() == null;
-	}
-	
-	/**
-	 * Gets the value.
-	 *
-	 * @return the value
-	 */
-	@Nullable T getValue();
-	
-	/**
-	 * Sets the value.
-	 *
-	 * @param t the value
-	 */
-	void setValue(@Nullable T t);
 }
