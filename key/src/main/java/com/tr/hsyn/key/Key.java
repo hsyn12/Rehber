@@ -6,6 +6,10 @@ import com.tr.hsyn.atom.AtomImpl;
 import org.jetbrains.annotations.NotNull;
 
 
+/**
+ * Defines the global keys for the app.<br>
+ * With these keys, hold and access the objects globally.
+ */
 public class Key extends AtomImpl {
 	
 	public static final Key EMPTY                  = Key.of(0, "-");

@@ -2,12 +2,12 @@ package com.tr.hsyn.identity;
 
 
 /**
- * Nesneleri tanımlamayı sağlar
+ * Allows identifying objects
  */
 public interface Identity {
 	
 	/**
-	 * @return Unique id
+	 * @return id
 	 */
 	long getId();
 }
