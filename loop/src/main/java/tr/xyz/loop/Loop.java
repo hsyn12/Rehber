@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 public interface Loop {
 	
 	/**
-	 * Creates a loop to work until the condition is {@code true} and calls the runnable on each cycle.
+	 * Creates a loop to work while the condition is {@code true} and calls the runnable on each cycle.
 	 *
 	 * @param condition the condition to check
 	 * @param runnable  the runnable to call on each cycle
