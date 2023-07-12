@@ -9,7 +9,10 @@ import java.util.Locale;
 
 
 /**
- * Label of things.
+ * Label of things.<br>
+ * Provides to define the labels and check their validations.<br>
+ * A label is a thing.
+ * It provides to separate or to group the things.
  */
 public class Label extends AtomImpl {
 	
@@ -65,11 +68,11 @@ public class Label extends AtomImpl {
 	}
 	
 	/**
-	 * String bir nesneyi etikete çevirir.
-	 * String olarak etiket {@code 'id:name'} şeklinde olmalı.
+	 * Converts a String object to a label.
+	 * As a string, the tag must be in the form {@code 'id:name'}.
 	 *
-	 * @param label Etiket bildiren string ({@code 'id:name'})
-	 * @return {@code Label} nesnesi
+	 * @param label the string in the form ({@code 'id:name'})
+	 * @return {@code Label} object
 	 */
 	@NotNull
 	public static Label of(@NotNull String label) {
@@ -82,6 +85,6 @@ public class Label extends AtomImpl {
 		}
 		catch (Exception ignore) {}
 		
-		return Label.of(-1, "-");
+		return INVALID_LABEL;
 	}
 }
