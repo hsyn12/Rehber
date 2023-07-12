@@ -8,7 +8,7 @@ import java.util.Set;
 
 /**
  * Labels the objects.<br>
- * The classes that implement this interface mean that they are labeled.
+ * The classes that implement this interface mean that they can be labeled.
  */
 public interface Labeled {
 	
