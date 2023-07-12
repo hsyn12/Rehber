@@ -17,7 +17,7 @@ public interface DigiGate extends AutoGate {
 	 * Enters through the gate and close it if it is open.
 	 *
 	 * @param onExit work to do on exit
-	 * @return {@code true} if the gate is open, and the gate is closed, entering is successful.
+	 * @return {@code true} if the gate is open, then the gate is closed, entering is successful.
 	 *      {@code false} if it is closed already and entering is not successful.
 	 */
 	boolean enter(@NotNull Runnable onExit);
