@@ -2,14 +2,14 @@ package com.tr.hsyn.gate;
 
 
 /**
- * Kapının durumunu dinleyen sınıf
+ * Gate Observer.
  */
 public interface GateObserver {
 	
 	/**
-	 * Kapının durumunun değiştiğini bildirir.
+	 * Called when gate state change.
 	 *
-	 * @param isOpen Kapı açıldıysa {@code true}, kapandıysa {@code false}
+	 * @param isOpen {@code true} if the gate is open
 	 */
 	void onGateStateChange(boolean isOpen);
 }

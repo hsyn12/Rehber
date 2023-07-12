@@ -2,12 +2,14 @@ package com.tr.hsyn.gate;
 
 
 /**
- * Kapının açık-kapalı durumunu izlemeyi sağlar.
+ * Observable Gate.
  */
 public interface ObserableGate extends Gate {
 	
 	/**
-	 * @param gateObserver İzleyici
+	 * Sets the gate observer.
+	 *
+	 * @param gateObserver observer
 	 */
 	void setGateObserver(GateObserver gateObserver);
 }
