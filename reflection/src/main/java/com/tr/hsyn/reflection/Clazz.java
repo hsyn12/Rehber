@@ -1,7 +1,6 @@
 package com.tr.hsyn.reflection;
 
 
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,18 +19,10 @@ import java.util.stream.Collectors;
 
 
 /**
- * Reflection tool
+ * Reflection class
  */
 public final class Clazz {
 	
-	@Nullable
-	private static Class<?>[] getTypes(@Nullable final Object... parameters) {
-		
-		if (parameters != null)
-			return Arrays.stream(parameters).filter(Objects::nonNull).map(Object::getClass).toArray(Class[]::new);
-		
-		return null;
-	}
 	
 	/**
 	 * Creates an object from the given {@linkplain Class} class.
@@ -46,7 +37,7 @@ public final class Clazz {
 		
 		try {
 			//noinspection ConstantConditions
-			return findConstructor(clazz, getTypes(parameters)).newInstance(parameters);
+			return findConstructor(clazz, convertToTypes(parameters)).newInstance(parameters);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -389,20 +380,16 @@ public final class Clazz {
 	/**
 	 * Converts the given arguments to an array of types.
 	 *
-	 * @param args arguments
-	 * @return array of types of the arguments, which are in the same order
+	 * @param parameters parameters
+	 * @return array of types of the parameters, which are in the same order
 	 */
-	@NotNull
-	@Contract(pure = true)
-	public static Class<?>[] convertToTypes(Object... args) {
+	@Nullable
+	private static Class<?>[] convertToTypes(@Nullable final Object... parameters) {
 		
-		if (args.length == 0) return new Class<?>[0];
+		if (parameters != null)
+			return Arrays.stream(parameters).filter(Objects::nonNull).map(Object::getClass).toArray(Class[]::new);
 		
-		Class<?>[] types = new Class<?>[args.length];
-		
-		for (int i = 0; i < args.length; i++) types[i] = args[i].getClass();
-		
-		return types;
+		return null;
 	}
 	
 	public static void main(String... args) {
