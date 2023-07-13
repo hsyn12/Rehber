@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 
 /**
@@ -12,27 +13,6 @@ import java.util.function.Consumer;
  * Provides methods to create loops.
  */
 public interface Loop {
-	
-	int cycle();
-	
-	int getCycle();
-	
-	Runnable getRunnable();
-	
-	default void test(@NotNull Condition condition) {
-		
-		while (condition.getCondition()) {
-			
-			if (getRunnable() != null) getRunnable().run();
-			cycle();
-		}
-	}
-	
-	@NotNull
-	static Loop whileTrue(Runnable runnable) {
-		
-		return new LoopImpl();
-	}
 	
 	/**
 	 * Creates a loop on the iterable and calls the consumer with the element on each cycle.<br><br>
@@ -51,13 +31,17 @@ public interface Loop {
 		for (T t : iterable) consumer.accept(t);
 	}
 	
+	static void with(@NotNull Function<Integer, Boolean> condition) {
+		
+		int counter = 0;
+		while (condition.apply(counter++)) ;
+	}
+	
 	static void main(String[] args) {
 		
 		var list = List.of("march", "june", "april");
 		
-		While loop = While.create();
-		
-		loop.with(i -> {
+		with(i -> {
 			
 			var item = list.get(i);
 			
