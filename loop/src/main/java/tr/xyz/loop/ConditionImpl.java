@@ -3,45 +3,26 @@ package tr.xyz.loop;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Predicate;
-import java.util.function.UnaryOperator;
+import java.util.function.Function;
 
 
 public class ConditionImpl<T> implements Condition<T> {
 	
-	private T                condition;
-	private Predicate<T>     predicate;
-	private UnaryOperator<T> modifier;
+	private T                    condition;
+	private Function<T, Boolean> predicate;
 	
-	public ConditionImpl() {
-		
-	}
+	public ConditionImpl() {}
 	
-	public ConditionImpl(T condition, Predicate<T> predicate, UnaryOperator<T> modifier) {
+	public ConditionImpl(T condition, Function<T, Boolean> predicate) {
 		
 		this.condition = condition;
 		this.predicate = predicate;
-		this.modifier  = modifier;
 	}
 	
 	@Override
-	public boolean isTrue() {
+	public boolean test() {
 		
-		if (predicate != null)
-			return predicate.test(condition);
-		return false;
-	}
-	
-	@Override
-	public void modify() {
-		
-		if (modifier != null) condition = modifier.apply(condition);
-	}
-	
-	@Override
-	public void modify(@NotNull UnaryOperator<T> modifier) {
-		
-		condition = modifier.apply(condition);
+		return predicate != null && predicate.apply(condition);
 	}
 	
 	@Override
@@ -52,16 +33,9 @@ public class ConditionImpl<T> implements Condition<T> {
 	}
 	
 	@Override
-	public @NotNull Condition<T> predicate(@NotNull Predicate<T> predicate) {
+	public @NotNull Condition<T> predicate(@NotNull Function<T, Boolean> predicate) {
 		
 		this.predicate = predicate;
-		return this;
-	}
-	
-	@Override
-	public @NotNull Condition<T> modifier(@NotNull UnaryOperator<T> modifier) {
-		
-		this.modifier = modifier;
 		return this;
 	}
 	
@@ -69,5 +43,11 @@ public class ConditionImpl<T> implements Condition<T> {
 	public T getCondition() {
 		
 		return condition;
+	}
+	
+	@Override
+	public void setCondition(T condition) {
+		
+		this.condition = condition;
 	}
 }

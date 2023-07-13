@@ -3,8 +3,7 @@ package tr.xyz.loop;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Predicate;
-import java.util.function.UnaryOperator;
+import java.util.function.Function;
 
 
 /**
@@ -40,19 +39,7 @@ public interface Condition<T> {
 	/**
 	 * @return {@code true} if the condition is {@code true}
 	 */
-	boolean isTrue();
-	
-	/**
-	 * Executes the modifier on the condition.
-	 */
-	void modify();
-	
-	/**
-	 * Executes the modifier on the condition.
-	 *
-	 * @param modifier the modifier
-	 */
-	void modify(@NotNull UnaryOperator<T> modifier);
+	boolean test();
 	
 	/**
 	 * Sets the condition to test the truth.
@@ -70,35 +57,27 @@ public interface Condition<T> {
 	 * @return this condition object
 	 */
 	@NotNull
-	Condition<T> predicate(@NotNull Predicate<T> predicate);
-	
-	/**
-	 * Sets the modifier of the condition to change the condition.
-	 *
-	 * @param modifier the modifier
-	 * @return this condition object
-	 */
-	@NotNull
-	Condition<T> modifier(@NotNull UnaryOperator<T> modifier);
+	Condition<T> predicate(@NotNull Function<T, Boolean> predicate);
 	
 	/**
 	 * @return the condition
 	 */
 	T getCondition();
 	
+	void setCondition(T condition);
+	
 	/**
 	 * Creates a condition.
 	 *
 	 * @param condition the condition object to test the truth
 	 * @param predicate the predicate of the condition to test
-	 * @param modifier  the modifier of the condition to change
 	 * @param <T>       the type of the condition
 	 * @return new condition object
 	 */
 	@NotNull
-	static <T> Condition<T> of(T condition, Predicate<T> predicate, UnaryOperator<T> modifier) {
+	static <T> Condition<T> of(T condition, Function<T, Boolean> predicate) {
 		
-		return new ConditionImpl<T>(condition, predicate, modifier);
+		return new ConditionImpl<T>(condition, predicate);
 	}
 	
 	/**
