@@ -5,31 +5,33 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 
 /**
  * The Loop.<br>
  * Provides methods to create loops.
  */
-public interface Loop<T> {
+public interface Loop {
 	
-	Condition<T> getCondition();
+	int cycle();
 	
-	default void loop(@NotNull Consumer<T> consumer) {
+	int getCycle();
+	
+	Runnable getRunnable();
+	
+	default void test(@NotNull Condition condition) {
 		
-		while (getCondition().test()) consumer.accept(getCondition().getCondition());
+		while (condition.getCondition()) {
+			
+			if (getRunnable() != null) getRunnable().run();
+			cycle();
+		}
 	}
 	
-	/**
-	 * Creates a loop to work while the condition is {@code true} and calls the function on each cycle.
-	 *
-	 * @param condition the condition to check
-	 * @param consumer  the function to call on each cycle
-	 */
-	static <T> void on(@NotNull Condition<T> condition, @NotNull Consumer<T> consumer) {
+	@NotNull
+	static Loop whileTrue(Runnable runnable) {
 		
-		new LoopImpl<>(condition).loop(consumer);
+		return new LoopImpl();
 	}
 	
 	/**
@@ -53,22 +55,19 @@ public interface Loop<T> {
 		
 		var list = List.of("march", "june", "april");
 		
-		var go        = true;
-		var condition = Condition.of(go, b -> true);
+		While loop = While.create();
 		
-		Function<Boolean, Boolean> predicate = b -> {
+		loop.with(i -> {
 			
-			var s    = list.get(condition.getCycle());
-			var test = s.length() > 4;
+			var item = list.get(i);
 			
-			if (!test) return false;
+			if (item.length() < 5) return false;
 			
-			System.out.println(s);
+			System.out.println(item);
 			
 			return true;
-		};
+		});
 		
-		Loop.on(condition, predicate);
 	}
 	
 	

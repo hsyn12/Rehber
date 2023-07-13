@@ -1,18 +1,35 @@
 package tr.xyz.loop;
 
 
-public class LoopImpl<T> implements Loop<T> {
+public class LoopImpl implements Loop {
 	
-	private final Condition<T> condition;
+	private Condition condition;
+	private int       cycle;
 	
-	public LoopImpl(Condition<T> condition) {
+	public LoopImpl() {
+		
+	}
+	
+	public LoopImpl(Condition condition) {
 		
 		this.condition = condition;
 	}
 	
 	@Override
-	public Condition<T> getCondition() {
+	public int cycle() {
 		
-		return condition;
+		return cycle++;
+	}
+	
+	@Override
+	public int getCycle() {
+		
+		return cycle;
+	}
+	
+	@Override
+	public Runnable getRunnable() {
+		
+		return null;
 	}
 }

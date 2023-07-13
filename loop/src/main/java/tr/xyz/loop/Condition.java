@@ -3,8 +3,6 @@ package tr.xyz.loop;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Function;
-
 
 /**
  * Defines the condition contract.<br>
@@ -31,64 +29,24 @@ import java.util.function.Function;
  * <p>
  * You cannot change either the condition value or the integer value without the condition object.
  * You can try.
- *
- * @param <T> the type of the condition
  */
-public interface Condition<T> {
-	
-	/**
-	 * @return {@code true} if the condition is {@code true}
-	 */
-	boolean test();
-	
-	/**
-	 * Sets the condition to test the truth.
-	 *
-	 * @param condition the condition
-	 * @return this condition object
-	 */
-	@NotNull
-	Condition<T> condition(T condition);
-	
-	/**
-	 * Sets the predicate of the condition to test.
-	 *
-	 * @param predicate the predicate to test the condition
-	 * @return this condition object
-	 */
-	@NotNull
-	Condition<T> predicate(@NotNull Function<T, Boolean> predicate);
+public interface Condition {
 	
 	/**
 	 * @return the condition
 	 */
-	T getCondition();
+	boolean getCondition();
 	
-	void setCondition(T condition);
-	
-	/**
-	 * Creates a condition.
-	 *
-	 * @param condition the condition object to test the truth
-	 * @param predicate the predicate of the condition to test
-	 * @param <T>       the type of the condition
-	 * @return new condition object
-	 */
-	@NotNull
-	static <T> Condition<T> of(T condition, Function<T, Boolean> predicate) {
-		
-		return new ConditionImpl<T>(condition, predicate);
-	}
+	void setCondition(boolean condition);
 	
 	/**
 	 * Creates a condition.
 	 *
-	 * @param <T> the type of the condition
 	 * @return new condition object
 	 */
 	@NotNull
-	static <T> Condition<T> create() {
+	static Condition create() {
 		
-		return new ConditionImpl<>();
+		return new ConditionImpl();
 	}
 }
