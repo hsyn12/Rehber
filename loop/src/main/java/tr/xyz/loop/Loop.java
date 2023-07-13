@@ -31,9 +31,28 @@ public interface Loop {
 		for (T t : iterable) consumer.accept(t);
 	}
 	
+	/**
+	 * Creates a loop to work while the condition is {@code true}.<br><br>
+	 *
+	 * <pre>
+	 * var list = List.of("march", "june", "april");
+	 * Loop.with(i -> {
+	 *    var item = list.get(i);
+	 *    if (item.length() < 5) return false;
+	 *    System.out.println(item);
+	 *    return true;
+	 * });
+	 * </pre>
+	 *
+	 * @param condition the condition function that takes the cycle counts as a parameter
+	 *                  and returns a boolean {@code true} to continue,
+	 *                  {@code false} to break.
+	 *                  The cycle count starts from 0 and increments by 1.
+	 */
 	static void with(@NotNull Function<Integer, Boolean> condition) {
 		
 		int counter = 0;
+		//noinspection StatementWithEmptyBody
 		while (condition.apply(counter++)) ;
 	}
 	
@@ -41,7 +60,7 @@ public interface Loop {
 		
 		var list = List.of("march", "june", "april");
 		
-		with(i -> {
+		Loop.with(i -> {
 			
 			var item = list.get(i);
 			
@@ -52,6 +71,7 @@ public interface Loop {
 			return true;
 		});
 		
+		System.out.println("Finished");
 	}
 	
 	
