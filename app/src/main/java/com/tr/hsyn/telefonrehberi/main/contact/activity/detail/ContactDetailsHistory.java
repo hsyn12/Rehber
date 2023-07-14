@@ -277,6 +277,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	 */
 	private void addContactHistoryView(@NonNull History history) {
 		
+		//todo Why is this here
 		this.history = history;
 		
 		//- Kişinin geçmişine yönlendirecek olan görünüm sadece bir kez eklenmeli
