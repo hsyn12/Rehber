@@ -44,4 +44,11 @@ public class FragmentContacts extends FragmentPageMenu {
 		
 		return 0;
 	}
+	
+	@Override
+	public void onSwipe(int index) {
+		
+		adapter.notifyItemChanged(index);
+		super.onSwipe(index);
+	}
 }

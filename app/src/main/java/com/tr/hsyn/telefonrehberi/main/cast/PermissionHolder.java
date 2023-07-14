@@ -36,6 +36,14 @@ public interface PermissionHolder extends ActivityCompat.OnRequestPermissionsRes
 			Manifest.permission.GET_ACCOUNTS
 	};
 	
+	/**
+	 * İzinlerin sonuçları için çağrılır.
+	 *
+	 * @param requestCode requestCode
+	 * @param result      [Permission : true/false] şeklinde izin sonuçlarını taşır
+	 */
+	void onPermissionsResult(int requestCode, Map<String, Boolean> result);
+	
 	default boolean isPermissionPermanentlyDenied(String permission) {
 		
 		return !((Activity) this).shouldShowRequestPermissionRationale(permission);
@@ -44,8 +52,7 @@ public interface PermissionHolder extends ActivityCompat.OnRequestPermissionsRes
 	/**
 	 * @return Rehber için okuma-yazma ve hesaplara erişim izni varsa <code>true</code>
 	 */
-	default boolean hasContactsPermissions() {
-		
+	default boolean hasContactPermissions() {
 		
 		return hasPermissions(CONTACT_PERMISSIONS);
 	}
@@ -85,14 +92,6 @@ public interface PermissionHolder extends ActivityCompat.OnRequestPermissionsRes
 		
 		onPermissionsResult(requestCode, createPermissionsResult(permissions, grantResults));
 	}
-	
-	/**
-	 * İzinlerin sonuçları için çağrılır.
-	 *
-	 * @param requestCode requestCode
-	 * @param result      [Permission : true/false] şeklinde izin sonuçlarını taşır
-	 */
-	void onPermissionsResult(int requestCode, Map<String, Boolean> result);
 	
 	@NonNull
 	default Map<String, Boolean> createPermissionsResult(@NonNull String[] permissions, @NonNull int[] grantResults) {

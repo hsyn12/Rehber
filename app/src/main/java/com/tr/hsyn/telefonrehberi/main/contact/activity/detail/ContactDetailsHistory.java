@@ -64,6 +64,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	private final   Gate     gateHistory     = DigiGate.newGate(1000L, this::hideProgress);
 	/** Gate used to block input while showing history. */
 	private final   Gate     gateShowHistory = AutoGate.newGate(1000L);
+	private final   Gate     gateLoading     = Gate.newGate();
 	protected       CallLogs callLogs;
 	protected       History  history;
 	/** Flag indicating whether the view for the contact history added to the UI. */
@@ -158,8 +159,6 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	 * This method gets called when the activity first created,
 	 * and when the user touched the show history view if a need be.<br>
 	 * This method is the starting point to get the contact history.
-	 * Because it gets called automatically when the activity is created,
-	 * it cannot be done permission control.
 	 */
 	private void setHistory() {
 		
@@ -229,14 +228,14 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	 * @see #hasCallLogPermissions()
 	 */
 	@NotNull
-	protected final History getCallHistory() {
+	private History getCallHistory() {
 		
 		//- Eğer arama kayıtları en az bir kez yüklenmiş ise sorun yok
 		//- Ancak yüklenmemiş ise, kayıtların buradan yüklenmesi biraz karışıklık yaratabilir.
-		callLogs = CallLogs.createOnTheCloud();
+		callLogs = Blue.getObject(Key.CALL_LOGS);
 		
 		//- Öncelikle arama kayıtları izinlerine bakılmalı
-		if (callLogs.isEmpty()) {
+		if (callLogs == null || callLogs.isEmpty()) {
 			
 			//- Arama kayıtları izinleri, kayıtların en az bir kez yüklendiğini gösterir
 			//- Ancak bu yükleme, yükleme istasyonunda mı yoksa burada mı gerçekleşti bilmiyoruz
@@ -247,15 +246,23 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 				//- Burada anlıyoruz ki kullanıcı yükleme istasyonuna gitmemiş
 				//- Bu durumda arama kayıtlarını buradan yüklememiz gerek
 				
-				var list = Over.CallLog.getCallLogManager().load();
-				
-				callLogs = CallLogs.createOnTheCloud(list);
-				
-				List<Call> calls = callLogs.getCallsById(String.valueOf(contact.getContactId()));
-				
-				calls.sort((x, y) -> Long.compare(y.getTime(), x.getTime()));
-				//_ This is the 'call history' of the selected contact
-				return History.of(contact, calls);
+				if (gateLoading.enter()) {
+					
+					var list = Over.CallLog.getCallLogManager().load();
+					
+					callLogs = CallLogs.createOnTheCloud(list);
+					
+					List<Call> calls = callLogs.getCallsById(String.valueOf(contact.getContactId()));
+					
+					calls.sort((x, y) -> Long.compare(y.getTime(), x.getTime()));
+					gateLoading.exit();
+					//_ This is the 'call history' of the selected contact
+					return History.of(contact, calls);
+				}
+				else {
+					
+					xlog.i("There is a loading please wait");
+				}
 			}
 		}
 		
@@ -268,6 +275,18 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 		return History.ofEmpty(contact);
 	}
 	
+	private void setHistoryView() {
+		
+		View historyView = getLayoutInflater().inflate(R.layout.show_contact_history, mainContainer, false);
+		mainContainer.addView(historyView);
+		
+		ImageView icon = historyView.findViewById(R.id.contact_history_icon);
+		Colors.setTintDrawable(icon.getDrawable(), Colors.lighter(Colors.getPrimaryColor(), 0.2f));
+		View view = historyView.findViewById(R.id.contact_history_item);
+		view.setBackgroundResource(Colors.getRipple());
+		view.setOnClickListener(this::onShowHistory);
+	}
+	
 	/**
 	 * Adds the view for showing the contact history.
 	 * If the user touches this view, the history gets shown by starting new activity.
@@ -277,25 +296,13 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	 */
 	private void addContactHistoryView(@NonNull History history) {
 		
-		//todo Why is this here
 		this.history = history;
 		
 		//- Kişinin geçmişine yönlendirecek olan görünüm sadece bir kez eklenmeli
 		if (!historyViewAdded) {
 			
 			historyViewAdded = true;
-			
-			View historyView = getLayoutInflater().inflate(R.layout.show_contact_history, mainContainer, false);
-			
-			mainContainer.addView(historyView);
-			
-			ImageView icon = historyView.findViewById(R.id.contact_history_icon);
-			Colors.setTintDrawable(icon.getDrawable(), Colors.lighter(Colors.getPrimaryColor(), 0.2f));
-			
-			View view = historyView.findViewById(R.id.contact_history_item);
-			
-			view.setBackgroundResource(Colors.getRipple());
-			view.setOnClickListener(this::onShowHistory);
+			setHistoryView();
 		}
 		
 		//- Geçmişin boş olması, ya gerçekten herhangi bir geçmiş kayıt olmadığı
@@ -326,11 +333,13 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	}
 	
 	/**
-	 * Listener for the show history event.
+	 * Listener for the show history click event.
 	 *
 	 * @param view Clicked view
 	 */
 	protected final void onShowHistory(View view) {
+		
+		xlog.i("Click show history");
 		
 		//- view null ise bu metodu biz kendimiz çağırmışız demektir
 		//- Kapıya takılmamak için bunu kontrol etmemiz gerek
@@ -411,6 +420,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 		Work.on(this::getCallHistory)
 				.onSuccess(h -> {
 					
+					history      = h;
 					isNewHistory = true;
 					onShowHistory(null);
 					onHistoryLoad();

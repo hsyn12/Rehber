@@ -130,13 +130,16 @@ public abstract class CallSummary extends ContactDetailsHistory {
 		
 		super.onHistoryLoad();
 		
-		History history = getCallHistory();
-		
 		// if no history, do not show anything
 		if (history.isEmpty()) {
 			
-			removeFromDetailView(mainLayout);
+			mainLayout.setVisibility(View.GONE);
+			//removeFromDetailView(mainLayout);
 			return;
+		}
+		else {
+			
+			mainLayout.setVisibility(View.VISIBLE);
 		}
 		
 		
@@ -285,8 +288,6 @@ public abstract class CallSummary extends ContactDetailsHistory {
 	 */
 	private void showCallSummary() {
 		
-		History history = getCallHistory();
-		
 		setupSummaryViews(history);
 		animateCallSummary();
 		needShowSummary = false;
@@ -409,10 +410,17 @@ public abstract class CallSummary extends ContactDetailsHistory {
 	 */
 	private void updateSummary() {
 		
-		History history = callLogs.getHistoryOf(contact);
-		
-		setupSummaryViews(history);
-		onSummaryUpdate();
+		if (callLogs != null) {
+			
+			History history = callLogs.getHistoryOf(contact);
+			
+			setupSummaryViews(history);
+			onSummaryUpdate();
+		}
+		else {
+			
+			xlog.d("The CallLogs is null");
+		}
 	}
 	
 	/**

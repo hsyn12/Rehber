@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 
 /**
  * Collection of the call logs.
- * This class can be accessed via {@link Blue#getObject(Key)} with the key {@link Key#CALL_LOGS}.
+ * This class can be accessed via {@link Blue#getObject(Key)} with the key {@link Key#CALL_LOGS} after creation.
  */
 @Keep
 public final class CallLogs {
@@ -57,7 +57,7 @@ public final class CallLogs {
 	private final          CoupleMap<String, Long>  mapNumberToId;
 	
 	/**
-	 * Creates a new empty call collection.
+	 * Creates a new call collection.
 	 */
 	private CallLogs() {
 		
@@ -93,7 +93,7 @@ public final class CallLogs {
 	}
 	
 	/**
-	 * Returns the map object that has a key by phone number, and a contact ID as value.
+	 * Returns the map object that has a key from phone number, and a contact ID as value.
 	 *
 	 * @return map
 	 */
@@ -102,6 +102,12 @@ public final class CallLogs {
 		return mapNumberToId;
 	}
 	
+	/**
+	 * Returns the contact by phone number.
+	 *
+	 * @param number the phone number
+	 * @return the contact
+	 */
 	@NotNull
 	public Contact getContact(@NotNull String number) {
 		

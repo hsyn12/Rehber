@@ -89,7 +89,8 @@ public interface Work<T> {
 	/**
 	 * Sets the priority.
 	 *
-	 * @param minPriority whether to execute the works on low-priority threads
+	 * @param minPriority whether to execute the works on low-priority threads.
+	 *                    If you do not call this method, the works will be executed on normal-priority threads.
 	 * @return Work
 	 */
 	Work<T> priority(boolean minPriority);

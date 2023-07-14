@@ -43,7 +43,7 @@ public abstract class LoadingStation extends CallLogLoader {
 		}
 		else {
 			
-			if (!hasContactsPermissions()) {
+			if (!hasContactPermissions()) {
 				
 				askContactPermissions();
 			}
@@ -104,7 +104,7 @@ public abstract class LoadingStation extends CallLogLoader {
 		
 		pageContacts.showProgress();
 		
-		if (!hasContactsPermissions()) {
+		if (!hasContactPermissions()) {
 			
 			askContactPermissions();
 			return;
