@@ -107,7 +107,7 @@ public abstract class ContactDetailsHeadWay extends ContactDetailsView implement
 	}
 	
 	/**
-	 * Sets the numbers of the contact into the text view
+	 * Sets the contact numbers into the text view
 	 */
 	private void setNumbers() {
 		

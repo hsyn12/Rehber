@@ -156,7 +156,10 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	/**
 	 * Start to load the call history for the contact associated with this activity.
 	 * This method gets called when the activity first created,
-	 * and when the user touched the show history view if a need be.
+	 * and when the user touched the show history view if a need be.<br>
+	 * This method is the starting point to get the contact history.
+	 * Because it gets called automatically when the activity is created,
+	 * it cannot be done permission control.
 	 */
 	private void setHistory() {
 		
@@ -226,42 +229,43 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	 * @see #hasCallLogPermissions()
 	 */
 	@NotNull
-	private History getCallHistory() {
+	protected final History getCallHistory() {
 		
 		//- Eğer arama kayıtları en az bir kez yüklenmiş ise sorun yok
 		//- Ancak yüklenmemiş ise, kayıtların buradan yüklenmesi biraz karışıklık yaratabilir.
-		callLogs = Blue.getObject(Key.CALL_LOGS);
+		callLogs = CallLogs.createOnTheCloud();
 		
 		//- Öncelikle arama kayıtları izinlerine bakılmalı
-		if (hasCallLogPermissions()) {
+		if (callLogs.isEmpty()) {
 			
 			//- Arama kayıtları izinleri, kayıtların en az bir kez yüklendiğini gösterir
 			//- Ancak bu yükleme, yükleme istasyonunda mı yoksa burada mı gerçekleşti bilmiyoruz
 			//- Kullanıcı uygulamayı ilk kez açıp, kişiler listesinden bir tıkla buraya gelmiş olabilir
 			//- Durum böyle ise bu değişkenin null olması gerek
-			if (callLogs == null) {
+			if (hasCallLogPermissions()) {
 				
 				//- Burada anlıyoruz ki kullanıcı yükleme istasyonuna gitmemiş
 				//- Bu durumda arama kayıtlarını buradan yüklememiz gerek
 				
-				Over.CallLog.getCallLogManager().load();
+				var list = Over.CallLog.getCallLogManager().load();
+				
+				callLogs = CallLogs.createOnTheCloud(list);
+				
+				List<Call> calls = callLogs.getCallsById(String.valueOf(contact.getContactId()));
+				
+				calls.sort((x, y) -> Long.compare(y.getTime(), x.getTime()));
+				//_ This is the 'call history' of the selected contact
+				return History.of(contact, calls);
 			}
 		}
-		else {
-			
-			//- İzinler yok
-			//- Demek ki zor yoldan ilerleyeceğiz
-			//- İzinlerin cevabı geldiğinde yeni liste oluşturacağız
-			//- İzinleri şimdi sormuyoruz çünkü kullanıcının tıklaması gerek
-			//- Şimdilik boş dönüyoruz
-			
-			return History.ofEmpty(contact);
-		}
 		
-		List<Call> calls = callLogs.getCallsById(String.valueOf(contact.getContactId()));
-		calls.sort((x, y) -> Long.compare(y.getTime(), x.getTime()));
-		//_ This is the 'call history' of the selected contact
-		return History.of(contact, calls);
+		//- İzinler yok
+		//- Demek ki zor yoldan ilerleyeceğiz
+		//- İzinlerin cevabı geldiğinde yeni liste oluşturacağız
+		//- İzinleri şimdi sormuyoruz çünkü kullanıcının tıklaması gerek
+		//- Şimdilik boş dönüyoruz
+		
+		return History.ofEmpty(contact);
 	}
 	
 	/**
@@ -410,6 +414,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 					onShowHistory(null);
 					onHistoryLoad();
 				})
+				.onError(xlog::w)
 				.onLast(this::hideProgress)
 				.execute();
 	}

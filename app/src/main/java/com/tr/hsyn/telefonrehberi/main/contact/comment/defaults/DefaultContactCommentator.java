@@ -46,7 +46,10 @@ import java.util.stream.Collectors;
 
 /**
  * This class implements the {@link ContactCommentator} interface and
- * provides default behavior for commenting on a contact.
+ * provides default behavior for commenting on a contact.<br>
+ * <p>
+ * The calling to the {@link #commentOn(Contact, Consumer)} method
+ * generates the comments about the contact.
  */
 public class DefaultContactCommentator implements ContactCommentator, Threaded {
 	
@@ -106,7 +109,7 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 	}
 	
 	/**
-	 * Returns the current contact commenting on.
+	 * Returns the current contact that has been commented on.
 	 *
 	 * @return the current contact
 	 */
@@ -136,14 +139,9 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 		}
 		else {
 			
-			xlog.d("Not fount call collection");
+			xlog.d("Not found the call collection");
 			onMain(this::returnComment);
 		}
-	}
-	
-	private void returnComment() {
-		
-		onMain(() -> callback.accept(comment));
 	}
 	
 	/**
@@ -154,7 +152,7 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 	private void commentOnContact() {
 		
 		// Here start to generate the comment.
-		// Call history is not 'null' and not empty at this point.
+		// The Call history is not 'null' and not empty at this point.
 		
 		xlog.d("Accessed the call history [contact='%s', size=%d]", contact.getName(), history.size());
 		
@@ -175,6 +173,11 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 			this.comment.append(commentOnDurations()); */
 		}
 		
+	}
+	
+	private void returnComment() {
+		
+		onMain(() -> callback.accept(comment));
 	}
 	
 	/**

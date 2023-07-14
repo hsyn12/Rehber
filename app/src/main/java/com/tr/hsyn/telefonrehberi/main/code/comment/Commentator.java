@@ -22,5 +22,11 @@ public interface Commentator<T> {
 	@NotNull
 	CharSequence commentOn(@NotNull T subject);
 	
+	/**
+	 * Comments on the subject.
+	 *
+	 * @param subject  the subject to be commented on
+	 * @param callback the callback to be called when the comment is done
+	 */
 	void commentOn(@NotNull T subject, @NotNull Consumer<CharSequence> callback);
 }
