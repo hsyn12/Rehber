@@ -198,9 +198,149 @@ public class QuantityComment implements ContactComment {
 		else {
 			
 			comment.append(getQuantityComment(history));
+			//+ call ranks
+			var incomingRank = getCallRank(Call.INCOMING);
+			var outgoingRank = getCallRank(Call.OUTGOING);
+			var missedRank   = getCallRank(Call.MISSED);
+			var rejectedRank = getCallRank(Call.REJECTED);
+			//+ ranks
+			int iRank = incomingRank == null ? -1 : incomingRank.getRank();
+			int oRank = outgoingRank == null ? -1 : outgoingRank.getRank();
+			int mRank = missedRank == null ? -1 : missedRank.getRank();
+			int rRank = rejectedRank == null ? -1 : rejectedRank.getRank();
+			//+ rank maps
+			var incomingRankMap = createRankMap(Call.INCOMING);
+			var outgoingRankMap = createRankMap(Call.OUTGOING);
+			var missedRankMap   = createRankMap(Call.MISSED);
+			var rejectedRankMap = createRankMap(Call.REJECTED);
+			//+ listeners
+			View.OnClickListener incomingListener = v -> new MostCallDialog(getActivity(), createMostCallItemList(incomingRankMap), getString(R.string.most_incoming_calls), null).show();
+			View.OnClickListener outgoingListener = v -> new MostCallDialog(getActivity(), createMostCallItemList(outgoingRankMap), getString(R.string.most_outgoing_calls), null).show();
+			View.OnClickListener missedListener   = v -> new MostCallDialog(getActivity(), createMostCallItemList(missedRankMap), getString(R.string.most_missed_calls), null).show();
+			View.OnClickListener rejectedListener = v -> new MostCallDialog(getActivity(), createMostCallItemList(rejectedRankMap), getString(R.string.most_rejected_calls), null).show();
 			
+			if (iRank == 1 && oRank == 1 && mRank == 1 && rRank == 1) {
+				
+				if (isTurkish) comment.append("Ve tüm listelerde birinci sırada görünüyor.\n");
+				else comment.append("And in the first place in the all call lists.\n");
+				//+ incoming
+				comment.append(getComment(incomingListener, incomingRank.getRankCount(), Call.INCOMING));
+				//+ outgoing
+				comment.append(getComment(outgoingListener, outgoingRank.getRankCount(), Call.OUTGOING));
+				//+ missed
+				comment.append(getComment(missedListener, missedRank.getRankCount(), Call.MISSED));
+				//+ rejected
+				comment.append(getComment(rejectedListener, rejectedRank.getRankCount(), Call.REJECTED));
+			}
+			else if (iRank != 1 && oRank != 1 && mRank != 1 && rRank != 1) {
+				
+				
+			}
+		}
+	}
+	
+	private @NotNull CharSequence getComment(View.OnClickListener listener, int rankCount, int callType) {
+		
+		Spanner comment = new Spanner();
+		
+		switch (callType) {
+			
+			case Call.INCOMING:
+				if (isTurkish) {
+					
+					comment.append("En çok arayanlar", getClickSpans(listener))
+							.append(" listesinde ");
+					
+					if (rankCount == 1) comment.append("tek başına ");
+					else comment.append(fmt("%d kişi ile birlikte ", rankCount - 1));
+					
+					comment.append("birinci sırada.\n");
+				}
+				else {
+					
+					comment.append("In the first place ");
+					
+					if (rankCount == 1) comment.append("alone ");
+					else comment.append(fmt("together with %d contact(s) ", rankCount - 1));
+					
+					comment.append("in the ")
+							.append("most incoming", getClickSpans(listener))
+							.append(" call list.\n");
+				}
+				break;
+			case Call.OUTGOING:
+				if (isTurkish) {
+					
+					comment.append("En çok arananlar", getClickSpans(listener))
+							.append(" listesinde ");
+					
+					if (rankCount == 1) comment.append("tek başına ");
+					else comment.append(fmt("%d kişi ile birlikte ", rankCount - 1));
+					
+					comment.append("birinci sırada.\n");
+				}
+				else {
+					
+					comment.append("In the first place ");
+					
+					if (rankCount == 1) comment.append("alone ");
+					else comment.append(fmt("together with %d contact(s) ", rankCount - 1));
+					
+					comment.append("in the ")
+							.append("most outgoing", getClickSpans(listener))
+							.append(" call list.\n");
+					
+				}
+				break;
+			case Call.MISSED:
+				if (isTurkish) {
+					
+					comment.append("En çok çağrı bırakanlar", getClickSpans(listener))
+							.append(" listesinde ");
+					
+					if (rankCount == 1) comment.append("tek başına ");
+					else comment.append(fmt("%d kişi ile birlikte ", rankCount - 1));
+					
+					comment.append("birinci sırada.\n");
+				}
+				else {
+					
+					comment.append("In the first place ");
+					
+					if (rankCount == 1) comment.append("alone ");
+					else comment.append(fmt("together with %d contact(s) ", rankCount - 1));
+					
+					comment.append("in the ")
+							.append("most missed", getClickSpans(listener))
+							.append(" call list.\n");
+				}
+				break;
+			case Call.REJECTED:
+				if (isTurkish) {
+					
+					comment.append("En çok reddedilenler", getClickSpans(listener))
+							.append(" listesinde ");
+					
+					if (rankCount == 1) comment.append("tek başına ");
+					else comment.append(fmt("%d kişi ile birlikte ", rankCount - 1));
+					
+					comment.append("birinci sırada.\n");
+				}
+				else {
+					
+					comment.append("In the first place ");
+					
+					if (rankCount == 1) comment.append("alone ");
+					else comment.append(fmt("together with %d contact(s) ", rankCount - 1));
+					
+					comment.append("in the ")
+							.append("most rejected", getClickSpans(listener))
+							.append(" call list.\n");
+				}
+				break;
 		}
 		
+		return comment;
 	}
 	
 	/**
