@@ -106,10 +106,10 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	 */
 	@Override
 	protected void prepare() {
-		//! This call must be first.
+		//Warn This call must be first.
 		super.prepare();
 		
-		//_ If no any phone numbers, then no history
+		//+ If no any phone numbers, then no history
 		
 		if (Lister.exist(phoneNumbers)) {
 			

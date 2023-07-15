@@ -235,18 +235,23 @@ public class QuantityComment implements ContactComment {
 		
 	}
 	
+	/**
+	 * The comment for the contacts, which have no any incoming call.
+	 *
+	 * @param contactsHasNoCall the list of contacts with no incoming call
+	 */
 	private void noIncomingComment(List<Contact> contactsHasNoCall) {
 		
 		if (isTurkish) {
 			
 			if (contactsHasNoCall.size() == 1) {
 				
-				comment.append("Bu kişi, rehberde seni aramayan tek kişi. ");
+				comment.append("Bu kişi, rehberinde seni aramayan tek kişi. ");
 			}
 			else {
 				ContactListDialog dialog = createContactListDialog(contactsHasNoCall, "Aramayanlar", fmt("%d Kişi", contactsHasNoCall.size()));
 				
-				comment.append("Bu kişi, rehberde ")
+				comment.append("Bu kişi, rehberinde ")
 						.append("seni hiç aramayan", getClickSpans(view -> dialog.show()))
 						.append(fmt(" %d kişiden biri. ", contactsHasNoCall.size()));
 			}
@@ -266,18 +271,23 @@ public class QuantityComment implements ContactComment {
 		}
 	}
 	
+	/**
+	 * The comment for the contacts, which have no any call.
+	 *
+	 * @param contactsHasNoCalls the list of contacts with no any call
+	 */
 	private void noCallsComment(List<Contact> contactsHasNoCalls) {
 		
 		if (isTurkish) {
 			
 			if (contactsHasNoCalls.size() == 1) {
 				
-				comment.append("Bu kişi, rehberdeki arama kaydı olmayan tek kişi. ");
+				comment.append("Bu kişi, rehberinde arama kaydı olmayan tek kişi. ");
 			}
 			else {
 				ContactListDialog dialog = createContactListDialog(contactsHasNoCalls, "Arama Kaydı Olmayanlar", fmt("%d Kişi", contactsHasNoCalls.size()));
 				
-				comment.append("Bu kişi, rehberde ")
+				comment.append("Bu kişi, rehberinde ")
 						.append("arama kaydı olmayan", getClickSpans(view -> dialog.show()))
 						.append(fmt(" %d kişiden biri. ", contactsHasNoCalls.size()));
 			}
@@ -296,7 +306,6 @@ public class QuantityComment implements ContactComment {
 			}
 		}
 	}
-	
 	
 	/**
 	 * Returns the contacts that no any incoming calls.
