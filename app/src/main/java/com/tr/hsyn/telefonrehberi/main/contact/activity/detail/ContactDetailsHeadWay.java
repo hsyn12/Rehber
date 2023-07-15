@@ -65,6 +65,7 @@ public abstract class ContactDetailsHeadWay extends ContactDetailsView implement
 	 * <u><strong>call super first</strong></u>,
 	 * and start their all work from there.
 	 * This is the start point for all subclasses.
+	 * And remember, this method only called once when the activity is created.
 	 */
 	@CallSuper
 	protected void prepare() {

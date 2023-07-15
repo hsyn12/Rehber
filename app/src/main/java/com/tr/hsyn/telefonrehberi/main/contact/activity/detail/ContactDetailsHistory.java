@@ -98,10 +98,10 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	private         boolean  isPermissionsRequested;
 	
 	/**
-	 * @inheritDoc Prepares the activity for display by loading the call history for the
-	 * 		contact associated with this activity.
+	 * @inheritDoc Prepares the activity for display by loading the call history for the selected contact.
 	 * 		This method gets called only one time by the superclass while the activity has been settings up.
-	 * 		So this method is the starting point for this class and for subclasses.
+	 * 		So this method is the starting point for this class and for subclasses.<br>
+	 * 		Here, if the selected contact has no phone numbers, does nothing.
 	 */
 	@Override
 	protected void prepare() {
@@ -118,7 +118,9 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	
 	/**
 	 * Callback method called when a permission requested.
-	 * Overrides the method from {@link PermissionHolder}.
+	 * The activity must call the {@link #onPermissionResult(int, String[], int[])} method
+	 * whenever took the permission results.
+	 * Otherwise, this method never called.
 	 *
 	 * @param requestCode The request code for the permission request.
 	 * @param result      A mapping of permissions to grant/deny outcomes.
@@ -192,7 +194,6 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	
 	/**
 	 * Requests call log permissions {@link PermissionHolder#CALL_LOG_PERMISSIONS} from the user.
-	 * Overrides the method from {@link PermissionHolder}.
 	 *
 	 * @see #RC_CALL_LOG
 	 * @see #onPermissionsResult(int, Map)
@@ -214,7 +215,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	
 	/**
 	 * Handles cases where call log permissions granted.
-	 * Override this method to perform custom actions when permissions get granted.
+	 * Override this method to perform actions when permissions get granted.
 	 *
 	 * @see #requestCallPermissions()
 	 */
@@ -224,7 +225,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	
 	/**
 	 * Handles cases where call log permissions denied.
-	 * Override this method to perform custom actions when permissions get denied.
+	 * Override this method to perform actions when permissions get denied.
 	 *
 	 * @see #requestCallPermissions()
 	 */
@@ -234,7 +235,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	
 	/**
 	 * Callback method called when the history each load.
-	 * Override this method to perform custom actions when the history loaded
+	 * Override this method to perform actions when the history loaded
 	 * or at the first loading.
 	 */
 	protected void onHistoryLoad() {

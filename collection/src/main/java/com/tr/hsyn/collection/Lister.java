@@ -488,6 +488,8 @@ public final class Lister {
 	}
 	
 	/**
+	 * Checks a list existence.
+	 *
 	 * @param list list
 	 * @return {@code true} if {@code list} is not {@code null} and not empty, {@code false} otherwise
 	 */
