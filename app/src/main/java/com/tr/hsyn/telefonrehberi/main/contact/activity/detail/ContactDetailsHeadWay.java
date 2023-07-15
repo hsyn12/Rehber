@@ -64,6 +64,7 @@ public abstract class ContactDetailsHeadWay extends ContactDetailsView implement
 	 * Subclasses of this class have to override this method,
 	 * <u><strong>call super first</strong></u>,
 	 * and start their all work from there.
+	 * This is the start point for all subclasses.
 	 */
 	@CallSuper
 	protected void prepare() {

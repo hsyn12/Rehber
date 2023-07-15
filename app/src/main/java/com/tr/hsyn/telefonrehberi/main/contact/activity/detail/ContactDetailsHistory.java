@@ -40,6 +40,7 @@ import java.util.Map;
  * This class has duty is to take the call log
  * and show the call history of the selected contact in a new activity.
  * So, it needs to have {@link Manifest.permission#READ_CALL_LOG} permission.
+ * And it is the first accessing class to the call log permissions.
  * It can request the permission to access the call log if needed
  * (the permission if not taken before,
  * it requests {@link PermissionHolder#CALL_LOG_PERMISSIONS}).
@@ -64,20 +65,40 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	private final   Gate     gateHistory     = DigiGate.newGate(1000L, this::hideProgress);
 	/** Gate used to block input while showing history. */
 	private final   Gate     gateShowHistory = AutoGate.newGate(1000L);
+	/**
+	 * The gate used to block input while loading the history.
+	 */
 	private final   Gate     gateLoading     = Gate.newGate();
+	/**
+	 * All call logs.
+	 */
 	protected       CallLogs callLogs;
+	/**
+	 * This is the call history of the selected contact.
+	 * It is protected for subclasses to use for practical reasons,
+	 * but subclasses do not set it directly.
+	 * It is updated on every needed and the {@link #onHistoryLoad()} method is called.
+	 * On the first loading it is maybe empty or {@code null} because the permissions are not granted.
+	 * When the permissions are granted,
+	 * it is updated and then the {@link #onHistoryLoad()} method is called.
+	 * So, if you need the history,
+	 * you need to override the {@link #onHistoryLoad()} method and
+	 * take it from in it when it is called.
+	 * When the {@link #onHistoryLoad()} method is called,
+	 * this variable is possibly empty but never {@code null}.
+	 */
 	protected       History  history;
 	/** Flag indicating whether the view for the contact history added to the UI. */
 	private         boolean  historyViewAdded;
-	/** Flag indicating whether it needs to show the history, after receiving call log permissions. */
+	/** Flag indicating whether the history is updated */
 	private         boolean  isNewHistory    = true;
-	/** Flag indicating whether call log permissions get requested. */
+	/** Flag indicating whether the history needs to be shown. */
 	private         boolean  needShowHistory;
-	/** Flag indicating whether a new history needs to get loaded. */
+	/** Flag indicating whether the permissions are requested */
 	private         boolean  isPermissionsRequested;
 	
 	/**
-	 * @inheritDoc Prepares this activity for display by loading the call history for the
+	 * @inheritDoc Prepares the activity for display by loading the call history for the
 	 * 		contact associated with this activity.
 	 * 		This method gets called only one time by the superclass while the activity has been settings up.
 	 * 		So this method is the starting point for this class and for subclasses.
