@@ -204,10 +204,15 @@ public class QuantityComment implements ContactComment {
 			var missedRank   = getCallRank(Call.MISSED);
 			var rejectedRank = getCallRank(Call.REJECTED);
 			//+ ranks
-			int iRank = incomingRank == null ? -1 : incomingRank.getRank();
-			int oRank = outgoingRank == null ? -1 : outgoingRank.getRank();
-			int mRank = missedRank == null ? -1 : missedRank.getRank();
-			int rRank = rejectedRank == null ? -1 : rejectedRank.getRank();
+			int iRank = incomingRank == null ? 0 : incomingRank.getRank();
+			int oRank = outgoingRank == null ? 0 : outgoingRank.getRank();
+			int mRank = missedRank == null ? 0 : missedRank.getRank();
+			int rRank = rejectedRank == null ? 0 : rejectedRank.getRank();
+			
+			int iCount = incomingRank == null ? 0 : incomingRank.getRankCount();
+			int oCount = outgoingRank == null ? 0 : outgoingRank.getRankCount();
+			int mCount = missedRank == null ? 0 : missedRank.getRankCount();
+			int rCount = rejectedRank == null ? 0 : rejectedRank.getRankCount();
 			//+ rank maps
 			var incomingRankMap = createRankMap(Call.INCOMING);
 			var outgoingRankMap = createRankMap(Call.OUTGOING);
@@ -219,20 +224,29 @@ public class QuantityComment implements ContactComment {
 			View.OnClickListener missedListener   = v -> new MostCallDialog(getActivity(), createMostCallItemList(missedRankMap), getString(R.string.most_missed_calls), null).show();
 			View.OnClickListener rejectedListener = v -> new MostCallDialog(getActivity(), createMostCallItemList(rejectedRankMap), getString(R.string.most_rejected_calls), null).show();
 			
-			if (iRank == 1 && oRank == 1 && mRank == 1 && rRank == 1) {
+			int rank = iRank + oRank + mRank + rRank;
+			
+			if (rank == 4) {
 				
 				if (isTurkish) comment.append("Ve tüm listelerde birinci sırada görünüyor.\n");
 				else comment.append("And in the first place in the all call lists.\n");
 				//+ incoming
-				comment.append(getComment(incomingListener, incomingRank.getRankCount(), Call.INCOMING));
+				comment.append(getComment(incomingListener, iCount, Call.INCOMING));
 				//+ outgoing
-				comment.append(getComment(outgoingListener, outgoingRank.getRankCount(), Call.OUTGOING));
+				comment.append(getComment(outgoingListener, oCount, Call.OUTGOING));
 				//+ missed
-				comment.append(getComment(missedListener, missedRank.getRankCount(), Call.MISSED));
+				comment.append(getComment(missedListener, mCount, Call.MISSED));
 				//+ rejected
-				comment.append(getComment(rejectedListener, rejectedRank.getRankCount(), Call.REJECTED));
+				comment.append(getComment(rejectedListener, rCount, Call.REJECTED));
 			}
-			else if (iRank != 1 && oRank != 1 && mRank != 1 && rRank != 1) {
+			else if (rank == 3) {
+				//+ which one is out
+				if (rRank == 0) {}
+				else if (mRank == 0) {}
+				else if (oRank == 0) {}
+				else if (iRank == 0) {}
+			}
+			else if (rank == 2) {
 				
 				
 			}
