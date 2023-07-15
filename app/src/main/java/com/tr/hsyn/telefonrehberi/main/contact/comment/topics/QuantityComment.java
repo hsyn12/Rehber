@@ -209,30 +209,73 @@ public class QuantityComment implements ContactComment {
 		}
 		//+ the history is not empty
 		else {//+ looking for incoming
-			List<Call> incomingCalls = history.getIncomingCalls();
-			//+ create a call logs with only incoming calls
-			CallLogs incomingCallLogs = CallLogs.create(this.callLogs.getIncomingCalls());
 			
-			if (incomingCalls.isEmpty()) {
+			mostIncomingComment(history);
+			
+		}
+		
+	}
+	
+	/**
+	 * The comment for the contact, with the most incoming calls.
+	 *
+	 * @param history the history
+	 */
+	private void mostIncomingComment(@NotNull History history) {
+		
+		List<Call> incomingCalls = history.getIncomingCalls();
+		//+ create a call logs with only incoming calls
+		assert this.callLogs != null;
+		CallLogs incomingCallLogs = CallLogs.create(this.callLogs.getIncomingCalls());
+		
+		if (incomingCalls.isEmpty()) {
+			
+			noIncomingComment(getContactsHasNoCall(incomingCallLogs));
+		}
+		
+		else {//+ incoming calls are not empty
+			//+ from the most callers or from the fewest callers?
+			
+			Map<Integer, List<CallRank>> rankMap = incomingCallLogs.makeRank();
+			int                          rank    = CallLogs.getRank(rankMap, contact);
+			
+			if (rank == 1) {
+				//+ from the most callers
 				
-				noIncoming = true;
-				noIncomingComment(getContactsHasNoCall(incomingCallLogs));
-			}
-			//+ incoming calls are not empty
-			else {
-				//+ from the most callers or from the fewest callers?
+				var                  candidate = rankMap.get(rank);
+				View.OnClickListener listener  = v -> new MostCallDialog(getActivity(), createMostCallItemList(rankMap), getString(R.string.most_incoming_calls), String.valueOf(rankMap.size()));
 				
-				
-				Map<Integer, List<CallRank>> rankMap = incomingCallLogs.makeRank();
-				int                          rank    = CallLogs.getRank(rankMap, contact);
-				
-				if (rank == 1) {
+				if (isTurkish) {
 					
+					comment.append("Bu kişi seni ")
+							.append(fmt("en çok arayan"), getClickSpans(listener));
 					
+					assert candidate != null;
+					if (candidate.size() == 1) {
+						
+						comment.append(" kişi. ");
+					}
+					else {
+						
+						comment.append(fmt(" %d kişiden biri. ", candidate.size()));
+					}
+				}
+				else {
+					assert candidate != null;
+					if (candidate.size() == 1) {
+						comment.append("This contact is")
+								.append("the most caller", getClickSpans(listener))
+								.append(" to you. ");
+					}
+					else {
+						
+						comment.append(fmt("The contact is the one of %d contact who is ", candidate.size()))
+								.append("the most caller", getClickSpans(listener))
+								.append(" to you. ");
+					}
 				}
 			}
 		}
-		
 	}
 	
 	/**
