@@ -234,6 +234,7 @@ public class QuantityComment implements ContactComment {
 			}
 			else if (iRank != 1 && oRank != 1 && mRank != 1 && rRank != 1) {
 				
+				
 			}
 		}
 	}
