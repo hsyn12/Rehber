@@ -15,12 +15,12 @@ public class CallRank {
 	
 	private final String     key;
 	private final List<Call> calls;
-	private final String     number;
 	private       int        rank;
 	private       long       incomingDuration;
 	private       long       outgoingDuration;
 	private       String     name;
 	private       Contact    contact;
+	private       int        rankCount;
 	
 	public CallRank(@NotNull String key, @NotNull List<Call> calls) {
 		
@@ -32,8 +32,40 @@ public class CallRank {
 		this.rank  = rank;
 		this.key   = key;
 		this.calls = calls;
-		number     = calls.get(0).getNumber();
 		name       = calls.get(0).getName();
+	}
+	
+	@Override
+	public int hashCode() {
+		
+		return key.hashCode();
+	}
+	
+	@Override
+	public boolean equals(@Nullable Object obj) {
+		
+		return obj instanceof CallRank && key.equals(((CallRank) obj).key);
+	}
+	
+	@NotNull
+	@Override
+	public String toString() {
+		
+		return "CallRank{" +
+		       "rank=" + rank +
+		       ", key='" + key + '\'' +
+		       ", calls=" + calls.size() +
+		       '}';
+	}
+	
+	public int getRankCount() {
+		
+		return rankCount;
+	}
+	
+	public void setRankCount(int rankCount) {
+		
+		this.rankCount = rankCount;
 	}
 	
 	public Contact getContact() {
@@ -44,11 +76,6 @@ public class CallRank {
 	public void setContact(Contact contact) {
 		
 		this.contact = contact;
-	}
-	
-	public String getNumber() {
-		
-		return number;
 	}
 	
 	public String getName() {
@@ -109,28 +136,5 @@ public class CallRank {
 	public List<Call> getCalls() {
 		
 		return calls;
-	}
-	
-	@Override
-	public int hashCode() {
-		
-		return key.hashCode();
-	}
-	
-	@Override
-	public boolean equals(@Nullable Object obj) {
-		
-		return obj instanceof CallRank && key.equals(((CallRank) obj).key);
-	}
-	
-	@NotNull
-	@Override
-	public String toString() {
-		
-		return "CallRank{" +
-		       "rank=" + rank +
-		       ", key='" + key + '\'' +
-		       ", calls=" + calls.size() +
-		       '}';
 	}
 }

@@ -465,6 +465,27 @@ public final class CallLogs {
 	}
 	
 	/**
+	 * Creates a new {@link CallLogs} object based on the given call type.
+	 *
+	 * @param callType the call type
+	 * @return the new {@link CallLogs} object
+	 */
+	public @NotNull CallLogs createFrom(int callType) {
+		
+		switch (callType) {
+			
+			case Call.INCOMING:
+			case Call.INCOMING_WIFI: return create(getIncomingCalls());
+			case Call.OUTGOING:
+			case Call.OUTGOING_WIFI: return create(getOutgoingCalls());
+			case Call.MISSED: return create(getMissedCalls());
+			case Call.REJECTED: return create(getRejectedCalls());
+			
+			default: throw new IllegalArgumentException("Unknown call type : " + callType);
+		}
+	}
+	
+	/**
 	 * Creates a rank map for calls that related to this {@link CallLogs} object.
 	 * Remember, a {@code CallLogs} object can be related to any list of {@link Call}.
 	 *
@@ -475,6 +496,11 @@ public final class CallLogs {
 	public @NotNull Map<Integer, List<CallRank>> makeRank() {
 		
 		return createRankMap(mapIdToCalls, QUANTITY_COMPARATOR);
+	}
+	
+	public static @NotNull Map<Integer, List<CallRank>> makeRank(@NotNull CallLogs callLogs) {
+		
+		return callLogs.makeRank();
 	}
 	
 	/**
@@ -884,12 +910,12 @@ public final class CallLogs {
 	 * @param rankMap the rank map
 	 * @param rank    the rank of the contact
 	 * @param contact the contact
-	 * @return the {@link CallRank}
+	 * @return the {@link CallRank} or {@code null} if not found
 	 */
 	@Nullable
 	public static CallRank getCallRank(@NotNull Map<Integer, List<CallRank>> rankMap, int rank, Contact contact) {
 		
-		if (contact == null) return null;
+		if (contact == null || rank < 1) return null;
 		
 		List<CallRank> ranks = rankMap.get(rank);
 		

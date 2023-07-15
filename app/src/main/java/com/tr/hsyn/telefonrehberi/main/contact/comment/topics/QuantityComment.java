@@ -195,8 +195,7 @@ public class QuantityComment implements ContactComment {
 	private void evaluateCalls() {
 		
 		assert callLogs != null;
-		History history    = callLogs.getHistoryOf(contact);
-		boolean noIncoming = false;
+		History history = callLogs.getHistoryOf(contact);
 		
 		if (history.isEmpty()) {
 			
@@ -208,43 +207,107 @@ public class QuantityComment implements ContactComment {
 			}
 		}
 		//+ the history is not empty
-		else {//+ looking for incoming
+		else {
+			//+ looking for incoming
 			
-			mostIncomingComment(history);
+			CallRank incomingCallRank = getCallRank(Call.INCOMING);
+			CallRank outgoingCallRank = getCallRank(Call.OUTGOING);
+			
+			if (incomingCallRank != null && incomingCallRank.getRank() == 1) {
+				
+				incomingComment(history);
+			}
 			
 		}
 		
 	}
 	
 	/**
-	 * The comment for the contact, with the most incoming calls.
+	 * Returns the call rank of the given call type for the contact.
+	 *
+	 * @param callType the call type
+	 * @return the call rank or {@code null} if not found
+	 */
+	@Nullable
+	private CallRank getCallRank(int callType) {
+		
+		Map<Integer, List<CallRank>> rankMap;
+		
+		switch (callType) {
+			
+			case Call.INCOMING:
+			case Call.INCOMING_WIFI:
+				rankMap = createRankMap(Call.INCOMING);
+				break;
+			case Call.OUTGOING:
+			case Call.OUTGOING_WIFI:
+				rankMap = createRankMap(Call.OUTGOING);
+				break;
+			case Call.MISSED:
+				rankMap = createRankMap(Call.MISSED);
+				break;
+			case Call.REJECTED:
+				rankMap = createRankMap(Call.REJECTED);
+				break;
+			default: throw new IllegalArgumentException("Unknown call type : " + callType);
+		}
+		
+		int            rank      = CallLogs.getRank(rankMap, contact);
+		List<CallRank> candidate = rankMap.get(rank);
+		CallRank       callRank  = CallLogs.getCallRank(rankMap, rank, contact);
+		
+		if (callRank != null) {
+			
+			callRank.setContact(contact);
+			//noinspection DataFlowIssue
+			callRank.setRankCount(candidate.size());
+		}
+		
+		return callRank;
+	}
+	
+	private @NotNull Map<Integer, List<CallRank>> createRankMap(int callType) {
+		
+		assert this.callLogs != null;
+		switch (callType) {
+			
+			case Call.INCOMING:
+			case Call.INCOMING_WIFI: return CallLogs.create(this.callLogs.getIncomingCalls()).makeRank();
+			case Call.OUTGOING:
+			case Call.OUTGOING_WIFI: return CallLogs.create(this.callLogs.getOutgoingCalls()).makeRank();
+			case Call.MISSED: return CallLogs.create(this.callLogs.getMissedCalls()).makeRank();
+			case Call.REJECTED: return CallLogs.create(this.callLogs.getRejectedCalls()).makeRank();
+			default: throw new IllegalArgumentException("Unknown call type: " + callType);
+		}
+	}
+	
+	/**
+	 * Comments the contact, which has the most incoming calls.
 	 *
 	 * @param history the history
-	 * @return {@code true} if the contact has the most incoming calls
 	 */
-	private boolean mostIncomingComment(@NotNull History history) {
+	private void incomingComment(@NotNull History history) {
 		
 		List<Call> incomingCalls = history.getIncomingCalls();
 		//+ create a call logs with only incoming calls
 		assert this.callLogs != null;
-		CallLogs incomingCallLogs = CallLogs.create(this.callLogs.getIncomingCalls());
+		CallLogs                     incomingCallLogs = CallLogs.create(this.callLogs.getIncomingCalls());
+		Map<Integer, List<CallRank>> rankMap          = incomingCallLogs.makeRank();
+		int                          rank             = CallLogs.getRank(rankMap, contact);
+		List<CallRank>               candidate        = rankMap.get(rank);
 		
 		if (incomingCalls.isEmpty()) {
 			
 			noIncomingComment(getContactsHasNoCall(incomingCallLogs));
-			return false;
 		}
-		else {//+ incoming calls are not empty
+		else {
+			//+ incoming calls are not empty
 			//+ from the most callers or from the fewest callers?
-			
-			Map<Integer, List<CallRank>> rankMap = incomingCallLogs.makeRank();
-			int                          rank    = CallLogs.getRank(rankMap, contact);
 			
 			if (rank == 1) {
 				//+ from the most callers
 				
-				var                  candidate = rankMap.get(rank);
-				View.OnClickListener listener  = v -> new MostCallDialog(getActivity(), createMostCallItemList(rankMap), getString(R.string.most_incoming_calls), String.valueOf(rankMap.size()));
+				View.OnClickListener listener = v -> new MostCallDialog(getActivity(), createMostCallItemList(rankMap), getString(R.string.most_incoming_calls), String.valueOf(rankMap.size()));
 				
 				if (isTurkish) {
 					
@@ -275,36 +338,38 @@ public class QuantityComment implements ContactComment {
 								.append(" to you. ");
 					}
 				}
-				
-				return true;
 			}
 		}
-		
-		return false;
 	}
 	
+	/**
+	 * Comments the contact, which has the most outgoing calls.
+	 *
+	 * @param history the history of the contact
+	 */
 	private void mostOutgoingComment(@NotNull History history) {
 		
 		List<Call> outgoingCalls = history.getOutgoingCalls();
 		//+ create a call logs with only incoming calls
 		assert this.callLogs != null;
-		CallLogs outgoingCallLogs = CallLogs.create(this.callLogs.getOutgoingCalls());
+		CallLogs                     outgoingCallLogs = CallLogs.create(this.callLogs.getOutgoingCalls());
+		Map<Integer, List<CallRank>> rankMap          = outgoingCallLogs.makeRank();
+		int                          rank             = CallLogs.getRank(rankMap, contact);
+		List<CallRank>               candidate        = rankMap.get(rank);
+		
 		
 		if (outgoingCalls.isEmpty()) {
 			
 			noOutgoingComment(getContactsHasNoCall(outgoingCallLogs));
 		}
-		else {//+ incoming calls are not empty
+		else {
+			//+ incoming calls are not empty
 			//+ from the most callers or from the fewest callers?
-			
-			Map<Integer, List<CallRank>> rankMap = outgoingCallLogs.makeRank();
-			int                          rank    = CallLogs.getRank(rankMap, contact);
 			
 			if (rank == 1) {
 				//+ from the most callers
 				
-				var                  candidate = rankMap.get(rank);
-				View.OnClickListener listener  = v -> new MostCallDialog(getActivity(), createMostCallItemList(rankMap), getString(R.string.most_incoming_calls), String.valueOf(rankMap.size()));
+				View.OnClickListener listener = v -> new MostCallDialog(getActivity(), createMostCallItemList(rankMap), getString(R.string.most_incoming_calls), String.valueOf(rankMap.size()));
 				
 				if (isTurkish) {
 					
