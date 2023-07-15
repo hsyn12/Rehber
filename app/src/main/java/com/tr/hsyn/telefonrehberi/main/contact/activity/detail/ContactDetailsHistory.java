@@ -39,6 +39,7 @@ import java.util.Map;
 /**
  * This class has duty is to take the call log
  * and show the call history of the selected contact in a new activity.
+ * ({@link #showCalls(List)})
  * So, it needs to have {@link Manifest.permission#READ_CALL_LOG} permission.
  * And it is the first accessing class to the call log permissions.
  * It can request the permission to access the call log if needed
@@ -457,6 +458,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	 */
 	protected final void showCalls(List<Call> calls) {
 		
+		//+ keep closed
 		if (gateShowHistory.enter()) {
 			
 			xlog.dx("Show call history for : %s", contact.getName());
