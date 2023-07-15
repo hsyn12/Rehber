@@ -232,7 +232,6 @@ public class QuantityComment implements ContactComment {
 			
 			noIncomingComment(getContactsHasNoCall(incomingCallLogs));
 		}
-		
 		else {//+ incoming calls are not empty
 			//+ from the most callers or from the fewest callers?
 			
@@ -278,6 +277,62 @@ public class QuantityComment implements ContactComment {
 		}
 	}
 	
+	private void mostOutgoingComment(@NotNull History history) {
+		
+		List<Call> outgoingCalls = history.getOutgoingCalls();
+		//+ create a call logs with only incoming calls
+		assert this.callLogs != null;
+		CallLogs outgoingCallLogs = CallLogs.create(this.callLogs.getOutgoingCalls());
+		
+		if (outgoingCalls.isEmpty()) {
+			
+			noOutgoingComment(getContactsHasNoCall(outgoingCallLogs));
+		}
+		else {//+ incoming calls are not empty
+			//+ from the most callers or from the fewest callers?
+			
+			Map<Integer, List<CallRank>> rankMap = outgoingCallLogs.makeRank();
+			int                          rank    = CallLogs.getRank(rankMap, contact);
+			
+			if (rank == 1) {
+				//+ from the most callers
+				
+				var                  candidate = rankMap.get(rank);
+				View.OnClickListener listener  = v -> new MostCallDialog(getActivity(), createMostCallItemList(rankMap), getString(R.string.most_incoming_calls), String.valueOf(rankMap.size()));
+				
+				if (isTurkish) {
+					
+					comment.append("Bu kişi ")
+							.append(fmt("en çok aradığın"), getClickSpans(listener));
+					
+					assert candidate != null;
+					if (candidate.size() == 1) {
+						
+						comment.append(" kişi. ");
+					}
+					else {
+						
+						comment.append(fmt(" %d kişiden biri. ", candidate.size()));
+					}
+				}
+				else {
+					assert candidate != null;
+					if (candidate.size() == 1) {
+						comment.append("This contact is the contact that ")
+								.append("your most calling to", getClickSpans(listener))
+								.append(" . ");
+					}
+					else {
+						
+						comment.append(fmt("The contact is the one of %d contact who is ", candidate.size()))
+								.append("your most calling to", getClickSpans(listener))
+								.append(" to you. ");
+					}
+				}
+			}
+		}
+	}
+	
 	/**
 	 * The comment for the contacts, which have no any incoming call.
 	 *
@@ -309,6 +364,37 @@ public class QuantityComment implements ContactComment {
 				
 				comment.append(fmt("The contact is the one of %d contacts who ", contactsHasNoCall.size()))
 						.append("do not call you", getClickSpans(view -> dialog.show()))
+						.append(" . ");
+			}
+		}
+	}
+	
+	private void noOutgoingComment(List<Contact> contactsHasNoCall) {
+		
+		if (isTurkish) {
+			
+			if (contactsHasNoCall.size() == 1) {
+				
+				comment.append("Bu kişi, rehberdeki aramadığın tek kişi. ");
+			}
+			else {
+				ContactListDialog dialog = createContactListDialog(contactsHasNoCall, "Aranmayanlar", fmt("%d Kişi", contactsHasNoCall.size()));
+				
+				comment.append("Bu kişi, rehberindeki ")
+						.append("hiç aranmayan", getClickSpans(view -> dialog.show()))
+						.append(fmt(" %d kişiden biri. ", contactsHasNoCall.size()));
+			}
+		}
+		else {
+			if (contactsHasNoCall.size() == 1) {
+				
+				comment.append("This contact is the only contact that you do not call in your contacts. ");
+			}
+			else {
+				ContactListDialog dialog = createContactListDialog(contactsHasNoCall, "Contacts That You Do Not Call", fmt("%d Contacts", contactsHasNoCall.size()));
+				
+				comment.append(fmt("The contact is the one of %d contacts that ", contactsHasNoCall.size()))
+						.append(" you do not call", getClickSpans(view -> dialog.show()))
 						.append(" . ");
 			}
 		}
