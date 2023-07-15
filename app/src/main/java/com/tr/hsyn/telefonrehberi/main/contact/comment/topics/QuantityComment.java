@@ -220,8 +220,9 @@ public class QuantityComment implements ContactComment {
 	 * The comment for the contact, with the most incoming calls.
 	 *
 	 * @param history the history
+	 * @return {@code true} if the contact has the most incoming calls
 	 */
-	private void mostIncomingComment(@NotNull History history) {
+	private boolean mostIncomingComment(@NotNull History history) {
 		
 		List<Call> incomingCalls = history.getIncomingCalls();
 		//+ create a call logs with only incoming calls
@@ -231,6 +232,7 @@ public class QuantityComment implements ContactComment {
 		if (incomingCalls.isEmpty()) {
 			
 			noIncomingComment(getContactsHasNoCall(incomingCallLogs));
+			return false;
 		}
 		else {//+ incoming calls are not empty
 			//+ from the most callers or from the fewest callers?
@@ -273,8 +275,12 @@ public class QuantityComment implements ContactComment {
 								.append(" to you. ");
 					}
 				}
+				
+				return true;
 			}
 		}
+		
+		return false;
 	}
 	
 	private void mostOutgoingComment(@NotNull History history) {
