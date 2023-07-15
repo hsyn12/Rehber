@@ -147,19 +147,6 @@ public class QuantityComment implements ContactComment {
 		return callback;
 	}
 	
-	private void test() {
-		
-		assert callLogs != null;
-		List<Contact> contacts = CallLogs.getContactsWithNumber();
-		
-		if (contacts == null) return;
-		
-		ContactListDialog dialog = new ContactListDialog(activity, contacts, "Kişiler", fmt("%d Kişi", contacts.size()));
-		
-		comment.append("Kişiler listesi", getClickSpans(view -> dialog.show()))
-				.append(" test ediliyor. ");
-	}
-	
 	@NotNull
 	private ContactListDialog createContactListDialog(@NotNull List<Contact> contacts, @NotNull String title, @NotNull String subtitle) {
 		
@@ -197,6 +184,7 @@ public class QuantityComment implements ContactComment {
 		assert callLogs != null;
 		History history = callLogs.getHistoryOf(contact);
 		
+		//+ no any calls
 		if (history.isEmpty()) {
 			
 			List<Contact> contactsHasNoCall = getContactsHasNoCall(callLogs);
@@ -208,15 +196,8 @@ public class QuantityComment implements ContactComment {
 		}
 		//+ the history is not empty
 		else {
-			//+ looking for incoming
 			
-			CallRank incomingCallRank = getCallRank(Call.INCOMING);
-			CallRank outgoingCallRank = getCallRank(Call.OUTGOING);
-			
-			if (incomingCallRank != null && incomingCallRank.getRank() == 1) {
-				
-				incomingComment(history);
-			}
+			comment.append(getQuantityComment(history));
 			
 		}
 		
@@ -604,11 +585,9 @@ public class QuantityComment implements ContactComment {
 	}
 	
 	@NotNull
-	private CharSequence getQuantityComment(boolean isTurkish) {
+	private CharSequence getQuantityComment(History history) {
 		
-		Spanner comment = new Spanner();
-		assert callLogs != null;
-		History              history  = callLogs.getHistoryOf(contact);
+		Spanner              comment  = new Spanner();
 		String               name     = contact.getName() != null && !PhoneNumbers.isPhoneNumber(contact.getName()) ? contact.getName() : Stringx.toTitle(getString(R.string.word_contact));
 		View.OnClickListener listener = view -> new ShowCallsDialog(activity, history.getCalls(), contact.getName(), null).show();
 		
