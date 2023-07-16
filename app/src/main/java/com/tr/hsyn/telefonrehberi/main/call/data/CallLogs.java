@@ -1,6 +1,8 @@
 package com.tr.hsyn.telefonrehberi.main.call.data;
 
 
+import android.content.Context;
+
 import androidx.annotation.NonNull;
 
 import com.tr.hsyn.calldata.Call;
@@ -11,6 +13,7 @@ import com.tr.hsyn.keep.Keep;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.string.Stringx;
+import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
 import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.contact.data.History;
@@ -42,19 +45,71 @@ public final class CallLogs {
 	/**
 	 * The comparator used to sort the entries by quantity descending.
 	 */
-	public static final Comparator<Map.Entry<String, List<Call>>> QUANTITY_COMPARATOR = (e1, e2) -> e2.getValue().size() - e1.getValue().size();
-	
+	public static final    Comparator<Map.Entry<String, List<Call>>> QUANTITY_COMPARATOR  = (e1, e2) -> e2.getValue().size() - e1.getValue().size();
+	/**
+	 * The filter for All calls.
+	 */
+	public static final    int                                       FILTER_ALL           = 0;
+	/**
+	 * The filter for Incoming calls.
+	 */
+	public static final    int                                       FILTER_INCOMING      = 1;
+	/**
+	 * The filter for Outgoing calls.
+	 */
+	public static final    int                                       FILTER_OUTGOING      = 2;
+	/**
+	 * The filter for missed calls
+	 */
+	public static final    int                                       FILTER_MISSED        = 3;
+	/**
+	 * The filter for rejected calls
+	 */
+	public static final    int                                       FILTER_REJECTED      = 4;
+	/**
+	 * The filter for no-named calls
+	 */
+	public static final    int                                       FILTER_NO_NAMED      = 5;
+	/**
+	 * The filter for random calls
+	 */
+	public static final    int                                       FILTER_RANDOM        = 6;
+	/**
+	 * The filter for most incoming
+	 */
+	public static final    int                                       FILTER_MOST_INCOMING = 7;
+	/**
+	 * The filter for most outgoing
+	 */
+	public static final    int                                       FILTER_MOST_OUTGOING = 8;
+	/**
+	 * The filter for most missed
+	 */
+	public static final    int                                       FILTER_MOST_MISSED   = 9;
+	/**
+	 * The filter for most rejected
+	 */
+	public static final    int                                       FILTER_MOST_REJECTED = 10;
+	/**
+	 * The filter for most speaking (incoming)
+	 */
+	public static final    int                                       FILTER_MOST_SPEAKING = 11;
+	/**
+	 * The filter for most talking (outgoing)
+	 */
+	public static final    int                                       FILTER_MOST_TALKING  = 12;
 	/**
 	 * All call log calls
 	 */
-	@NotNull private final List<Call>               calls;
+	@NotNull private final List<Call>                                calls;
 	/**
 	 * Map object that has a key by phone number or by contact ID and a value as a list of its calls
 	 * that belong to the phone number.
 	 */
-	@NotNull private final Map<String, List<Call>>  mapIdToCalls;
-	private final          CoupleMap<Long, Contact> mapIdToContact;
-	private final          CoupleMap<String, Long>  mapNumberToId;
+	@NotNull private final Map<String, List<Call>>                   mapIdToCalls;
+	private final          CoupleMap<Long, Contact>                  mapIdToContact;
+	private final          CoupleMap<String, Long>                   mapNumberToId;
+	
 	
 	/**
 	 * Creates a new call collection.
@@ -928,5 +983,17 @@ public final class CallLogs {
 		return null;
 	}
 	
-	
+	/**
+	 * Returns the name equivalent of the filtering options used in the call logs.
+	 *
+	 * @param context context
+	 * @param filter  the filter
+	 * @return the name of the filter
+	 */
+	static String getCallFilterName(@NotNull Context context, int filter) {
+		
+		var filters = context.getResources().getStringArray(R.array.call_filter_items);
+		
+		return filters[filter];
+	}
 }

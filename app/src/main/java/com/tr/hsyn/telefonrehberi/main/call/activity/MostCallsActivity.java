@@ -19,6 +19,7 @@ import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.call.Group;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallLogs;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallOver;
 import com.tr.hsyn.telefonrehberi.main.data.Res;
 import com.tr.hsyn.textdrawable.TextDrawable;
@@ -34,10 +35,13 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 
+/**
+ * Shows the most calls by a filter.
+ */
 public class MostCallsActivity extends ActivityView {
 	
-	private final int                     FILTER = Objects.requireNonNull(Blue.getObject(Key.MOST_CALLS_FILTER_TYPE));
-	private final List<Call>              calls  = Blue.getObject(Key.CALL_LOG);
+	private final int                     FILTER   = Objects.requireNonNull(Blue.getObject(Key.MOST_CALLS_FILTER_TYPE));
+	private final CallLogs                callLogs = Blue.getObject(Key.CALL_LOGS);
 	private       List<Call>              filteredCalls;
 	private       ProgressBar             progressBar;
 	private       Drawable                imgType;
@@ -59,7 +63,7 @@ public class MostCallsActivity extends ActivityView {
 		list        = findView(R.id.most_calls_list);
 		emptyView   = findView(R.id.empty);
 		
-		setTitle();
+		setToolbar();
 		
 		Betty.bet(() -> {
 					
@@ -84,7 +88,7 @@ public class MostCallsActivity extends ActivityView {
 		Bungee.slideUp(this);
 	}
 	
-	private void setTitle() {
+	private void setToolbar() {
 		
 		Toolbar toolbar = findView(R.id.most_calls_toolbar);
 		
@@ -99,44 +103,33 @@ public class MostCallsActivity extends ActivityView {
 		switch (FILTER) {
 			
 			case Res.Calls.FILTER_MOST_INCOMING:
-				
 				imgType = AppCompatResources.getDrawable(this, R.drawable.incoming_call);
-				filteredCalls = calls.stream().filter(Call::isIncoming).collect(Collectors.toList());
+				filteredCalls = callLogs.getIncomingCalls();
 				textType = getString(R.string.call_type_incoming);
 				break;
-			
 			case Res.Calls.FILTER_MOST_OUTGOING:
-				
 				imgType = AppCompatResources.getDrawable(this, R.drawable.outgoing_call);
-				filteredCalls = calls.stream().filter(Call::isOutgoing).collect(Collectors.toList());
+				filteredCalls = callLogs.getOutgoingCalls();
 				textType = getString(R.string.call_type_outgoing);
 				break;
-			
 			case Res.Calls.FILTER_MOST_MISSED:
-				
 				imgType = AppCompatResources.getDrawable(this, R.drawable.missed_call);
-				filteredCalls = calls.stream().filter(Call::isOutgoing).collect(Collectors.toList());
+				filteredCalls = callLogs.getMissedCalls();
 				textType = getString(R.string.call_type_missed);
 				break;
-			
 			case Res.Calls.FILTER_MOST_REJECTED:
-				
 				imgType = AppCompatResources.getDrawable(this, R.drawable.rejected_call);
-				filteredCalls = calls.stream().filter(Call::isOutgoing).collect(Collectors.toList());
+				filteredCalls = callLogs.getRejectedCalls();
 				textType = getString(R.string.call_type_rejected);
 				break;
-			
-			
 			case Res.Calls.FILTER_MOST_SPEAKING:
-				
 				imgType = AppCompatResources.getDrawable(this, com.tr.hsyn.resarrowdrawable.R.drawable.clock);
-				filteredCalls = calls.stream().filter(Call::isIncoming).filter(Call::isSpoken).collect(Collectors.toList());
+				filteredCalls = callLogs.getCalls(c -> c.isIncoming() && c.isSpoken());
 				break;
-			
 			case Res.Calls.FILTER_MOST_TALKING:
 				
 				imgType = AppCompatResources.getDrawable(this, com.tr.hsyn.resarrowdrawable.R.drawable.clock);
-				filteredCalls = calls.stream().filter(Call::isOutgoing).filter(Call::isSpoken).collect(Collectors.toList());
+				filteredCalls = callLogs.getCalls(c -> c.isOutgoing() && c.isSpoken());
 				break;
 			
 			default:

@@ -23,6 +23,7 @@ import com.tr.hsyn.telefonrehberi.main.call.Filter;
 import com.tr.hsyn.telefonrehberi.main.call.activity.MostCallsActivity;
 import com.tr.hsyn.telefonrehberi.main.call.activity.search.CallLogSearchInfo;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallLogs;
 import com.tr.hsyn.telefonrehberi.main.call.dialog.CallLogFilters;
 import com.tr.hsyn.telefonrehberi.main.cast.BackPressObserver;
 import com.tr.hsyn.telefonrehberi.main.code.page.adapter.CallAdapter;
@@ -48,7 +49,7 @@ public abstract class CallLogFilter extends CallList implements Filter, HaveCall
 			onBackPressed();
 		}
 	};
-	protected     int                   filter      = Res.Calls.FILTER_ALL;
+	protected     int                   filter      = CallLogs.FILTER_ALL;
 	private       List<Call>            filteredCalls;
 	private       ItemIndexListener     onCallAction;
 	
@@ -81,6 +82,62 @@ public abstract class CallLogFilter extends CallList implements Filter, HaveCall
 		callback.remove();
 	}
 	
+	@Override
+	public int getFilter() {
+		
+		return filter;
+	}
+	
+	@Override
+	public void setFilter(int filter) {
+		
+		changeFilter(filter);
+		
+		if (filter != this.filter) {
+			
+			if (filter <= 6) this.filter = filter;
+			else showMostCalls(filter);
+		}
+		
+		//xlog.d("Call Filter : %d [%s]", filter, getFilterName(filter));
+	}
+	
+	@Override
+	public void onBackPressed() {
+		
+		if (adapter.isSelectionMode()) {
+			
+			cancelSelection();
+		}
+	}
+	
+	@Override
+	public void setOnCallAction(ItemIndexListener onCallAction) {
+		
+		this.onCallAction = onCallAction;
+	}
+	
+	@Override
+	public void setList(@NonNull @NotNull List<Call> list) {
+		
+		super.setList(list);
+		
+		setTitle(filters[filter]);
+		setFilter(filter);
+		updateSubTitle();
+		checkEmpty();
+		
+		refreshLayout.setRefreshing(false);
+	}
+	
+	@Override
+	public Call getItem(int index) {
+		
+		if (filter == CallLogs.FILTER_ALL) return getList().get(index);
+		
+		return filteredCalls.get(index);
+	}
+	
 	protected void onFilterSelected(int index) {
 		
 		setFilter(index);
@@ -90,7 +147,7 @@ public abstract class CallLogFilter extends CallList implements Filter, HaveCall
 		
 		if (filter <= 6) {
 			
-			if (filter == Res.Calls.FILTER_ALL) {
+			if (filter == CallLogs.FILTER_ALL) {
 				
 				filterAll();
 			}
@@ -201,61 +258,5 @@ public abstract class CallLogFilter extends CallList implements Filter, HaveCall
 		}
 		
 		hideProgress();
-	}
-	
-	@Override
-	public int getFilter() {
-		
-		return filter;
-	}
-	
-	@Override
-	public void setFilter(int filter) {
-		
-		changeFilter(filter);
-		
-		if (filter != this.filter) {
-			
-			if (filter <= 6) this.filter = filter;
-			else showMostCalls(filter);
-		}
-		
-		//xlog.d("Call Filter : %d [%s]", filter, getFilterName(filter));
-	}
-	
-	@Override
-	public void onBackPressed() {
-		
-		if (adapter.isSelectionMode()) {
-			
-			cancelSelection();
-		}
-	}
-	
-	@Override
-	public void setOnCallAction(ItemIndexListener onCallAction) {
-		
-		this.onCallAction = onCallAction;
-	}
-	
-	@Override
-	public void setList(@NonNull @NotNull List<Call> list) {
-		
-		super.setList(list);
-		
-		setTitle(filters[filter]);
-		setFilter(filter);
-		updateSubTitle();
-		checkEmpty();
-		
-		refreshLayout.setRefreshing(false);
-	}
-	
-	@Override
-	public Call getItem(int index) {
-		
-		if (filter == Res.Calls.FILTER_ALL) return getList().get(index);
-		
-		return filteredCalls.get(index);
 	}
 }

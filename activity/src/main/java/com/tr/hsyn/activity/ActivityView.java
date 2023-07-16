@@ -26,6 +26,17 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class ActivityView extends AppCompatActivity {
 	
+	/**
+	 * @return The ID of the layout file
+	 */
+	@LayoutRes
+	protected abstract int getLayoutId();
+	
+	/**
+	 * Invoked immediately after the view file (and the toolbar, if any) has been set.
+	 */
+	protected abstract void onCreate();
+	
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		
@@ -43,17 +54,6 @@ public abstract class ActivityView extends AppCompatActivity {
 		
 		onCreate();
 	}
-	
-	/**
-	 * @return The id of the view file
-	 */
-	@LayoutRes
-	protected abstract int getLayoutId();
-	
-	/**
-	 * Invoked immediately after the view file (and the toolbar, if any) has been set.
-	 */
-	protected abstract void onCreate();
 	
 	/**
 	 * @return {@code true} if this activity has toolbar
