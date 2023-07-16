@@ -219,126 +219,29 @@ public class QuantityComment implements ContactComment {
 			var missedRankMap   = createRankMap(Call.MISSED);
 			var rejectedRankMap = createRankMap(Call.REJECTED);
 			//+ listeners
-			View.OnClickListener incomingListener = v -> new MostCallDialog(getActivity(), createMostCallItemList(incomingRankMap), getString(R.string.most_incoming_calls), null).show();
-			View.OnClickListener outgoingListener = v -> new MostCallDialog(getActivity(), createMostCallItemList(outgoingRankMap), getString(R.string.most_outgoing_calls), null).show();
-			View.OnClickListener missedListener   = v -> new MostCallDialog(getActivity(), createMostCallItemList(missedRankMap), getString(R.string.most_missed_calls), null).show();
-			View.OnClickListener rejectedListener = v -> new MostCallDialog(getActivity(), createMostCallItemList(rejectedRankMap), getString(R.string.most_rejected_calls), null).show();
+			View.OnClickListener incomingListener = v -> new MostCallDialog(getActivity(), createMostCallItemList(incomingRankMap), getString(R.string.most_incoming_calls), fmt(" %d %s", incomingRankMap.size(), getString(R.string.contact))).show();
+			View.OnClickListener outgoingListener = v -> new MostCallDialog(getActivity(), createMostCallItemList(outgoingRankMap), getString(R.string.most_outgoing_calls), fmt(" %d %s", outgoingRankMap.size(), getString(R.string.contact))).show();
+			View.OnClickListener missedListener   = v -> new MostCallDialog(getActivity(), createMostCallItemList(missedRankMap), getString(R.string.most_missed_calls), fmt(" %d %s", missedRankMap.size(), getString(R.string.contact))).show();
+			View.OnClickListener rejectedListener = v -> new MostCallDialog(getActivity(), createMostCallItemList(rejectedRankMap), getString(R.string.most_rejected_calls), fmt(" %d %s", rejectedRankMap.size(), getString(R.string.contact))).show();
 			
-			int rank = iRank + oRank + mRank + rRank;
-			
-			if (rank == 4) {
-				
-				if (isTurkish) comment.append("Ve tüm listelerde birinci sırada görünüyor.\n");
-				else comment.append("And in the first place in the all call lists.\n");
+			if (iRank == 1) {
 				//+ incoming
 				comment.append(getComment(incomingListener, iCount, Call.INCOMING));
+			}
+			
+			if (oRank == 1) {
 				//+ outgoing
 				comment.append(getComment(outgoingListener, oCount, Call.OUTGOING));
+			}
+			
+			if (mRank == 1) {
 				//+ missed
 				comment.append(getComment(missedListener, mCount, Call.MISSED));
+			}
+			
+			if (rRank == 1) {
 				//+ rejected
 				comment.append(getComment(rejectedListener, rCount, Call.REJECTED));
-			}
-			else if (rank == 3) {
-				//+ which one is out
-				if (rRank == 0) {
-					//+ incoming
-					comment.append(getComment(incomingListener, iCount, Call.INCOMING));
-					//+ outgoing
-					comment.append(getComment(outgoingListener, oCount, Call.OUTGOING));
-					//+ missed
-					comment.append(getComment(missedListener, mCount, Call.MISSED));
-				}
-				else if (mRank == 0) {
-					//+ incoming
-					comment.append(getComment(incomingListener, iCount, Call.INCOMING));
-					//+ outgoing
-					comment.append(getComment(outgoingListener, oCount, Call.OUTGOING));
-					//+ rejected
-					comment.append(getComment(rejectedListener, rCount, Call.REJECTED));
-				}
-				else if (oRank == 0) {
-					//+ incoming
-					comment.append(getComment(incomingListener, iCount, Call.INCOMING));
-					//+ missed
-					comment.append(getComment(missedListener, mCount, Call.MISSED));
-					//+ rejected
-					comment.append(getComment(rejectedListener, rCount, Call.REJECTED));
-				}
-				else {
-					//+ outgoing
-					comment.append(getComment(outgoingListener, oCount, Call.OUTGOING));
-					//+ missed
-					comment.append(getComment(missedListener, mCount, Call.MISSED));
-					//+ rejected
-					comment.append(getComment(rejectedListener, rCount, Call.REJECTED));
-				}
-			}
-			else if (rank == 2) {
-				
-				if (rRank == 0) {
-					
-					if (mRank == 0) {
-						//+ io
-						//+ incoming
-						comment.append(getComment(incomingListener, iCount, Call.INCOMING));
-						//+ outgoing
-						comment.append(getComment(outgoingListener, oCount, Call.OUTGOING));
-					}
-					else if (oRank == 0) {
-						//+ im
-						//+ incoming
-						comment.append(getComment(incomingListener, iCount, Call.INCOMING));
-						//+ missed
-						comment.append(getComment(missedListener, mCount, Call.MISSED));
-					}
-					else {
-						//+ om
-						//+ outgoing
-						comment.append(getComment(outgoingListener, oCount, Call.OUTGOING));
-						//+ missed
-						comment.append(getComment(missedListener, mCount, Call.MISSED));
-					}
-				}
-				else if (mRank == 0) {
-					
-					if (oRank == 0) {
-						//+ incoming
-						comment.append(getComment(incomingListener, iCount, Call.INCOMING));
-					}
-					else {
-						//+ outgoing
-						comment.append(getComment(outgoingListener, oCount, Call.OUTGOING));
-					}
-					
-					//+ rejected
-					comment.append(getComment(rejectedListener, rCount, Call.REJECTED));
-				}
-				else if (oRank == 0) {
-					//+ missed
-					comment.append(getComment(missedListener, mCount, Call.MISSED));
-					//+ rejected
-					comment.append(getComment(rejectedListener, rCount, Call.REJECTED));
-				}
-			}
-			else if (rank == 1) {
-				
-				if (iRank == 1) {
-					//+ incoming
-					comment.append(getComment(incomingListener, iCount, Call.INCOMING));
-				}
-				else if (oRank == 1) {
-					//+ outgoing
-					comment.append(getComment(outgoingListener, oCount, Call.OUTGOING));
-				}
-				else if (mRank == 1) {
-					//+ missed
-					comment.append(getComment(missedListener, mCount, Call.MISSED));
-				}
-				else {
-					//+ rejected
-					comment.append(getComment(rejectedListener, rCount, Call.REJECTED));
-				}
 			}
 		}
 	}

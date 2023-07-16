@@ -3,7 +3,8 @@
 
 	<string name="call_logs">Call Logs</string>
 	<string name="call_record">Call Records</string>
-	<string name="contact">Call</string>
+	<string name="contact">Contact</string>
+	<string name="call">Call</string>
 
 	<string name="call_type_incoming">Incoming Call</string>
 	<string name="call_type_outgoing">Outgoing Call</string>

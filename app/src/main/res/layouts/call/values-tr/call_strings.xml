@@ -3,8 +3,8 @@
 
 	<string name="call_logs">Arama Kayıtları</string>
 	<string name="call_record">Arama Kaydı</string>
-
-	<string name="contact">Ara</string>
+	<string name="call">Ara</string>
+	<string name="contact">Kişi</string>
 
 	<!-- CallLog Calls -->
 	<string name="incoming">Gelen</string>

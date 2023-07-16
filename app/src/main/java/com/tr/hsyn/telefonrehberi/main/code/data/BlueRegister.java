@@ -79,8 +79,8 @@ public class BlueRegister extends DBBase<Visitor> {
 		
 		private final DBColumn[] columns = {
 				
-				DB.number(TIME_ENTER).primaryKey(),
-				DB.text(NAME).notNull(),
+				DB.number(TIME_ENTER),
+				DB.text(NAME).primaryKey(),
 				DB.number(ID).notNull(),
 				DB.number(TIME_EXIT).defaultValue(0L),
 				DB.number(INTERACTION).defaultValue(0L)
@@ -95,7 +95,7 @@ public class BlueRegister extends DBBase<Visitor> {
 		@Override
 		public @NotNull String getPrimaryKey() {
 			
-			return TIME_ENTER;
+			return NAME;
 		}
 		
 		@Override

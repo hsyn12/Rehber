@@ -41,6 +41,7 @@ public class MostCallDialog extends Dialog {
 		list.setAdapter(new MostCallDialogAdapter(mostCallItemViewDataList));
 		
 		setHeight(list, list.getLayoutParams());
+		builder.setView(view);
 		
 		((TextView) view.findViewById(R.id.title)).setText(title);
 		((TextView) view.findViewById(R.id.sub_title)).setText(subTitle);

@@ -11,7 +11,6 @@ import com.tr.hsyn.xlog.xlog;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -44,15 +43,112 @@ public class Alice implements Writer {
 	 */
 	protected final                                    Database<Visitor> register;
 	@SuppressWarnings("FieldCanBeLocal") private final int               DEBUG_DEGREE = 0;
-	/**
-	 * Anahtarların anlık olarak durumlarını tutar
-	 */
-	private final                                      Map<Key, Visitor> keyMap       = new HashMap<>();
 	
 	public Alice(Database<Visitor> database) {
 		
 		this.register = database;
 		Runny.run(this::registerControlResult, false);
+	}
+	
+	@Override
+	public void remove(@NotNull Key key) {
+		
+		if (register == null) {
+			xlog.i("No register to register data : [%s]", key.getName());
+			return;
+		}
+		
+		Visitor data = register.find(key.getName());
+		
+		if (data == null) {
+			
+			xlog.d("Visitor did not find : [%s]", key.getName());
+			return;
+		}
+		
+		data.setExit();
+		
+		if (register.update(data)) {
+			
+			xlog.i("The visitor exited : [%s]", key.getName());
+		}
+		else {
+			
+			xlog.i("The visitor exited but could not registered : [%s]", key.getName());
+		}
+	}
+	
+	@SuppressWarnings("ConstantValue")
+	@Override
+	public void interact(@NotNull Key key) {
+		
+		if (register == null) {
+			xlog.i("No register to register interaction : [%s]", key.getName());
+			return;
+		}
+		
+		Visitor data = register.find(key.getName());
+		
+		if (data == null) {
+			
+			xlog.d("Visitor did not find : [%s]", key.getName());
+			return;
+		}
+		
+		data.interact();
+		
+		if (DEBUG_DEGREE > 1)
+			xlog.i("The data has interacted : [%s]", key.getName());
+		
+		if (register.update(data)) {
+			
+			if (DEBUG_DEGREE > 1)
+				xlog.i("Data interaction is registered : [%s]", key.getName());
+		}
+		else {
+			if (DEBUG_DEGREE > 0)
+				xlog.i("Data interaction could not registered : [%s]", key.getName());
+		}
+		
+		
+	}
+	
+	@SuppressWarnings("ConstantValue")
+	@Override
+	public void add(@NotNull Key key) {
+		
+		Visitor data = register.find(key.getName());
+		//Visitor data = keyMap.get(key);
+		
+		if (data == null) {
+			data = new Visitor(key);
+			register.add(data);
+		}
+		else data.setReEnter();
+		
+		if (register != null) {
+			
+			if (register.update(data)) {
+				if (DEBUG_DEGREE > 1)
+					xlog.i("Key is registered [%s]", key.getName());
+			}
+			else {
+				if (DEBUG_DEGREE > 0)
+					xlog.i("Key registering is failed [%s]", key.getName());
+			}
+		}
+		else {
+			
+			xlog.i("No register to register the key [%s]", data);
+		}
+	}
+	
+	@Override
+	public void close() {
+		
+		if (register != null) {
+			register.close();
+		}
 	}
 	
 	/**
@@ -150,95 +246,5 @@ public class Alice implements Writer {
 			xlog.i(sb.toString());
 		}
 		
-	}
-	
-	@Override
-	public void remove(@NotNull Key key) {
-		
-		Visitor data = keyMap.get(key);
-		data.setExit();
-		
-		if (register != null) {
-			
-			if (register.update(data)) {
-				
-				xlog.i("The visitor exited : [%s]", key.getName());
-			}
-			else {
-				
-				xlog.i("The visitor exited but could not registered : [%s]", key.getName());
-			}
-		}
-		else {
-			
-			xlog.i("The visitor exited but no register to register data : [%s]", key.getName());
-		}
-	}
-	
-	@SuppressWarnings("ConstantValue")
-	@Override
-	public void interact(@NotNull Key key) {
-		
-		Visitor data = keyMap.get(key);
-		data.interact();
-		
-		if (DEBUG_DEGREE > 1)
-			xlog.i("The data has interacted : [%s]", key.getName());
-		
-		if (register != null) {
-			
-			if (register.update(data)) {
-				
-				if (DEBUG_DEGREE > 1)
-					xlog.i("Data interaction is registered : [%s]", key.getName());
-			}
-			else {
-				if (DEBUG_DEGREE > 0)
-					xlog.i("Data interaction could not registered : [%s]", key.getName());
-			}
-		}
-		else {
-			
-			xlog.i("No register to register interaction : [%s]", key.getName());
-		}
-		
-		
-	}
-	
-	@SuppressWarnings("ConstantValue")
-	@Override
-	public void add(@NotNull Key key) {
-		
-		Visitor data = keyMap.get(key);
-		
-		if (data == null) {
-			data = new Visitor(key);
-			keyMap.put(key, data);
-		}
-		else data.setReEnter();
-		
-		if (register != null) {
-			
-			if (register.add(data)) {
-				if (DEBUG_DEGREE > 1)
-					xlog.i("Key is registered [%s]", key.getName());
-			}
-			else {
-				if (DEBUG_DEGREE > 0)
-					xlog.i("Key registering is failed [%s]", key.getName());
-			}
-		}
-		else {
-			
-			xlog.i("No register to register the key [%s]", data);
-		}
-	}
-	
-	@Override
-	public void close() {
-		
-		if (register != null) {
-			register.close();
-		}
 	}
 }

@@ -39,13 +39,22 @@ public interface Database<T extends Identity> extends SimpleDatabase {
 	long getRawCount();
 	
 	/**
-	 * Verilen id değerine sahip satırı bulur.
+	 * Finds the element by a primary key.
 	 *
-	 * @param primaryValue id değeri
-	 * @return Eleman
+	 * @param primaryValue primary key
+	 * @return T element
 	 */
 	@Nullable
 	T find(long primaryValue);
+	
+	/**
+	 * Finds the element by a primary key.
+	 *
+	 * @param primaryValue primary key
+	 * @return T element
+	 */
+	@Nullable
+	T find(String primaryValue);
 	
 	/**
 	 * @return Tüm satırlar

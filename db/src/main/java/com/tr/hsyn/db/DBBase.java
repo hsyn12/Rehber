@@ -60,6 +60,46 @@ public abstract class DBBase<T extends Identity> extends DBOperator<T> {
 	@NonNull
 	protected abstract T createObject(@NonNull final Cursor cursor);
 	
+	@Override
+	@Nullable
+	public T find(long primaryValue) {
+		
+		return find(primaryValue, this::createObject);
+	}
+	
+	@Override
+	@Nullable
+	public T find(String primaryValue) {
+		
+		return find(primaryValue, this::createObject);
+	}
+	
+	@Override
+	@NonNull
+	public List<T> queryAll() {
+		
+		return query(this::createObject, null, null, null);
+	}
+	
+	@Override
+	public List<T> queryAll(String selection, String sortOrder) {
+		
+		return query(this::createObject, selection, null, sortOrder);
+	}
+	
+	@Override
+	public List<T> queryAll(String selection) {
+		
+		return query(this::createObject, selection, null, null);
+	}
+	
+	@NonNull
+	@Override
+	public List<T> queryAll(String selection, String[] selectionArgs, String sortOrder) {
+		
+		return query(this::createObject, selection, selectionArgs, sortOrder);
+	}
+	
 	@SuppressLint({"DefaultLocale", "Range"})
 	
 	@Nullable
@@ -94,41 +134,16 @@ public abstract class DBBase<T extends Identity> extends DBOperator<T> {
 		return null;
 	}
 	
-	@Override
-	@Nullable
-	public T find(long primaryValue) {
-		
-		return find(primaryValue, this::createObject);
-	}
-	
-	@Override
-	@NonNull
-	public List<T> queryAll() {
-		
-		return query(this::createObject, null, null, null);
-	}
-	
-	@Override
-	public List<T> queryAll(String selection, String sortOrder) {
-		
-		return query(this::createObject, selection, null, sortOrder);
-	}
-	
-	@Override
-	public List<T> queryAll(String selection) {
-		
-		return query(this::createObject, selection, null, null);
-	}
-	
-	@NonNull
-	@Override
-	public List<T> queryAll(String selection, String[] selectionArgs, String sortOrder) {
-		
-		return query(this::createObject, selection, selectionArgs, sortOrder);
-	}
-	
 	@Nullable
 	public T find(long primaryValue, @NonNull Function<? super Cursor, ? extends T> func) {
+		
+		String key = databaseInterface.getPrimaryKey();
+		
+		return find(Database.createSelection(key), Database.createArg(primaryValue), func);
+	}
+	
+	@Nullable
+	public T find(String primaryValue, @NonNull Function<? super Cursor, ? extends T> func) {
 		
 		String key = databaseInterface.getPrimaryKey();
 		
