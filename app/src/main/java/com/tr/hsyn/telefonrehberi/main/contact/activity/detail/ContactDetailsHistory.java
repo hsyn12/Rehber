@@ -288,6 +288,10 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 				}
 			}
 		}
+		else {
+			
+			return callLogs.getHistoryOf(contact);
+		}
 		
 		//- İzinler yok
 		//- Demek ki zor yoldan ilerleyeceğiz

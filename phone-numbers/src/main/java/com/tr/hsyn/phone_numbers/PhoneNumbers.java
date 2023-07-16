@@ -65,7 +65,7 @@ public class PhoneNumbers {
 	/**
 	 * The regular expression for phone number.
 	 */
-	public static final String PHONE_NUMBER_REGEX    = "\\+[0-9]{10,15}";//+xxxxx5434937530;
+	public static final String PHONE_NUMBER_REGEX    = "\\+?[0-9]{10,15}";//+xxxxx5434937530;
 	
 	private PhoneNumbers() {
 		

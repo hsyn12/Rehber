@@ -1,6 +1,7 @@
 package com.tr.hsyn.telefonrehberi.main.call.activity.history;
 
 
+import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -85,6 +86,13 @@ public class CallHistoryAdapter extends RecyclerView.Adapter<CallHistoryAdapter.
 	public int getItemCount() {
 		
 		return calls.size();
+	}
+	
+	@SuppressLint("NotifyDataSetChanged")
+	public void clear() {
+		
+		calls.clear();
+		notifyDataSetChanged();
 	}
 	
 	private static int getTypeIcon(int type) {

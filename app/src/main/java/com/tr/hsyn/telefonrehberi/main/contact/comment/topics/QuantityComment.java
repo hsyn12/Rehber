@@ -197,7 +197,7 @@ public class QuantityComment implements ContactComment {
 		//+ the history is not empty
 		else {
 			
-			comment.append(getQuantityComment(history));
+			comment.append(getQuantityComment(history)).append("\n");
 			//+ call ranks
 			var incomingRank = getCallRank(Call.INCOMING);
 			var outgoingRank = getCallRank(Call.OUTGOING);
@@ -208,7 +208,7 @@ public class QuantityComment implements ContactComment {
 			int oRank = outgoingRank == null ? 0 : outgoingRank.getRank();
 			int mRank = missedRank == null ? 0 : missedRank.getRank();
 			int rRank = rejectedRank == null ? 0 : rejectedRank.getRank();
-			
+			//+ rank counts
 			int iCount = incomingRank == null ? 0 : incomingRank.getRankCount();
 			int oCount = outgoingRank == null ? 0 : outgoingRank.getRankCount();
 			int mCount = missedRank == null ? 0 : missedRank.getRankCount();
@@ -241,14 +241,104 @@ public class QuantityComment implements ContactComment {
 			}
 			else if (rank == 3) {
 				//+ which one is out
-				if (rRank == 0) {}
-				else if (mRank == 0) {}
-				else if (oRank == 0) {}
-				else if (iRank == 0) {}
+				if (rRank == 0) {
+					//+ incoming
+					comment.append(getComment(incomingListener, iCount, Call.INCOMING));
+					//+ outgoing
+					comment.append(getComment(outgoingListener, oCount, Call.OUTGOING));
+					//+ missed
+					comment.append(getComment(missedListener, mCount, Call.MISSED));
+				}
+				else if (mRank == 0) {
+					//+ incoming
+					comment.append(getComment(incomingListener, iCount, Call.INCOMING));
+					//+ outgoing
+					comment.append(getComment(outgoingListener, oCount, Call.OUTGOING));
+					//+ rejected
+					comment.append(getComment(rejectedListener, rCount, Call.REJECTED));
+				}
+				else if (oRank == 0) {
+					//+ incoming
+					comment.append(getComment(incomingListener, iCount, Call.INCOMING));
+					//+ missed
+					comment.append(getComment(missedListener, mCount, Call.MISSED));
+					//+ rejected
+					comment.append(getComment(rejectedListener, rCount, Call.REJECTED));
+				}
+				else {
+					//+ outgoing
+					comment.append(getComment(outgoingListener, oCount, Call.OUTGOING));
+					//+ missed
+					comment.append(getComment(missedListener, mCount, Call.MISSED));
+					//+ rejected
+					comment.append(getComment(rejectedListener, rCount, Call.REJECTED));
+				}
 			}
 			else if (rank == 2) {
 				
+				if (rRank == 0) {
+					
+					if (mRank == 0) {
+						//+ io
+						//+ incoming
+						comment.append(getComment(incomingListener, iCount, Call.INCOMING));
+						//+ outgoing
+						comment.append(getComment(outgoingListener, oCount, Call.OUTGOING));
+					}
+					else if (oRank == 0) {
+						//+ im
+						//+ incoming
+						comment.append(getComment(incomingListener, iCount, Call.INCOMING));
+						//+ missed
+						comment.append(getComment(missedListener, mCount, Call.MISSED));
+					}
+					else {
+						//+ om
+						//+ outgoing
+						comment.append(getComment(outgoingListener, oCount, Call.OUTGOING));
+						//+ missed
+						comment.append(getComment(missedListener, mCount, Call.MISSED));
+					}
+				}
+				else if (mRank == 0) {
+					
+					if (oRank == 0) {
+						//+ incoming
+						comment.append(getComment(incomingListener, iCount, Call.INCOMING));
+					}
+					else {
+						//+ outgoing
+						comment.append(getComment(outgoingListener, oCount, Call.OUTGOING));
+					}
+					
+					//+ rejected
+					comment.append(getComment(rejectedListener, rCount, Call.REJECTED));
+				}
+				else if (oRank == 0) {
+					//+ missed
+					comment.append(getComment(missedListener, mCount, Call.MISSED));
+					//+ rejected
+					comment.append(getComment(rejectedListener, rCount, Call.REJECTED));
+				}
+			}
+			else if (rank == 1) {
 				
+				if (iRank == 1) {
+					//+ incoming
+					comment.append(getComment(incomingListener, iCount, Call.INCOMING));
+				}
+				else if (oRank == 1) {
+					//+ outgoing
+					comment.append(getComment(outgoingListener, oCount, Call.OUTGOING));
+				}
+				else if (mRank == 1) {
+					//+ missed
+					comment.append(getComment(missedListener, mCount, Call.MISSED));
+				}
+				else {
+					//+ rejected
+					comment.append(getComment(rejectedListener, rCount, Call.REJECTED));
+				}
 			}
 		}
 	}

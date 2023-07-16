@@ -63,13 +63,8 @@
 		<activity android:name=".main.call.activity.history.ActivityCallList" />
 		<activity android:name=".main.call.activity.search.CallLogSearch" />
 		<activity android:name=".main.call.activity.showcalls.ShowCallsActivity" />
-		<activity
-				android:name=".main.call.activity.random.RandomCallsActivity"
-				android:exported="false" />
-
-		<activity
-				android:name=".main.contact.activity.search.ContactSearch"
-				android:exported="false" />
+		<activity android:name=".main.call.activity.random.RandomCallsActivity" />
+		<activity android:name=".main.contact.activity.search.ContactSearch" />
 
 		<service
 				android:name=".main.call.activity.random.service.RandomCallService"

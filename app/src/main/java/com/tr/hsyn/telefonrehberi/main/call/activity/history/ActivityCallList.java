@@ -8,6 +8,8 @@ import android.view.View;
 import androidx.annotation.NonNull;
 
 import com.tr.hsyn.bungee.Bungee;
+import com.tr.hsyn.calldata.Call;
+import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.execution.Runny;
 import com.tr.hsyn.key.Key;
@@ -81,6 +83,34 @@ public class ActivityCallList extends ActivityCallHistoryView {
 		updateSize();
 	}
 	
+	@Override
+	public void onBackPressed() {
+		
+		super.onBackPressed();
+		Bungee.slideLeft(this);
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		
+		getMenuInflater().inflate(R.menu.call_history_menu, menu);
+		
+		return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+		
+		if (item.getItemId() == R.id.menu_delete_all) {
+			
+			deleteAll();
+			return true;
+		}
+		
+		
+		return super.onOptionsItemSelected(item);
+	}
+	
 	/**
 	 * If the contact is registered in the Contacts, it checks its name and writes it to the toolbar.
 	 */
@@ -152,34 +182,6 @@ public class ActivityCallList extends ActivityCallHistoryView {
 		else emptyView.setVisibility(View.GONE);
 	}
 	
-	@Override
-	public void onBackPressed() {
-		
-		super.onBackPressed();
-		Bungee.slideLeft(this);
-	}
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		
-		getMenuInflater().inflate(R.menu.call_history_menu, menu);
-		
-		return super.onCreateOptionsMenu(menu);
-	}
-	
-	@Override
-	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-		
-		if (item.getItemId() == R.id.menu_delete_all) {
-			
-			deleteAll();
-			return true;
-		}
-		
-		
-		return super.onOptionsItemSelected(item);
-	}
-	
 	/**
 	 * Called when the user wants to delete all call history from the menu.
 	 * And permanently deletes all records.
@@ -188,10 +190,8 @@ public class ActivityCallList extends ActivityCallHistoryView {
 		
 		if (calls.isEmpty()) return;
 		
-		adapter.notifyItemRangeRemoved(0, calls.size() - 1);
-		
-		ArrayList<com.tr.hsyn.calldata.Call> deletedCalls = new ArrayList<>(calls);
-		calls.clear();
+		List<Call> deletedCalls = Lister.listOf(calls);
+		adapter.clear();
 		
 		updateSize();
 		
