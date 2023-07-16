@@ -199,48 +199,41 @@ public class QuantityComment implements ContactComment {
 			
 			comment.append(getQuantityComment(history)).append("\n");
 			//+ call ranks
-			var incomingRank = getCallRank(Call.INCOMING);
-			var outgoingRank = getCallRank(Call.OUTGOING);
-			var missedRank   = getCallRank(Call.MISSED);
-			var rejectedRank = getCallRank(Call.REJECTED);
+			CallRank incomingRank = getCallRank(Call.INCOMING);
+			CallRank outgoingRank = getCallRank(Call.OUTGOING);
+			CallRank missedRank   = getCallRank(Call.MISSED);
+			CallRank rejectedRank = getCallRank(Call.REJECTED);
 			//+ ranks
 			int iRank = incomingRank == null ? 0 : incomingRank.getRank();
 			int oRank = outgoingRank == null ? 0 : outgoingRank.getRank();
 			int mRank = missedRank == null ? 0 : missedRank.getRank();
 			int rRank = rejectedRank == null ? 0 : rejectedRank.getRank();
-			//+ rank counts
-			int iCount = incomingRank == null ? 0 : incomingRank.getRankCount();
-			int oCount = outgoingRank == null ? 0 : outgoingRank.getRankCount();
-			int mCount = missedRank == null ? 0 : missedRank.getRankCount();
-			int rCount = rejectedRank == null ? 0 : rejectedRank.getRankCount();
-			//+ rank maps
-			var incomingRankMap = createRankMap(Call.INCOMING);
-			var outgoingRankMap = createRankMap(Call.OUTGOING);
-			var missedRankMap   = createRankMap(Call.MISSED);
-			var rejectedRankMap = createRankMap(Call.REJECTED);
-			//+ listeners
-			View.OnClickListener incomingListener = v -> new MostCallDialog(getActivity(), createMostCallItemList(incomingRankMap), getString(R.string.most_incoming_calls), fmt(" %d %s", incomingRankMap.size(), getString(R.string.contact))).show();
-			View.OnClickListener outgoingListener = v -> new MostCallDialog(getActivity(), createMostCallItemList(outgoingRankMap), getString(R.string.most_outgoing_calls), fmt(" %d %s", outgoingRankMap.size(), getString(R.string.contact))).show();
-			View.OnClickListener missedListener   = v -> new MostCallDialog(getActivity(), createMostCallItemList(missedRankMap), getString(R.string.most_missed_calls), fmt(" %d %s", missedRankMap.size(), getString(R.string.contact))).show();
-			View.OnClickListener rejectedListener = v -> new MostCallDialog(getActivity(), createMostCallItemList(rejectedRankMap), getString(R.string.most_rejected_calls), fmt(" %d %s", rejectedRankMap.size(), getString(R.string.contact))).show();
-			
+			//+ incoming
 			if (iRank == 1) {
-				//+ incoming
+				Map<Integer, List<CallRank>> incomingRankMap  = createRankMap(Call.INCOMING);
+				int                          iCount           = incomingRank.getRankCount();
+				View.OnClickListener         incomingListener = v -> new MostCallDialog(getActivity(), createMostCallItemList(incomingRankMap), getString(R.string.most_incoming_calls), fmt(" %d %s", incomingRankMap.size(), getString(R.string.contact))).show();
 				comment.append(getComment(incomingListener, iCount, Call.INCOMING));
 			}
-			
+			//+ outgoing
 			if (oRank == 1) {
-				//+ outgoing
+				Map<Integer, List<CallRank>> outgoingRankMap  = createRankMap(Call.OUTGOING);
+				int                          oCount           = outgoingRank.getRankCount();
+				View.OnClickListener         outgoingListener = v -> new MostCallDialog(getActivity(), createMostCallItemList(outgoingRankMap), getString(R.string.most_outgoing_calls), fmt(" %d %s", outgoingRankMap.size(), getString(R.string.contact))).show();
 				comment.append(getComment(outgoingListener, oCount, Call.OUTGOING));
 			}
-			
+			//+ missed
 			if (mRank == 1) {
-				//+ missed
+				Map<Integer, List<CallRank>> missedRankMap  = createRankMap(Call.MISSED);
+				int                          mCount         = missedRank.getRankCount();
+				View.OnClickListener         missedListener = v -> new MostCallDialog(getActivity(), createMostCallItemList(missedRankMap), getString(R.string.most_missed_calls), fmt(" %d %s", missedRankMap.size(), getString(R.string.contact))).show();
 				comment.append(getComment(missedListener, mCount, Call.MISSED));
 			}
-			
+			//+ rejected
 			if (rRank == 1) {
-				//+ rejected
+				Map<Integer, List<CallRank>> rejectedRankMap  = createRankMap(Call.REJECTED);
+				int                          rCount           = rejectedRank.getRankCount();
+				View.OnClickListener         rejectedListener = v -> new MostCallDialog(getActivity(), createMostCallItemList(rejectedRankMap), getString(R.string.most_rejected_calls), fmt(" %d %s", rejectedRankMap.size(), getString(R.string.contact))).show();
 				comment.append(getComment(rejectedListener, rCount, Call.REJECTED));
 			}
 		}
