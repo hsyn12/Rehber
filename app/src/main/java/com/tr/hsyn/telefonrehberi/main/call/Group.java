@@ -21,7 +21,7 @@ import java.util.List;
 public class Group<T> {
 	
 	/**
-	 * Anahatar
+	 * Anahtar
 	 */
 	private final T       value;
 	/**
@@ -35,6 +35,18 @@ public class Group<T> {
 		
 		this.list = list;
 		value     = list.get(0);
+	}
+	
+	@Override
+	public int hashCode() {
+		
+		return value.hashCode();
+	}
+	
+	@Override
+	public boolean equals(@Nullable Object obj) {
+		
+		return obj instanceof Group && value.equals(obj);
 	}
 	
 	public T getValue() {
@@ -73,17 +85,5 @@ public class Group<T> {
 	public int size() {
 		
 		return list.size();
-	}
-	
-	@Override
-	public boolean equals(@Nullable Object obj) {
-		
-		return obj instanceof Group && value.equals(obj);
-	}
-	
-	@Override
-	public int hashCode() {
-		
-		return value.hashCode();
 	}
 }

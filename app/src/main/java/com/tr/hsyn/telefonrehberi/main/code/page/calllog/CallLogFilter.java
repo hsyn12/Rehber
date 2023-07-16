@@ -27,7 +27,6 @@ import com.tr.hsyn.telefonrehberi.main.call.data.CallLogs;
 import com.tr.hsyn.telefonrehberi.main.call.dialog.CallLogFilters;
 import com.tr.hsyn.telefonrehberi.main.cast.BackPressObserver;
 import com.tr.hsyn.telefonrehberi.main.code.page.adapter.CallAdapter;
-import com.tr.hsyn.telefonrehberi.main.data.Res;
 import com.tr.hsyn.xbox.Blue;
 import com.tr.hsyn.xlog.xlog;
 
@@ -193,23 +192,23 @@ public abstract class CallLogFilter extends CallList implements Filter, HaveCall
 			
 			switch (type) {
 				
-				case Res.Calls.FILTER_INCOMING:
+				case CallLogs.FILTER_INCOMING:
 					filteredCalls = getList().stream().filter(Call::isIncoming).collect(Collectors.toList());
 					break;
-				case Res.Calls.FILTER_OUTGOING:
+				case CallLogs.FILTER_OUTGOING:
 					filteredCalls = getList().stream().filter(CallType::isOutgoing).collect(Collectors.toList());
 					break;
-				case Res.Calls.FILTER_MISSED:
+				case CallLogs.FILTER_MISSED:
 					filteredCalls = getList().stream().filter(CallType::isMissed).collect(Collectors.toList());
 					break;
-				case Res.Calls.FILTER_REJECTED:
+				case CallLogs.FILTER_REJECTED:
 					filteredCalls = getList().stream().filter(CallType::isRejected).collect(Collectors.toList());
 					break;
-				case Res.Calls.FILTER_NO_NAMED:
+				case CallLogs.FILTER_NO_NAMED:
 					filteredCalls = getList().stream().filter(c -> c.getName() == null || PhoneNumbers.isPhoneNumber(c.getName())).collect(Collectors.toList());
 					break;
 				
-				case Res.Calls.FILTER_RANDOM:
+				case CallLogs.FILTER_RANDOM:
 					filteredCalls = getList().stream().filter(call -> call.getBool(CallKey.RANDOM)).collect(Collectors.toList());
 					break;
 			}

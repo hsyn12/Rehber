@@ -990,7 +990,7 @@ public final class CallLogs {
 	 * @param filter  the filter
 	 * @return the name of the filter
 	 */
-	static String getCallFilterName(@NotNull Context context, int filter) {
+	public static String getCallFilterName(@NotNull Context context, int filter) {
 		
 		var filters = context.getResources().getStringArray(R.array.call_filter_items);
 		

@@ -80,7 +80,6 @@ public class CallOver {
 		return new ArrayList<>();
 	}
 	
-	
 	/**
 	 * Arama kayıtlarını telefon numarasına göre gruplar.
 	 * Grubun yapısı {@code Telefon numarası --> Numaraya ait kayıtlar}
