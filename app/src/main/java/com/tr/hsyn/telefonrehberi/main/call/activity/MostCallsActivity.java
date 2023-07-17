@@ -144,6 +144,9 @@ public class MostCallsActivity extends ActivityView {
 	
 	/**
 	 * Makes a list of {@link CallRank}.
+	 * A rank is information about the calls for a phone number.
+	 * A list is created, and it is ordered by duration or by quantity.
+	 * And each phone number gets a rank in this ordering.
 	 *
 	 * @return the list of {@link CallRank}
 	 */
