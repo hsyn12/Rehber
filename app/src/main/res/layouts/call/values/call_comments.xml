@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:locale="en">
 
-	<string name="single_call">This contact has just a single call</string>
+	<string name="single_call">This contact has a single call</string>
 	<string name="log">log</string>
 	<string name="size_call">%d calls</string>
 
@@ -14,5 +14,7 @@
 	<string name="title_most_calls">The Most Calls</string>
 	<string name="title_most_incoming_calls">Top Callers</string>
 	<string name="size_contacts">%d Contacts</string>
+	<string name="no_incoming_calls">Contacts Who Do Not Call You</string>
+
 
 </resources>

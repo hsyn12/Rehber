@@ -104,6 +104,9 @@ public class MostCallsActivity extends ActivityView {
 		getSupportActionBar().setTitle(CallLogs.getCallFilterName(this, FILTER));
 	}
 	
+	/**
+	 * Sets the list by the filter.
+	 */
 	private void filter() {
 		
 		switch (FILTER) {
@@ -166,11 +169,22 @@ public class MostCallsActivity extends ActivityView {
 				CallLogs.createRankList(filteredCalls);
 	}
 	
-	private List<MostCallsItemData> makeItemData(@NotNull List<CallRank> groups) {
+	/**
+	 * Converts a list of {@link CallRank} to a list of {@link MostCallsItemData}.
+	 *
+	 * @param ranks the list of {@link CallRank}
+	 * @return the list of {@link MostCallsItemData}
+	 */
+	private List<MostCallsItemData> makeItemData(@NotNull List<CallRank> ranks) {
 		
-		return groups.stream().map(this::createItemData).collect(Collectors.toList());
+		return ranks.stream().map(this::createItemData).collect(Collectors.toList());
 	}
 	
+	/**
+	 * Shows the list of {@link MostCallsItemData}.
+	 *
+	 * @param data the list of {@link MostCallsItemData}
+	 */
 	private void showList(@NotNull List<MostCallsItemData> data) {
 		
 		this.data = data;
@@ -186,6 +200,12 @@ public class MostCallsActivity extends ActivityView {
 		}
 	}
 	
+	/**
+	 * Converts a {@link CallRank} to a {@link MostCallsItemData}.
+	 *
+	 * @param callRank the {@link CallRank}
+	 * @return the {@link MostCallsItemData}
+	 */
 	@NotNull
 	private MostCallsItemData createItemData(@NotNull CallRank callRank) {
 		
@@ -206,6 +226,11 @@ public class MostCallsActivity extends ActivityView {
 		return new MostCallsItemData(callRank.getName(), txt, imgType, rank);
 	}
 	
+	/**
+	 * Callback for the click event of the list item.
+	 *
+	 * @param index the index of the list item to be clicked
+	 */
 	private void onClickItem(int index) {
 		
 		MostCallsItemData item = data.get(index);

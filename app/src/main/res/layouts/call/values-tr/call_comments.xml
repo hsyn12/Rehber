@@ -12,4 +12,5 @@
 	<string name="title_speaking_durations">Toplam Konuşma Süreleri</string>
 	<string name="title_most_calls">En Fazla Arama Kaydı</string>
 	<string name="title_most_incoming_calls">En Çok Arayanlar</string>
+	<string name="no_incoming_calls">Seni Hiç Aramayanlar</string>
 </resources>

@@ -346,7 +346,7 @@ public final class CallLogs {
 	}
 	
 	/**
-	 * Returns the object that mapped phone number and its calls.
+	 * Returns the object that mapped a key and its calls.
 	 *
 	 * @return the object that mapped phone number and its calls
 	 */
@@ -845,15 +845,17 @@ public final class CallLogs {
 	}
 	
 	/**
-	 * Creates a ranked map from the entries.
+	 * Creates a ranked map from the calls.
 	 *
-	 * @param entries    the entries
+	 * @param calls      the calls
 	 * @param comparator the comparator
 	 * @param callType   the call type to select
 	 * @return the ranked map
 	 */
 	@NotNull
-	public static Map<Integer, List<CallRank>> createRankMap(@NotNull Map<String, List<Call>> entries, Comparator<Map.Entry<String, List<Call>>> comparator, int callType) {
+	public static Map<Integer, List<CallRank>> createRankMap(@NotNull List<Call> calls, Comparator<Map.Entry<String, List<Call>>> comparator, int callType) {
+		
+		Map<String, List<Call>> entries = mapIdToCalls(calls);
 		
 		Map<String, List<Call>> filtered = new HashMap<>();
 		
@@ -863,6 +865,28 @@ public final class CallLogs {
 		}
 		
 		return createRankMap(filtered, comparator);
+	}
+	
+	/**
+	 * Creates a ranked map from the calls.
+	 *
+	 * @param calls    the calls
+	 * @param callType the call type to select
+	 * @return the ranked map
+	 */
+	@NotNull
+	public static Map<Integer, List<CallRank>> createRankMap(@NotNull List<Call> calls, int callType) {
+		
+		Map<String, List<Call>> entries = mapIdToCalls(calls);
+		
+		Map<String, List<Call>> filtered = new HashMap<>();
+		
+		for (Map.Entry<String, List<Call>> entry : entries.entrySet()) {
+			
+			filtered.put(entry.getKey(), entry.getValue().stream().filter(c -> c.getCallType() == callType).collect(Collectors.toList()));
+		}
+		
+		return createRankMap(filtered, QUANTITY_COMPARATOR);
 	}
 	
 	/**

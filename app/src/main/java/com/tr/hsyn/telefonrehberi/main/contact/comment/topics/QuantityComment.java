@@ -38,7 +38,13 @@ import java.util.function.Consumer;
 
 public class QuantityComment implements ContactComment {
 	
+	/**
+	 * Main {@link CallLogs} object that has the all call log calls.
+	 */
 	private final CallLogs                 callLogs = getCallLogs();
+	/**
+	 * The comment object to add the all comments into.
+	 */
 	private final Spanner                  comment  = new Spanner();
 	private       Activity                 activity;
 	private       Consumer<ContactComment> callback;
@@ -208,37 +214,68 @@ public class QuantityComment implements ContactComment {
 			int oRank = outgoingRank == null ? 0 : outgoingRank.getRank();
 			int mRank = missedRank == null ? 0 : missedRank.getRank();
 			int rRank = rejectedRank == null ? 0 : rejectedRank.getRank();
+			
+			if (iRank == 0) {
+				
+				List<Contact> hasNoIncoming = getContactsHasNoCall(this.callLogs.createByCallType(Call.INCOMING));
+				
+				if (hasNoIncoming.size() == 1) {
+					
+					comment.append("Bu kişi, rehberinde seni aramayan tek kişi.\n");
+				}
+				else {
+					
+					View.OnClickListener listener = v -> new ContactListDialog(getActivity(), hasNoIncoming, getString(R.string.no_incoming_calls), getString(R.string.size_contacts, hasNoIncoming.size())).show();
+					comment.append("Bu kişi, rehberinde ")
+							.append("seni aramayan", getClickSpans(listener))
+							.append(fmt(" %d kişiden biri.\n", hasNoIncoming.size()));
+				}
+			}
+			
+			
 			//+ incoming
 			if (iRank == 1) {
 				Map<Integer, List<CallRank>> incomingRankMap  = createRankMap(Call.INCOMING);
 				int                          iCount           = incomingRank.getRankCount();
-				View.OnClickListener         incomingListener = v -> new MostCallDialog(getActivity(), createMostCallItemList(incomingRankMap), getString(R.string.most_incoming_calls), fmt(" %d %s", incomingRankMap.size(), getString(R.string.contact))).show();
+				int                          size             = incomingRankMap.values().stream().map(List::size).reduce(0, Integer::sum);
+				View.OnClickListener         incomingListener = v -> new MostCallDialog(getActivity(), createMostCallItemList(incomingRankMap), getString(R.string.most_incoming_calls), getString(R.string.size_contacts, size)).show();
 				comment.append(getComment(incomingListener, iCount, Call.INCOMING));
 			}
 			//+ outgoing
 			if (oRank == 1) {
 				Map<Integer, List<CallRank>> outgoingRankMap  = createRankMap(Call.OUTGOING);
 				int                          oCount           = outgoingRank.getRankCount();
-				View.OnClickListener         outgoingListener = v -> new MostCallDialog(getActivity(), createMostCallItemList(outgoingRankMap), getString(R.string.most_outgoing_calls), fmt(" %d %s", outgoingRankMap.size(), getString(R.string.contact))).show();
+				int                          size             = outgoingRankMap.values().stream().map(List::size).reduce(0, Integer::sum);
+				View.OnClickListener         outgoingListener = v -> new MostCallDialog(getActivity(), createMostCallItemList(outgoingRankMap), getString(R.string.most_outgoing_calls), getString(R.string.size_contacts, size)).show();
 				comment.append(getComment(outgoingListener, oCount, Call.OUTGOING));
 			}
 			//+ missed
 			if (mRank == 1) {
 				Map<Integer, List<CallRank>> missedRankMap  = createRankMap(Call.MISSED);
 				int                          mCount         = missedRank.getRankCount();
-				View.OnClickListener         missedListener = v -> new MostCallDialog(getActivity(), createMostCallItemList(missedRankMap), getString(R.string.most_missed_calls), fmt(" %d %s", missedRankMap.size(), getString(R.string.contact))).show();
+				int                          size           = missedRankMap.values().stream().map(List::size).reduce(0, Integer::sum);
+				View.OnClickListener         missedListener = v -> new MostCallDialog(getActivity(), createMostCallItemList(missedRankMap), getString(R.string.most_missed_calls), getString(R.string.size_contacts, size)).show();
 				comment.append(getComment(missedListener, mCount, Call.MISSED));
 			}
 			//+ rejected
 			if (rRank == 1) {
 				Map<Integer, List<CallRank>> rejectedRankMap  = createRankMap(Call.REJECTED);
 				int                          rCount           = rejectedRank.getRankCount();
-				View.OnClickListener         rejectedListener = v -> new MostCallDialog(getActivity(), createMostCallItemList(rejectedRankMap), getString(R.string.most_rejected_calls), fmt(" %d %s", rejectedRankMap.size(), getString(R.string.contact))).show();
+				int                          size             = rejectedRankMap.values().stream().map(List::size).reduce(0, Integer::sum);
+				View.OnClickListener         rejectedListener = v -> new MostCallDialog(getActivity(), createMostCallItemList(rejectedRankMap), getString(R.string.most_rejected_calls), getString(R.string.size_contacts, size)).show();
 				comment.append(getComment(rejectedListener, rCount, Call.REJECTED));
 			}
 		}
 	}
 	
+	/**
+	 * Returns the comment.
+	 *
+	 * @param listener  listener
+	 * @param rankCount rank count
+	 * @param callType  call type
+	 * @return the comment
+	 */
 	private @NotNull CharSequence getComment(View.OnClickListener listener, int rankCount, int callType) {
 		
 		Spanner comment = new Spanner();
@@ -388,141 +425,18 @@ public class QuantityComment implements ContactComment {
 	}
 	
 	private @NotNull Map<Integer, List<CallRank>> createRankMap(int callType) {
-		
+		//@off
 		assert this.callLogs != null;
 		switch (callType) {
-			
 			case Call.INCOMING:
-			case Call.INCOMING_WIFI: return CallLogs.create(this.callLogs.getIncomingCalls()).makeRank();
+			case Call.INCOMING_WIFI: return CallLogs.createRankMap(this.callLogs.getIncomingCalls(), Call.INCOMING);
 			case Call.OUTGOING:
-			case Call.OUTGOING_WIFI: return CallLogs.create(this.callLogs.getOutgoingCalls()).makeRank();
-			case Call.MISSED: return CallLogs.create(this.callLogs.getMissedCalls()).makeRank();
-			case Call.REJECTED: return CallLogs.create(this.callLogs.getRejectedCalls()).makeRank();
-			default: throw new IllegalArgumentException("Unknown call type: " + callType);
+			case Call.OUTGOING_WIFI: return CallLogs.createRankMap(this.callLogs.getOutgoingCalls(), Call.OUTGOING);
+			case Call.MISSED:        return CallLogs.createRankMap(this.callLogs.getMissedCalls(), Call.MISSED);
+			case Call.REJECTED:      return CallLogs.createRankMap(this.callLogs.getRejectedCalls(), Call.REJECTED);
+			default:                 throw new IllegalArgumentException("Unknown call type: " + callType);
 		}
-	}
-	
-	/**
-	 * Comments the contact, which has the most incoming calls.
-	 *
-	 * @param history the history
-	 */
-	private void incomingComment(@NotNull History history) {
-		
-		List<Call> incomingCalls = history.getIncomingCalls();
-		//+ create a call logs with only incoming calls
-		assert this.callLogs != null;
-		CallLogs                     incomingCallLogs = CallLogs.create(this.callLogs.getIncomingCalls());
-		Map<Integer, List<CallRank>> rankMap          = incomingCallLogs.makeRank();
-		int                          rank             = CallLogs.getRank(rankMap, contact);
-		List<CallRank>               candidate        = rankMap.get(rank);
-		
-		if (incomingCalls.isEmpty()) {
-			
-			noIncomingComment(getContactsHasNoCall(incomingCallLogs));
-		}
-		else {
-			//+ incoming calls are not empty
-			//+ from the most callers or from the fewest callers?
-			
-			if (rank == 1) {
-				//+ from the most callers
-				
-				View.OnClickListener listener = v -> new MostCallDialog(getActivity(), createMostCallItemList(rankMap), getString(R.string.most_incoming_calls), String.valueOf(rankMap.size()));
-				
-				if (isTurkish) {
-					
-					comment.append("Bu kişi seni ")
-							.append(fmt("en çok arayan"), getClickSpans(listener));
-					
-					assert candidate != null;
-					if (candidate.size() == 1) {
-						
-						comment.append(" kişi. ");
-					}
-					else {
-						
-						comment.append(fmt(" %d kişiden biri. ", candidate.size()));
-					}
-				}
-				else {
-					assert candidate != null;
-					if (candidate.size() == 1) {
-						comment.append("This contact is")
-								.append("the most caller", getClickSpans(listener))
-								.append(" to you. ");
-					}
-					else {
-						
-						comment.append(fmt("The contact is the one of %d contact who is ", candidate.size()))
-								.append("the most caller", getClickSpans(listener))
-								.append(" to you. ");
-					}
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Comments the contact, which has the most outgoing calls.
-	 *
-	 * @param history the history of the contact
-	 */
-	private void mostOutgoingComment(@NotNull History history) {
-		
-		List<Call> outgoingCalls = history.getOutgoingCalls();
-		//+ create a call logs with only incoming calls
-		assert this.callLogs != null;
-		CallLogs                     outgoingCallLogs = CallLogs.create(this.callLogs.getOutgoingCalls());
-		Map<Integer, List<CallRank>> rankMap          = outgoingCallLogs.makeRank();
-		int                          rank             = CallLogs.getRank(rankMap, contact);
-		List<CallRank>               candidate        = rankMap.get(rank);
-		
-		
-		if (outgoingCalls.isEmpty()) {
-			
-			noOutgoingComment(getContactsHasNoCall(outgoingCallLogs));
-		}
-		else {
-			//+ incoming calls are not empty
-			//+ from the most callers or from the fewest callers?
-			
-			if (rank == 1) {
-				//+ from the most callers
-				
-				View.OnClickListener listener = v -> new MostCallDialog(getActivity(), createMostCallItemList(rankMap), getString(R.string.most_incoming_calls), String.valueOf(rankMap.size()));
-				
-				if (isTurkish) {
-					
-					comment.append("Bu kişi ")
-							.append(fmt("en çok aradığın"), getClickSpans(listener));
-					
-					assert candidate != null;
-					if (candidate.size() == 1) {
-						
-						comment.append(" kişi. ");
-					}
-					else {
-						
-						comment.append(fmt(" %d kişiden biri. ", candidate.size()));
-					}
-				}
-				else {
-					assert candidate != null;
-					if (candidate.size() == 1) {
-						comment.append("This contact is the contact that ")
-								.append("your most calling to", getClickSpans(listener))
-								.append(" . ");
-					}
-					else {
-						
-						comment.append(fmt("The contact is the one of %d contact who is ", candidate.size()))
-								.append("your most calling to", getClickSpans(listener))
-								.append(" to you. ");
-					}
-				}
-			}
-		}
+		//@on
 	}
 	
 	/**
