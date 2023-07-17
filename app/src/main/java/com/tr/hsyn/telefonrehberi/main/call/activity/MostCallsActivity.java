@@ -28,10 +28,7 @@ import com.tr.hsyn.xlog.xlog;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -145,6 +142,11 @@ public class MostCallsActivity extends ActivityView {
 		}
 	}
 	
+	/**
+	 * Makes a list of {@link CallRank}.
+	 *
+	 * @return the list of {@link CallRank}
+	 */
 	@Nullable
 	private List<CallRank> makeRank() {
 		
@@ -156,23 +158,9 @@ public class MostCallsActivity extends ActivityView {
 		
 		xlog.d("Filter : %d", FILTER);
 		
-		
-		List<CallRank> groups;
-		
-		if (FILTER == CallLogs.FILTER_MOST_SPEAKING || FILTER == CallLogs.FILTER_MOST_TALKING) {
-			
-			var ranks = CallLogs.createRankMapByCallDuration(filteredCalls);
-			groups = ranks.values().stream().flatMap(Collection::stream).collect(Collectors.toList());
-		}
-		else {
-			
-			CallLogs                     callLogs = CallLogs.create(filteredCalls);
-			Map<Integer, List<CallRank>> rankMap  = callLogs.makeRank();
-			
-			groups = rankMap.values().stream().flatMap(Collection::stream).sorted(Comparator.comparingInt(CallRank::getRank)).collect(Collectors.toList());
-		}
-		
-		return groups;
+		return (FILTER == CallLogs.FILTER_MOST_SPEAKING || FILTER == CallLogs.FILTER_MOST_TALKING) ?
+				CallLogs.createRankListByDuration(filteredCalls) :
+				CallLogs.createRankList(filteredCalls);
 	}
 	
 	private List<MostCallsItemData> makeItemData(@NotNull List<CallRank> groups) {

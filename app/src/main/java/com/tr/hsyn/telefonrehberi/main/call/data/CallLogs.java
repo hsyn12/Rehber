@@ -26,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -525,7 +526,7 @@ public final class CallLogs {
 	 * @param callType the call type
 	 * @return the new {@link CallLogs} object
 	 */
-	public @NotNull CallLogs createFrom(int callType) {
+	public @NotNull CallLogs createByCallType(int callType) {
 		
 		switch (callType) {
 			
@@ -960,10 +961,22 @@ public final class CallLogs {
 		return rankMap;
 	}
 	
+	/**
+	 * Returns a map object that ranked by call duration by descending.
+	 *
+	 * @param calls the calls
+	 * @return a map object that ranked by calls duration by descending
+	 */
 	@NotNull
 	public static Map<Integer, List<CallRank>> createRankMapByCallDuration(@NotNull List<Call> calls) {
 		
 		return createRankMapByCallDuration(create(calls));
+	}
+	
+	@NotNull
+	public static Map<Integer, List<CallRank>> createRankMap(@NotNull List<Call> calls) {
+		
+		return create(calls).makeRank();
 	}
 	
 	/**
@@ -1002,5 +1015,34 @@ public final class CallLogs {
 		var filters = context.getResources().getStringArray(R.array.call_filter_items);
 		
 		return filters[filter];
+	}
+	
+	/**
+	 * Creates a ranked list by quantity.
+	 *
+	 * @param calls the calls
+	 * @return the ranked list
+	 */
+	public static List<CallRank> createRankList(@NotNull List<Call> calls) {
+		
+		return CallLogs.createRankMap(calls).values()
+				.stream()
+				.flatMap(Collection::stream)
+				.sorted(Comparator.comparingInt(CallRank::getRank))
+				.collect(Collectors.toList());
+	}
+	
+	/**
+	 * Creates a ranked list by duration.
+	 *
+	 * @param calls the calls
+	 * @return the ranked list
+	 */
+	public static List<CallRank> createRankListByDuration(@NotNull List<Call> calls) {
+		
+		return CallLogs.createRankMapByCallDuration(calls).values()
+				.stream().
+				flatMap(Collection::stream)
+				.collect(Collectors.toList());
 	}
 }
