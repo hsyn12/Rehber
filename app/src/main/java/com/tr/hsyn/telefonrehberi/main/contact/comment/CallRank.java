@@ -124,7 +124,7 @@ public class CallRank {
 	}
 	
 	/**
-	 * Key can be phone number, or contact id, or whatever else.
+	 * Key can be phone number, or contact ID, or whatever else.
 	 *
 	 * @return the key
 	 */
@@ -136,5 +136,10 @@ public class CallRank {
 	public List<Call> getCalls() {
 		
 		return calls;
+	}
+	
+	public int size() {
+		
+		return calls.size();
 	}
 }

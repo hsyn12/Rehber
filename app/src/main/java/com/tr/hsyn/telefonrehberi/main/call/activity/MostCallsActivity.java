@@ -18,9 +18,8 @@ import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.execution.Work;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.telefonrehberi.R;
-import com.tr.hsyn.telefonrehberi.main.call.Group;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallLogs;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallOver;
+import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
 import com.tr.hsyn.textdrawable.TextDrawable;
 import com.tr.hsyn.time.Time;
 import com.tr.hsyn.xbox.Blue;
@@ -29,7 +28,10 @@ import com.tr.hsyn.xlog.xlog;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -43,7 +45,6 @@ import java.util.stream.Collectors;
  * by calling the {@link Blue#getObject(Key)} method.
  * So,
  * only the one thing to do is to set the key {@link Key#MOST_CALLS_FILTER_TYPE} with the filter.
- * This is not so haard.
  */
 public class MostCallsActivity extends ActivityView {
 	
@@ -75,10 +76,9 @@ public class MostCallsActivity extends ActivityView {
 		
 		showProgress();
 		Work.on(() -> {
-					
 					filter();
 					
-					List<Group<Call>> ranks = makeRank();
+					List<CallRank> ranks = makeRank();
 					
 					if (ranks != null) return makeItemData(ranks);
 					
@@ -86,7 +86,8 @@ public class MostCallsActivity extends ActivityView {
 				})
 				.onSuccess(this::showList)
 				.onError(xlog::e)
-				.onLast(this::hideProgress);
+				.onLast(this::hideProgress)
+				.execute();
 	}
 	
 	@Override
@@ -145,7 +146,7 @@ public class MostCallsActivity extends ActivityView {
 	}
 	
 	@Nullable
-	private List<Group<Call>> makeRank() {
+	private List<CallRank> makeRank() {
 		
 		if (filteredCalls == null || filteredCalls.isEmpty()) {
 			
@@ -155,25 +156,26 @@ public class MostCallsActivity extends ActivityView {
 		
 		xlog.d("Filter : %d", FILTER);
 		
-		List<Group<Call>> groups = CallOver.groupByNumber(filteredCalls);
+		
+		List<CallRank> groups;
 		
 		if (FILTER == CallLogs.FILTER_MOST_SPEAKING || FILTER == CallLogs.FILTER_MOST_TALKING) {
-			//- Extra değerlerini ata
-			CallOver.accumulateByDuration(groups);
-			CallOver.makeByExtra(groups);
-			//MisterLister.makeRanks(groups, 1);
+			
+			var ranks = CallLogs.createRankMapByCallDuration(CallLogs.create(filteredCalls));
+			groups = ranks.values().stream().flatMap(Collection::stream).collect(Collectors.toList());
 		}
 		else {
 			
-			CallOver.makeBySize(groups);
-			//groups.sort((x, y) -> Integer.compare(y.size(), x.size()));
-			//MisterLister.makeRanks(groups, 0);
+			CallLogs                     callLogs = CallLogs.create(filteredCalls);
+			Map<Integer, List<CallRank>> rankMap  = callLogs.makeRank();
+			
+			groups = rankMap.values().stream().flatMap(Collection::stream).sorted(Comparator.comparingInt(CallRank::getRank)).collect(Collectors.toList());
 		}
 		
 		return groups;
 	}
 	
-	private List<MostCallsItemData> makeItemData(@NotNull List<Group<Call>> groups) {
+	private List<MostCallsItemData> makeItemData(@NotNull List<CallRank> groups) {
 		
 		return groups.stream().map(this::createItemData).collect(Collectors.toList());
 	}
@@ -194,23 +196,23 @@ public class MostCallsActivity extends ActivityView {
 	}
 	
 	@NotNull
-	private MostCallsItemData createItemData(@NotNull Group<Call> group) {
+	private MostCallsItemData createItemData(@NotNull CallRank callRank) {
 		
 		TextDrawable rank = TextDrawable.builder()
-				.buildRound(String.valueOf(group.getRank()), Colors.COLOR_GENERATOR.getRandomColor());
+				.buildRound(String.valueOf(callRank.getRank()), Colors.COLOR_GENERATOR.getRandomColor());
 		
 		String txt;
 		
 		if (FILTER == CallLogs.FILTER_MOST_SPEAKING || FILTER == CallLogs.FILTER_MOST_TALKING) {
 			
-			txt = Time.formatSeconds(group.getExtra());
+			txt = Time.formatSeconds((int) (callRank.getIncomingDuration() + callRank.getOutgoingDuration()));
 		}
 		else {
 			
-			txt = group.size() + " " + textType;
+			txt = callRank.size() + " " + textType;
 		}
 		
-		return new MostCallsItemData(group.getValue().getName(), txt, imgType, rank);
+		return new MostCallsItemData(callRank.getName(), txt, imgType, rank);
 	}
 	
 	private void onClickItem(int index) {

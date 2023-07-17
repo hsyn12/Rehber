@@ -5,11 +5,13 @@ import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.telefonrehberi.main.call.Group;
+import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -37,13 +39,13 @@ public class CallOver {
 	}
 	
 	/**
-	 * Bir listeyi, liste elemanlarının belirli bir özelliğine göre gruplar.
+	 * Groups a list according to a particular property of list elements
 	 *
-	 * @param list       Liste
-	 * @param groupMaker Gruplama kriteri
-	 * @param <X>        Verilen listenin eleman türü
-	 * @param <Y>        Gruplama için uygulanan fonksiyonun döndürdüğü nesne türü
-	 * @return Grup listesi
+	 * @param list       list
+	 * @param groupMaker group maker
+	 * @param <X>        type of list element
+	 * @param <Y>        type of group key
+	 * @return grouped list
 	 * @see Group
 	 */
 	@NotNull
@@ -88,9 +90,12 @@ public class CallOver {
 	 * @return Gruplanmış arama kayıtları listesi
 	 */
 	@NotNull
-	public static List<Group<Call>> groupByNumber(@NotNull List<Call> calls) {
+	public static List<CallRank> groupByNumber(@NotNull List<Call> calls) {
 		
-		return group(calls, c -> PhoneNumbers.formatNumber(c.getNumber(), 10));
+		CallLogs                     callLogs = CallLogs.create(calls);
+		Map<Integer, List<CallRank>> rankMap  = callLogs.makeRank();
+		
+		return rankMap.values().stream().flatMap(Collection::stream).sorted(Comparator.comparingInt(CallRank::getRank)).collect(Collectors.toList());
 	}
 	
 	/**

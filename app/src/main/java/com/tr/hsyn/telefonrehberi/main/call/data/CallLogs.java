@@ -946,8 +946,9 @@ public final class CallLogs {
 		//_ set ranks
 		for (int i = 0; i < size; i++) {
 			
-			CallRank       callRank = callRanks.get(i);
-			List<CallRank> ranks    = rankMap.computeIfAbsent(rank, r -> new ArrayList<>());
+			CallRank callRank = callRanks.get(i);
+			callRank.setRank(rank);
+			List<CallRank> ranks = rankMap.computeIfAbsent(rank, r -> new ArrayList<>());
 			ranks.add(callRank);
 			
 			if (i == last) break;

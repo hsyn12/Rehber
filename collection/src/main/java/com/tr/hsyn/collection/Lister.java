@@ -420,7 +420,7 @@ public final class Lister {
 	 * @param list      list
 	 * @param keyMapper function
 	 * @param <T>       element type
-	 * @param <R>       return type
+	 * @param <R>       group key type
 	 * @return group
 	 */
 	public static <T, R> @NotNull Map<R, List<T>> group(@NotNull List<? extends T> list, @NotNull Function<? super T, ? extends R> keyMapper) {

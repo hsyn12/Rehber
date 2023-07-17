@@ -21,11 +21,11 @@ import java.util.List;
 public class Group<T> {
 	
 	/**
-	 * Anahtar
+	 * Key
 	 */
 	private final T       value;
 	/**
-	 * Değer
+	 * Value
 	 */
 	private final List<T> list;
 	private       int     extra;
