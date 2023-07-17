@@ -960,6 +960,12 @@ public final class CallLogs {
 		return rankMap;
 	}
 	
+	@NotNull
+	public static Map<Integer, List<CallRank>> createRankMapByCallDuration(@NotNull List<Call> calls) {
+		
+		return createRankMapByCallDuration(create(calls));
+	}
+	
 	/**
 	 * Return the {@link CallRank} of the contact.
 	 *

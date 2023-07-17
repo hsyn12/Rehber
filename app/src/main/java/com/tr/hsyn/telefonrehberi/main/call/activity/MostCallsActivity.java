@@ -161,7 +161,7 @@ public class MostCallsActivity extends ActivityView {
 		
 		if (FILTER == CallLogs.FILTER_MOST_SPEAKING || FILTER == CallLogs.FILTER_MOST_TALKING) {
 			
-			var ranks = CallLogs.createRankMapByCallDuration(CallLogs.create(filteredCalls));
+			var ranks = CallLogs.createRankMapByCallDuration(filteredCalls);
 			groups = ranks.values().stream().flatMap(Collection::stream).collect(Collectors.toList());
 		}
 		else {
