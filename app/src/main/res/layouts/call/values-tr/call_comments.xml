@@ -13,4 +13,7 @@
 	<string name="title_most_calls">En Fazla Arama Kaydı</string>
 	<string name="title_most_incoming_calls">En Çok Arayanlar</string>
 	<string name="no_incoming_calls">Seni Hiç Aramayanlar</string>
+	<string name="no_outgoing_calls">Hiç Aramadıkların</string>
+	<string name="no_missed_calls">Cevapsız Çağrısı Olmayanlar</string>
+	<string name="no_rejected_calls">Hiç Reddetmediklerin</string>
 </resources>

@@ -14,7 +14,9 @@
 	<string name="title_most_calls">The Most Calls</string>
 	<string name="title_most_incoming_calls">Top Callers</string>
 	<string name="size_contacts">%d Contacts</string>
-	<string name="no_incoming_calls">Contacts Who Do Not Call You</string>
-
+	<string name="no_incoming_calls">Ones Who Do Not Call You</string>
+	<string name="no_outgoing_calls">Ones You Never Called</string>
+	<string name="no_missed_calls">Ones With No Missed Calls</string>
+	<string name="no_rejected_calls">Ones With No Rejected Calls</string>
 
 </resources>
