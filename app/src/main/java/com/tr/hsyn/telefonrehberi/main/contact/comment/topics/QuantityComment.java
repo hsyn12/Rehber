@@ -4,6 +4,8 @@ package com.tr.hsyn.telefonrehberi.main.contact.comment.topics;
 import android.app.Activity;
 import android.view.View;
 
+import androidx.annotation.StringRes;
+
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.calldata.CallType;
 import com.tr.hsyn.contactdata.Contact;
@@ -34,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 
@@ -186,6 +189,7 @@ public class QuantityComment implements ContactComment {
 		return contactsHasNoCalls;
 	}
 	
+	
 	private @NotNull CharSequence getNoCallComment(List<Contact> contacts, int callType, @NotNull View.OnClickListener listener) {
 		
 		Spanner comment = new Spanner();
@@ -194,25 +198,16 @@ public class QuantityComment implements ContactComment {
 			case Call.INCOMING:
 			case Call.INCOMING_WIFI:
 				if (isTurkish) {
-					if (contacts.size() == 1) {
-						comment.append("Bu kişi, seni hiç aramayan tek kişi.\n");
-					}
-					else {
-						comment.append("Bu kişi, ")
-								.append("seni hiç aramayan", getClickSpans(listener))
-								.append(fmt(" %d kişiden biri.\n", contacts.size()));
-					}
+					if (contacts.size() == 1) comment.append("Bu kişi, seni hiç aramayan tek kişi.\n");
+					else comment.append("Bu kişi, ")
+							.append("seni hiç aramayan", getClickSpans(listener))
+							.append(fmt(" %d kişiden biri.\n", contacts.size()));
 				}
 				else {
-					
-					if (contacts.size() == 1) {
-						comment.append("This contact is the only one who never called you.\n");
-					}
-					else {
-						comment.append(fmt("This contact one of the %d contacts ", contacts.size()))
-								.append("who never called you", getClickSpans(listener))
-								.append(".\n");
-					}
+					if (contacts.size() == 1) comment.append("This contact is the only one who never called you.\n");
+					else comment.append(fmt("This contact one of the %d contacts ", contacts.size()))
+							.append("who never called you", getClickSpans(listener))
+							.append(".\n");
 				}
 				break;
 			case Call.OUTGOING:
@@ -224,7 +219,6 @@ public class QuantityComment implements ContactComment {
 							.append(fmt(" %d kişiden biri.\n", contacts.size()));
 				}
 				else {
-					
 					if (contacts.size() == 1) comment.append("This contact is the only one you never called to.\n");
 					else comment.append(fmt("This contact one of the %d contacts ", contacts.size()))
 							.append("you never called", getClickSpans(listener))
@@ -239,7 +233,6 @@ public class QuantityComment implements ContactComment {
 							.append(fmt(" %d kişiden biri.\n", contacts.size()));
 				}
 				else {
-					
 					if (contacts.size() == 1) comment.append("This person is the only one with no missed calls.\n");
 					else comment.append(fmt("This contact one of the %d contacts with", contacts.size()))
 							.append("no missed calls", getClickSpans(listener))
@@ -254,7 +247,6 @@ public class QuantityComment implements ContactComment {
 							.append(fmt(" %d kişiden biri.\n", contacts.size()));
 				}
 				else {
-					
 					if (contacts.size() == 1) comment.append("This is the only person you never rejected a call from.\n");
 					else comment.append(fmt("This contact one of the %d contacts you", contacts.size()))
 							.append("never rejected", getClickSpans(listener))
@@ -269,13 +261,13 @@ public class QuantityComment implements ContactComment {
 	
 	private void evaluateCalls() {
 		
-		assert callLogs != null;
+		assert this.callLogs != null;
 		History history = callLogs.getHistoryOf(contact);
 		
 		//+ no any calls
 		if (history.isEmpty()) {
 			
-			List<Contact> contactsHasNoCall = getContactsHasNoCall(callLogs);
+			List<Contact> contactsHasNoCall = callLogs.getContactsByCalls(Objects::isNull);
 			
 			if (contactsHasNoCall.contains(contact)) {
 				
@@ -331,7 +323,6 @@ public class QuantityComment implements ContactComment {
 					View.OnClickListener listener  = v -> new ContactListDialog(getActivity(), hasNoCall, getString(R.string.no_incoming_calls), getString(R.string.size_contacts, hasNoCall.size())).show();
 					comment.append(getNoCallComment(hasNoCall, Call.INCOMING, listener));
 				}
-				
 			}
 			//+ no outgoing
 			if (oRank == 0) {
@@ -344,11 +335,11 @@ public class QuantityComment implements ContactComment {
 				//+ no missed but has incoming and no rejected
 				if (iRank > 0 && rRank == 0) {
 					
-					var iCalls = history.getIncomingCalls();
+					List<Call> iCalls = history.getIncomingCalls();
 					
 					if (iCalls.size() > 5) {
 						
-						View.OnClickListener listener = v -> new ShowCallsDialog(activity, iCalls, getString(R.string.incoming_calls), null).show();
+						View.OnClickListener listener = createCallListener(iCalls, R.string.incoming_calls);
 						
 						if (isTurkish) comment.append("Bu kişiden ")
 								.append("gelen tüm aramaları ", getClickSpans(listener))
@@ -358,21 +349,15 @@ public class QuantityComment implements ContactComment {
 								.append(" from this contact.\n");
 					}
 				}
-				else {
-					List<Contact>        hasNoCall = getContactsHasNoCall(this.callLogs.createByCallType(Call.MISSED));
-					View.OnClickListener listener  = v -> new ContactListDialog(getActivity(), hasNoCall, getString(R.string.no_missed_calls), getString(R.string.size_contacts, hasNoCall.size())).show();
-					comment.append(getNoCallComment(hasNoCall, Call.MISSED, listener));
-				}
-				
 			}
+			assert this.callLogs != null;
 			//+ rejected
 			if (rRank == 0 && iRank > 0) {//+ must be having an incoming call
-				List<Contact>        hasNoCall = getContactsHasNoCall(this.callLogs.createByCallType(Call.REJECTED));
-				View.OnClickListener listener  = v -> new ContactListDialog(getActivity(), hasNoCall, getString(R.string.no_rejected_calls), getString(R.string.size_contacts, hasNoCall.size())).show();
+				CallLogs             rejectedLogs = this.callLogs.createByCallType(Call.REJECTED);
+				List<Contact>        hasNoCall    = rejectedLogs.getContactsByCalls(Objects::isNull);
+				View.OnClickListener listener     = createContactListener(hasNoCall, R.string.no_rejected_calls);
 				comment.append(getNoCallComment(hasNoCall, Call.REJECTED, listener));
 			}
-			
-			
 			//+ incoming
 			if (iRank == 1) {
 				Map<Integer, List<CallRank>> incomingRankMap  = createRankMap(Call.INCOMING);
@@ -406,6 +391,18 @@ public class QuantityComment implements ContactComment {
 				comment.append(getComment(rejectedListener, rCount, Call.REJECTED));
 			}
 		}
+	}
+	
+	@NotNull
+	private View.OnClickListener createContactListener(@NotNull List<Contact> contacts, @StringRes int title) {
+		
+		return v -> new ContactListDialog(getActivity(), contacts, getString(title), getString(R.string.size_contacts, contacts.size())).show();
+	}
+	
+	@NotNull
+	private View.OnClickListener createCallListener(List<Call> calls, @StringRes int title) {
+		
+		return v -> new ShowCallsDialog(activity, calls, getString(title), null).show();
 	}
 	
 	/**

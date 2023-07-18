@@ -253,6 +253,23 @@ public final class CallLogs {
 		return History.of(contact, getCallsById(String.valueOf(contact.getContactId())));
 	}
 	
+	public @NotNull List<Contact> getContactsByCalls(@NotNull Predicate<@Nullable List<Call>> predicate) {
+		
+		List<Contact> contacts = CallLogs.getContactsWithNumber();
+		
+		if (contacts == null) return new ArrayList<>();
+		
+		return contacts.stream()
+				.filter(contact -> predicate.test(getCalls(contact)))
+				.collect(Collectors.toList());
+	}
+	
+	@Nullable
+	public List<Call> getCalls(@NotNull Contact contact) {
+		
+		return mapIdToCalls.get(String.valueOf(contact.getContactId()));
+	}
+	
 	/**
 	 * Returns all calls with the given call types.
 	 *
