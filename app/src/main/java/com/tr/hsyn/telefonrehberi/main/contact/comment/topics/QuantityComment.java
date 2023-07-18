@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.view.View;
 
 import com.tr.hsyn.calldata.Call;
+import com.tr.hsyn.calldata.CallType;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.nextension.Extension;
 import com.tr.hsyn.nextension.WordExtension;
@@ -295,23 +296,74 @@ public class QuantityComment implements ContactComment {
 			int oRank = outgoingRank == null ? 0 : outgoingRank.getRank();
 			int mRank = missedRank == null ? 0 : missedRank.getRank();
 			int rRank = rejectedRank == null ? 0 : rejectedRank.getRank();
-			//+ incoming
+			//+ no incoming
 			if (iRank == 0) {
-				List<Contact>        hasNoCall = getContactsHasNoCall(this.callLogs.createByCallType(Call.INCOMING));
-				View.OnClickListener listener  = v -> new ContactListDialog(getActivity(), hasNoCall, getString(R.string.no_incoming_calls), getString(R.string.size_contacts, hasNoCall.size())).show();
-				comment.append(getNoCallComment(hasNoCall, Call.INCOMING, listener));
+				if (mRank > 0 || rRank > 0) {
+					if (mRank > 0 && rRank > 0) {
+						
+						List<Call> mCalls = this.callLogs.getCalls(CallType::isMissed);
+						List<Call> rCalls = this.callLogs.getCalls(CallType::isRejected);
+						
+						if (isTurkish) comment.append("Bu kişinin hiç bir aramasını cevaplamadın. ")
+								.append(fmt("Gelen %d aramayı reddettin ve %d aramayı da cevapsız bıraktın.\n", mCalls.size(), rCalls.size()));
+						else comment.append("You did not answer any calls from this contact.")
+								.append(fmt("You rejected %d calls and did not answer %d calls.\n", rCalls.size(), mCalls.size()));
+					}
+					else if (rRank > 0) {
+						
+						List<Call> rCalls = this.callLogs.getCalls(CallType::isRejected);
+						if (isTurkish) comment.append("Bu kişinin hiç bir aramasını cevaplamadın. ")
+								.append(fmt("Gelen %d aramayı da reddettin.\n", rCalls.size()));
+						else comment.append("You did not answer any calls from this contact.")
+								.append(fmt("You rejected %d calls.\n", rCalls.size()));
+					}
+					else {
+						
+						List<Call> mCalls = this.callLogs.getCalls(CallType::isMissed);
+						if (isTurkish) comment.append("Bu kişinin hiç bir aramasını cevaplamadın. ")
+								.append(fmt("Gelen %d aramayı da cevapsız bıraktın.\n", mCalls.size()));
+						else comment.append("You did not answer any calls from this contact.")
+								.append(fmt("You missed %d calls.\n", mCalls.size()));
+					}
+				}
+				else {
+					List<Contact>        hasNoCall = getContactsHasNoCall(this.callLogs.createByCallType(Call.INCOMING));
+					View.OnClickListener listener  = v -> new ContactListDialog(getActivity(), hasNoCall, getString(R.string.no_incoming_calls), getString(R.string.size_contacts, hasNoCall.size())).show();
+					comment.append(getNoCallComment(hasNoCall, Call.INCOMING, listener));
+				}
+				
 			}
-			//+ outgoing
+			//+ no outgoing
 			if (oRank == 0) {
 				List<Contact>        hasNoCall = getContactsHasNoCall(this.callLogs.createByCallType(Call.OUTGOING));
 				View.OnClickListener listener  = v -> new ContactListDialog(getActivity(), hasNoCall, getString(R.string.no_outgoing_calls), getString(R.string.size_contacts, hasNoCall.size())).show();
 				comment.append(getNoCallComment(hasNoCall, Call.OUTGOING, listener));
 			}
-			//+ missed
+			//+ no missed
 			if (mRank == 0) {
-				List<Contact>        hasNoCall = getContactsHasNoCall(this.callLogs.createByCallType(Call.MISSED));
-				View.OnClickListener listener  = v -> new ContactListDialog(getActivity(), hasNoCall, getString(R.string.no_missed_calls), getString(R.string.size_contacts, hasNoCall.size())).show();
-				comment.append(getNoCallComment(hasNoCall, Call.MISSED, listener));
+				//+ no missed but has incoming and no rejected
+				if (iRank > 0 && rRank == 0) {
+					
+					var iCalls = history.getIncomingCalls();
+					
+					if (iCalls.size() > 5) {
+						
+						View.OnClickListener listener = v -> new ShowCallsDialog(activity, iCalls, getString(R.string.incoming_calls), null).show();
+						
+						if (isTurkish) comment.append("Bu kişiden ")
+								.append("gelen tüm aramaları ", getClickSpans(listener))
+								.append("cevapladın.\n");
+						else comment.append("You answered ")
+								.append("all calls", getClickSpans(listener))
+								.append(" from this contact.\n");
+					}
+				}
+				else {
+					List<Contact>        hasNoCall = getContactsHasNoCall(this.callLogs.createByCallType(Call.MISSED));
+					View.OnClickListener listener  = v -> new ContactListDialog(getActivity(), hasNoCall, getString(R.string.no_missed_calls), getString(R.string.size_contacts, hasNoCall.size())).show();
+					comment.append(getNoCallComment(hasNoCall, Call.MISSED, listener));
+				}
+				
 			}
 			//+ rejected
 			if (rRank == 0 && iRank > 0) {//+ must be having an incoming call
