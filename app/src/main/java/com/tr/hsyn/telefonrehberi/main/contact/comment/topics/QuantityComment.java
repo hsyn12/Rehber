@@ -163,33 +163,6 @@ public class QuantityComment implements ContactComment {
 		return new ContactListDialog(activity, contacts, title, subtitle);
 	}
 	
-	/**
-	 * Returns the list of contacts with no calls according to the given call logs.
-	 *
-	 * @return the list of contacts with no calls
-	 */
-	private @NotNull List<Contact> getContactsHasNoCall(@NotNull CallLogs callLogs) {
-		
-		List<Contact> contacts           = CallLogs.getContactsWithNumber();
-		List<Contact> contactsHasNoCalls = new ArrayList<>();
-		
-		if (contacts == null) {
-			
-			xlog.d(activity.getString(R.string.can_not_access_the_contacts));
-			return new ArrayList<>();
-		}
-		
-		for (Contact contact : contacts) {
-			
-			List<Call> calls = callLogs.getMapIdToCalls().get(String.valueOf(contact.getId()));
-			
-			if (calls == null) contactsHasNoCalls.add(contact);
-		}
-		
-		return contactsHasNoCalls;
-	}
-	
-	
 	private @NotNull CharSequence getNoCallComment(List<Contact> contacts, int callType, @NotNull View.OnClickListener listener) {
 		
 		Spanner comment = new Spanner();
@@ -319,15 +292,16 @@ public class QuantityComment implements ContactComment {
 					}
 				}
 				else {
-					List<Contact>        hasNoCall = getContactsHasNoCall(this.callLogs.createByCallType(Call.INCOMING));
-					View.OnClickListener listener  = v -> new ContactListDialog(getActivity(), hasNoCall, getString(R.string.no_incoming_calls), getString(R.string.size_contacts, hasNoCall.size())).show();
+					List<Contact>        hasNoCall = this.callLogs.createByCallType(Call.INCOMING).getContactsByCalls(Objects::isNull);
+					View.OnClickListener listener  = createContactListener(hasNoCall, R.string.no_incoming_calls);
 					comment.append(getNoCallComment(hasNoCall, Call.INCOMING, listener));
 				}
 			}
 			//+ no outgoing
 			if (oRank == 0) {
-				List<Contact>        hasNoCall = getContactsHasNoCall(this.callLogs.createByCallType(Call.OUTGOING));
-				View.OnClickListener listener  = v -> new ContactListDialog(getActivity(), hasNoCall, getString(R.string.no_outgoing_calls), getString(R.string.size_contacts, hasNoCall.size())).show();
+				assert this.callLogs != null;
+				List<Contact>        hasNoCall = this.callLogs.createByCallType(Call.OUTGOING).getContactsByCalls(Objects::isNull);
+				View.OnClickListener listener  = createContactListener(hasNoCall, R.string.no_outgoing_calls);
 				comment.append(getNoCallComment(hasNoCall, Call.OUTGOING, listener));
 			}
 			//+ no missed
@@ -360,34 +334,26 @@ public class QuantityComment implements ContactComment {
 			}
 			//+ incoming
 			if (iRank == 1) {
-				Map<Integer, List<CallRank>> incomingRankMap  = createRankMap(Call.INCOMING);
-				int                          iCount           = incomingRank.getRankCount();
-				int                          size             = incomingRankMap.values().stream().map(List::size).reduce(0, Integer::sum);
-				View.OnClickListener         incomingListener = v -> new MostCallDialog(getActivity(), createMostCallItemList(incomingRankMap), getString(R.string.most_incoming_calls), getString(R.string.size_contacts, size)).show();
+				int                  iCount           = incomingRank.getRankCount();
+				View.OnClickListener incomingListener = createCallListener(createRankMap(Call.INCOMING), R.string.most_incoming_calls);
 				comment.append(getComment(incomingListener, iCount, Call.INCOMING));
 			}
 			//+ outgoing
 			if (oRank == 1) {
-				Map<Integer, List<CallRank>> outgoingRankMap  = createRankMap(Call.OUTGOING);
-				int                          oCount           = outgoingRank.getRankCount();
-				int                          size             = outgoingRankMap.values().stream().map(List::size).reduce(0, Integer::sum);
-				View.OnClickListener         outgoingListener = v -> new MostCallDialog(getActivity(), createMostCallItemList(outgoingRankMap), getString(R.string.most_outgoing_calls), getString(R.string.size_contacts, size)).show();
+				int                  oCount           = outgoingRank.getRankCount();
+				View.OnClickListener outgoingListener = createCallListener(createRankMap(Call.OUTGOING), R.string.most_outgoing_calls);
 				comment.append(getComment(outgoingListener, oCount, Call.OUTGOING));
 			}
 			//+ missed
 			if (mRank == 1) {
-				Map<Integer, List<CallRank>> missedRankMap  = createRankMap(Call.MISSED);
-				int                          mCount         = missedRank.getRankCount();
-				int                          size           = missedRankMap.values().stream().map(List::size).reduce(0, Integer::sum);
-				View.OnClickListener         missedListener = v -> new MostCallDialog(getActivity(), createMostCallItemList(missedRankMap), getString(R.string.most_missed_calls), getString(R.string.size_contacts, size)).show();
+				int                  mCount         = missedRank.getRankCount();
+				View.OnClickListener missedListener = createCallListener(createRankMap(Call.MISSED), R.string.most_missed_calls);
 				comment.append(getComment(missedListener, mCount, Call.MISSED));
 			}
 			//+ rejected
 			if (rRank == 1) {
-				Map<Integer, List<CallRank>> rejectedRankMap  = createRankMap(Call.REJECTED);
-				int                          rCount           = rejectedRank.getRankCount();
-				int                          size             = rejectedRankMap.values().stream().map(List::size).reduce(0, Integer::sum);
-				View.OnClickListener         rejectedListener = v -> new MostCallDialog(getActivity(), createMostCallItemList(rejectedRankMap), getString(R.string.most_rejected_calls), getString(R.string.size_contacts, size)).show();
+				int                  rCount           = rejectedRank.getRankCount();
+				View.OnClickListener rejectedListener = createCallListener(createRankMap(Call.REJECTED), R.string.most_rejected_calls);
 				comment.append(getComment(rejectedListener, rCount, Call.REJECTED));
 			}
 		}
@@ -403,6 +369,13 @@ public class QuantityComment implements ContactComment {
 	private View.OnClickListener createCallListener(List<Call> calls, @StringRes int title) {
 		
 		return v -> new ShowCallsDialog(activity, calls, getString(title), null).show();
+	}
+	
+	@NotNull
+	private View.OnClickListener createCallListener(@NotNull Map<Integer, List<CallRank>> rankMap, @StringRes int title) {
+		
+		int size = rankMap.values().stream().map(List::size).reduce(0, Integer::sum);
+		return v -> new MostCallDialog(getActivity(), createMostCallItemList(rankMap), getString(title), getString(R.string.size_contacts, size)).show();
 	}
 	
 	/**
