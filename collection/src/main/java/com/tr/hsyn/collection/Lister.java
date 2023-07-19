@@ -45,6 +45,26 @@ public final class Lister {
 		return false;
 	}
 	
+	public static <T> boolean contains(T[] list, T value) {
+		
+		if (list == null) return false;
+		
+		for (T t : list)
+			if (t.equals(value)) return true;
+		
+		return false;
+	}
+	
+	public static boolean contains(int[] list, int value) {
+		
+		if (list == null) return false;
+		
+		for (int t : list)
+			if (t == value) return true;
+		
+		return false;
+	}
+	
 	/**
 	 * Creates a new list from the given list.
 	 *

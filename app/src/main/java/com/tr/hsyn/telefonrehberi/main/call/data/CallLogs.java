@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.calldata.CallType;
 import com.tr.hsyn.collection.CoupleMap;
+import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.keep.Keep;
 import com.tr.hsyn.key.Key;
@@ -31,6 +32,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -556,6 +558,58 @@ public final class CallLogs {
 			
 			default: throw new IllegalArgumentException("Unknown call type : " + callType);
 		}
+	}
+	
+	public @NotNull List<Contact> getContacts(Boolean incoming, Boolean outgoing, Boolean missed, Boolean rejected) {
+		
+		List<Contact> contacts = getContactsWithNumber();
+		
+		if (contacts == null) return new ArrayList<>();
+		
+		Predicate<List<Call>> ip        = (incoming != null ? incoming : false) ? Objects::nonNull : Objects::isNull;
+		Predicate<List<Call>> op        = (outgoing != null ? outgoing : false) ? Objects::nonNull : Objects::isNull;
+		Predicate<List<Call>> mp        = (missed != null ? missed : false) ? Objects::nonNull : Objects::isNull;
+		Predicate<List<Call>> rp        = (rejected != null ? rejected : false) ? Objects::nonNull : Objects::isNull;
+		List<Contact>         _contacts = new ArrayList<>();
+		
+		for (Contact contact : contacts) {
+			
+			var il = createFromType(Call.INCOMING);
+			
+			if (ip.test(il.getCalls(contact))) {
+				
+				if (op.test(getCalls(contact))) {
+					
+					if (mp.test(getCalls(contact))) {
+						
+						if (rp.test(getCalls(contact))) {
+							
+							return contacts;
+						}
+					}
+				}
+			}
+		}
+		return new ArrayList<>();
+		
+	}
+	
+	@NotNull
+	public CallLogs createFrom(@NotNull Predicate<Call> predicate) {
+		
+		return create(getCalls(predicate));
+	}
+	
+	@NotNull
+	public CallLogs createFromType(int @NotNull ... callTypes) {
+		
+		List<Call> calls = new ArrayList<>();
+		
+		if (callTypes.length > 0)
+			for (Call call : this.calls)
+				if (Lister.contains(callTypes, call.getCallType())) calls.add(call);
+		
+		return create(calls);
 	}
 	
 	/**

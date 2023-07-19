@@ -234,7 +234,6 @@ public class QuantityComment implements ContactComment {
 	
 	private void evaluateCalls() {
 		
-		assert this.callLogs != null;
 		History history = callLogs.getHistoryOf(contact);
 		
 		//+ no any calls
@@ -299,7 +298,6 @@ public class QuantityComment implements ContactComment {
 			}
 			//+ no outgoing
 			if (oRank == 0) {
-				assert this.callLogs != null;
 				List<Contact>        hasNoCall = this.callLogs.createByCallType(Call.OUTGOING).getContactsByCalls(Objects::isNull);
 				View.OnClickListener listener  = createContactListener(hasNoCall, R.string.no_outgoing_calls);
 				comment.append(getNoCallComment(hasNoCall, Call.OUTGOING, listener));
@@ -324,12 +322,21 @@ public class QuantityComment implements ContactComment {
 					}
 				}
 			}
-			assert this.callLogs != null;
 			//+ rejected
-			if (rRank == 0 && iRank > 0) {//+ must be having an incoming call
-				CallLogs             rejectedLogs = this.callLogs.createByCallType(Call.REJECTED);
-				List<Contact>        hasNoCall    = rejectedLogs.getContactsByCalls(Objects::isNull);
-				View.OnClickListener listener     = createContactListener(hasNoCall, R.string.no_rejected_calls);
+			if (rRank == 0 && iRank > 0 && mRank == 0) {//+ must be having an incoming call and no missed call
+				CallLogs      rejectedLogs    = this.callLogs.createByCallType(Call.REJECTED);
+				CallLogs      missedLogs      = this.callLogs.createByCallType(Call.MISSED);
+				CallLogs      incomingLogs    = this.callLogs.createByCallType(Call.INCOMING);
+				List<Contact> hasNoCall       = rejectedLogs.getContactsByCalls(Objects::isNull);
+				List<Contact> hasIncomingCall = rejectedLogs.getContactsByCalls(Objects::nonNull);
+				int           iSize           = history.getIncomingCalls().size();
+				
+				if (iSize > 9) {
+					
+					
+				}
+				
+				View.OnClickListener listener = createContactListener(hasNoCall, R.string.no_rejected_calls);
 				comment.append(getNoCallComment(hasNoCall, Call.REJECTED, listener));
 			}
 			//+ incoming

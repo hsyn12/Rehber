@@ -17,7 +17,6 @@ import com.tr.hsyn.treadedwork.Threaded;
 import com.tr.hsyn.xbox.Blue;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
@@ -69,7 +68,7 @@ public interface ContactComment extends Threaded {
 	@NotNull
 	Consumer<ContactComment> getCallback();
 	
-	default @Nullable CallLogs getCallLogs() {
+	default CallLogs getCallLogs() {
 		
 		return Blue.getObject(Key.CALL_LOGS);
 	}
