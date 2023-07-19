@@ -20,8 +20,8 @@ import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.contact.data.History;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
 import com.tr.hsyn.time.duration.DurationGroup;
+import com.tr.hsyn.tryme.Try;
 import com.tr.hsyn.xbox.Blue;
-import com.tr.hsyn.xlog.xlog;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,7 +32,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -106,16 +105,19 @@ public final class CallLogs {
 	 */
 	@NotNull private final List<Call>                                calls;
 	/**
-	 * Map object that has a key by phone number or by contact ID and a value as a list of its calls
-	 * that belong to the phone number.
+	 * Map object that has a key and
+	 * a value as a list of its calls
+	 * that belong to the key.
 	 */
 	@NotNull private final Map<String, List<Call>>                   mapIdToCalls;
-	private final          CoupleMap<Long, Contact>                  mapIdToContact;
-	private final          CoupleMap<String, Long>                   mapNumberToId;
-	
+	/**
+	 * Map object, which mapped a key by contact ID and a contact as value.
+	 */
+	private final          CoupleMap<Long, Contact>                  mapContactIdToContact;
 	
 	/**
 	 * Creates a new call collection.
+	 * It uses all call log calls.
 	 */
 	private CallLogs() {
 		
@@ -123,8 +125,7 @@ public final class CallLogs {
 		this.calls   = c != null ? c : new ArrayList<>(0);
 		mapIdToCalls = mapIdToCalls(this.calls);
 		mergeSameCalls(mapIdToCalls);
-		mapNumberToId  = new CoupleMap<>(createMapNumberToId());
-		mapIdToContact = new CoupleMap<>(createMapIdToContact());
+		mapContactIdToContact = new CoupleMap<>(mapContactIdToContact());
 	}
 	
 	/**
@@ -134,10 +135,9 @@ public final class CallLogs {
 	 */
 	private CallLogs(List<Call> calls) {
 		
-		this.calls     = calls != null ? calls : new ArrayList<>(0);
-		mapIdToCalls   = mapIdToCalls(this.calls);
-		mapNumberToId  = new CoupleMap<>(createMapNumberToId());
-		mapIdToContact = new CoupleMap<>(createMapIdToContact());
+		this.calls            = calls != null ? calls : new ArrayList<>(0);
+		mapIdToCalls          = mapIdToCalls(this.calls);
+		mapContactIdToContact = new CoupleMap<>(mapContactIdToContact());
 	}
 	
 	/**
@@ -145,31 +145,20 @@ public final class CallLogs {
 	 *
 	 * @return map
 	 */
-	public CoupleMap<Long, Contact> getMapIdToContact() {
+	public CoupleMap<Long, Contact> getMapContactIdToContact() {
 		
-		return mapIdToContact;
+		return mapContactIdToContact;
 	}
 	
 	/**
-	 * Returns the map object that has a key from phone number, and a contact ID as value.
+	 * Returns the contact by phone key.
 	 *
-	 * @return map
-	 */
-	public CoupleMap<String, Long> getMapNumberToId() {
-		
-		return mapNumberToId;
-	}
-	
-	/**
-	 * Returns the contact by phone number.
-	 *
-	 * @param number the phone number
+	 * @param key the phone key
 	 * @return the contact
 	 */
-	@NotNull
-	public Contact getContact(@NotNull String number) {
+	public Contact getContact(@NotNull String key) {
 		
-		return mapIdToContact.get(mapNumberToId.get(number));
+		return Try.ignore(() -> mapContactIdToContact.get(Long.parseLong(key)));
 	}
 	
 	/**
@@ -178,57 +167,16 @@ public final class CallLogs {
 	 * @param id the contact ID
 	 * @return the contact
 	 */
-	@NotNull
 	public Contact getContact(long id) {
 		
-		return mapIdToContact.get(id);
-	}
-	
-	/**
-	 * Returns the contact ID by phone number.
-	 *
-	 * @param number the phone number
-	 * @return the contact ID
-	 */
-	@Nullable
-	public Long getContactId(@NotNull String number) {
-		
-		return mapNumberToId.get(number);
-	}
-	
-	/**
-	 * Returns the phone number by contact ID.
-	 *
-	 * @param id the contact ID
-	 * @return the phone number
-	 */
-	public String getNumber(long id) {
-		
-		return mapNumberToId.getKey(id);
-	}
-	
-	/**
-	 * Creates the map object that has a key by contact ID, and a contact as value.
-	 */
-	private Map<Long, Contact> createMapIdToContact() {
-		
-		List<Contact> contacts = Blue.getObject(Key.CONTACTS);
-		
-		if (contacts != null) {
-			
-			xlog.d("Contacts size : %s", contacts.size());
-			
-			return contacts.stream().collect(Collectors.toMap(Contact::getContactId, c -> c));
-		}
-		
-		return new HashMap<>();
+		return mapContactIdToContact.get(id);
 	}
 	
 	/**
 	 * Creates the map object that has a key by phone number, and a contact ID as value.
 	 */
 	@NotNull
-	private Map<String, Long> createMapNumberToId() {
+	private Map<String, Long> createMapKeyToId() {
 		
 		Map<String, Long> mapNumberToId = new HashMap<>();
 		
@@ -266,10 +214,11 @@ public final class CallLogs {
 				.collect(Collectors.toList());
 	}
 	
-	@Nullable
+	@NotNull
 	public List<Call> getCalls(@NotNull Contact contact) {
 		
-		return mapIdToCalls.get(String.valueOf(contact.getContactId()));
+		//noinspection DataFlowIssue
+		return mapIdToCalls.getOrDefault(String.valueOf(contact.getContactId()), new ArrayList<>(0));
 	}
 	
 	/**
@@ -482,6 +431,14 @@ public final class CallLogs {
 	}
 	
 	/**
+	 * @return {@code true} if the collection is not empty
+	 */
+	public boolean isNotEmpty() {
+		
+		return !isEmpty();
+	}
+	
+	/**
 	 * Returns all calls with the given number.
 	 *
 	 * @param phoneNumber the number
@@ -560,6 +517,32 @@ public final class CallLogs {
 		}
 	}
 	
+	/**
+	 * Returns the contacts that have or have no calls.<br><br>
+	 * Get all the contacts that have incoming calls,
+	 * but have no outgoing and rejected calls,<br>
+	 * <pre>getContacts(true, false, null, false, 1);</pre>
+	 * <br>
+	 * <p>
+	 * Get all the contacts that having only rejected calls,<br>
+	 * <pre>getContacts(false, false, false, true, 1);</pre>
+	 * <br>
+	 * <p>
+	 * Get all the contacts that have incoming calls,<br>
+	 * <pre>getContacts(true, null, null, null, 1);</pre>
+	 * <br>
+	 * <p>
+	 * Get all the contacts that have only incoming calls,<br>
+	 * <pre>getContacts(true, false, false, false, 1);</pre>
+	 * <br>
+	 *
+	 * @param incoming have calls or not. {@code null} if not specified.
+	 * @param outgoing have calls or not. {@code null} if not specified.
+	 * @param missed   have calls or not. {@code null} if not specified.
+	 * @param rejected have calls or not. {@code null} if not specified.
+	 * @param minSize  the minimum number of calls. The number greater than zero means does not select empty calls.
+	 * @return the contacts that match the all criteria together.
+	 */
 	public @NotNull List<Contact> getContacts(@Nullable Boolean incoming, @Nullable Boolean outgoing, @Nullable Boolean missed, @Nullable Boolean rejected, int minSize) {
 		
 		List<Contact> contacts = getContactsWithNumber();
@@ -584,24 +567,24 @@ public final class CallLogs {
 			Boolean               rr = null;
 			
 			if (incoming != null) {
-				ip = incoming ? Objects::nonNull : Objects::isNull;
+				ip = incoming ? this::isNotEmpty : List::isEmpty;
 				ip = ip.and(c -> c.size() >= minSize);
-				il = createFromType(Call.INCOMING);
+				il = createByType(Call.INCOMING);
 			}
 			if (outgoing != null) {
-				op = outgoing ? Objects::nonNull : Objects::isNull;
+				op = outgoing ? this::isNotEmpty : List::isEmpty;
 				op = op.and(c -> c.size() >= minSize);
-				ol = createFromType(Call.OUTGOING);
+				ol = createByType(Call.OUTGOING);
 			}
 			if (missed != null) {
-				mp = missed ? Objects::nonNull : Objects::isNull;
+				mp = missed ? this::isNotEmpty : List::isEmpty;
 				mp = mp.and(c -> c.size() >= minSize);
-				ml = createFromType(Call.MISSED);
+				ml = createByType(Call.MISSED);
 			}
 			if (rejected != null) {
-				rp = rejected ? Objects::nonNull : Objects::isNull;
+				rp = rejected ? this::isNotEmpty : List::isEmpty;
 				rp = rp.and(c -> c.size() >= minSize);
-				rl = createFromType(Call.REJECTED);
+				rl = createByType(Call.REJECTED);
 			}
 			
 			if (ip != null) ir = ip.test(il.getCalls(contact));
@@ -620,14 +603,38 @@ public final class CallLogs {
 		
 	}
 	
+	/**
+	 * Checks if the list is not empty.
+	 *
+	 * @param list the list
+	 * @param <T>  the type of the list
+	 * @return {@code true} if the list is not empty
+	 */
+	public <T> boolean isNotEmpty(@NotNull List<T> list) {
+		
+		return !list.isEmpty();
+	}
+	
+	/**
+	 * Returns a new {@link CallLogs} object based on the given predicate.
+	 *
+	 * @param predicate the predicate
+	 * @return the new {@link CallLogs} object
+	 */
 	@NotNull
-	public CallLogs createFrom(@NotNull Predicate<Call> predicate) {
+	public CallLogs createBy(@NotNull Predicate<Call> predicate) {
 		
 		return create(getCalls(predicate));
 	}
 	
+	/**
+	 * Creates a new {@link CallLogs} object based on the given call types.
+	 *
+	 * @param callTypes the call types
+	 * @return the new {@link CallLogs} object
+	 */
 	@NotNull
-	public CallLogs createFromType(int @NotNull ... callTypes) {
+	public CallLogs createByType(int @NotNull ... callTypes) {
 		
 		List<Call> calls = new ArrayList<>();
 		
@@ -638,9 +645,9 @@ public final class CallLogs {
 		return create(calls);
 	}
 	
-	public @NotNull CallLogs createFrom(List<Contact> contacts) {
+	public @NotNull CallLogs createBy(Contact contact) {
 		
-		return null;
+		return create(getCalls(contact));
 	}
 	
 	/**
@@ -654,6 +661,19 @@ public final class CallLogs {
 	public @NotNull Map<Integer, List<CallRank>> makeRank() {
 		
 		return createRankMap(mapIdToCalls, QUANTITY_COMPARATOR);
+	}
+	
+	/**
+	 * Creates the map object that has a key by contact ID, and a contact as value.
+	 */
+	public static Map<Long, Contact> mapContactIdToContact() {
+		
+		List<Contact> contacts = Blue.getObject(Key.CONTACTS);
+		
+		if (contacts != null)
+			return contacts.stream().collect(Collectors.toMap(Contact::getContactId, c -> c));
+		
+		return new HashMap<>();
 	}
 	
 	public static @NotNull Map<Integer, List<CallRank>> makeRank(@NotNull CallLogs callLogs) {
@@ -704,17 +724,11 @@ public final class CallLogs {
 		
 		if (numbers == null || numbers.isEmpty()) return false;
 		
-		boolean hasNumber = false;
-		for (String number : numbers) {
-			
-			if (PhoneNumbers.isPhoneNumber(number)) {
-				
-				hasNumber = true;
-				break;
-			}
-		}
+		for (String number : numbers)
+			if (PhoneNumbers.isPhoneNumber(number))
+				return true;
 		
-		return hasNumber;
+		return false;
 	}
 	
 	/**
@@ -853,7 +867,7 @@ public final class CallLogs {
 	}
 	
 	/**
-	 * Returns a key for the given call.
+	 * Returns a unique key for the given call.
 	 * Used as an identifier.
 	 *
 	 * @param call the call
