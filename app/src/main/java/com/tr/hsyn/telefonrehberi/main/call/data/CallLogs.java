@@ -560,37 +560,63 @@ public final class CallLogs {
 		}
 	}
 	
-	public @NotNull List<Contact> getContacts(Boolean incoming, Boolean outgoing, Boolean missed, Boolean rejected) {
+	public @NotNull List<Contact> getContacts(@Nullable Boolean incoming, @Nullable Boolean outgoing, @Nullable Boolean missed, @Nullable Boolean rejected, int minSize) {
 		
 		List<Contact> contacts = getContactsWithNumber();
 		
 		if (contacts == null) return new ArrayList<>();
 		
-		Predicate<List<Call>> ip        = (incoming != null ? incoming : false) ? Objects::nonNull : Objects::isNull;
-		Predicate<List<Call>> op        = (outgoing != null ? outgoing : false) ? Objects::nonNull : Objects::isNull;
-		Predicate<List<Call>> mp        = (missed != null ? missed : false) ? Objects::nonNull : Objects::isNull;
-		Predicate<List<Call>> rp        = (rejected != null ? rejected : false) ? Objects::nonNull : Objects::isNull;
-		List<Contact>         _contacts = new ArrayList<>();
+		List<Contact> _contacts = new ArrayList<>();
 		
 		for (Contact contact : contacts) {
 			
-			var il = createFromType(Call.INCOMING);
+			Predicate<List<Call>> ip = null;
+			CallLogs              il = null;
+			Predicate<List<Call>> op = null;
+			CallLogs              ol = null;
+			Predicate<List<Call>> mp = null;
+			CallLogs              ml = null;
+			Predicate<List<Call>> rp = null;
+			CallLogs              rl = null;
+			Boolean               ir = null;
+			Boolean               or = null;
+			Boolean               mr = null;
+			Boolean               rr = null;
 			
-			if (ip.test(il.getCalls(contact))) {
-				
-				if (op.test(getCalls(contact))) {
-					
-					if (mp.test(getCalls(contact))) {
-						
-						if (rp.test(getCalls(contact))) {
-							
-							return contacts;
-						}
-					}
-				}
+			if (incoming != null) {
+				ip = incoming ? Objects::nonNull : Objects::isNull;
+				ip = ip.and(c -> c.size() >= minSize);
+				il = createFromType(Call.INCOMING);
 			}
+			if (outgoing != null) {
+				op = outgoing ? Objects::nonNull : Objects::isNull;
+				op = op.and(c -> c.size() >= minSize);
+				ol = createFromType(Call.OUTGOING);
+			}
+			if (missed != null) {
+				mp = missed ? Objects::nonNull : Objects::isNull;
+				mp = mp.and(c -> c.size() >= minSize);
+				ml = createFromType(Call.MISSED);
+			}
+			if (rejected != null) {
+				rp = rejected ? Objects::nonNull : Objects::isNull;
+				rp = rp.and(c -> c.size() >= minSize);
+				rl = createFromType(Call.REJECTED);
+			}
+			
+			if (ip != null) ir = ip.test(il.getCalls(contact));
+			if (op != null) or = op.test(ol.getCalls(contact));
+			if (mp != null) mr = mp.test(ml.getCalls(contact));
+			if (rp != null) rr = rp.test(rl.getCalls(contact));
+			
+			if ((ir != null ? ir : true) &&
+			    (or != null ? or : true) &&
+			    (mr != null ? mr : true) &&
+			    (rr != null ? rr : true))
+				_contacts.add(contact);
 		}
-		return new ArrayList<>();
+		
+		return _contacts;
 		
 	}
 	
@@ -610,6 +636,11 @@ public final class CallLogs {
 				if (Lister.contains(callTypes, call.getCallType())) calls.add(call);
 		
 		return create(calls);
+	}
+	
+	public @NotNull CallLogs createFrom(List<Contact> contacts) {
+		
+		return null;
 	}
 	
 	/**
@@ -652,7 +683,7 @@ public final class CallLogs {
 	
 	public static @Nullable List<Contact> getContacts(@NotNull Predicate<Contact> predicate) {
 		
-		var contacts = getContacts();
+		List<Contact> contacts = getContacts();
 		
 		if (contacts == null) return null;
 		
@@ -669,12 +700,12 @@ public final class CallLogs {
 	 */
 	public static boolean hasNumber(@NotNull Contact contact) {
 		
-		var numbers = ContactKey.getNumbers(contact);
+		List<String> numbers = ContactKey.getNumbers(contact);
 		
 		if (numbers == null || numbers.isEmpty()) return false;
 		
 		boolean hasNumber = false;
-		for (var number : numbers) {
+		for (String number : numbers) {
 			
 			if (PhoneNumbers.isPhoneNumber(number)) {
 				
@@ -1107,7 +1138,7 @@ public final class CallLogs {
 	 */
 	public static String getCallFilterName(@NotNull Context context, int filter) {
 		
-		var filters = context.getResources().getStringArray(R.array.call_filter_items);
+		String[] filters = context.getResources().getStringArray(R.array.call_filter_items);
 		
 		return filters[filter];
 	}

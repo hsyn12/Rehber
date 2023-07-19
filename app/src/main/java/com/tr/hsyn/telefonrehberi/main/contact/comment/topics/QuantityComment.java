@@ -324,20 +324,16 @@ public class QuantityComment implements ContactComment {
 			}
 			//+ rejected
 			if (rRank == 0 && iRank > 0 && mRank == 0) {//+ must be having an incoming call and no missed call
-				CallLogs      rejectedLogs    = this.callLogs.createByCallType(Call.REJECTED);
-				CallLogs      missedLogs      = this.callLogs.createByCallType(Call.MISSED);
-				CallLogs      incomingLogs    = this.callLogs.createByCallType(Call.INCOMING);
-				List<Contact> hasNoCall       = rejectedLogs.getContactsByCalls(Objects::isNull);
-				List<Contact> hasIncomingCall = rejectedLogs.getContactsByCalls(Objects::nonNull);
-				int           iSize           = history.getIncomingCalls().size();
 				
-				if (iSize > 9) {
+				int minSize = 5;
+				int iSize   = history.getIncomingCalls().size();
+				
+				if (iSize >= minSize) {
 					
-					
+					List<Contact>        contacts = this.callLogs.getContacts(true, null, false, false, minSize);
+					View.OnClickListener listener = createContactListener(contacts, R.string.no_rejected_calls);
+					comment.append(getNoCallComment(contacts, Call.REJECTED, listener));
 				}
-				
-				View.OnClickListener listener = createContactListener(hasNoCall, R.string.no_rejected_calls);
-				comment.append(getNoCallComment(hasNoCall, Call.REJECTED, listener));
 			}
 			//+ incoming
 			if (iRank == 1) {
