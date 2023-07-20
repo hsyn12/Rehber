@@ -33,7 +33,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -101,15 +100,11 @@ public final class CallLog {
 	 */
 	public static final    int                                       FILTER_MOST_TALKING  = 12;
 	/**
-	 * The call log calls that are creating this object by.
-	 */
-	@NotNull private final List<Call>                                calls;
-	/**
 	 * The calls get associated by a key.
 	 * The key is a contact ID or a phone number or whatever else unique.
 	 * In this way, it provides accessing the calls by a key practically.
 	 */
-	@NotNull private final Map<String, List<Call>>                   mapIdToCalls;
+	@NotNull private final RankMap                                   rankMap;
 	/**
 	 * The contacts get associated by a key.
 	 * The key is a contact ID.
@@ -123,10 +118,10 @@ public final class CallLog {
 	 */
 	private CallLog() {
 		
-		List<Call> c = Over.CallLog.Calls.getCalls();
-		this.calls   = c != null ? c : new ArrayList<>(0);
-		mapIdToCalls = groupByKey(this.calls);
-		mergeSameCalls(mapIdToCalls);
+		List<Call> c     = Over.CallLog.Calls.getCalls();
+		List<Call> calls = c != null ? c : new ArrayList<>(0);
+		rankMap = new RankMap(calls);
+		mergeSameCalls(rankMap.getIdToCalls());
 	}
 	
 	/**
@@ -136,8 +131,8 @@ public final class CallLog {
 	 */
 	private CallLog(List<Call> calls) {
 		
-		this.calls   = calls != null ? calls : new ArrayList<>(0);
-		mapIdToCalls = groupByKey(this.calls);
+		rankMap = new RankMap(calls != null ? calls : new ArrayList<>(0));
+		mergeSameCalls(rankMap.getIdToCalls());
 	}
 	
 	/**
@@ -190,7 +185,7 @@ public final class CallLog {
 	@NotNull
 	public List<Call> getCalls(@NotNull Contact contact, int @NotNull ... callTypes) {
 		
-		var calls = mapIdToCalls.getOrDefault(String.valueOf(contact.getContactId()), new ArrayList<>(0));
+		var calls = rankMap.getIdToCalls().getOrDefault(String.valueOf(contact.getContactId()), new ArrayList<>(0));
 		assert calls != null;
 		if (callTypes.length == 0) return calls;
 		
@@ -209,7 +204,7 @@ public final class CallLog {
 		List<Call> _calls = new ArrayList<>();
 		
 		for (int callType : callTypes)
-			for (Call call : calls)
+			for (Call call : rankMap.getCalls())
 				if (callType == call.getCallType() && !_calls.contains(call)) _calls.add(call);
 		
 		return _calls;
@@ -295,9 +290,9 @@ public final class CallLog {
 	 * @return the object that mapped phone number and its calls
 	 */
 	@NotNull
-	public Map<String, List<Call>> getMapIdToCalls() {
+	public Map<String, List<Call>> getRankMap() {
 		
-		return mapIdToCalls;
+		return rankMap.getIdToCalls();
 	}
 	
 	/**
@@ -306,7 +301,7 @@ public final class CallLog {
 	@NotNull
 	public List<Call> getCalls() {
 		
-		return calls;
+		return rankMap.getCalls();
 	}
 	
 	/**
@@ -358,7 +353,7 @@ public final class CallLog {
 	@NotNull
 	public List<Call> getCalls(@NotNull Predicate<Call> predicate) {
 		
-		return calls.stream().filter(predicate).collect(Collectors.toList());
+		return rankMap.getCalls().stream().filter(predicate).collect(Collectors.toList());
 	}
 	
 	/**
@@ -403,7 +398,7 @@ public final class CallLog {
 	 */
 	public boolean isEmpty() {
 		
-		return calls.isEmpty();
+		return rankMap.isEmpty();
 	}
 	
 	/**
@@ -426,7 +421,7 @@ public final class CallLog {
 		
 		phoneNumber = PhoneNumbers.formatNumber(phoneNumber, 10);
 		//noinspection DataFlowIssue
-		return mapIdToCalls.getOrDefault(phoneNumber, new ArrayList<>(0));
+		return rankMap.getIdToCalls().getOrDefault(phoneNumber, new ArrayList<>(0));
 	}
 	
 	/**
@@ -439,7 +434,7 @@ public final class CallLog {
 		
 		if (Stringx.isNoboe(id) || isEmpty()) return new ArrayList<>(0);
 		//noinspection DataFlowIssue
-		return mapIdToCalls.getOrDefault(id, new ArrayList<>(0));
+		return rankMap.getIdToCalls().getOrDefault(id, new ArrayList<>(0));
 	}
 	
 	/**
@@ -469,7 +464,7 @@ public final class CallLog {
 	public Map<Integer, List<CallRank>> getMost(int @NotNull ... callTypes) {
 		
 		List<Call> calls = getCallsByType(callTypes);
-		return createRankMap(CallLog.groupByKey(calls), QUANTITY_COMPARATOR);
+		return RankMap.createRankMap(RankMap.groupByKey(calls), QUANTITY_COMPARATOR);
 	}
 	
 	/**
@@ -529,7 +524,7 @@ public final class CallLog {
 		List<Call> calls = new ArrayList<>();
 		
 		if (callTypes.length > 0)
-			for (Call call : this.calls)
+			for (Call call : rankMap.getCalls())
 				if (Lister.contains(callTypes, call.getCallType())) calls.add(call);
 		
 		return create(calls);
@@ -540,18 +535,6 @@ public final class CallLog {
 		return create(getCalls(contact));
 	}
 	
-	/**
-	 * Creates a rank map for calls that related to this {@link CallLog} object.
-	 * Remember, a {@code CallLogs} object can be related to any list of {@link Call}.
-	 *
-	 * @return the rank map.
-	 * 		The ranking starts 1, and advances one by one.
-	 * 		The most valuable rank is 1.
-	 */
-	public @NotNull Map<Integer, List<CallRank>> makeRank() {
-		
-		return createRankMap(mapIdToCalls, QUANTITY_COMPARATOR);
-	}
 	
 	/**
 	 * Returns the contacts that have or have no calls.<br><br>
@@ -693,7 +676,7 @@ public final class CallLog {
 	
 	public static @NotNull Map<Integer, List<CallRank>> makeRank(@NotNull CallLog callLog) {
 		
-		return callLog.makeRank();
+		return callLog.rankMap.makeRank();
 	}
 	
 	/**
@@ -863,101 +846,6 @@ public final class CallLog {
 	}
 	
 	/**
-	 * Groups the calls by {@link #getKey(Call)}.
-	 *
-	 * @param calls the calls
-	 * @return the map of calls by key
-	 */
-	public static Map<String, List<Call>> groupByKey(@NotNull List<Call> calls) {
-		
-		return calls.stream().collect(Collectors.groupingBy(CallLog::getKey));
-	}
-	
-	/**
-	 * Groups the calls by the key function.
-	 *
-	 * @param calls       the calls to group
-	 * @param callTypes   the call types. If not specified, all calls are grouped.
-	 * @param keyFunction the key function to extract the key
-	 * @return the group of calls by key
-	 */
-	public static Map<String, List<Call>> groupByKey(@NotNull List<Call> calls, @Nullable Function<Call, String> keyFunction, int @NotNull ... callTypes) {
-		
-		if (callTypes.length == 0)
-			return calls.stream().collect(Collectors.groupingBy(keyFunction != null ? keyFunction : CallLog::getKey));
-		
-		return calls.stream().filter(c -> Lister.contains(callTypes, c.getCallType())).collect(Collectors.groupingBy(keyFunction != null ? keyFunction : CallLog::getKey));
-	}
-	
-	/**
-	 * Returns a unique key for the given call.
-	 *
-	 * @param call the call
-	 * @return the key
-	 */
-	@NotNull
-	public static String getKey(@NotNull Call call) {
-		
-		long id = call.getLong(CallKey.CONTACT_ID, 0L);
-		
-		if (id != 0L) return id + "";
-		
-		return PhoneNumbers.formatNumber(call.getNumber(), PhoneNumbers.MINIMUM_NUMBER_LENGTH);
-	}
-	
-	/**
-	 * Creates a ranked map from the entries.
-	 * The ranking is done by the comparator.
-	 * The ranking starts from 1.
-	 * The most valuable rank is 1 and advances one by one.
-	 *
-	 * @param entries    entries that mapped an ID to its calls
-	 * @param comparator the comparator that the ranking is done according to
-	 * @return the ranked map.
-	 * 		The keys are the ranks, and the values are the call rank objects.
-	 */
-	@NotNull
-	public static Map<Integer, List<CallRank>> createRankMap(@NotNull Map<String, List<Call>> entries, @NotNull Comparator<Map.Entry<String, List<Call>>> comparator) {
-		
-		Map<Integer, List<CallRank>>        rankMap  = new HashMap<>();
-		List<Map.Entry<String, List<Call>>> rankList = sortedList(entries, comparator);
-		int                                 rank     = 1;
-		int                                 size     = rankList.size();
-		int                                 last     = size - 1;
-		
-		for (int i = 0; i < size; i++) {
-			
-			//RankList sıfırdan başlayacak
-			Map.Entry<String, List<Call>> ranked   = rankList.get(i);
-			List<CallRank>                calls    = rankMap.computeIfAbsent(rank, r -> new ArrayList<>());
-			CallRank                      callRank = new CallRank(rank, ranked.getKey(), ranked.getValue());
-			calls.add(callRank);
-			
-			if (i == last) break;
-			
-			Map.Entry<String, List<Call>> next = rankList.get(i + 1);
-			
-			if (ranked.getValue().size() > next.getValue().size()) rank++;
-		}
-		
-		return rankMap;
-	}
-	
-	/**
-	 * Creates a sorted list from the entries.
-	 * The sorting is done by the comparator.
-	 *
-	 * @param entries    the entries
-	 * @param comparator the comparator
-	 * @return the ranked list that ordered by comparator
-	 */
-	@NotNull
-	private static List<Map.Entry<String, List<Call>>> sortedList(@NotNull Map<String, List<Call>> entries, @NotNull Comparator<Map.Entry<String, List<Call>>> comparator) {
-		// sort
-		return entries.entrySet().stream().sorted(comparator).collect(Collectors.toList());
-	}
-	
-	/**
 	 * Returns the rank of the contact.
 	 *
 	 * @param rankMap the rank map
@@ -980,33 +868,6 @@ public final class CallLog {
 		}
 		
 		return 0;
-	}
-	
-	/**
-	 * Creates a ranked map from the calls.
-	 *
-	 * @param calls      the calls
-	 * @param comparator the comparator
-	 * @param callType   the call type to select
-	 * @return the ranked map
-	 */
-	@NotNull
-	public static Map<Integer, List<CallRank>> createRankMap(@NotNull List<Call> calls, Comparator<Map.Entry<String, List<Call>>> comparator, int callType) {
-		
-		return createRankMap(groupByKey(calls, null, callType), comparator);
-	}
-	
-	/**
-	 * Creates a ranked map from the calls.
-	 *
-	 * @param calls    the calls
-	 * @param callType the call type to select
-	 * @return the rank map
-	 */
-	@NotNull
-	public static Map<Integer, List<CallRank>> createRankMap(@NotNull List<Call> calls, int callType) {
-		
-		return createRankMap(groupByKey(calls, null, callType), QUANTITY_COMPARATOR);
 	}
 	
 	/**
@@ -1052,7 +913,7 @@ public final class CallLog {
 	@NotNull
 	public static Map<Integer, List<CallRank>> createRankMapByCallDuration(@NotNull CallLog callLog) {
 		
-		Map<String, List<Call>> entries   = callLog.getMapIdToCalls();
+		Map<String, List<Call>> entries   = callLog.getRankMap();
 		Set<String>             keys      = entries.keySet();
 		List<CallRank>          callRanks = new ArrayList<>();
 		
@@ -1124,9 +985,9 @@ public final class CallLog {
 	 * @return the rank map
 	 */
 	@NotNull
-	public static Map<Integer, List<CallRank>> createRankMap(@NotNull List<Call> calls) {
+	public static RankMap createRankMap(@NotNull List<Call> calls) {
 		
-		return create(calls).makeRank();
+		return new RankMap(calls);
 	}
 	
 	/**
@@ -1165,21 +1026,6 @@ public final class CallLog {
 		String[] filters = context.getResources().getStringArray(R.array.call_filter_items);
 		
 		return filters[filter];
-	}
-	
-	/**
-	 * Creates a ranked list by quantity.
-	 *
-	 * @param calls the calls
-	 * @return the ranked list in order by rank ascending
-	 */
-	public static List<CallRank> createRankList(@NotNull List<Call> calls) {
-		
-		return CallLog.createRankMap(calls).values()
-				.stream()
-				.flatMap(Collection::stream)
-				.sorted(Comparator.comparingInt(CallRank::getRank))
-				.collect(Collectors.toList());
 	}
 	
 	/**

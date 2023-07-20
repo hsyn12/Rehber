@@ -18,6 +18,7 @@ import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
+import com.tr.hsyn.telefonrehberi.main.call.data.RankMap;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.ContactListDialog;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostCallDialog;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostCallItemViewData;
@@ -542,11 +543,11 @@ public class QuantityComment implements ContactComment {
 		assert this.callLog != null;
 		switch (callType) {
 			case Call.INCOMING:
-			case Call.INCOMING_WIFI: return CallLog.createRankMap(this.callLog.getIncomingCalls(), Call.INCOMING);
+			case Call.INCOMING_WIFI: return RankMap.createRankMap(this.callLog.getIncomingCalls(), Call.INCOMING);
 			case Call.OUTGOING:
-			case Call.OUTGOING_WIFI: return CallLog.createRankMap(this.callLog.getOutgoingCalls(), Call.OUTGOING);
-			case Call.MISSED:        return CallLog.createRankMap(this.callLog.getMissedCalls(), Call.MISSED);
-			case Call.REJECTED:      return CallLog.createRankMap(this.callLog.getRejectedCalls(), Call.REJECTED);
+			case Call.OUTGOING_WIFI: return RankMap.createRankMap(this.callLog.getOutgoingCalls(), Call.OUTGOING);
+			case Call.MISSED:        return RankMap.createRankMap(this.callLog.getMissedCalls(), Call.MISSED);
+			case Call.REJECTED:      return RankMap.createRankMap(this.callLog.getRejectedCalls(), Call.REJECTED);
 			default:                 throw new IllegalArgumentException("Unknown call type: " + callType);
 		}
 		//@on
@@ -677,7 +678,7 @@ public class QuantityComment implements ContactComment {
 		
 		for (Contact contact : contacts) {
 			
-			List<Call> calls = incomingCallsLog.getMapIdToCalls().get(String.valueOf(contact.getId()));
+			List<Call> calls = incomingCallsLog.getRankMap().get(String.valueOf(contact.getId()));
 			
 			if (calls == null) contactsHasNoIncoming.add(contact);
 		}
