@@ -330,7 +330,7 @@ public class QuantityComment implements ContactComment {
 				
 				if (iSize >= minSize) {
 					
-					List<Contact>        contacts = this.callLog.getContacts(true, null, false, false, minSize);
+					List<Contact>        contacts = this.callLog.selectContacts(true, null, false, false, minSize);
 					View.OnClickListener listener = createContactListener(contacts, R.string.no_rejected_calls);
 					comment.append(getNoCallComment(contacts, Call.REJECTED, listener));
 				}

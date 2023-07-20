@@ -6,7 +6,6 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 
 import com.tr.hsyn.calldata.Call;
-import com.tr.hsyn.calldata.CallType;
 import com.tr.hsyn.collection.CoupleMap;
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.contactdata.Contact;
@@ -34,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -114,7 +114,7 @@ public final class CallLog {
 	 * The contacts get associated by a key.
 	 * The key is a contact ID.
 	 */
-	private final          CoupleMap<Long, Contact>                  mapContactIdToContact;
+	private                CoupleMap<Long, Contact>                  mapContactIdToContact;
 	private                CoupleMap<Long, NumberKey>                mapContactIdToNumbers;
 	
 	/**
@@ -125,21 +125,19 @@ public final class CallLog {
 		
 		List<Call> c = Over.CallLog.Calls.getCalls();
 		this.calls   = c != null ? c : new ArrayList<>(0);
-		mapIdToCalls = mapIdToCalls(this.calls);
+		mapIdToCalls = groupByKey(this.calls);
 		mergeSameCalls(mapIdToCalls);
-		mapContactIdToContact = new CoupleMap<>(mapContactIdToContact());
 	}
 	
 	/**
-	 * Creates a new call collection.
+	 * Creates a new call log.
 	 *
-	 * @param calls list of calls
+	 * @param calls list of calls to create the call log
 	 */
 	private CallLog(List<Call> calls) {
 		
-		this.calls            = calls != null ? calls : new ArrayList<>(0);
-		mapIdToCalls          = mapIdToCalls(this.calls);
-		mapContactIdToContact = new CoupleMap<>(mapContactIdToContact());
+		this.calls   = calls != null ? calls : new ArrayList<>(0);
+		mapIdToCalls = groupByKey(this.calls);
 	}
 	
 	/**
@@ -165,29 +163,8 @@ public final class CallLog {
 	 */
 	public CoupleMap<Long, Contact> getContactIdToContactMap() {
 		
-		return mapContactIdToContact;
-	}
-	
-	/**
-	 * Returns the contact by contact ID.
-	 *
-	 * @param contactId the contact ID
-	 * @return the contact
-	 */
-	public Contact getContact(@NotNull String contactId) {
-		
-		return Try.ignore(() -> mapContactIdToContact.get(Long.parseLong(contactId)));
-	}
-	
-	/**
-	 * Returns the contact by contact ID.
-	 *
-	 * @param id the contact ID
-	 * @return the contact
-	 */
-	public Contact getContact(long id) {
-		
-		return mapContactIdToContact.get(id);
+		if (mapContactIdToContact != null) return mapContactIdToContact;
+		return mapContactIdToContact = new CoupleMap<>(mapContactIdToContact());
 	}
 	
 	/**
@@ -203,22 +180,21 @@ public final class CallLog {
 		return History.of(contact, getCallsById(String.valueOf(contact.getContactId())));
 	}
 	
-	public @NotNull List<Contact> getContactsByCalls(@NotNull Predicate<@Nullable List<Call>> predicate) {
-		
-		List<Contact> contacts = CallLog.getContactsWithNumber();
-		
-		if (contacts == null) return new ArrayList<>();
-		
-		return contacts.stream()
-				.filter(contact -> predicate.test(getCalls(contact)))
-				.collect(Collectors.toList());
-	}
-	
+	/**
+	 * Returns the calls of the contact.
+	 *
+	 * @param contact   the contact
+	 * @param callTypes the call types to select
+	 * @return the calls
+	 */
 	@NotNull
-	public List<Call> getCalls(@NotNull Contact contact) {
+	public List<Call> getCalls(@NotNull Contact contact, int @NotNull ... callTypes) {
 		
-		//noinspection DataFlowIssue
-		return mapIdToCalls.getOrDefault(String.valueOf(contact.getContactId()), new ArrayList<>(0));
+		var calls = mapIdToCalls.getOrDefault(String.valueOf(contact.getContactId()), new ArrayList<>(0));
+		assert calls != null;
+		if (callTypes.length == 0) return calls;
+		
+		return calls.stream().filter(call -> Lister.contains(callTypes, call.getCallType())).collect(Collectors.toList());
 	}
 	
 	/**
@@ -493,7 +469,7 @@ public final class CallLog {
 	public Map<Integer, List<CallRank>> getMost(int @NotNull ... callTypes) {
 		
 		List<Call> calls = getCallsByType(callTypes);
-		return createRankMap(CallLog.mapIdToCalls(calls), QUANTITY_COMPARATOR);
+		return createRankMap(CallLog.groupByKey(calls), QUANTITY_COMPARATOR);
 	}
 	
 	/**
@@ -515,92 +491,6 @@ public final class CallLog {
 			
 			default: throw new IllegalArgumentException("Unknown call type : " + callType);
 		}
-	}
-	
-	/**
-	 * Returns the contacts that have or have no calls.<br><br>
-	 * Get all the contacts that have incoming calls,
-	 * but have no outgoing and rejected calls,<br>
-	 * <pre>getContacts(true, false, null, false, 1);</pre>
-	 * <br>
-	 * <p>
-	 * Get all the contacts that having only rejected calls,<br>
-	 * <pre>getContacts(false, false, false, true, 1);</pre>
-	 * <br>
-	 * <p>
-	 * Get all the contacts that have incoming calls,<br>
-	 * <pre>getContacts(true, null, null, null, 1);</pre>
-	 * <br>
-	 * <p>
-	 * Get all the contacts that have only incoming calls,<br>
-	 * <pre>getContacts(true, false, false, false, 1);</pre>
-	 * <br>
-	 *
-	 * @param incoming have calls or not. {@code null} if not specified.
-	 * @param outgoing have calls or not. {@code null} if not specified.
-	 * @param missed   have calls or not. {@code null} if not specified.
-	 * @param rejected have calls or not. {@code null} if not specified.
-	 * @param minSize  the minimum number of calls. The number greater than zero means does not select empty calls.
-	 * @return the contacts that match the all criteria together.
-	 */
-	public @NotNull List<Contact> getContacts(@Nullable Boolean incoming, @Nullable Boolean outgoing, @Nullable Boolean missed, @Nullable Boolean rejected, int minSize) {
-		
-		List<Contact> contacts = getContactsWithNumber();
-		
-		if (contacts == null) return new ArrayList<>();
-		
-		List<Contact> _contacts = new ArrayList<>();
-		
-		for (Contact contact : contacts) {
-			
-			Predicate<List<Call>> ip = null;
-			CallLog               il = null;
-			Predicate<List<Call>> op = null;
-			CallLog               ol = null;
-			Predicate<List<Call>> mp = null;
-			CallLog               ml = null;
-			Predicate<List<Call>> rp = null;
-			CallLog               rl = null;
-			Boolean               ir = null;
-			Boolean               or = null;
-			Boolean               mr = null;
-			Boolean               rr = null;
-			
-			if (incoming != null) {
-				ip = incoming ? this::isNotEmpty : List::isEmpty;
-				ip = ip.and(c -> c.size() >= minSize);
-				il = createByType(Call.INCOMING);
-			}
-			if (outgoing != null) {
-				op = outgoing ? this::isNotEmpty : List::isEmpty;
-				op = op.and(c -> c.size() >= minSize);
-				ol = createByType(Call.OUTGOING);
-			}
-			if (missed != null) {
-				mp = missed ? this::isNotEmpty : List::isEmpty;
-				mp = mp.and(c -> c.size() >= minSize);
-				ml = createByType(Call.MISSED);
-			}
-			if (rejected != null) {
-				rp = rejected ? this::isNotEmpty : List::isEmpty;
-				rp = rp.and(c -> c.size() >= minSize);
-				rl = createByType(Call.REJECTED);
-			}
-			
-			if (ip != null) ir = ip.test(il.getCalls(contact));
-			if (op != null) or = op.test(ol.getCalls(contact));
-			if (mp != null) mr = mp.test(ml.getCalls(contact));
-			if (rp != null) rr = rp.test(rl.getCalls(contact));
-			
-			if ((ir != null ? ir : true) &&
-			    (or != null ? or : true) &&
-			    (mr != null ? mr : true) &&
-			    (rr != null ? rr : true))
-				_contacts.add(contact);
-		}
-		
-		return _contacts;
-		
 	}
 	
 	/**
@@ -664,6 +554,131 @@ public final class CallLog {
 	}
 	
 	/**
+	 * Returns the contacts that have or have no calls.<br><br>
+	 * Get all the contacts that have incoming calls,
+	 * but have no outgoing and rejected calls,<br>
+	 * <pre>getContacts(true, false, null, false, 1);</pre>
+	 * <br>
+	 * <p>
+	 * Get all the contacts that having only rejected calls,<br>
+	 * <pre>getContacts(false, false, false, true, 1);</pre>
+	 * <br>
+	 * <p>
+	 * Get all the contacts that have incoming calls,<br>
+	 * <pre>getContacts(true, null, null, null, 1);</pre>
+	 * <br>
+	 * <p>
+	 * Get all the contacts that have only incoming calls,<br>
+	 * <pre>getContacts(true, false, false, false, 1);</pre>
+	 * <br>
+	 *
+	 * @param incoming have calls or not. {@code null} if not specified.
+	 * @param outgoing have calls or not. {@code null} if not specified.
+	 * @param missed   have calls or not. {@code null} if not specified.
+	 * @param rejected have calls or not. {@code null} if not specified.
+	 * @param minSize  the minimum number of calls. The number greater than zero means does not select empty calls.
+	 * @return the contacts that match the all criteria together.
+	 */
+	public @NotNull List<Contact> selectContacts(@Nullable Boolean incoming, @Nullable Boolean outgoing, @Nullable Boolean missed, @Nullable Boolean rejected, int minSize) {
+		
+		List<Contact> contacts = getContactsWithNumber();
+		
+		if (contacts == null) return new ArrayList<>();
+		
+		List<Contact> _contacts = new ArrayList<>();
+		
+		for (Contact contact : contacts) {
+			
+			Predicate<List<Call>> ip = null;
+			CallLog               il = null;
+			Predicate<List<Call>> op = null;
+			CallLog               ol = null;
+			Predicate<List<Call>> mp = null;
+			CallLog               ml = null;
+			Predicate<List<Call>> rp = null;
+			CallLog               rl = null;
+			Boolean               ir = null;
+			Boolean               or = null;
+			Boolean               mr = null;
+			Boolean               rr = null;
+			
+			if (incoming != null) {
+				ip = incoming ? this::isNotEmpty : List::isEmpty;
+				ip = ip.and(c -> c.size() >= minSize);
+				il = createByType(Call.INCOMING);
+			}
+			if (outgoing != null) {
+				op = outgoing ? this::isNotEmpty : List::isEmpty;
+				op = op.and(c -> c.size() >= minSize);
+				ol = createByType(Call.OUTGOING);
+			}
+			if (missed != null) {
+				mp = missed ? this::isNotEmpty : List::isEmpty;
+				mp = mp.and(c -> c.size() >= minSize);
+				ml = createByType(Call.MISSED);
+			}
+			if (rejected != null) {
+				rp = rejected ? this::isNotEmpty : List::isEmpty;
+				rp = rp.and(c -> c.size() >= minSize);
+				rl = createByType(Call.REJECTED);
+			}
+			
+			if (ip != null) ir = ip.test(il.getCalls(contact));
+			if (op != null) or = op.test(ol.getCalls(contact));
+			if (mp != null) mr = mp.test(ml.getCalls(contact));
+			if (rp != null) rr = rp.test(rl.getCalls(contact));
+			
+			if ((ir != null ? ir : true) &&
+			    (or != null ? or : true) &&
+			    (mr != null ? mr : true) &&
+			    (rr != null ? rr : true))
+				_contacts.add(contact);
+		}
+		
+		return _contacts;
+		
+	}
+	
+	/**
+	 * Returns the contacts by the predicate.
+	 *
+	 * @param predicate the predicate to select
+	 * @return the contacts
+	 */
+	public @NotNull List<Contact> getContactsByCalls(@NotNull Predicate<@Nullable List<Call>> predicate) {
+		
+		List<Contact> contacts = CallLog.getContactsWithNumber();
+		
+		if (contacts == null) return new ArrayList<>();
+		
+		return contacts.stream()
+				.filter(contact -> predicate.test(getCalls(contact)))
+				.collect(Collectors.toList());
+	}
+	
+	/**
+	 * Returns the contact by contact ID.
+	 *
+	 * @param contactId the contact ID
+	 * @return the contact
+	 */
+	public Contact getContact(@NotNull String contactId) {
+		
+		return Try.ignore(() -> getContactIdToContactMap().get(Long.parseLong(contactId)));
+	}
+	
+	/**
+	 * Returns the contact by contact ID.
+	 *
+	 * @param id the contact ID
+	 * @return the contact
+	 */
+	public Contact getContact(long id) {
+		
+		return getContactIdToContactMap().get(id);
+	}
+	
+	/**
 	 * Creates the map object that has a key by contact ID, and a contact as value.
 	 */
 	public static Map<Long, Contact> mapContactIdToContact() {
@@ -698,10 +713,16 @@ public final class CallLog {
 	@Nullable
 	public static List<Contact> getContactsWithNumber() {
 		
-		return getContacts(CallLog::hasNumber);
+		return selectContacts(CallLog::hasNumber);
 	}
 	
-	public static @Nullable List<Contact> getContacts(@NotNull Predicate<Contact> predicate) {
+	/**
+	 * Returns the contacts by the predicate.
+	 *
+	 * @param predicate the predicate to select
+	 * @return the contacts
+	 */
+	public static @Nullable List<Contact> selectContacts(@NotNull Predicate<Contact> predicate) {
 		
 		List<Contact> contacts = getContacts();
 		
@@ -776,10 +797,10 @@ public final class CallLog {
 	}
 	
 	/**
-	 * Creates a new call collection.
+	 * Creates a new call log.
 	 *
 	 * @param calls the calls
-	 * @return the call collection
+	 * @return new call log
 	 */
 	@NotNull
 	public static CallLog create(List<Call> calls) {
@@ -791,7 +812,7 @@ public final class CallLog {
 	 * Maybe there are more than one phone number belonging to the same contact.
 	 * This method merges the calls belonging to the same contact.
 	 *
-	 * @param entries the map object that mapped the phone number to its calls.
+	 * @param entries the map object that mapped the key to its calls.
 	 */
 	public static void mergeSameCalls(@NotNull Map<String, List<Call>> entries) {
 		
@@ -847,28 +868,29 @@ public final class CallLog {
 	 * @param calls the calls
 	 * @return the map of calls by key
 	 */
-	public static Map<String, List<Call>> mapIdToCalls(@NotNull List<Call> calls) {
+	public static Map<String, List<Call>> groupByKey(@NotNull List<Call> calls) {
 		
 		return calls.stream().collect(Collectors.groupingBy(CallLog::getKey));
 	}
 	
 	/**
-	 * Groups the calls of the given call type by {@link #getKey(Call)}.
+	 * Groups the calls by the key function.
 	 *
-	 * @param calls    the calls
-	 * @param callType the call type to group
-	 * @return the groups of calls by key
+	 * @param calls       the calls to group
+	 * @param callTypes   the call types. If not specified, all calls are grouped.
+	 * @param keyFunction the key function to extract the key
+	 * @return the group of calls by key
 	 */
-	public static Map<String, List<Call>> mapIdToCalls(@NotNull List<Call> calls, int callType) {
+	public static Map<String, List<Call>> groupByKey(@NotNull List<Call> calls, @Nullable Function<Call, String> keyFunction, int @NotNull ... callTypes) {
 		
-		if (CallType.UNKNOWN == callType) return mapIdToCalls(calls);
+		if (callTypes.length == 0)
+			return calls.stream().collect(Collectors.groupingBy(keyFunction != null ? keyFunction : CallLog::getKey));
 		
-		return calls.stream().filter(c -> c.getCallType() == callType).collect(Collectors.groupingBy(CallLog::getKey));
+		return calls.stream().filter(c -> Lister.contains(callTypes, c.getCallType())).collect(Collectors.groupingBy(keyFunction != null ? keyFunction : CallLog::getKey));
 	}
 	
 	/**
 	 * Returns a unique key for the given call.
-	 * Used as an identifier.
 	 *
 	 * @param call the call
 	 * @return the key
@@ -898,7 +920,7 @@ public final class CallLog {
 	public static Map<Integer, List<CallRank>> createRankMap(@NotNull Map<String, List<Call>> entries, @NotNull Comparator<Map.Entry<String, List<Call>>> comparator) {
 		
 		Map<Integer, List<CallRank>>        rankMap  = new HashMap<>();
-		List<Map.Entry<String, List<Call>>> rankList = makeRankList(entries, comparator);
+		List<Map.Entry<String, List<Call>>> rankList = sortedList(entries, comparator);
 		int                                 rank     = 1;
 		int                                 size     = rankList.size();
 		int                                 last     = size - 1;
@@ -922,15 +944,15 @@ public final class CallLog {
 	}
 	
 	/**
-	 * Creates a ranked list from the entries.
-	 * The ranking is done by the comparator.
+	 * Creates a sorted list from the entries.
+	 * The sorting is done by the comparator.
 	 *
 	 * @param entries    the entries
 	 * @param comparator the comparator
 	 * @return the ranked list that ordered by comparator
 	 */
 	@NotNull
-	private static List<Map.Entry<String, List<Call>>> makeRankList(@NotNull Map<String, List<Call>> entries, @NotNull Comparator<Map.Entry<String, List<Call>>> comparator) {
+	private static List<Map.Entry<String, List<Call>>> sortedList(@NotNull Map<String, List<Call>> entries, @NotNull Comparator<Map.Entry<String, List<Call>>> comparator) {
 		// sort
 		return entries.entrySet().stream().sorted(comparator).collect(Collectors.toList());
 	}
@@ -971,16 +993,7 @@ public final class CallLog {
 	@NotNull
 	public static Map<Integer, List<CallRank>> createRankMap(@NotNull List<Call> calls, Comparator<Map.Entry<String, List<Call>>> comparator, int callType) {
 		
-		Map<String, List<Call>> entries = mapIdToCalls(calls);
-		
-		Map<String, List<Call>> filtered = new HashMap<>();
-		
-		for (Map.Entry<String, List<Call>> entry : entries.entrySet()) {
-			
-			filtered.put(entry.getKey(), entry.getValue().stream().filter(c -> c.getCallType() == callType).collect(Collectors.toList()));
-		}
-		
-		return createRankMap(filtered, comparator);
+		return createRankMap(groupByKey(calls, null, callType), comparator);
 	}
 	
 	/**
@@ -988,21 +1001,12 @@ public final class CallLog {
 	 *
 	 * @param calls    the calls
 	 * @param callType the call type to select
-	 * @return the ranked map
+	 * @return the rank map
 	 */
 	@NotNull
 	public static Map<Integer, List<CallRank>> createRankMap(@NotNull List<Call> calls, int callType) {
 		
-		Map<String, List<Call>> entries = mapIdToCalls(calls);
-		
-		Map<String, List<Call>> filtered = new HashMap<>();
-		
-		for (Map.Entry<String, List<Call>> entry : entries.entrySet()) {
-			
-			filtered.put(entry.getKey(), entry.getValue().stream().filter(c -> c.getCallType() == callType).collect(Collectors.toList()));
-		}
-		
-		return createRankMap(filtered, QUANTITY_COMPARATOR);
+		return createRankMap(groupByKey(calls, null, callType), QUANTITY_COMPARATOR);
 	}
 	
 	/**
@@ -1024,7 +1028,7 @@ public final class CallLog {
 	/**
 	 * Finds the duration of the contact.
 	 *
-	 * @param durations the map of phone number to duration
+	 * @param durations the list of entry of contact to duration
 	 * @param contact   the contact
 	 * @return the duration
 	 */
@@ -1113,6 +1117,12 @@ public final class CallLog {
 		return createRankMapByCallDuration(create(calls));
 	}
 	
+	/**
+	 * Returns a rank map that created by the calls.
+	 *
+	 * @param calls the calls to create the rank map
+	 * @return the rank map
+	 */
 	@NotNull
 	public static Map<Integer, List<CallRank>> createRankMap(@NotNull List<Call> calls) {
 		
@@ -1161,7 +1171,7 @@ public final class CallLog {
 	 * Creates a ranked list by quantity.
 	 *
 	 * @param calls the calls
-	 * @return the ranked list
+	 * @return the ranked list in order by rank ascending
 	 */
 	public static List<CallRank> createRankList(@NotNull List<Call> calls) {
 		
@@ -1176,13 +1186,14 @@ public final class CallLog {
 	 * Creates a ranked list by duration.
 	 *
 	 * @param calls the calls
-	 * @return the ranked list
+	 * @return the ranked list in order by rank ascending
 	 */
 	public static List<CallRank> createRankListByDuration(@NotNull List<Call> calls) {
 		
 		return CallLog.createRankMapByCallDuration(calls).values()
-				.stream().
-				flatMap(Collection::stream)
+				.stream()
+				.flatMap(Collection::stream)
+				.sorted(Comparator.comparingInt(CallRank::getRank))
 				.collect(Collectors.toList());
 	}
 }
