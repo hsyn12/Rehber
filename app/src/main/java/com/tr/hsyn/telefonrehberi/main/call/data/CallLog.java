@@ -115,7 +115,7 @@ public final class CallLog {
 	 * The key is a contact ID.
 	 */
 	private final          CoupleMap<Long, Contact>                  mapContactIdToContact;
-	private final          CoupleMap<Long, NumberKey>                mapContactIdToNumbers;
+	private                CoupleMap<Long, NumberKey>                mapContactIdToNumbers;
 	
 	/**
 	 * Creates a new call log.
@@ -128,7 +128,6 @@ public final class CallLog {
 		mapIdToCalls = mapIdToCalls(this.calls);
 		mergeSameCalls(mapIdToCalls);
 		mapContactIdToContact = new CoupleMap<>(mapContactIdToContact());
-		mapContactIdToNumbers = mapIdToNumbers();
 	}
 	
 	/**
@@ -141,18 +140,22 @@ public final class CallLog {
 		this.calls            = calls != null ? calls : new ArrayList<>(0);
 		mapIdToCalls          = mapIdToCalls(this.calls);
 		mapContactIdToContact = new CoupleMap<>(mapContactIdToContact());
-		mapContactIdToNumbers = mapIdToNumbers();
 	}
 	
+	/**
+	 * @return map of contact ID to the numbers
+	 */
 	@NotNull
-	private CoupleMap<Long, NumberKey> mapIdToNumbers() {
+	private CoupleMap<Long, NumberKey> getContactIdToNumbersMap() {
+		
+		if (mapContactIdToNumbers != null) return mapContactIdToNumbers;
 		
 		List<Contact> contacts = getContactsWithNumber();
 		
 		if (contacts != null)
-			return new CoupleMap<>(contacts.stream().collect(Collectors.toMap(Contact::getContactId, c -> new NumberKey(Objects.requireNonNull(ContactKey.getNumbers(c))))));
+			mapContactIdToNumbers = new CoupleMap<>(contacts.stream().collect(Collectors.toMap(Contact::getContactId, c -> new NumberKey(Objects.requireNonNull(ContactKey.getNumbers(c))))));
 		
-		return new CoupleMap<>();
+		return mapContactIdToNumbers;
 	}
 	
 	/**
