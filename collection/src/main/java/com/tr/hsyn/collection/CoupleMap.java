@@ -18,6 +18,8 @@ import java.util.Map;
  */
 public class CoupleMap<K, V> extends HashMap<K, V> {
 	
+	public CoupleMap() {}
+	
 	public CoupleMap(Map<? extends K, ? extends V> m) {
 		
 		super(m);

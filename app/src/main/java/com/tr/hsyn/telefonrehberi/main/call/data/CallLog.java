@@ -32,14 +32,14 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 
 /**
- * Collection of the call logs.
- * This class can be accessed via {@link Blue#getObject(Key)} with the key {@link Key#CALL_LOGS}.
+ * Holds the call logs and provides methods for filtering, searching and analyzing.
  */
 @Keep
 public final class CallLog {
@@ -101,22 +101,24 @@ public final class CallLog {
 	 */
 	public static final    int                                       FILTER_MOST_TALKING  = 12;
 	/**
-	 * All call log calls
+	 * The call log calls that are creating this object by.
 	 */
 	@NotNull private final List<Call>                                calls;
 	/**
-	 * Map object that has a key and
-	 * a value as a list of its calls
-	 * that belong to the key.
+	 * The calls get associated by a key.
+	 * The key is a contact ID or a phone number or whatever else unique.
+	 * In this way, it provides accessing the calls by a key practically.
 	 */
 	@NotNull private final Map<String, List<Call>>                   mapIdToCalls;
 	/**
-	 * Map object, which mapped a key by contact ID and a contact as value.
+	 * The contacts get associated by a key.
+	 * The key is a contact ID.
 	 */
 	private final          CoupleMap<Long, Contact>                  mapContactIdToContact;
+	private final          CoupleMap<Long, NumberKey>                mapContactIdToNumbers;
 	
 	/**
-	 * Creates a new call collection.
+	 * Creates a new call log.
 	 * It uses all call log calls.
 	 */
 	private CallLog() {
@@ -126,6 +128,7 @@ public final class CallLog {
 		mapIdToCalls = mapIdToCalls(this.calls);
 		mergeSameCalls(mapIdToCalls);
 		mapContactIdToContact = new CoupleMap<>(mapContactIdToContact());
+		mapContactIdToNumbers = mapIdToNumbers();
 	}
 	
 	/**
@@ -138,6 +141,18 @@ public final class CallLog {
 		this.calls            = calls != null ? calls : new ArrayList<>(0);
 		mapIdToCalls          = mapIdToCalls(this.calls);
 		mapContactIdToContact = new CoupleMap<>(mapContactIdToContact());
+		mapContactIdToNumbers = mapIdToNumbers();
+	}
+	
+	@NotNull
+	private CoupleMap<Long, NumberKey> mapIdToNumbers() {
+		
+		List<Contact> contacts = getContactsWithNumber();
+		
+		if (contacts != null)
+			return new CoupleMap<>(contacts.stream().collect(Collectors.toMap(Contact::getContactId, c -> new NumberKey(Objects.requireNonNull(ContactKey.getNumbers(c))))));
+		
+		return new CoupleMap<>();
 	}
 	
 	/**
@@ -145,20 +160,20 @@ public final class CallLog {
 	 *
 	 * @return map
 	 */
-	public CoupleMap<Long, Contact> getMapContactIdToContact() {
+	public CoupleMap<Long, Contact> getContactIdToContactMap() {
 		
 		return mapContactIdToContact;
 	}
 	
 	/**
-	 * Returns the contact by phone key.
+	 * Returns the contact by contact ID.
 	 *
-	 * @param key the phone key
+	 * @param contactId the contact ID
 	 * @return the contact
 	 */
-	public Contact getContact(@NotNull String key) {
+	public Contact getContact(@NotNull String contactId) {
 		
-		return Try.ignore(() -> mapContactIdToContact.get(Long.parseLong(key)));
+		return Try.ignore(() -> mapContactIdToContact.get(Long.parseLong(contactId)));
 	}
 	
 	/**
@@ -170,24 +185,6 @@ public final class CallLog {
 	public Contact getContact(long id) {
 		
 		return mapContactIdToContact.get(id);
-	}
-	
-	/**
-	 * Creates the map object that has a key by phone number, and a contact ID as value.
-	 */
-	@NotNull
-	private Map<String, Long> createMapKeyToId() {
-		
-		Map<String, Long> mapNumberToId = new HashMap<>();
-		
-		for (Map.Entry<String, List<Call>> entry : mapIdToCalls.entrySet()) {
-			
-			String number = entry.getKey();
-			long   id     = CallKey.getContactId(entry.getValue().get(0));
-			mapNumberToId.put(number, id);
-		}
-		
-		return mapNumberToId;
 	}
 	
 	/**
@@ -325,7 +322,7 @@ public final class CallLog {
 	}
 	
 	/**
-	 * @return all call log calls
+	 * @return the calls that are creating this object by.
 	 */
 	@NotNull
 	public List<Call> getCalls() {
