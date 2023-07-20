@@ -5,7 +5,7 @@ import android.app.Activity;
 
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.key.Key;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallLogs;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
 import com.tr.hsyn.telefonrehberi.main.code.comment.CommentEditor;
 import com.tr.hsyn.telefonrehberi.main.code.comment.Commentator;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
@@ -82,11 +82,11 @@ public interface ContactCommentator extends Commentator<Contact>, CommentEditor 
 	}
 	
 	/**
-	 * Returns the {@link CallLogs} object.
+	 * Returns the {@link CallLog} object.
 	 *
-	 * @return {@link CallLogs} object
+	 * @return {@link CallLog} object
 	 */
-	default @Nullable CallLogs getCallCollection() {
+	default @Nullable CallLog getCallCollection() {
 		
 		return Blue.getObject(Key.CALL_LOGS);
 	}

@@ -39,10 +39,10 @@ import java.util.stream.Collectors;
 
 /**
  * Collection of the call logs.
- * This class can be accessed via {@link Blue#getObject(Key)} with the key {@link Key#CALL_LOGS} after creation.
+ * This class can be accessed via {@link Blue#getObject(Key)} with the key {@link Key#CALL_LOGS}.
  */
 @Keep
-public final class CallLogs {
+public final class CallLog {
 	
 	/**
 	 * The comparator used to sort the entries by quantity descending.
@@ -119,7 +119,7 @@ public final class CallLogs {
 	 * Creates a new call collection.
 	 * It uses all call log calls.
 	 */
-	private CallLogs() {
+	private CallLog() {
 		
 		List<Call> c = Over.CallLog.Calls.getCalls();
 		this.calls   = c != null ? c : new ArrayList<>(0);
@@ -133,7 +133,7 @@ public final class CallLogs {
 	 *
 	 * @param calls list of calls
 	 */
-	private CallLogs(List<Call> calls) {
+	private CallLog(List<Call> calls) {
 		
 		this.calls            = calls != null ? calls : new ArrayList<>(0);
 		mapIdToCalls          = mapIdToCalls(this.calls);
@@ -205,7 +205,7 @@ public final class CallLogs {
 	
 	public @NotNull List<Contact> getContactsByCalls(@NotNull Predicate<@Nullable List<Call>> predicate) {
 		
-		List<Contact> contacts = CallLogs.getContactsWithNumber();
+		List<Contact> contacts = CallLog.getContactsWithNumber();
 		
 		if (contacts == null) return new ArrayList<>();
 		
@@ -493,16 +493,16 @@ public final class CallLogs {
 	public Map<Integer, List<CallRank>> getMost(int @NotNull ... callTypes) {
 		
 		List<Call> calls = getCallsByType(callTypes);
-		return createRankMap(CallLogs.mapIdToCalls(calls), QUANTITY_COMPARATOR);
+		return createRankMap(CallLog.mapIdToCalls(calls), QUANTITY_COMPARATOR);
 	}
 	
 	/**
-	 * Creates a new {@link CallLogs} object based on the given call type.
+	 * Creates a new {@link CallLog} object based on the given call type.
 	 *
 	 * @param callType the call type
-	 * @return the new {@link CallLogs} object
+	 * @return the new {@link CallLog} object
 	 */
-	public @NotNull CallLogs createByCallType(int callType) {
+	public @NotNull CallLog createByCallType(int callType) {
 		
 		switch (callType) {
 			
@@ -554,13 +554,13 @@ public final class CallLogs {
 		for (Contact contact : contacts) {
 			
 			Predicate<List<Call>> ip = null;
-			CallLogs              il = null;
+			CallLog               il = null;
 			Predicate<List<Call>> op = null;
-			CallLogs              ol = null;
+			CallLog               ol = null;
 			Predicate<List<Call>> mp = null;
-			CallLogs              ml = null;
+			CallLog               ml = null;
 			Predicate<List<Call>> rp = null;
-			CallLogs              rl = null;
+			CallLog               rl = null;
 			Boolean               ir = null;
 			Boolean               or = null;
 			Boolean               mr = null;
@@ -616,25 +616,25 @@ public final class CallLogs {
 	}
 	
 	/**
-	 * Returns a new {@link CallLogs} object based on the given predicate.
+	 * Returns a new {@link CallLog} object based on the given predicate.
 	 *
 	 * @param predicate the predicate
-	 * @return the new {@link CallLogs} object
+	 * @return the new {@link CallLog} object
 	 */
 	@NotNull
-	public CallLogs createBy(@NotNull Predicate<Call> predicate) {
+	public CallLog createBy(@NotNull Predicate<Call> predicate) {
 		
 		return create(getCalls(predicate));
 	}
 	
 	/**
-	 * Creates a new {@link CallLogs} object based on the given call types.
+	 * Creates a new {@link CallLog} object based on the given call types.
 	 *
 	 * @param callTypes the call types
-	 * @return the new {@link CallLogs} object
+	 * @return the new {@link CallLog} object
 	 */
 	@NotNull
-	public CallLogs createByType(int @NotNull ... callTypes) {
+	public CallLog createByType(int @NotNull ... callTypes) {
 		
 		List<Call> calls = new ArrayList<>();
 		
@@ -645,13 +645,13 @@ public final class CallLogs {
 		return create(calls);
 	}
 	
-	public @NotNull CallLogs createBy(Contact contact) {
+	public @NotNull CallLog createBy(Contact contact) {
 		
 		return create(getCalls(contact));
 	}
 	
 	/**
-	 * Creates a rank map for calls that related to this {@link CallLogs} object.
+	 * Creates a rank map for calls that related to this {@link CallLog} object.
 	 * Remember, a {@code CallLogs} object can be related to any list of {@link Call}.
 	 *
 	 * @return the rank map.
@@ -676,9 +676,9 @@ public final class CallLogs {
 		return new HashMap<>();
 	}
 	
-	public static @NotNull Map<Integer, List<CallRank>> makeRank(@NotNull CallLogs callLogs) {
+	public static @NotNull Map<Integer, List<CallRank>> makeRank(@NotNull CallLog callLog) {
 		
-		return callLogs.makeRank();
+		return callLog.makeRank();
 	}
 	
 	/**
@@ -698,7 +698,7 @@ public final class CallLogs {
 	@Nullable
 	public static List<Contact> getContactsWithNumber() {
 		
-		return getContacts(CallLogs::hasNumber);
+		return getContacts(CallLog::hasNumber);
 	}
 	
 	public static @Nullable List<Contact> getContacts(@NotNull Predicate<Contact> predicate) {
@@ -739,9 +739,9 @@ public final class CallLogs {
 	 * @see Key#CALL_LOGS
 	 */
 	@NotNull
-	public static CallLogs createOnTheCloud() {
+	public static CallLog createOnTheCloud() {
 		
-		CallLogs collection = new CallLogs();
+		CallLog collection = new CallLog();
 		
 		Blue.box(Key.CALL_LOGS, collection);
 		
@@ -754,9 +754,9 @@ public final class CallLogs {
 	 * @return the call logs
 	 */
 	@NotNull
-	public static CallLogs create() {
+	public static CallLog create() {
 		
-		return new CallLogs();
+		return new CallLog();
 	}
 	
 	/**
@@ -766,9 +766,9 @@ public final class CallLogs {
 	 * @return the call collection
 	 */
 	@NotNull
-	public static CallLogs createOnTheCloud(List<Call> calls) {
+	public static CallLog createOnTheCloud(List<Call> calls) {
 		
-		CallLogs collection = new CallLogs(calls);
+		CallLog collection = new CallLog(calls);
 		
 		Blue.box(Key.CALL_LOGS, collection);
 		
@@ -782,9 +782,9 @@ public final class CallLogs {
 	 * @return the call collection
 	 */
 	@NotNull
-	public static CallLogs create(List<Call> calls) {
+	public static CallLog create(List<Call> calls) {
 		
-		return new CallLogs(calls);
+		return new CallLog(calls);
 	}
 	
 	/**
@@ -849,7 +849,7 @@ public final class CallLogs {
 	 */
 	public static Map<String, List<Call>> mapIdToCalls(@NotNull List<Call> calls) {
 		
-		return calls.stream().collect(Collectors.groupingBy(CallLogs::getKey));
+		return calls.stream().collect(Collectors.groupingBy(CallLog::getKey));
 	}
 	
 	/**
@@ -863,7 +863,7 @@ public final class CallLogs {
 		
 		if (CallType.UNKNOWN == callType) return mapIdToCalls(calls);
 		
-		return calls.stream().filter(c -> c.getCallType() == callType).collect(Collectors.groupingBy(CallLogs::getKey));
+		return calls.stream().filter(c -> c.getCallType() == callType).collect(Collectors.groupingBy(CallLog::getKey));
 	}
 	
 	/**
@@ -1042,13 +1042,13 @@ public final class CallLogs {
 	/**
 	 * Returns a map object that ranked by call duration by descending.
 	 *
-	 * @param callLogs call collection
+	 * @param callLog call collection
 	 * @return a map object that ranked by calls duration by descending
 	 */
 	@NotNull
-	public static Map<Integer, List<CallRank>> createRankMapByCallDuration(@NotNull CallLogs callLogs) {
+	public static Map<Integer, List<CallRank>> createRankMapByCallDuration(@NotNull CallLog callLog) {
 		
-		Map<String, List<Call>> entries   = callLogs.getMapIdToCalls();
+		Map<String, List<Call>> entries   = callLog.getMapIdToCalls();
 		Set<String>             keys      = entries.keySet();
 		List<CallRank>          callRanks = new ArrayList<>();
 		
@@ -1072,7 +1072,7 @@ public final class CallLogs {
 			
 			callRank.setIncomingDuration(incomingDuration);
 			callRank.setOutgoingDuration(outgoingDuration);
-			callRank.setContact(callLogs.getContact(key));
+			callRank.setContact(callLog.getContact(key));
 			callRanks.add(callRank);
 		}
 		
@@ -1165,7 +1165,7 @@ public final class CallLogs {
 	 */
 	public static List<CallRank> createRankList(@NotNull List<Call> calls) {
 		
-		return CallLogs.createRankMap(calls).values()
+		return CallLog.createRankMap(calls).values()
 				.stream()
 				.flatMap(Collection::stream)
 				.sorted(Comparator.comparingInt(CallRank::getRank))
@@ -1180,7 +1180,7 @@ public final class CallLogs {
 	 */
 	public static List<CallRank> createRankListByDuration(@NotNull List<Call> calls) {
 		
-		return CallLogs.createRankMapByCallDuration(calls).values()
+		return CallLog.createRankMapByCallDuration(calls).values()
 				.stream().
 				flatMap(Collection::stream)
 				.collect(Collectors.toList());

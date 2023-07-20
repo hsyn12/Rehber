@@ -18,7 +18,7 @@ import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.execution.Work;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.telefonrehberi.R;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallLogs;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
 import com.tr.hsyn.textdrawable.TextDrawable;
 import com.tr.hsyn.time.Time;
@@ -35,8 +35,8 @@ import java.util.stream.Collectors;
 
 /**
  * Shows the most calls by a filter.<br>
- * The filters can be found in {@link CallLogs}.
- * For example, the most incoming calls filter is {@link CallLogs#FILTER_MOST_INCOMING}.
+ * The filters can be found in {@link CallLog}.
+ * For example, the most incoming calls filter is {@link CallLog#FILTER_MOST_INCOMING}.
  * When this activity is started with this filter, it will show the most incoming calls.
  * The activity finds the filter from the key {@link Key#MOST_CALLS_FILTER_TYPE}
  * by calling the {@link Blue#getObject(Key)} method.
@@ -46,8 +46,8 @@ import java.util.stream.Collectors;
 public class MostCallsActivity extends ActivityView {
 	
 	/** The filter */
-	private final int                     FILTER   = Objects.requireNonNull(Blue.getObject(Key.MOST_CALLS_FILTER_TYPE));
-	private final CallLogs                callLogs = Blue.getObject(Key.CALL_LOGS);
+	private final int                     FILTER  = Objects.requireNonNull(Blue.getObject(Key.MOST_CALLS_FILTER_TYPE));
+	private final CallLog                 callLog = Blue.getObject(Key.CALL_LOGS);
 	private       List<Call>              filteredCalls;
 	private       ProgressBar             progressBar;
 	private       Drawable                imgType;
@@ -101,7 +101,7 @@ public class MostCallsActivity extends ActivityView {
 		Toolbarx.setToolbar(this, toolbar, this::onBackPressed);
 		
 		assert getSupportActionBar() != null;
-		getSupportActionBar().setTitle(CallLogs.getCallFilterName(this, FILTER));
+		getSupportActionBar().setTitle(CallLog.getCallFilterName(this, FILTER));
 	}
 	
 	/**
@@ -111,37 +111,37 @@ public class MostCallsActivity extends ActivityView {
 		
 		switch (FILTER) {
 			
-			case CallLogs.FILTER_MOST_INCOMING:
+			case CallLog.FILTER_MOST_INCOMING:
 				imgType = AppCompatResources.getDrawable(this, R.drawable.incoming_call);
-				filteredCalls = callLogs.getIncomingCalls();
+				filteredCalls = callLog.getIncomingCalls();
 				textType = getString(R.string.call_type_incoming);
 				break;
-			case CallLogs.FILTER_MOST_OUTGOING:
+			case CallLog.FILTER_MOST_OUTGOING:
 				imgType = AppCompatResources.getDrawable(this, R.drawable.outgoing_call);
-				filteredCalls = callLogs.getOutgoingCalls();
+				filteredCalls = callLog.getOutgoingCalls();
 				textType = getString(R.string.call_type_outgoing);
 				break;
-			case CallLogs.FILTER_MOST_MISSED:
+			case CallLog.FILTER_MOST_MISSED:
 				imgType = AppCompatResources.getDrawable(this, R.drawable.missed_call);
-				filteredCalls = callLogs.getMissedCalls();
+				filteredCalls = callLog.getMissedCalls();
 				textType = getString(R.string.call_type_missed);
 				break;
-			case CallLogs.FILTER_MOST_REJECTED:
+			case CallLog.FILTER_MOST_REJECTED:
 				imgType = AppCompatResources.getDrawable(this, R.drawable.rejected_call);
-				filteredCalls = callLogs.getRejectedCalls();
+				filteredCalls = callLog.getRejectedCalls();
 				textType = getString(R.string.call_type_rejected);
 				break;
-			case CallLogs.FILTER_MOST_SPEAKING:
+			case CallLog.FILTER_MOST_SPEAKING:
 				imgType = AppCompatResources.getDrawable(this, com.tr.hsyn.resarrowdrawable.R.drawable.clock);
-				filteredCalls = callLogs.getCalls(c -> c.isIncoming() && c.isSpoken());
+				filteredCalls = callLog.getCalls(c -> c.isIncoming() && c.isSpoken());
 				break;
-			case CallLogs.FILTER_MOST_TALKING:
+			case CallLog.FILTER_MOST_TALKING:
 				imgType = AppCompatResources.getDrawable(this, com.tr.hsyn.resarrowdrawable.R.drawable.clock);
-				filteredCalls = callLogs.getCalls(c -> c.isOutgoing() && c.isSpoken());
+				filteredCalls = callLog.getCalls(c -> c.isOutgoing() && c.isSpoken());
 				break;
 			
 			default:
-				xlog.w("There is no proper type for filter : %d [%s]", FILTER, CallLogs.getCallFilterName(this, FILTER));
+				xlog.w("There is no proper type for filter : %d [%s]", FILTER, CallLog.getCallFilterName(this, FILTER));
 		}
 	}
 	
@@ -164,9 +164,9 @@ public class MostCallsActivity extends ActivityView {
 		
 		xlog.d("Filter : %d", FILTER);
 		
-		return (FILTER == CallLogs.FILTER_MOST_SPEAKING || FILTER == CallLogs.FILTER_MOST_TALKING) ?
-				CallLogs.createRankListByDuration(filteredCalls) :
-				CallLogs.createRankList(filteredCalls);
+		return (FILTER == CallLog.FILTER_MOST_SPEAKING || FILTER == CallLog.FILTER_MOST_TALKING) ?
+				CallLog.createRankListByDuration(filteredCalls) :
+				CallLog.createRankList(filteredCalls);
 	}
 	
 	/**
@@ -214,7 +214,7 @@ public class MostCallsActivity extends ActivityView {
 		
 		String txt;
 		
-		if (FILTER == CallLogs.FILTER_MOST_SPEAKING || FILTER == CallLogs.FILTER_MOST_TALKING) {
+		if (FILTER == CallLog.FILTER_MOST_SPEAKING || FILTER == CallLog.FILTER_MOST_TALKING) {
 			
 			txt = Time.formatSeconds((int) (callRank.getIncomingDuration() + callRank.getOutgoingDuration()));
 		}

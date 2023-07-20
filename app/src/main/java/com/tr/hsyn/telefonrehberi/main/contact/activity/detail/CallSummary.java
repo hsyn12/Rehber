@@ -410,9 +410,9 @@ public abstract class CallSummary extends ContactDetailsHistory {
 	 */
 	private void updateSummary() {
 		
-		if (callLogs != null) {
+		if (callLog != null) {
 			
-			History history = callLogs.getHistoryOf(contact);
+			History history = callLog.getHistoryOf(contact);
 			
 			setupSummaryViews(history);
 			onSummaryUpdate();

@@ -8,7 +8,7 @@ import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallLogs;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationData;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationDialog;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
@@ -30,8 +30,8 @@ import java.util.function.Consumer;
 
 public class CallDurationComment implements ContactComment {
 	
-	private final CallLogs                 callLogs = getCallLogs();
-	private final Spanner                  comment  = new Spanner("\n");
+	private final CallLog                  callLog = getCallLogs();
+	private final Spanner                  comment = new Spanner("\n");
 	private       Activity                 activity;
 	private       Consumer<ContactComment> callback;
 	private       Contact                  contact;
@@ -70,7 +70,7 @@ public class CallDurationComment implements ContactComment {
 		this.activity  = activity;
 		this.isTurkish = isTurkish;
 		
-		if (callLogs == null) {
+		if (callLog == null) {
 			
 			xlog.d("callCollection is null");
 			returnComment();
@@ -78,10 +78,10 @@ public class CallDurationComment implements ContactComment {
 		}
 		// endregion
 		
-		Map<Integer, List<CallRank>> rankMap      = CallLogs.createRankMapByCallDuration(callLogs);
-		int                          rank         = CallLogs.getRank(rankMap, contact);
-		CallRank                     thisRank     = CallLogs.getCallRank(rankMap, rank, contact);
-		List<MostDurationData>       durationList = createDurationList(rankMap, CallLogs.getContactsWithNumber());
+		Map<Integer, List<CallRank>> rankMap      = CallLog.createRankMapByCallDuration(callLog);
+		int                          rank         = CallLog.getRank(rankMap, contact);
+		CallRank                     thisRank     = CallLog.getCallRank(rankMap, rank, contact);
+		List<MostDurationData>       durationList = createDurationList(rankMap, CallLog.getContactsWithNumber());
 		String                       title        = getString(R.string.title_speaking_durations);
 		String                       subtitle     = getString(R.string.size_contacts, durationList.size());
 		MostDurationDialog           dialog       = new MostDurationDialog(getActivity(), durationList, title, subtitle);

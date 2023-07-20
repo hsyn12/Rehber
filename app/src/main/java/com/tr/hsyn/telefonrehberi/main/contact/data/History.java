@@ -5,7 +5,7 @@ import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.key.Key;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallLogs;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
 import com.tr.hsyn.telefonrehberi.main.call.data.Res;
 import com.tr.hsyn.time.Time;
 import com.tr.hsyn.time.duration.DurationGroup;
@@ -218,7 +218,7 @@ public interface History {
 	 */
 	static History getHistory(@NotNull Contact contact) {
 		
-		CallLogs collection = Blue.getObject(Key.CALL_LOGS);
+		CallLog collection = Blue.getObject(Key.CALL_LOGS);
 		
 		if (collection == null) return ofEmpty(contact);
 		

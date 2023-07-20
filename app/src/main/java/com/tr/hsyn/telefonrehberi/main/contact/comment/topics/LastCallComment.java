@@ -9,7 +9,7 @@ import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.dev.android.dialog.ShowCall;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallLogs;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
 import com.tr.hsyn.telefonrehberi.main.call.data.Res;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.ShowCallsDialog;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.ContactComment;
@@ -28,8 +28,8 @@ import java.util.function.Consumer;
 
 public class LastCallComment implements ContactComment {
 	
-	private final CallLogs                 callLogs = getCallLogs();
-	private final Spanner                  comment  = new Spanner();
+	private final CallLog                  callLog = getCallLogs();
+	private final Spanner                  comment = new Spanner();
 	private       Activity                 activity;
 	private       Consumer<ContactComment> callback;
 	
@@ -63,14 +63,14 @@ public class LastCallComment implements ContactComment {
 		this.callback = callback;
 		this.activity = activity;
 		
-		if (callLogs == null) {
+		if (callLog == null) {
 			
 			xlog.d("callCollection is null");
 			returnComment();
 			return;
 		}
 		
-		History                   history         = callLogs.getHistoryOf(contact);
+		History                   history         = callLog.getHistoryOf(contact);
 		com.tr.hsyn.calldata.Call lastCall        = history.getLastCall();
 		int                       type            = lastCall.getCallType();
 		int[]                     callTypes       = Res.getCallTypes(type);

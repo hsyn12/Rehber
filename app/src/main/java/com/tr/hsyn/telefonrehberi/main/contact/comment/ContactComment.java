@@ -9,7 +9,7 @@ import androidx.annotation.ColorInt;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.string.Stringx;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallLogs;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.topics.Topic;
 import com.tr.hsyn.text.Span;
 import com.tr.hsyn.text.Spans;
@@ -68,7 +68,7 @@ public interface ContactComment extends Threaded {
 	@NotNull
 	Consumer<ContactComment> getCallback();
 	
-	default CallLogs getCallLogs() {
+	default CallLog getCallLogs() {
 		
 		return Blue.getObject(Key.CALL_LOGS);
 	}

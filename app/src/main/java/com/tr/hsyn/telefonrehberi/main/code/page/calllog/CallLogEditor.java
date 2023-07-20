@@ -5,7 +5,7 @@ import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.page.ListEditor;
 import com.tr.hsyn.string.Stringx;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallLogs;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
 import com.tr.hsyn.xlog.xlog;
 
 import java.util.List;
@@ -28,7 +28,7 @@ public abstract class CallLogEditor extends CallLogColor implements ListEditor<C
 		getAdapter().notifyItemRemoved(index);
 		
 		
-		if (CallLogs.FILTER_ALL != filter) {
+		if (CallLog.FILTER_ALL != filter) {
 			
 			int _index = getList().indexOf(deleted);
 			
@@ -55,7 +55,7 @@ public abstract class CallLogEditor extends CallLogColor implements ListEditor<C
 		getAdapter().clearItems();
 		
 		//- Filtreleme durumuna göre silinen elemanları ana listeden de çıkaralım
-		if (CallLogs.FILTER_ALL != filter) {
+		if (CallLog.FILTER_ALL != filter) {
 			
 			int count = Lister.removeItems(getList(), deletedCalls);
 			

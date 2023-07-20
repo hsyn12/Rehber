@@ -17,7 +17,7 @@ import com.tr.hsyn.scaler.Scaler;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallLogs;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.ContactListDialog;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostCallDialog;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostCallItemViewData;
@@ -43,13 +43,13 @@ import java.util.function.Consumer;
 public class QuantityComment implements ContactComment {
 	
 	/**
-	 * Main {@link CallLogs} object that has the all call log calls.
+	 * Main {@link CallLog} object that has the all call log calls.
 	 */
-	private final CallLogs                 callLogs = getCallLogs();
+	private final CallLog                  callLog = getCallLogs();
 	/**
 	 * The comment object to add the all comments into.
 	 */
-	private final Spanner                  comment  = new Spanner();
+	private final Spanner                  comment = new Spanner();
 	private       Activity                 activity;
 	private       Consumer<ContactComment> callback;
 	private       Contact                  contact;
@@ -88,7 +88,7 @@ public class QuantityComment implements ContactComment {
 		this.activity  = activity;
 		this.isTurkish = isTurkish;
 		
-		if (callLogs == null) {
+		if (callLog == null) {
 			
 			xlog.d(activity.getString(R.string.call_collection_is_null));
 			returnComment();
@@ -234,12 +234,12 @@ public class QuantityComment implements ContactComment {
 	
 	private void evaluateCalls() {
 		
-		History history = callLogs.getHistoryOf(contact);
+		History history = callLog.getHistoryOf(contact);
 		
 		//+ no any calls
 		if (history.isEmpty()) {
 			
-			List<Contact> contactsHasNoCall = callLogs.getContactsByCalls(Objects::isNull);
+			List<Contact> contactsHasNoCall = callLog.getContactsByCalls(Objects::isNull);
 			
 			if (contactsHasNoCall.contains(contact)) {
 				
@@ -265,8 +265,8 @@ public class QuantityComment implements ContactComment {
 				if (mRank > 0 || rRank > 0) {
 					if (mRank > 0 && rRank > 0) {
 						
-						List<Call> mCalls = this.callLogs.getCalls(CallType::isMissed);
-						List<Call> rCalls = this.callLogs.getCalls(CallType::isRejected);
+						List<Call> mCalls = this.callLog.getCalls(CallType::isMissed);
+						List<Call> rCalls = this.callLog.getCalls(CallType::isRejected);
 						
 						if (isTurkish) comment.append("Bu kişinin hiç bir aramasını cevaplamadın. ")
 								.append(fmt("Gelen %d aramayı reddettin ve %d aramayı da cevapsız bıraktın.\n", mCalls.size(), rCalls.size()));
@@ -275,7 +275,7 @@ public class QuantityComment implements ContactComment {
 					}
 					else if (rRank > 0) {
 						
-						List<Call> rCalls = this.callLogs.getCalls(CallType::isRejected);
+						List<Call> rCalls = this.callLog.getCalls(CallType::isRejected);
 						if (isTurkish) comment.append("Bu kişinin hiç bir aramasını cevaplamadın. ")
 								.append(fmt("Gelen %d aramayı da reddettin.\n", rCalls.size()));
 						else comment.append("You did not answer any calls from this contact.")
@@ -283,7 +283,7 @@ public class QuantityComment implements ContactComment {
 					}
 					else {
 						
-						List<Call> mCalls = this.callLogs.getCalls(CallType::isMissed);
+						List<Call> mCalls = this.callLog.getCalls(CallType::isMissed);
 						if (isTurkish) comment.append("Bu kişinin hiç bir aramasını cevaplamadın. ")
 								.append(fmt("Gelen %d aramayı da cevapsız bıraktın.\n", mCalls.size()));
 						else comment.append("You did not answer any calls from this contact.")
@@ -291,14 +291,14 @@ public class QuantityComment implements ContactComment {
 					}
 				}
 				else {
-					List<Contact>        hasNoCall = this.callLogs.createByCallType(Call.INCOMING).getContactsByCalls(Objects::isNull);
+					List<Contact>        hasNoCall = this.callLog.createByCallType(Call.INCOMING).getContactsByCalls(Objects::isNull);
 					View.OnClickListener listener  = createContactListener(hasNoCall, R.string.no_incoming_calls);
 					comment.append(getNoCallComment(hasNoCall, Call.INCOMING, listener));
 				}
 			}
 			//+ no outgoing
 			if (oRank == 0) {
-				List<Contact>        hasNoCall = this.callLogs.createByCallType(Call.OUTGOING).getContactsByCalls(Objects::isNull);
+				List<Contact>        hasNoCall = this.callLog.createByCallType(Call.OUTGOING).getContactsByCalls(Objects::isNull);
 				View.OnClickListener listener  = createContactListener(hasNoCall, R.string.no_outgoing_calls);
 				comment.append(getNoCallComment(hasNoCall, Call.OUTGOING, listener));
 			}
@@ -330,7 +330,7 @@ public class QuantityComment implements ContactComment {
 				
 				if (iSize >= minSize) {
 					
-					List<Contact>        contacts = this.callLogs.getContacts(true, null, false, false, minSize);
+					List<Contact>        contacts = this.callLog.getContacts(true, null, false, false, minSize);
 					View.OnClickListener listener = createContactListener(contacts, R.string.no_rejected_calls);
 					comment.append(getNoCallComment(contacts, Call.REJECTED, listener));
 				}
@@ -523,9 +523,9 @@ public class QuantityComment implements ContactComment {
 			default: throw new IllegalArgumentException("Unknown call type : " + callType);
 		}
 		
-		int            rank      = CallLogs.getRank(rankMap, contact);
+		int            rank      = CallLog.getRank(rankMap, contact);
 		List<CallRank> candidate = rankMap.get(rank);
-		CallRank       callRank  = CallLogs.getCallRank(rankMap, rank, contact);
+		CallRank       callRank  = CallLog.getCallRank(rankMap, rank, contact);
 		
 		if (callRank != null) {
 			
@@ -539,14 +539,14 @@ public class QuantityComment implements ContactComment {
 	
 	private @NotNull Map<Integer, List<CallRank>> createRankMap(int callType) {
 		//@off
-		assert this.callLogs != null;
+		assert this.callLog != null;
 		switch (callType) {
 			case Call.INCOMING:
-			case Call.INCOMING_WIFI: return CallLogs.createRankMap(this.callLogs.getIncomingCalls(), Call.INCOMING);
+			case Call.INCOMING_WIFI: return CallLog.createRankMap(this.callLog.getIncomingCalls(), Call.INCOMING);
 			case Call.OUTGOING:
-			case Call.OUTGOING_WIFI: return CallLogs.createRankMap(this.callLogs.getOutgoingCalls(), Call.OUTGOING);
-			case Call.MISSED:        return CallLogs.createRankMap(this.callLogs.getMissedCalls(), Call.MISSED);
-			case Call.REJECTED:      return CallLogs.createRankMap(this.callLogs.getRejectedCalls(), Call.REJECTED);
+			case Call.OUTGOING_WIFI: return CallLog.createRankMap(this.callLog.getOutgoingCalls(), Call.OUTGOING);
+			case Call.MISSED:        return CallLog.createRankMap(this.callLog.getMissedCalls(), Call.MISSED);
+			case Call.REJECTED:      return CallLog.createRankMap(this.callLog.getRejectedCalls(), Call.REJECTED);
 			default:                 throw new IllegalArgumentException("Unknown call type: " + callType);
 		}
 		//@on
@@ -662,9 +662,9 @@ public class QuantityComment implements ContactComment {
 	 */
 	private @Nullable List<Contact> getContactsHasNoIncoming() {
 		
-		assert callLogs != null;
+		assert callLog != null;
 		
-		List<Contact> contacts              = CallLogs.getContactsWithNumber();
+		List<Contact> contacts              = CallLog.getContactsWithNumber();
 		List<Contact> contactsHasNoIncoming = new ArrayList<>();
 		
 		if (contacts == null) {
@@ -673,7 +673,7 @@ public class QuantityComment implements ContactComment {
 			return null;
 		}
 		
-		CallLogs incomingCallsLog = CallLogs.create(callLogs.getIncomingCalls());
+		CallLog incomingCallsLog = CallLog.create(callLog.getIncomingCalls());
 		
 		for (Contact contact : contacts) {
 			
@@ -687,8 +687,8 @@ public class QuantityComment implements ContactComment {
 	
 	private void evaluateIncoming() {
 		
-		assert callLogs != null;
-		History    history = callLogs.getHistoryOf(contact);
+		assert callLog != null;
+		History    history = callLog.getHistoryOf(contact);
 		List<Call> calls   = history.getIncomingCalls();
 		
 		if (calls.isEmpty()) {
@@ -696,11 +696,11 @@ public class QuantityComment implements ContactComment {
 			return;
 		}
 		
-		Map<Integer, List<CallRank>> incomingRankMap = callLogs.getMostIncoming();
+		Map<Integer, List<CallRank>> incomingRankMap = callLog.getMostIncoming();
 		
 		if (!incomingRankMap.isEmpty()) {
 			
-			int            rank   = CallLogs.getRank(incomingRankMap, contact);
+			int            rank   = CallLog.getRank(incomingRankMap, contact);
 			List<CallRank> winner = incomingRankMap.get(1);
 			assert winner != null;
 			int rankCount = winner.size();

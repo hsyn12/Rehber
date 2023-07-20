@@ -23,7 +23,7 @@ import com.tr.hsyn.gate.Gate;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.call.activity.history.ActivityCallList;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallLogs;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
 import com.tr.hsyn.telefonrehberi.main.cast.PermissionHolder;
 import com.tr.hsyn.telefonrehberi.main.contact.data.History;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
@@ -61,19 +61,19 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	/**
 	 * The request code for call log permissions
 	 */
-	protected final int      RC_CALL_LOG     = 45;
+	protected final int     RC_CALL_LOG     = 45;
 	/** Gate for accessing the history data */
-	private final   Gate     gateHistory     = DigiGate.newGate(1000L, this::hideProgress);
+	private final   Gate    gateHistory     = DigiGate.newGate(1000L, this::hideProgress);
 	/** Gate used to block input while showing history. */
-	private final   Gate     gateShowHistory = AutoGate.newGate(1000L);
+	private final   Gate    gateShowHistory = AutoGate.newGate(1000L);
 	/**
 	 * The gate used to block input while loading the history.
 	 */
-	private final   Gate     gateLoading     = Gate.newGate();
+	private final   Gate    gateLoading     = Gate.newGate();
 	/**
 	 * All call logs.
 	 */
-	protected       CallLogs callLogs;
+	protected       CallLog callLog;
 	/**
 	 * This is the call history of the selected contact.
 	 * It is protected for subclasses to use for practical reasons,
@@ -88,15 +88,15 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 	 * When the {@link #onHistoryLoad()} method is called,
 	 * this variable is possibly empty but never {@code null}.
 	 */
-	protected       History  history;
+	protected       History history;
 	/** Flag indicating whether the view for the contact history added to the UI. */
-	private         boolean  historyViewAdded;
+	private         boolean historyViewAdded;
 	/** Flag indicating whether the history is updated */
-	private         boolean  isNewHistory    = true;
+	private         boolean isNewHistory    = true;
 	/** Flag indicating whether the history needs to be shown. */
-	private         boolean  needShowHistory;
+	private         boolean needShowHistory;
 	/** Flag indicating whether the permissions are requested */
-	private         boolean  isPermissionsRequested;
+	private         boolean isPermissionsRequested;
 	
 	/**
 	 * @inheritDoc Prepares the activity for display by loading the call history for the selected contact.
@@ -255,10 +255,10 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 		
 		//- Eğer arama kayıtları en az bir kez yüklenmiş ise sorun yok
 		//- Ancak yüklenmemiş ise, kayıtların buradan yüklenmesi biraz karışıklık yaratabilir.
-		callLogs = Blue.getObject(Key.CALL_LOGS);
+		callLog = Blue.getObject(Key.CALL_LOGS);
 		
 		//- Öncelikle arama kayıtları izinlerine bakılmalı
-		if (callLogs == null || callLogs.isEmpty()) {
+		if (callLog == null || callLog.isEmpty()) {
 			
 			//- Arama kayıtları izinleri, kayıtların en az bir kez yüklendiğini gösterir
 			//- Ancak bu yükleme, yükleme istasyonunda mı yoksa burada mı gerçekleşti bilmiyoruz
@@ -273,9 +273,9 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 					
 					var list = Over.CallLog.getCallLogManager().load();
 					
-					callLogs = CallLogs.createOnTheCloud(list);
+					callLog = CallLog.createOnTheCloud(list);
 					
-					List<Call> calls = callLogs.getCallsById(String.valueOf(contact.getContactId()));
+					List<Call> calls = callLog.getCallsById(String.valueOf(contact.getContactId()));
 					
 					calls.sort((x, y) -> Long.compare(y.getTime(), x.getTime()));
 					gateLoading.exit();
@@ -290,7 +290,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 		}
 		else {
 			
-			return callLogs.getHistoryOf(contact);
+			return callLog.getHistoryOf(contact);
 		}
 		
 		//- İzinler yok

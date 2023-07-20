@@ -7,7 +7,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.tr.hsyn.telefonrehberi.main.call.data.CallLogs;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
 import com.tr.hsyn.telefonrehberi.main.code.page.adapter.CallAdapter;
 
 
@@ -47,7 +47,7 @@ public abstract class CallLogTitle extends CallLogView {
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		
 		filters = getResources().getStringArray(com.tr.hsyn.callfilter.R.array.call_filter_items);
-		title   = getFilterName(CallLogs.FILTER_ALL);
+		title   = getFilterName(CallLog.FILTER_ALL);
 		super.onViewCreated(view, savedInstanceState);
 	}
 	

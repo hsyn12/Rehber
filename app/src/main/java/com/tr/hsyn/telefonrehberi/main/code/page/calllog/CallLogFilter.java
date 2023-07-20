@@ -23,7 +23,7 @@ import com.tr.hsyn.telefonrehberi.main.call.Filter;
 import com.tr.hsyn.telefonrehberi.main.call.activity.MostCallsActivity;
 import com.tr.hsyn.telefonrehberi.main.call.activity.search.CallLogSearchInfo;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallLogs;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
 import com.tr.hsyn.telefonrehberi.main.call.dialog.CallLogFilters;
 import com.tr.hsyn.telefonrehberi.main.cast.BackPressObserver;
 import com.tr.hsyn.telefonrehberi.main.code.page.adapter.CallAdapter;
@@ -48,7 +48,7 @@ public abstract class CallLogFilter extends CallList implements Filter, HaveCall
 			onBackPressed();
 		}
 	};
-	protected     int                   filter      = CallLogs.FILTER_ALL;
+	protected     int                   filter      = CallLog.FILTER_ALL;
 	private       List<Call>            filteredCalls;
 	private       ItemIndexListener     onCallAction;
 	
@@ -132,7 +132,7 @@ public abstract class CallLogFilter extends CallList implements Filter, HaveCall
 	@Override
 	public Call getItem(int index) {
 		
-		if (filter == CallLogs.FILTER_ALL) return getList().get(index);
+		if (filter == CallLog.FILTER_ALL) return getList().get(index);
 		
 		return filteredCalls.get(index);
 	}
@@ -146,7 +146,7 @@ public abstract class CallLogFilter extends CallList implements Filter, HaveCall
 		
 		if (filter <= 6) {
 			
-			if (filter == CallLogs.FILTER_ALL) {
+			if (filter == CallLog.FILTER_ALL) {
 				
 				filterAll();
 			}
@@ -192,23 +192,23 @@ public abstract class CallLogFilter extends CallList implements Filter, HaveCall
 			
 			switch (type) {
 				
-				case CallLogs.FILTER_INCOMING:
+				case CallLog.FILTER_INCOMING:
 					filteredCalls = getList().stream().filter(Call::isIncoming).collect(Collectors.toList());
 					break;
-				case CallLogs.FILTER_OUTGOING:
+				case CallLog.FILTER_OUTGOING:
 					filteredCalls = getList().stream().filter(CallType::isOutgoing).collect(Collectors.toList());
 					break;
-				case CallLogs.FILTER_MISSED:
+				case CallLog.FILTER_MISSED:
 					filteredCalls = getList().stream().filter(CallType::isMissed).collect(Collectors.toList());
 					break;
-				case CallLogs.FILTER_REJECTED:
+				case CallLog.FILTER_REJECTED:
 					filteredCalls = getList().stream().filter(CallType::isRejected).collect(Collectors.toList());
 					break;
-				case CallLogs.FILTER_NO_NAMED:
+				case CallLog.FILTER_NO_NAMED:
 					filteredCalls = getList().stream().filter(c -> c.getName() == null || PhoneNumbers.isPhoneNumber(c.getName())).collect(Collectors.toList());
 					break;
 				
-				case CallLogs.FILTER_RANDOM:
+				case CallLog.FILTER_RANDOM:
 					filteredCalls = getList().stream().filter(call -> call.getBool(CallKey.RANDOM)).collect(Collectors.toList());
 					break;
 			}
