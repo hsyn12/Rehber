@@ -121,7 +121,7 @@ public final class CallLog {
 		List<Call> c     = Over.CallLog.Calls.getCalls();
 		List<Call> calls = c != null ? c : new ArrayList<>(0);
 		rankMap = new RankMap(calls);
-		mergeSameCalls(rankMap.getIdToCalls());
+		mergeSameCalls(rankMap.getCallMap());
 	}
 	
 	/**
@@ -132,7 +132,7 @@ public final class CallLog {
 	private CallLog(List<Call> calls) {
 		
 		rankMap = new RankMap(calls != null ? calls : new ArrayList<>(0));
-		mergeSameCalls(rankMap.getIdToCalls());
+		mergeSameCalls(rankMap.getCallMap());
 	}
 	
 	/**
@@ -185,7 +185,7 @@ public final class CallLog {
 	@NotNull
 	public List<Call> getCalls(@NotNull Contact contact, int @NotNull ... callTypes) {
 		
-		var calls = rankMap.getIdToCalls().getOrDefault(String.valueOf(contact.getContactId()), new ArrayList<>(0));
+		var calls = rankMap.getCallMap().getOrDefault(String.valueOf(contact.getContactId()), new ArrayList<>(0));
 		assert calls != null;
 		if (callTypes.length == 0) return calls;
 		
@@ -237,9 +237,9 @@ public final class CallLog {
 	 * @return the most incoming calls
 	 */
 	@NotNull
-	public Map<Integer, List<CallRank>> getMostIncoming() {
+	public RankMap makeIncomingRank() {
 		
-		return getMost(Call.INCOMING, Call.INCOMING_WIFI);
+		return makeRank(Call.INCOMING, Call.INCOMING_WIFI);
 	}
 	
 	/**
@@ -251,9 +251,9 @@ public final class CallLog {
 	 * @return the most outgoing calls
 	 */
 	@NotNull
-	public Map<Integer, List<CallRank>> getMostOutgoing() {
+	public RankMap makeOutgoingRank() {
 		
-		return getMost(Call.OUTGOING, Call.OUTGOING_WIFI);
+		return makeRank(Call.OUTGOING, Call.OUTGOING_WIFI);
 	}
 	
 	/**
@@ -265,9 +265,9 @@ public final class CallLog {
 	 * @return the most missed calls
 	 */
 	@NotNull
-	public Map<Integer, List<CallRank>> getMostMissed() {
+	public RankMap makeMissedRank() {
 		
-		return getMost(Call.MISSED);
+		return makeRank(Call.MISSED);
 	}
 	
 	/**
@@ -279,9 +279,9 @@ public final class CallLog {
 	 * @return the most rejected calls
 	 */
 	@NotNull
-	public Map<Integer, List<CallRank>> getMostRejected() {
+	public RankMap makeRejectedRank() {
 		
-		return getMost(Call.REJECTED);
+		return makeRank(Call.REJECTED);
 	}
 	
 	/**
@@ -292,7 +292,7 @@ public final class CallLog {
 	@NotNull
 	public Map<String, List<Call>> getRankMap() {
 		
-		return rankMap.getIdToCalls();
+		return rankMap.getCallMap();
 	}
 	
 	/**
@@ -421,7 +421,7 @@ public final class CallLog {
 		
 		phoneNumber = PhoneNumbers.formatNumber(phoneNumber, 10);
 		//noinspection DataFlowIssue
-		return rankMap.getIdToCalls().getOrDefault(phoneNumber, new ArrayList<>(0));
+		return rankMap.getCallMap().getOrDefault(phoneNumber, new ArrayList<>(0));
 	}
 	
 	/**
@@ -434,7 +434,7 @@ public final class CallLog {
 		
 		if (Stringx.isNoboe(id) || isEmpty()) return new ArrayList<>(0);
 		//noinspection DataFlowIssue
-		return rankMap.getIdToCalls().getOrDefault(id, new ArrayList<>(0));
+		return rankMap.getCallMap().getOrDefault(id, new ArrayList<>(0));
 	}
 	
 	/**
@@ -461,10 +461,9 @@ public final class CallLog {
 	 * 		The most valuable rank is 1.
 	 */
 	@NotNull
-	public Map<Integer, List<CallRank>> getMost(int @NotNull ... callTypes) {
+	public RankMap makeRank(int @NotNull ... callTypes) {
 		
-		List<Call> calls = getCallsByType(callTypes);
-		return RankMap.createRankMap(RankMap.groupByKey(calls), QUANTITY_COMPARATOR);
+		return RankMap.of(getCallsByType(callTypes));
 	}
 	
 	/**
@@ -674,11 +673,6 @@ public final class CallLog {
 		return new HashMap<>();
 	}
 	
-	public static @NotNull Map<Integer, List<CallRank>> makeRank(@NotNull CallLog callLog) {
-		
-		return callLog.rankMap.makeRank();
-	}
-	
 	/**
 	 * @return all contacts
 	 */
@@ -846,47 +840,6 @@ public final class CallLog {
 	}
 	
 	/**
-	 * Returns the rank of the contact.
-	 *
-	 * @param rankMap the rank map
-	 * @param contact the contact
-	 * @return the rank of the contact or –1 if not found
-	 */
-	public static int getRank(@NotNull Map<Integer, List<CallRank>> rankMap, @NotNull Contact contact) {
-		
-		for (Map.Entry<Integer, List<CallRank>> entry : rankMap.entrySet()) {
-			
-			List<CallRank> callRanks = entry.getValue();
-			
-			for (CallRank callRank : callRanks) {
-				
-				if (callRank.getKey().equals(String.valueOf(contact.getContactId()))) {
-					
-					return entry.getKey();
-				}
-			}
-		}
-		
-		return 0;
-	}
-	
-	/**
-	 * Returns the rank of the contact.
-	 *
-	 * @param durationList the list of duration
-	 * @param contact      the contact to get the rank
-	 * @return the rank or zero
-	 */
-	public static int getRank(@NotNull List<Map.Entry<Contact, DurationGroup>> durationList, @NotNull Contact contact) {
-		
-		for (int i = 0; i < durationList.size(); i++)
-			if (durationList.get(i).getKey().getContactId() == contact.getContactId())
-				return i;
-		
-		return 0;
-	}
-	
-	/**
 	 * Finds the duration of the contact.
 	 *
 	 * @param durations the list of entry of contact to duration
@@ -990,29 +943,6 @@ public final class CallLog {
 		return new RankMap(calls);
 	}
 	
-	/**
-	 * Return the {@link CallRank} of the contact.
-	 *
-	 * @param rankMap the rank map
-	 * @param rank    the rank of the contact
-	 * @param contact the contact
-	 * @return the {@link CallRank} or {@code null} if not found
-	 */
-	@Nullable
-	public static CallRank getCallRank(@NotNull Map<Integer, List<CallRank>> rankMap, int rank, Contact contact) {
-		
-		if (contact == null || rank < 1) return null;
-		
-		List<CallRank> ranks = rankMap.get(rank);
-		
-		if (ranks == null) return null;
-		
-		for (CallRank callRank : ranks)
-			if (callRank.getKey().equals(String.valueOf(contact.getContactId())))
-				return callRank;
-		
-		return null;
-	}
 	
 	/**
 	 * Returns the name equivalent of the filtering options used in the call logs.

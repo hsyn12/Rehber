@@ -36,7 +36,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -376,9 +375,9 @@ public class QuantityComment implements ContactComment {
 	}
 	
 	@NotNull
-	private View.OnClickListener createCallListener(@NotNull Map<Integer, List<CallRank>> rankMap, @StringRes int title) {
+	private View.OnClickListener createCallListener(@NotNull RankMap rankMap, @StringRes int title) {
 		
-		int size = rankMap.values().stream().map(List::size).reduce(0, Integer::sum);
+		int size = rankMap.getRankMap().values().stream().map(List::size).reduce(0, Integer::sum);
 		return v -> new MostCallDialog(getActivity(), createMostCallItemList(rankMap), getString(title), getString(R.string.size_contacts, size)).show();
 	}
 	
@@ -503,7 +502,7 @@ public class QuantityComment implements ContactComment {
 	@Nullable
 	private CallRank getCallRank(int callType) {
 		
-		Map<Integer, List<CallRank>> rankMap;
+		RankMap rankMap;
 		
 		switch (callType) {
 			
@@ -524,9 +523,9 @@ public class QuantityComment implements ContactComment {
 			default: throw new IllegalArgumentException("Unknown call type : " + callType);
 		}
 		
-		int            rank      = CallLog.getRank(rankMap, contact);
-		List<CallRank> candidate = rankMap.get(rank);
-		CallRank       callRank  = CallLog.getCallRank(rankMap, rank, contact);
+		int            rank      = rankMap.getRank(contact);
+		List<CallRank> candidate = rankMap.getRank(rank);
+		CallRank       callRank  = rankMap.getCallRank(rank, contact);
 		
 		if (callRank != null) {
 			
@@ -538,16 +537,16 @@ public class QuantityComment implements ContactComment {
 		return callRank;
 	}
 	
-	private @NotNull Map<Integer, List<CallRank>> createRankMap(int callType) {
+	private @NotNull RankMap createRankMap(int callType) {
 		//@off
 		assert this.callLog != null;
 		switch (callType) {
 			case Call.INCOMING:
-			case Call.INCOMING_WIFI: return RankMap.createRankMap(this.callLog.getIncomingCalls(), Call.INCOMING);
+			case Call.INCOMING_WIFI: return RankMap.of(this.callLog.getIncomingCalls(), Call.INCOMING);
 			case Call.OUTGOING:
-			case Call.OUTGOING_WIFI: return RankMap.createRankMap(this.callLog.getOutgoingCalls(), Call.OUTGOING);
-			case Call.MISSED:        return RankMap.createRankMap(this.callLog.getMissedCalls(), Call.MISSED);
-			case Call.REJECTED:      return RankMap.createRankMap(this.callLog.getRejectedCalls(), Call.REJECTED);
+			case Call.OUTGOING_WIFI: return RankMap.of(this.callLog.getOutgoingCalls(), Call.OUTGOING);
+			case Call.MISSED:        return RankMap.of(this.callLog.getMissedCalls(), Call.MISSED);
+			case Call.REJECTED:      return RankMap.of(this.callLog.getRejectedCalls(), Call.REJECTED);
 			default:                 throw new IllegalArgumentException("Unknown call type: " + callType);
 		}
 		//@on
@@ -697,12 +696,12 @@ public class QuantityComment implements ContactComment {
 			return;
 		}
 		
-		Map<Integer, List<CallRank>> incomingRankMap = callLog.getMostIncoming();
+		RankMap incomingRankMap = callLog.makeIncomingRank();
 		
 		if (!incomingRankMap.isEmpty()) {
 			
-			int            rank   = CallLog.getRank(incomingRankMap, contact);
-			List<CallRank> winner = incomingRankMap.get(1);
+			int            rank   = incomingRankMap.getRank(contact);
+			List<CallRank> winner = incomingRankMap.getRank(1);
 			assert winner != null;
 			int rankCount = winner.size();
 			
@@ -790,11 +789,11 @@ public class QuantityComment implements ContactComment {
 	 * @return the list of most call items
 	 */
 	@NotNull
-	private List<MostCallItemViewData> createMostCallItemList(@NotNull Map<Integer, List<CallRank>> map) {
+	private List<MostCallItemViewData> createMostCallItemList(@NotNull RankMap map) {
 		
 		List<MostCallItemViewData> list = new ArrayList<>();
 		
-		for (List<CallRank> rankList : map.values()) {
+		for (List<CallRank> rankList : map.getRankMap().values()) {
 			
 			for (CallRank callRank : rankList) {
 				

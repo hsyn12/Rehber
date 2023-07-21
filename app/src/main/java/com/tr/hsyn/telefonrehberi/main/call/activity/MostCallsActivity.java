@@ -167,7 +167,7 @@ public class MostCallsActivity extends ActivityView {
 		
 		return (FILTER == CallLog.FILTER_MOST_SPEAKING || FILTER == CallLog.FILTER_MOST_TALKING) ?
 				CallLog.createRankListByDuration(filteredCalls) :
-				RankMap.createRankList(filteredCalls);
+				RankMap.rankListOf(filteredCalls);
 	}
 	
 	/**
