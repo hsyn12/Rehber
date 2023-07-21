@@ -236,7 +236,7 @@ public interface History {
 	@NotNull
 	static History ofEmpty(@NotNull Contact contact) {
 		
-		return new ContactCallHistory(contact, new ArrayList<>(0));
+		return new HistoryImpl(contact, new ArrayList<>(0));
 	}
 	
 	/**
@@ -248,7 +248,7 @@ public interface History {
 	@NotNull
 	static History of(@NotNull String key, @NotNull List<Call> calls) {
 		
-		return new ContactCallHistory(key, calls);
+		return new HistoryImpl(key, calls);
 	}
 	
 	/**
@@ -259,7 +259,7 @@ public interface History {
 	 */
 	static @NotNull History of(@NotNull Contact contact, @NotNull List<Call> calls) {
 		
-		return new ContactCallHistory(contact, calls);
+		return new HistoryImpl(contact, calls);
 	}
 	
 	/**

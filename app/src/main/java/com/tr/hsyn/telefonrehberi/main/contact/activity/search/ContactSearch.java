@@ -89,6 +89,62 @@ public class ContactSearch extends ActivityView implements OnSearchViewListener,
 		searchView.showSearch();
 	}
 	
+	@Override
+	public void onSearchViewShown() {
+		
+	}
+	
+	@Override
+	public void onSearchViewClosed() {
+		
+		onBackPressed();
+	}
+	
+	@Override
+	public boolean onQueryTextSubmit(String query) {
+		
+		return true;
+	}
+	
+	@Override
+	public void onQueryTextChange(String newText) {
+		
+		if (newText == null) return;
+		
+		searchText = newText;
+		
+		gateFilter.enter(this::filter);
+	}
+	
+	@Override
+	public void onBackPressed() {
+		
+		super.onBackPressed();
+		
+		Bungee.zoomFast(this);
+	}
+	
+	@Override
+	public void onSwipe(int index) {
+		
+		adapter.notifyItemChanged(index);
+		
+		Contact contact = getAdapterCalls().get(index);
+		
+		xlog.d("Swiped : %s", contact.getName());
+		
+		List<String> numbers = contact.getData(ContactKey.NUMBERS);
+		
+		if (numbers != null && !numbers.isEmpty()) {
+			
+			Phone.makeCall(this, numbers.get(0));
+		}
+		else {
+			
+			Show.tost(this, "Numara yok");
+		}
+	}
+	
 	/**
 	 * Listeyi birden fazla numarası olanlar için güncelle.
 	 * Tüm liste tek numaralı olacak, fazla numarası olanlar her numara için eklenecek.
@@ -162,65 +218,9 @@ public class ContactSearch extends ActivityView implements OnSearchViewListener,
 		return adapter.getFilteredContacts();
 	}
 	
-	@Override
-	public void onSearchViewShown() {
-		
-	}
-	
-	@Override
-	public void onSearchViewClosed() {
-		
-		onBackPressed();
-	}
-	
-	@Override
-	public boolean onQueryTextSubmit(String query) {
-		
-		return true;
-	}
-	
-	@Override
-	public void onQueryTextChange(String newText) {
-		
-		if (newText == null) return;
-		
-		searchText = newText;
-		
-		gateFilter.enter(this::filter);
-	}
-	
-	@Override
-	public void onBackPressed() {
-		
-		super.onBackPressed();
-		
-		Bungee.zoomFast(this);
-	}
-	
 	private void filter() {
 		
 		adapter.onTextChanged(searchText);
-	}
-	
-	@Override
-	public void onSwipe(int index) {
-		
-		adapter.notifyItemChanged(index);
-		
-		Contact contact = getAdapterCalls().get(index);
-		
-		xlog.d("Swiped : %s", contact.getName());
-		
-		List<String> numbers = contact.getData(ContactKey.NUMBERS);
-		
-		if (numbers != null && !numbers.isEmpty()) {
-			
-			Phone.makeCall(this, numbers.get(0));
-		}
-		else {
-			
-			Show.tost(this, "Numara yok");
-		}
 	}
 	
 	

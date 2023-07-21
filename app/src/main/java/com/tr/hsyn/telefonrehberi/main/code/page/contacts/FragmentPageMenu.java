@@ -36,33 +36,12 @@ public abstract class FragmentPageMenu extends FragmentContactListEditor impleme
 	//private       Menu       menu;
 	private       MenuEditor menuEditor;
 	
-	protected void onClickSearch() {
-		
-		
-		if (getList().isEmpty()) {
-			
-			Show.tost(getContext(), getString(R.string.no_contact));
-			return;
-		}
-		
-		startActivity(new Intent(getContext(), ContactSearch.class));
-		Bungee.zoomFast(getContext());
-	}
-	
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		
 		requireActivity().addMenuProvider(this);
 		return super.onCreateView(inflater, container, savedInstanceState);
-	}
-	
-	@Override
-	public void onPrepareMenu(@NonNull Menu menu) {
-		
-		Use.ifNotNull(
-				menu.findItem(R.id.menu_search_contacts),
-				item -> item.setVisible(isShowTime() || menuPrepared++ == 0));
 	}
 	
 	@Override
@@ -75,9 +54,11 @@ public abstract class FragmentPageMenu extends FragmentContactListEditor impleme
 	}
 	
 	@Override
-	public void showMenu(boolean show) {
+	public void onPrepareMenu(@NonNull Menu menu) {
 		
-		menuEditor.setVisible(menuEditor.getMenuItemResourceIds(), !show);
+		Use.ifNotNull(
+				menu.findItem(R.id.menu_search_contacts),
+				item -> item.setVisible(isShowTime() || menuPrepared++ == 0));
 	}
 	
 	@Override
@@ -107,5 +88,24 @@ public abstract class FragmentPageMenu extends FragmentContactListEditor impleme
 		}
 		
 		return false;
+	}
+	
+	@Override
+	public void showMenu(boolean show) {
+		
+		menuEditor.setVisible(menuEditor.getMenuItemResourceIds(), !show);
+	}
+	
+	protected void onClickSearch() {
+		
+		
+		if (getList().isEmpty()) {
+			
+			Show.tost(getContext(), getString(R.string.no_contact));
+			return;
+		}
+		
+		startActivity(new Intent(getContext(), ContactSearch.class));
+		Bungee.zoomFast(getContext());
 	}
 }

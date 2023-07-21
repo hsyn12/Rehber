@@ -15,7 +15,7 @@ import java.util.Objects;
 /**
  * @inheritDoc
  */
-public final class ContactCallHistory implements History {
+public final class HistoryImpl implements History {
 	
 	private final Contact    contact;
 	private final List<Call> calls;
@@ -24,23 +24,18 @@ public final class ContactCallHistory implements History {
 	/**
 	 * Creates a new history for the given contact with the given calls.
 	 */
-	public ContactCallHistory(@NotNull String key, @NotNull List<Call> calls) {
+	public HistoryImpl(@NotNull String key, @NotNull List<Call> calls) {
 		
 		this.contact = null;
 		this.calls   = calls;
 		this.key     = key;
 	}
 	
-	public ContactCallHistory(@NotNull Contact contact, @NotNull List<Call> calls) {
+	public HistoryImpl(@NotNull Contact contact, @NotNull List<Call> calls) {
 		
 		this.contact = contact;
 		this.calls   = calls;
 		key          = String.valueOf(contact.getContactId());
-	}
-	
-	public String getKey() {
-		
-		return key;
 	}
 	
 	/**
@@ -73,7 +68,7 @@ public final class ContactCallHistory implements History {
 		
 		if (obj == this) return true;
 		if (obj == null || obj.getClass() != this.getClass()) return false;
-		var that = (ContactCallHistory) obj;
+		var that = (HistoryImpl) obj;
 		return Objects.equals(this.contact, that.contact) &&
 		       Objects.equals(this.calls, that.calls);
 	}
@@ -84,6 +79,11 @@ public final class ContactCallHistory implements History {
 	public String toString() {
 		
 		return String.format("History{calls=%d}", calls.size());
+	}
+	
+	public String getKey() {
+		
+		return key;
 	}
 	
 }

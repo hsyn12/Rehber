@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.provider.ContactsContract;
 
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
-import com.tr.hsyn.telefonrehberi.main.contact.data.Contacts;
+import com.tr.hsyn.telefonrehberi.main.contact.data.ContactsReader;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -19,7 +19,7 @@ public interface SystemContactNumbers {
 	@NotNull
 	static List<String> getPhoneNumbers(@NotNull final ContentResolver contentResolver, final long contactId) {
 		
-		var          numbers  = Contacts.getByMimeType(contentResolver, contactId, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
+		var          numbers  = ContactsReader.getByMimeType(contentResolver, contactId, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
 		List<String> _numbers = new ArrayList<>(numbers.size());
 		
 		numbers.forEach(n -> {

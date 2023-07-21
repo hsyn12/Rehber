@@ -18,7 +18,7 @@ import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
-import com.tr.hsyn.telefonrehberi.main.call.data.RankMap;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallLogRank;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.ContactListDialog;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostCallDialog;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostCallItemViewData;
@@ -375,10 +375,10 @@ public class QuantityComment implements ContactComment {
 	}
 	
 	@NotNull
-	private View.OnClickListener createCallListener(@NotNull RankMap rankMap, @StringRes int title) {
+	private View.OnClickListener createCallListener(@NotNull CallLogRank callLogRank, @StringRes int title) {
 		
-		int size = rankMap.getRankMap().values().stream().map(List::size).reduce(0, Integer::sum);
-		return v -> new MostCallDialog(getActivity(), createMostCallItemList(rankMap), getString(title), getString(R.string.size_contacts, size)).show();
+		int size = callLogRank.getRankMap().values().stream().map(List::size).reduce(0, Integer::sum);
+		return v -> new MostCallDialog(getActivity(), createMostCallItemList(callLogRank), getString(title), getString(R.string.size_contacts, size)).show();
 	}
 	
 	/**
@@ -502,30 +502,30 @@ public class QuantityComment implements ContactComment {
 	@Nullable
 	private CallRank getCallRank(int callType) {
 		
-		RankMap rankMap;
+		CallLogRank callLogRank;
 		
 		switch (callType) {
 			
 			case Call.INCOMING:
 			case Call.INCOMING_WIFI:
-				rankMap = createRankMap(Call.INCOMING);
+				callLogRank = createRankMap(Call.INCOMING);
 				break;
 			case Call.OUTGOING:
 			case Call.OUTGOING_WIFI:
-				rankMap = createRankMap(Call.OUTGOING);
+				callLogRank = createRankMap(Call.OUTGOING);
 				break;
 			case Call.MISSED:
-				rankMap = createRankMap(Call.MISSED);
+				callLogRank = createRankMap(Call.MISSED);
 				break;
 			case Call.REJECTED:
-				rankMap = createRankMap(Call.REJECTED);
+				callLogRank = createRankMap(Call.REJECTED);
 				break;
 			default: throw new IllegalArgumentException("Unknown call type : " + callType);
 		}
 		
-		int            rank      = rankMap.getRank(contact);
-		List<CallRank> candidate = rankMap.getRank(rank);
-		CallRank       callRank  = rankMap.getCallRank(rank, contact);
+		int            rank      = callLogRank.getRank(contact);
+		List<CallRank> candidate = callLogRank.getRank(rank);
+		CallRank       callRank  = callLogRank.getCallRank(rank, contact);
 		
 		if (callRank != null) {
 			
@@ -537,16 +537,16 @@ public class QuantityComment implements ContactComment {
 		return callRank;
 	}
 	
-	private @NotNull RankMap createRankMap(int callType) {
+	private @NotNull CallLogRank createRankMap(int callType) {
 		//@off
 		assert this.callLog != null;
 		switch (callType) {
 			case Call.INCOMING:
-			case Call.INCOMING_WIFI: return RankMap.of(this.callLog.getIncomingCalls(), Call.INCOMING);
+			case Call.INCOMING_WIFI: return CallLogRank.by(this.callLog.getIncomingCalls(), Call.INCOMING);
 			case Call.OUTGOING:
-			case Call.OUTGOING_WIFI: return RankMap.of(this.callLog.getOutgoingCalls(), Call.OUTGOING);
-			case Call.MISSED:        return RankMap.of(this.callLog.getMissedCalls(), Call.MISSED);
-			case Call.REJECTED:      return RankMap.of(this.callLog.getRejectedCalls(), Call.REJECTED);
+			case Call.OUTGOING_WIFI: return CallLogRank.by(this.callLog.getOutgoingCalls(), Call.OUTGOING);
+			case Call.MISSED:        return CallLogRank.by(this.callLog.getMissedCalls(), Call.MISSED);
+			case Call.REJECTED:      return CallLogRank.by(this.callLog.getRejectedCalls(), Call.REJECTED);
 			default:                 throw new IllegalArgumentException("Unknown call type: " + callType);
 		}
 		//@on
@@ -696,18 +696,18 @@ public class QuantityComment implements ContactComment {
 			return;
 		}
 		
-		RankMap incomingRankMap = callLog.makeIncomingRank();
+		CallLogRank incomingCallLogRank = callLog.makeIncomingRank();
 		
-		if (!incomingRankMap.isEmpty()) {
+		if (!incomingCallLogRank.isEmpty()) {
 			
-			int            rank   = incomingRankMap.getRank(contact);
-			List<CallRank> winner = incomingRankMap.getRank(1);
+			int            rank   = incomingCallLogRank.getRank(contact);
+			List<CallRank> winner = incomingCallLogRank.getRank(1);
 			assert winner != null;
 			int rankCount = winner.size();
 			
 			if (rank == 1) {
 				
-				List<MostCallItemViewData> mostList = createMostCallItemList(incomingRankMap);
+				List<MostCallItemViewData> mostList = createMostCallItemList(incomingCallLogRank);
 				String                     title    = getString(R.string.title_most_incoming_calls);
 				String                     subtitle = getString(R.string.size_contacts, mostList.size());
 				MostCallDialog             dialog   = new MostCallDialog(activity, mostList, title, subtitle);
@@ -789,7 +789,7 @@ public class QuantityComment implements ContactComment {
 	 * @return the list of most call items
 	 */
 	@NotNull
-	private List<MostCallItemViewData> createMostCallItemList(@NotNull RankMap map) {
+	private List<MostCallItemViewData> createMostCallItemList(@NotNull CallLogRank map) {
 		
 		List<MostCallItemViewData> list = new ArrayList<>();
 		

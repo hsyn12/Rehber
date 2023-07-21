@@ -5,7 +5,7 @@ import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallDatabase;
 import com.tr.hsyn.telefonrehberi.main.call.story.CallStory;
-import com.tr.hsyn.telefonrehberi.main.contact.data.Contacts;
+import com.tr.hsyn.telefonrehberi.main.contact.data.ContactsReader;
 import com.tr.hsyn.telefonrehberi.main.dev.Loader;
 import com.tr.hsyn.telefonrehberi.main.dev.Story;
 import com.tr.hsyn.xbox.Blue;
@@ -22,14 +22,6 @@ public abstract class BigBank extends NorthBridge {
 	 */
 	private Story<com.tr.hsyn.calldata.Call> callStory;
 	
-	/**
-	 * @return Arama kayıtları yöneticisi
-	 */
-	protected final Story<com.tr.hsyn.calldata.Call> getCallStory() {
-		
-		return callStory;
-	}
-	
 	@Override
 	protected void onCreate() {
 		
@@ -40,6 +32,14 @@ public abstract class BigBank extends NorthBridge {
 		
 		Blue.box(Key.CALL_STORY, callStory);
 		
+	}
+	
+	/**
+	 * @return Arama kayıtları yöneticisi
+	 */
+	protected final Story<com.tr.hsyn.calldata.Call> getCallStory() {
+		
+		return callStory;
 	}
 	
 	@NotNull
@@ -57,6 +57,6 @@ public abstract class BigBank extends NorthBridge {
 	private @NotNull
 	List<Contact> loadContacts() {
 		
-		return Contacts.getContacts(getContentResolver());
+		return ContactsReader.getContacts(getContentResolver());
 	}
 }

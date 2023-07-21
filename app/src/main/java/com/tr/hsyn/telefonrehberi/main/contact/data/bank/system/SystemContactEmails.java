@@ -7,7 +7,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.provider.ContactsContract;
 
-import com.tr.hsyn.telefonrehberi.main.contact.data.Contacts;
+import com.tr.hsyn.telefonrehberi.main.contact.data.ContactsReader;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -19,7 +19,7 @@ public interface SystemContactEmails {
 	@NotNull
 	static List<String> getMailAddresses(@NotNull final ContentResolver contentResolver, final long contactId) {
 		
-		return Contacts.getByMimeType(contentResolver, contactId, ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE);
+		return ContactsReader.getByMimeType(contentResolver, contactId, ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE);
 	}
 	
 	/**

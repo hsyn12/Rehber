@@ -33,7 +33,7 @@ import com.tr.hsyn.telefonrehberi.main.activity.color.ColorsActivity;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
 import com.tr.hsyn.telefonrehberi.main.contact.activity.detail.ContactDetails;
 import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
-import com.tr.hsyn.telefonrehberi.main.contact.data.Contacts;
+import com.tr.hsyn.telefonrehberi.main.contact.data.ContactsReader;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
 import com.tr.hsyn.telefonrehberi.main.dev.menu.MenuEditor;
 import com.tr.hsyn.telefonrehberi.main.dev.menu.MenuManager;
@@ -134,7 +134,7 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 	@Override
 	protected void onClickNewContact(View view) {
 		
-		newContactCallBack.launch(Contacts.createNewContactIntent());
+		newContactCallBack.launch(ContactsReader.createNewContactIntent());
 	}
 	
 	@Override
@@ -199,7 +199,7 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 		
 		if (loadingCompleted.getAndSet(true)) {
 			
-			CallLog.createOnTheCloud();
+			CallLog.createGlobal();
 		}
 	}
 	
@@ -210,7 +210,7 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 		
 		if (loadingCompleted.getAndSet(true)) {
 			
-			CallLog.createOnTheCloud();
+			CallLog.createGlobal();
 		}
 	}
 	

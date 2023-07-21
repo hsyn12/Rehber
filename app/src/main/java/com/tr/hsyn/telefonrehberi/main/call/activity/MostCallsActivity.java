@@ -19,7 +19,7 @@ import com.tr.hsyn.execution.Work;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
-import com.tr.hsyn.telefonrehberi.main.call.data.RankMap;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallLogRank;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
 import com.tr.hsyn.textdrawable.TextDrawable;
 import com.tr.hsyn.time.Time;
@@ -167,7 +167,7 @@ public class MostCallsActivity extends ActivityView {
 		
 		return (FILTER == CallLog.FILTER_MOST_SPEAKING || FILTER == CallLog.FILTER_MOST_TALKING) ?
 				CallLog.createRankListByDuration(filteredCalls) :
-				RankMap.rankListOf(filteredCalls);
+				CallLogRank.rankListOf(filteredCalls);
 	}
 	
 	/**

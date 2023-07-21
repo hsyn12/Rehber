@@ -14,7 +14,6 @@ import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.contactdata.ContactDat;
 import com.tr.hsyn.content.Contents;
-import com.tr.hsyn.label.Label;
 import com.tr.hsyn.perfectsort.PerfectSort;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.telefonrehberi.main.contact.data.bank.system.ContactColumns;
@@ -25,112 +24,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 
 /**
- * Sistem rehberi üzerinde çalışan genel işlemleri tanımlar.<br>
+ *
  */
-public interface Contacts extends ContactColumns {
-	
-	@NotNull
-	static Contact newContact(Contact contact) {
-		
-		return new Contact(contact);
-	}
-	
-	@NotNull
-	static Contact newContact(long contactId, String name, String pic) {
-		
-		return new Contact(contactId, name, pic);
-	}
-	
-	static
-	@NotNull
-	Contact newContact(long contactId, String name, String pic, String bigPic, List<String> numbers, List<String> emails, String note, List<ContactDat> events, List<String> groups, Set<Label> labels) {
-		
-		return new Contact(contactId, name, pic) {{
-			
-			setData(ContactKey.BIG_PIC, bigPic);
-			setData(ContactKey.NUMBERS, numbers);
-			setData(ContactKey.EMAILS, emails);
-			setData(ContactKey.EVENTS, events);
-			setData(ContactKey.NOTE, note);
-			setData(ContactKey.GROUPS, groups);
-			setData(ContactKey.LABELS, labels);
-		}};
-	}
-	
-	@SuppressLint("Range")
-	static String getBigPic(@NotNull ContentResolver resolver, long contactId) {
-		
-		Cursor cursor = resolver.query(
-				ContactsContract.Contacts.CONTENT_URI,
-				Lister.arrayOf(ContactsContract.Contacts.PHOTO_URI),
-				ContactsContract.Contacts._ID + "=?",
-				Lister.arrayOf(String.valueOf(contactId)),
-				null
-		);
-		
-		String pic = null;
-		
-		if (cursor != null) {
-			
-			if (cursor.moveToFirst())
-				pic = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.PHOTO_URI));
-			
-			cursor.close();
-		}
-		
-		return pic;
-	}
-	
-	static
-	@NotNull
-	List<Contact> getSimpleContactList(@NotNull final ContentResolver resolver) {
-		
-		//region var cursor = resolver.query(...)
-		Cursor cursor = resolver.query(
-				ContactsContract.Contacts.CONTENT_URI,
-				PROJECTION,
-				null,
-				null,
-				null
-		);
-		//endregion
-		
-		if (cursor != null) {
-			
-			// region Setup indexes of contact column
-			int contactIdCol = cursor.getColumnIndex(PROJECTION[0]);
-			int nameCol      = cursor.getColumnIndex(PROJECTION[1]);
-			int picCol       = cursor.getColumnIndex(PROJECTION[2]);
-			// endregion
-			
-			// region Taking data in while loop and creating a contact object
-			
-			List<Contact> contacts = new ArrayList<>(cursor.getCount());
-			
-			while (cursor.moveToNext()) {
-				
-				Contact contact = new Contact(cursor.getLong(contactIdCol),
-				                              cursor.getString(nameCol),
-				                              cursor.getString(picCol));
-				
-				
-				contacts.add(contact);
-			}
-			// endregion
-			
-			cursor.close();
-			
-			contacts.sort(PerfectSort.stringComparator(Contact::getName));
-			return contacts;
-		}
-		
-		//- return me
-		return new ArrayList<>(0);
-	}
+public interface ContactsReader extends ContactColumns {
 	
 	/**
 	 * Kişi listesini verir.<br>
@@ -188,11 +87,11 @@ public interface Contacts extends ContactColumns {
 			return contacts;
 		}
 		xlog.d("No contact");
-		//- return me
+		//+ return me
 		return new ArrayList<>(0);
 	}
 	
-	static void setContact(@NotNull final ContentResolver contentResolver, @NotNull Contact contact) {
+	private static void setContact(@NotNull final ContentResolver contentResolver, @NotNull Contact contact) {
 		
 		android.net.Uri uri    = Contents.getContactEntityUri(contact.getContactId());
 		Cursor          cursor = contentResolver.query(uri, null, null, null, null);
@@ -215,7 +114,7 @@ public interface Contacts extends ContactColumns {
 	 * @param contact The contact to set the information for.
 	 */
 	@SuppressLint("Range")
-	static void _setContactDetails(@NotNull Cursor cursor, @NotNull Contact contact) {
+	private static void _setContactDetails(@NotNull Cursor cursor, @NotNull Contact contact) {
 		
 		int              data1Col    = cursor.getColumnIndex(DATA_COLUMNS[0]);
 		int              mimeTypeCol = cursor.getColumnIndex(DATA_COLUMNS[1]);
@@ -265,13 +164,13 @@ public interface Contacts extends ContactColumns {
 	
 	static void addNumbers(@NotNull Cursor cursor, int data1Column, @NotNull List<String> numbers) {
 		
-		final int       numberLength = 13;
-		@NotNull String number       = PhoneNumbers.formatNumber(cursor.getString(data1Column), numberLength);
+		String          rowNumber = cursor.getString(data1Column);
+		@NotNull String number    = PhoneNumbers.formatNumber(rowNumber, PhoneNumbers.MINIMUM_NUMBER_LENGTH);
 		
 		boolean notExist = numbers.stream()
-				.noneMatch(num -> PhoneNumbers.equalsOrContains(number, num));
+				.noneMatch(num -> PhoneNumbers.equals(number, num));
 		
-		if (notExist) numbers.add(number);
+		if (notExist) numbers.add(rowNumber);
 	}
 	
 	@SuppressLint("Range")
@@ -328,7 +227,7 @@ public interface Contacts extends ContactColumns {
 		return intent;
 	}
 	
-	public static void setContactDetails(@NotNull final ContentResolver contentResolver, @NotNull Contact contact, @NotNull MimeTypeHandler handler) {
+	private static void setContactDetails(@NotNull final ContentResolver contentResolver, @NotNull Contact contact, @NotNull MimeTypeHandler handler) {
 		
 		android.net.Uri uri    = Contents.getContactEntityUri(contact.getContactId());
 		Cursor          cursor = contentResolver.query(uri, null, null, null, null);
@@ -464,7 +363,7 @@ public interface Contacts extends ContactColumns {
 			
 			String number = cursor.getString(numberCol);
 			
-			if (PhoneNumbers.equalsOrContains(phoneNumber, number)) {
+			if (PhoneNumbers.equals(phoneNumber, number)) {
 				
 				id = cursor.getLong(idCol);
 				break;

@@ -15,11 +15,9 @@ import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
-import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.contact.data.History;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
 import com.tr.hsyn.time.duration.DurationGroup;
-import com.tr.hsyn.tryme.Try;
 import com.tr.hsyn.xbox.Blue;
 
 import org.jetbrains.annotations.NotNull;
@@ -28,11 +26,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -104,13 +99,13 @@ public final class CallLog {
 	 * The key is a contact ID or a phone number or whatever else unique.
 	 * In this way, it provides accessing the calls by a key practically.
 	 */
-	@NotNull private final RankMap                                   rankMap;
+	@NotNull private final CallLogRank                               callLogRank;
 	/**
 	 * The contacts get associated by a key.
 	 * The key is a contact ID.
 	 */
 	private                CoupleMap<Long, Contact>                  mapContactIdToContact;
-	private                CoupleMap<Long, NumberKey>                mapContactIdToNumbers;
+	
 	
 	/**
 	 * Creates a new call log.
@@ -120,8 +115,7 @@ public final class CallLog {
 		
 		List<Call> c     = Over.CallLog.Calls.getCalls();
 		List<Call> calls = c != null ? c : new ArrayList<>(0);
-		rankMap = new RankMap(calls);
-		mergeSameCalls(rankMap.getCallMap());
+		callLogRank = new CallLogRank(calls);
 	}
 	
 	/**
@@ -131,24 +125,7 @@ public final class CallLog {
 	 */
 	private CallLog(List<Call> calls) {
 		
-		rankMap = new RankMap(calls != null ? calls : new ArrayList<>(0));
-		mergeSameCalls(rankMap.getCallMap());
-	}
-	
-	/**
-	 * @return map of contact ID to the numbers
-	 */
-	@NotNull
-	private CoupleMap<Long, NumberKey> getContactIdToNumbersMap() {
-		
-		if (mapContactIdToNumbers != null) return mapContactIdToNumbers;
-		
-		List<Contact> contacts = getContactsWithNumber();
-		
-		if (contacts != null)
-			mapContactIdToNumbers = new CoupleMap<>(contacts.stream().collect(Collectors.toMap(Contact::getContactId, c -> new NumberKey(Objects.requireNonNull(ContactKey.getNumbers(c))))));
-		
-		return mapContactIdToNumbers;
+		callLogRank = new CallLogRank(calls != null ? calls : new ArrayList<>(0));
 	}
 	
 	/**
@@ -185,7 +162,7 @@ public final class CallLog {
 	@NotNull
 	public List<Call> getCalls(@NotNull Contact contact, int @NotNull ... callTypes) {
 		
-		var calls = rankMap.getCallMap().getOrDefault(String.valueOf(contact.getContactId()), new ArrayList<>(0));
+		var calls = callLogRank.getCallMap().getOrDefault(String.valueOf(contact.getContactId()), new ArrayList<>(0));
 		assert calls != null;
 		if (callTypes.length == 0) return calls;
 		
@@ -204,7 +181,7 @@ public final class CallLog {
 		List<Call> _calls = new ArrayList<>();
 		
 		for (int callType : callTypes)
-			for (Call call : rankMap.getCalls())
+			for (Call call : callLogRank.getCalls())
 				if (callType == call.getCallType() && !_calls.contains(call)) _calls.add(call);
 		
 		return _calls;
@@ -237,7 +214,7 @@ public final class CallLog {
 	 * @return the most incoming calls
 	 */
 	@NotNull
-	public RankMap makeIncomingRank() {
+	public CallLogRank makeIncomingRank() {
 		
 		return makeRank(Call.INCOMING, Call.INCOMING_WIFI);
 	}
@@ -251,7 +228,7 @@ public final class CallLog {
 	 * @return the most outgoing calls
 	 */
 	@NotNull
-	public RankMap makeOutgoingRank() {
+	public CallLogRank makeOutgoingRank() {
 		
 		return makeRank(Call.OUTGOING, Call.OUTGOING_WIFI);
 	}
@@ -265,7 +242,7 @@ public final class CallLog {
 	 * @return the most missed calls
 	 */
 	@NotNull
-	public RankMap makeMissedRank() {
+	public CallLogRank makeMissedRank() {
 		
 		return makeRank(Call.MISSED);
 	}
@@ -279,7 +256,7 @@ public final class CallLog {
 	 * @return the most rejected calls
 	 */
 	@NotNull
-	public RankMap makeRejectedRank() {
+	public CallLogRank makeRejectedRank() {
 		
 		return makeRank(Call.REJECTED);
 	}
@@ -292,7 +269,7 @@ public final class CallLog {
 	@NotNull
 	public Map<String, List<Call>> getRankMap() {
 		
-		return rankMap.getCallMap();
+		return callLogRank.getCallMap();
 	}
 	
 	/**
@@ -301,7 +278,7 @@ public final class CallLog {
 	@NotNull
 	public List<Call> getCalls() {
 		
-		return rankMap.getCalls();
+		return callLogRank.getCalls();
 	}
 	
 	/**
@@ -353,7 +330,7 @@ public final class CallLog {
 	@NotNull
 	public List<Call> getCalls(@NotNull Predicate<Call> predicate) {
 		
-		return rankMap.getCalls().stream().filter(predicate).collect(Collectors.toList());
+		return callLogRank.getCalls().stream().filter(predicate).collect(Collectors.toList());
 	}
 	
 	/**
@@ -398,7 +375,7 @@ public final class CallLog {
 	 */
 	public boolean isEmpty() {
 		
-		return rankMap.isEmpty();
+		return callLogRank.isEmpty();
 	}
 	
 	/**
@@ -421,7 +398,7 @@ public final class CallLog {
 		
 		phoneNumber = PhoneNumbers.formatNumber(phoneNumber, 10);
 		//noinspection DataFlowIssue
-		return rankMap.getCallMap().getOrDefault(phoneNumber, new ArrayList<>(0));
+		return callLogRank.getCallMap().getOrDefault(phoneNumber, new ArrayList<>(0));
 	}
 	
 	/**
@@ -434,7 +411,7 @@ public final class CallLog {
 		
 		if (Stringx.isNoboe(id) || isEmpty()) return new ArrayList<>(0);
 		//noinspection DataFlowIssue
-		return rankMap.getCallMap().getOrDefault(id, new ArrayList<>(0));
+		return callLogRank.getCallMap().getOrDefault(id, new ArrayList<>(0));
 	}
 	
 	/**
@@ -461,9 +438,9 @@ public final class CallLog {
 	 * 		The most valuable rank is 1.
 	 */
 	@NotNull
-	public RankMap makeRank(int @NotNull ... callTypes) {
+	public CallLogRank makeRank(int @NotNull ... callTypes) {
 		
-		return RankMap.of(getCallsByType(callTypes));
+		return CallLogRank.by(getCallsByType(callTypes));
 	}
 	
 	/**
@@ -523,7 +500,7 @@ public final class CallLog {
 		List<Call> calls = new ArrayList<>();
 		
 		if (callTypes.length > 0)
-			for (Call call : rankMap.getCalls())
+			for (Call call : callLogRank.getCalls())
 				if (Lister.contains(callTypes, call.getCallType())) calls.add(call);
 		
 		return create(calls);
@@ -638,96 +615,6 @@ public final class CallLog {
 				.collect(Collectors.toList());
 	}
 	
-	/**
-	 * Returns the contact by contact ID.
-	 *
-	 * @param contactId the contact ID
-	 * @return the contact
-	 */
-	public Contact getContact(@NotNull String contactId) {
-		
-		return Try.ignore(() -> getContactIdToContactMap().get(Long.parseLong(contactId)));
-	}
-	
-	/**
-	 * Returns the contact by contact ID.
-	 *
-	 * @param id the contact ID
-	 * @return the contact
-	 */
-	public Contact getContact(long id) {
-		
-		return getContactIdToContactMap().get(id);
-	}
-	
-	/**
-	 * Creates the map object that has a key by contact ID, and a contact as value.
-	 */
-	public static Map<Long, Contact> mapContactIdToContact() {
-		
-		List<Contact> contacts = Blue.getObject(Key.CONTACTS);
-		
-		if (contacts != null)
-			return contacts.stream().collect(Collectors.toMap(Contact::getContactId, c -> c));
-		
-		return new HashMap<>();
-	}
-	
-	/**
-	 * @return all contacts
-	 */
-	@Nullable
-	public static List<Contact> getContacts() {
-		
-		return Blue.getObject(Key.CONTACTS);
-	}
-	
-	/**
-	 * Returns the contacts that have any real phone number.
-	 *
-	 * @return the contacts
-	 */
-	@Nullable
-	public static List<Contact> getContactsWithNumber() {
-		
-		return selectContacts(CallLog::hasNumber);
-	}
-	
-	/**
-	 * Returns the contacts by the predicate.
-	 *
-	 * @param predicate the predicate to select
-	 * @return the contacts
-	 */
-	public static @Nullable List<Contact> selectContacts(@NotNull Predicate<Contact> predicate) {
-		
-		List<Contact> contacts = getContacts();
-		
-		if (contacts == null) return null;
-		
-		return contacts.stream()
-				.filter(predicate)
-				.collect(Collectors.toList());
-	}
-	
-	/**
-	 * Checks if the contact has any real phone number.
-	 *
-	 * @param contact the contact
-	 * @return {@code true} if the contact has a number
-	 */
-	public static boolean hasNumber(@NotNull Contact contact) {
-		
-		List<String> numbers = ContactKey.getNumbers(contact);
-		
-		if (numbers == null || numbers.isEmpty()) return false;
-		
-		for (String number : numbers)
-			if (PhoneNumbers.isPhoneNumber(number))
-				return true;
-		
-		return false;
-	}
 	
 	/**
 	 * Creates a new call collection.
@@ -737,7 +624,7 @@ public final class CallLog {
 	 * @see Key#CALL_LOGS
 	 */
 	@NotNull
-	public static CallLog createOnTheCloud() {
+	public static CallLog createGlobal() {
 		
 		CallLog collection = new CallLog();
 		
@@ -764,7 +651,7 @@ public final class CallLog {
 	 * @return the call collection
 	 */
 	@NotNull
-	public static CallLog createOnTheCloud(List<Call> calls) {
+	public static CallLog createGlobal(List<Call> calls) {
 		
 		CallLog collection = new CallLog(calls);
 		
@@ -783,60 +670,6 @@ public final class CallLog {
 	public static CallLog create(List<Call> calls) {
 		
 		return new CallLog(calls);
-	}
-	
-	/**
-	 * Maybe there are more than one phone number belonging to the same contact.
-	 * This method merges the calls belonging to the same contact.
-	 *
-	 * @param entries the map object that mapped the key to its calls.
-	 */
-	public static void mergeSameCalls(@NotNull Map<String, List<Call>> entries) {
-		
-		// phone numbers
-		List<String> keys = new ArrayList<>(entries.keySet());
-		
-		// loop on numbers
-		for (int i = 0; i < keys.size(); i++) {
-			
-			// Get contact ID.
-			// Needs to find the same ID in the list and make it one list.
-			String firstKey = keys.get(i);
-			// aggregated calls
-			List<Call> calls = entries.remove(firstKey);
-			
-			if (calls == null) continue;
-			
-			long contactId = CallKey.getContactId(calls.get(0));
-			
-			if (contactId != 0L) {//+ Contact ID found
-				
-				// loop on the other numbers and find the same ID 
-				for (int j = i + 1; j < keys.size(); j++) {
-					
-					String     secondKey  = keys.get(j);
-					List<Call> otherCalls = entries.remove(secondKey);
-					
-					if (otherCalls == null) continue;
-					
-					long otherContactId = CallKey.getContactId(otherCalls.get(0));
-					
-					// contactId cannot be zero but otherContactId maybe
-					if (contactId == otherContactId) {
-						
-						// that is the same ID, put it together
-						calls.addAll(otherCalls);
-						continue;
-					}
-					
-					// put it back in
-					entries.put(secondKey, otherCalls);
-				}
-			}
-			
-			// put it back in
-			entries.put(firstKey, calls);
-		}
 	}
 	
 	/**
@@ -860,68 +693,6 @@ public final class CallLog {
 	/**
 	 * Returns a map object that ranked by call duration by descending.
 	 *
-	 * @param callLog call collection
-	 * @return a map object that ranked by calls duration by descending
-	 */
-	@NotNull
-	public static Map<Integer, List<CallRank>> createRankMapByCallDuration(@NotNull CallLog callLog) {
-		
-		Map<String, List<Call>> entries   = callLog.getRankMap();
-		Set<String>             keys      = entries.keySet();
-		List<CallRank>          callRanks = new ArrayList<>();
-		
-		//_ create call rank objects
-		for (String key : keys) {
-			
-			List<Call> calls = entries.get(key);
-			
-			if (calls == null) continue;
-			
-			CallRank callRank = new CallRank(key, calls);
-			
-			long incomingDuration = 0L;
-			long outgoingDuration = 0L;
-			
-			for (Call call : calls) {
-				
-				if (call.isIncoming()) incomingDuration += call.getDuration();
-				else if (call.isOutgoing()) outgoingDuration += call.getDuration();
-			}
-			
-			callRank.setIncomingDuration(incomingDuration);
-			callRank.setOutgoingDuration(outgoingDuration);
-			callRank.setContact(callLog.getContact(key));
-			callRanks.add(callRank);
-		}
-		
-		//_ sort by duration descending
-		callRanks.sort((c1, c2) -> Long.compare(c2.getDuration(), c1.getDuration()));
-		
-		int                              rank    = 1;
-		int                              size    = callRanks.size();
-		int                              last    = size - 1;
-		HashMap<Integer, List<CallRank>> rankMap = new HashMap<>();
-		
-		//_ set ranks
-		for (int i = 0; i < size; i++) {
-			
-			CallRank callRank = callRanks.get(i);
-			callRank.setRank(rank);
-			List<CallRank> ranks = rankMap.computeIfAbsent(rank, r -> new ArrayList<>());
-			ranks.add(callRank);
-			
-			if (i == last) break;
-			
-			CallRank next = callRanks.get(i + 1);
-			if (callRank.getDuration() > next.getDuration()) rank++;
-		}
-		
-		return rankMap;
-	}
-	
-	/**
-	 * Returns a map object that ranked by call duration by descending.
-	 *
 	 * @param calls the calls
 	 * @return a map object that ranked by calls duration by descending
 	 */
@@ -930,19 +701,6 @@ public final class CallLog {
 		
 		return createRankMapByCallDuration(create(calls));
 	}
-	
-	/**
-	 * Returns a rank map that created by the calls.
-	 *
-	 * @param calls the calls to create the rank map
-	 * @return the rank map
-	 */
-	@NotNull
-	public static RankMap createRankMap(@NotNull List<Call> calls) {
-		
-		return new RankMap(calls);
-	}
-	
 	
 	/**
 	 * Returns the name equivalent of the filtering options used in the call logs.

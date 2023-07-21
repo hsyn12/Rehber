@@ -273,7 +273,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 					
 					var list = Over.CallLog.getCallLogManager().load();
 					
-					callLog = CallLog.createOnTheCloud(list);
+					callLog = CallLog.createGlobal(list);
 					
 					List<Call> calls = callLog.getCallsById(String.valueOf(contact.getContactId()));
 					

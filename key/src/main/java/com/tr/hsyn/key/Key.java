@@ -38,6 +38,10 @@ public class Key extends AtomImpl {
 	 * The object that consists of all call log calls.
 	 */
 	public static final Key CALL_LOGS              = Key.of(20, "Call Logs");
+	/**
+	 * Contacts object that has the all contacts.
+	 */
+	public static final Key CONTACTS_RANK          = Key.of(21, "Contacts Rank");
 	
 	public Key(long id, @NotNull String name) {
 		
