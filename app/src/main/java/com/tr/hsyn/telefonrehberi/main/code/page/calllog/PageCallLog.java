@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
 
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.collection.Lister;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
+import com.tr.hsyn.telefonrehberi.main.data.CallLog;
 import com.tr.hsyn.xlog.xlog;
 
 import org.jetbrains.annotations.NotNull;

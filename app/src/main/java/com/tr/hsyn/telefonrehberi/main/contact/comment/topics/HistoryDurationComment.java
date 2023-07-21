@@ -7,11 +7,13 @@ import android.view.View;
 
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.telefonrehberi.R;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallMap;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationData;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationDialog;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.ContactComment;
 import com.tr.hsyn.telefonrehberi.main.contact.data.History;
+import com.tr.hsyn.telefonrehberi.main.data.CallLog;
+import com.tr.hsyn.telefonrehberi.main.data.MainContacts;
 import com.tr.hsyn.text.Spanner;
 import com.tr.hsyn.time.Unit;
 import com.tr.hsyn.time.duration.DurationGroup;
@@ -82,7 +84,7 @@ public class HistoryDurationComment implements ContactComment {
 		
 		//+ The list that has the duration of each contact.
 		//+ And the order is by descending of the duration.
-		List<Map.Entry<Contact, DurationGroup>> durationList = createContactHistoryDurationList(CallLog.getContactsWithNumber());
+		List<Map.Entry<Contact, DurationGroup>> durationList = createContactHistoryDurationList(MainContacts.getWithNumber());
 		//+ First item of this list is the winner.
 		//+ Possibly there are durations with the same or so close with each other.
 		
@@ -110,7 +112,7 @@ public class HistoryDurationComment implements ContactComment {
 		MostDurationDialog                dialog              = new MostDurationDialog(getActivity(), durationDataList, title, subtitle);
 		View.OnClickListener              listener            = view -> dialog.show();
 		String                            durationString      = stringer.durations(thisDuration.getDurations()).toString();//+ Duration string of this contact.
-		int                               rank                = CallLog.getRank(durationList, contact);
+		int                               rank                = CallMap.getRank(durationList, contact);
 		boolean                           winner              = contact.getContactId() == winnerContact.getContactId();
 		
 		if (isTurkish) {

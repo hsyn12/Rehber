@@ -118,7 +118,7 @@ public interface Over {
 		 */
 		static boolean exist() {
 			
-			return Blue.exist(Key.CALL_LOG);
+			return Blue.exist(Key.CALL_LOG_CALLS);
 		}
 		
 		/**
@@ -213,12 +213,12 @@ public interface Over {
 			@Nullable
 			static List<com.tr.hsyn.calldata.Call> getCalls() {
 				
-				return Blue.getObject(Key.CALL_LOG);
+				return Blue.getObject(Key.CALL_LOG_CALLS);
 			}
 			
 			static void setCalls(List<com.tr.hsyn.calldata.Call> calls) {
 				
-				Blue.box(Key.CALL_LOG, calls);
+				Blue.box(Key.CALL_LOG_CALLS, calls);
 			}
 			
 			/**

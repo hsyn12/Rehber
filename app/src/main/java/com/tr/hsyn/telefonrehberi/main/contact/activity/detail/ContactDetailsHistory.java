@@ -23,9 +23,9 @@ import com.tr.hsyn.gate.Gate;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.call.activity.history.ActivityCallList;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
 import com.tr.hsyn.telefonrehberi.main.cast.PermissionHolder;
 import com.tr.hsyn.telefonrehberi.main.contact.data.History;
+import com.tr.hsyn.telefonrehberi.main.data.CallLog;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
 import com.tr.hsyn.xbox.Blue;
 import com.tr.hsyn.xlog.xlog;
@@ -255,7 +255,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 		
 		//- Eğer arama kayıtları en az bir kez yüklenmiş ise sorun yok
 		//- Ancak yüklenmemiş ise, kayıtların buradan yüklenmesi biraz karışıklık yaratabilir.
-		callLog = Blue.getObject(Key.CALL_LOGS);
+		callLog = Blue.getObject(Key.CALL_LOG);
 		
 		//- Öncelikle arama kayıtları izinlerine bakılmalı
 		if (callLog == null || callLog.isEmpty()) {

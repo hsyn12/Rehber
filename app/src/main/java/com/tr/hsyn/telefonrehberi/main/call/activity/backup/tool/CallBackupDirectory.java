@@ -49,7 +49,7 @@ public class CallBackupDirectory implements BackupDirectory<Call> {
 	@WorkerThread
 	public final Backup<Call> newBackup() {
 		
-		List<Call> calls = Blue.getObject(Key.CALL_LOG);
+		List<Call> calls = Blue.getObject(Key.CALL_LOG_CALLS);
 		
 		if (calls != null)
 			return newBackup(calls);

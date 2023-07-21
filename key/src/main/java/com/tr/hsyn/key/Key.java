@@ -14,7 +14,7 @@ public class Key extends AtomImpl {
 	
 	public static final Key EMPTY                  = Key.of(0, "-");
 	public static final Key CONTACTS               = Key.of(1, "Contacts");
-	public static final Key CALL_LOG               = Key.of(2, "Call Log");
+	public static final Key CALL_LOG_CALLS         = Key.of(2, "Call Log Calls");
 	public static final Key MESSAGE                = Key.of(3, "Message");
 	public static final Key CONTACT_LIST_UPDATED   = Key.of(4, "Contact List Updated");
 	public static final Key NEW_CONTACTS           = Key.of(5, "New Contacts");
@@ -37,11 +37,12 @@ public class Key extends AtomImpl {
 	/**
 	 * The object that consists of all call log calls.
 	 */
-	public static final Key CALL_LOGS              = Key.of(20, "Call Logs");
+	public static final Key CALL_LOG               = Key.of(20, "Call Log");
 	/**
 	 * Contacts object that has the all contacts.
 	 */
 	public static final Key CONTACTS_RANK          = Key.of(21, "Contacts Rank");
+	public static final Key CALL_LOG_RANK          = Key.of(22, "Call Log Rank");
 	
 	public Key(long id, @NotNull String name) {
 		

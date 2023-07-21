@@ -80,7 +80,7 @@ public abstract class LoadingStation extends CallLogLoader {
 			long loadTime = Time.now() - getLastContactsLoadingStartTime();
 			
 			pageCallLog.setList(calls);
-			Blue.box(Key.CALL_LOG, calls);
+			Blue.box(Key.CALL_LOG_CALLS, calls);
 			xlog.d("CallLog Loaded [size=%d, loadTime=%dms]", calls.size(), loadTime);
 		}
 		else {

@@ -11,7 +11,7 @@ import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.dev.android.dialog.ShowCall;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallMap;
 import com.tr.hsyn.telefonrehberi.main.call.data.Res;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationData;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationDialog;
@@ -26,6 +26,7 @@ import com.tr.hsyn.telefonrehberi.main.contact.comment.topics.QuantityComment;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.topics.Topic;
 import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.contact.data.History;
+import com.tr.hsyn.telefonrehberi.main.data.CallLog;
 import com.tr.hsyn.text.Spanner;
 import com.tr.hsyn.text.Spans;
 import com.tr.hsyn.time.Time;
@@ -278,14 +279,14 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 	@NotNull
 	private CharSequence commentOnDurations() {
 		
-		Spanner                      comment      = new Spanner();
-		Map<Integer, List<CallRank>> rankMap      = CallLog.createRankMapByCallDuration(callLog);
-		int                          rank         = CallLog.getRank(rankMap, contact);
-		List<MostDurationData>       durationList = createDurationList(rankMap);
-		String                       title        = getString(R.string.title_speaking_durations);
-		String                       subtitle     = getString(R.string.size_contacts, durationList.size());
-		MostDurationDialog           dialog       = new MostDurationDialog(commentStore.getActivity(), durationList, title, subtitle);
-		View.OnClickListener         listener     = view -> dialog.show();
+		Spanner                comment      = new Spanner();
+		CallMap                rankMap      = CallMap.createForDuration(callLog.getCalls());
+		int                    rank         = rankMap.getRank(contact);
+		List<MostDurationData> durationList = createDurationList(rankMap);
+		String                 title        = getString(R.string.title_speaking_durations);
+		String                 subtitle     = getString(R.string.size_contacts, durationList.size());
+		MostDurationDialog     dialog       = new MostDurationDialog(commentStore.getActivity(), durationList, title, subtitle);
+		View.OnClickListener   listener     = view -> dialog.show();
 		
 		comment.append("Bu kişi ")
 				.append("en çok konuştuğun", getClickSpans(listener))
@@ -302,14 +303,14 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 	 * @return the list of most duration items
 	 */
 	@NotNull
-	private List<MostDurationData> createDurationList(@NotNull Map<Integer, List<CallRank>> rankMap) {
+	private List<MostDurationData> createDurationList(@NotNull CallMap rankMap) {
 		
 		List<MostDurationData> list = new ArrayList<>();
 		
 		int rank = 1;
 		while (true) {
 			
-			var rankList = rankMap.get(rank);
+			var rankList = rankMap.getRank(rank);
 			
 			if (rankList == null) break;
 			

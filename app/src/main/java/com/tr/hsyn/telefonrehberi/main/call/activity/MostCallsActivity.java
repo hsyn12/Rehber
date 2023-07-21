@@ -18,9 +18,9 @@ import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.execution.Work;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.telefonrehberi.R;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallLogRank;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallMap;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
+import com.tr.hsyn.telefonrehberi.main.data.CallLog;
 import com.tr.hsyn.textdrawable.TextDrawable;
 import com.tr.hsyn.time.Time;
 import com.tr.hsyn.xbox.Blue;
@@ -48,7 +48,7 @@ public class MostCallsActivity extends ActivityView {
 	
 	/** The filter */
 	private final int                     FILTER  = Objects.requireNonNull(Blue.getObject(Key.MOST_CALLS_FILTER_TYPE));
-	private final CallLog                 callLog = Blue.getObject(Key.CALL_LOGS);
+	private final CallLog                 callLog = Blue.getObject(Key.CALL_LOG);
 	private       List<Call>              filteredCalls;
 	private       ProgressBar             progressBar;
 	private       Drawable                imgType;
@@ -167,7 +167,7 @@ public class MostCallsActivity extends ActivityView {
 		
 		return (FILTER == CallLog.FILTER_MOST_SPEAKING || FILTER == CallLog.FILTER_MOST_TALKING) ?
 				CallLog.createRankListByDuration(filteredCalls) :
-				CallLogRank.rankListOf(filteredCalls);
+				CallMap.rankListOf(filteredCalls);
 	}
 	
 	/**

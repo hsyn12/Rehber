@@ -4,10 +4,13 @@ package com.tr.hsyn.telefonrehberi.main.call.data;
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.contactdata.Contact;
+import com.tr.hsyn.key.Key;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
-import com.tr.hsyn.telefonrehberi.main.contact.data.ContactsRank;
+import com.tr.hsyn.telefonrehberi.main.data.MainContacts;
+import com.tr.hsyn.telefonrehberi.main.dev.Over;
 import com.tr.hsyn.time.duration.DurationGroup;
+import com.tr.hsyn.xbox.Blue;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,7 +37,7 @@ import java.util.stream.Collectors;
  * This is related to the used criteria.
  * So, the {@link #getRank(int)} method when called returns the list of {@link CallRank}.
  */
-public class CallLogRank {
+public class CallMap {
 	
 	public static final Comparator<Map.Entry<String, List<Call>>> QUANTITY_COMPARATOR = (e1, e2) -> e2.getValue().size() - e1.getValue().size();
 	
@@ -43,35 +46,65 @@ public class CallLogRank {
 	 */
 	private final Map<Integer, List<CallRank>> rankMap;
 	/**
-	 * The list of {@link Call} that created this {@link CallLogRank} object
+	 * The list of {@link Call} that created this {@link CallMap} object
 	 */
 	private final List<Call>                   calls;
 	/**
 	 * The map object that maps the keys to the list of {@link Call}s
 	 */
 	private final Map<String, List<Call>>      callsMap;
-	private final ContactsRank                 contacts;
 	
 	/**
-	 * Creates an instance of {@link CallLogRank}.
+	 * Creates an instance of {@link CallMap}.
 	 *
 	 * @param calls the list of {@link Call} to make rank of.
 	 */
-	public CallLogRank(@NotNull List<Call> calls) {
+	private CallMap(@NotNull List<Call> calls) {
 		
-		this.calls = calls;
-		contacts   = ContactsRank.create();
-		callsMap   = groupByKey(calls);
-		mergeSameCalls(callsMap);
-		rankMap = rankByQuantity();
+		this(calls, false);
 	}
 	
 	/**
-	 * @return the calls that creating this {@link CallLogRank} object by.
+	 * Creates an instance of {@link CallMap}.
+	 *
+	 * @param calls the list of {@link Call} to make rank of.
+	 */
+	private CallMap(@NotNull List<Call> calls, boolean forDuration) {
+		
+		if (forDuration) {
+			
+			this.calls = calls;
+			callsMap   = groupByKey(calls);
+			mergeSameCalls(callsMap);
+			rankMap = rankByDuration();
+		}
+		else {
+			this.calls = calls;
+			callsMap   = groupByKey(calls);
+			mergeSameCalls(callsMap);
+			rankMap = rankByQuantity();
+		}
+		
+	}
+	
+	public Map<String, List<Call>> getCallsMap() {
+		
+		return callsMap;
+	}
+	
+	/**
+	 * @return the calls that creating this {@link CallMap} object by.
 	 */
 	public List<Call> getCalls() {
 		
 		return calls;
+	}
+	
+	public List<Call> getCalls(long contactId) {
+		
+		return callsMap.get(String.valueOf(contactId));
+		
+		
 	}
 	
 	/**
@@ -97,7 +130,7 @@ public class CallLogRank {
 	}
 	
 	/**
-	 * @return {@code true} if the call list that created this {@link CallLogRank} object is empty.
+	 * @return {@code true} if the call list that created this {@link CallMap} object is empty.
 	 */
 	public boolean isEmpty() {
 		
@@ -105,7 +138,7 @@ public class CallLogRank {
 	}
 	
 	/**
-	 * Returns the size of the calls that creating this {@link CallLogRank} object by.
+	 * Returns the size of the calls that creating this {@link CallMap} object by.
 	 *
 	 * @return the size of the calls
 	 */
@@ -125,6 +158,11 @@ public class CallLogRank {
 				.flatMap(Collection::stream)
 				.sorted(Comparator.comparingInt(CallRank::getRank))
 				.collect(Collectors.toList());
+	}
+	
+	public Collection<List<CallRank>> getCallRankList() {
+		
+		return rankMap.values();
 	}
 	
 	/**
@@ -187,7 +225,7 @@ public class CallLogRank {
 	private Map<Integer, List<CallRank>> rankByQuantity() {
 		
 		Map<Integer, List<CallRank>>        rankMap  = new HashMap<>();
-		List<Map.Entry<String, List<Call>>> rankList = sortedList(callsMap, CallLogRank.QUANTITY_COMPARATOR);
+		List<Map.Entry<String, List<Call>>> rankList = sortedList(callsMap, CallMap.QUANTITY_COMPARATOR);
 		int                                 rank     = 1;
 		int                                 size     = rankList.size();
 		int                                 last     = size - 1;
@@ -216,7 +254,7 @@ public class CallLogRank {
 	 * @return a map object that ranked by calls duration by descending
 	 */
 	@NotNull
-	private Map<Integer, List<CallRank>> rankByDuration() {
+	public Map<Integer, List<CallRank>> rankByDuration() {
 		
 		Set<String>    keys      = callsMap.keySet();
 		List<CallRank> callRanks = new ArrayList<>();
@@ -241,7 +279,7 @@ public class CallLogRank {
 			
 			callRank.setIncomingDuration(incomingDuration);
 			callRank.setOutgoingDuration(outgoingDuration);
-			callRank.setContact(contacts.getContact(key));
+			callRank.setContact(MainContacts.getById(key));
 			callRanks.add(callRank);
 		}
 		
@@ -281,9 +319,9 @@ public class CallLogRank {
 	private static Map<String, List<Call>> groupByKey(@NotNull List<Call> calls, @Nullable Function<Call, String> keyFunction, int @NotNull ... callTypes) {
 		
 		if (callTypes.length == 0)
-			return calls.stream().collect(Collectors.groupingBy(keyFunction != null ? keyFunction : CallLogRank::getKey));
+			return calls.stream().collect(Collectors.groupingBy(keyFunction != null ? keyFunction : CallMap::getKey));
 		
-		return calls.stream().filter(c -> Lister.contains(callTypes, c.getCallType())).collect(Collectors.groupingBy(keyFunction != null ? keyFunction : CallLogRank::getKey));
+		return calls.stream().filter(c -> Lister.contains(callTypes, c.getCallType())).collect(Collectors.groupingBy(keyFunction != null ? keyFunction : CallMap::getKey));
 	}
 	
 	/**
@@ -294,7 +332,7 @@ public class CallLogRank {
 	 * @return the rank map
 	 */
 	@NotNull
-	public static CallLogRank by(@NotNull List<Call> calls, int callType) {
+	public static CallMap by(@NotNull List<Call> calls, int callType) {
 		
 		return by(calls.stream().filter(c -> c.isType(callType)).collect(Collectors.toList()));
 	}
@@ -307,7 +345,7 @@ public class CallLogRank {
 	 */
 	private static Map<String, List<Call>> groupByKey(@NotNull List<Call> calls) {
 		
-		return calls.stream().collect(Collectors.groupingBy(CallLogRank::getKey));
+		return calls.stream().collect(Collectors.groupingBy(CallMap::getKey));
 	}
 	
 	/**
@@ -348,7 +386,7 @@ public class CallLogRank {
 	 */
 	public static List<CallRank> rankListOf(@NotNull List<Call> calls) {
 		
-		return CallLogRank.by(calls).getCallRanks();
+		return CallMap.by(calls).getCallRanks();
 	}
 	
 	/**
@@ -358,9 +396,9 @@ public class CallLogRank {
 	 * @return new rank map
 	 */
 	@NotNull
-	public static CallLogRank by(@NotNull List<Call> calls) {
+	public static CallMap by(@NotNull List<Call> calls) {
 		
-		return new CallLogRank(calls);
+		return new CallMap(calls);
 	}
 	
 	/**
@@ -431,6 +469,70 @@ public class CallLogRank {
 			// put it back in
 			entries.put(firstKey, calls);
 		}
+	}
+	
+	/**
+	 * Creates a new {@link CallMap}.
+	 *
+	 * @return a new {@link CallMap}
+	 */
+	public static @NotNull CallMap create() {
+		
+		List<Call> c = Over.CallLog.Calls.getCalls();
+		return new CallMap(c != null ? c : new ArrayList<>(0));
+	}
+	
+	/**
+	 * Creates a new {@link CallMap}.
+	 *
+	 * @param calls the calls
+	 * @return a new {@link CallMap}
+	 */
+	public static @NotNull CallMap create(List<Call> calls) {
+		
+		return new CallMap(calls != null ? calls : new ArrayList<>(0));
+	}
+	
+	/**
+	 * Creates a new {@link CallMap}.
+	 *
+	 * @param calls the calls
+	 * @return a new {@link CallMap}
+	 */
+	public static @NotNull CallMap createForDuration(List<Call> calls) {
+		
+		return new CallMap(calls != null ? calls : new ArrayList<>(0));
+	}
+	
+	/**
+	 * Creates a new {@link CallMap}.
+	 * After this,
+	 * can be accessed viq {@link Blue#getObject(Key)} with the key {@link Key#CONTACTS_RANK}.
+	 *
+	 * @return a new {@link CallMap}
+	 */
+	public static @NotNull CallMap createGlobal() {
+		
+		List<Call> calls = Over.CallLog.Calls.getCalls();
+		var        cl    = new CallMap(calls != null ? calls : new ArrayList<>(0));
+		
+		Blue.box(Key.CALL_LOG_RANK, cl);
+		return cl;
+	}
+	
+	/**
+	 * Creates a new {@link CallMap}.
+	 * After this,
+	 * can be accessed viq {@link Blue#getObject(Key)} with the key {@link Key#CONTACTS_RANK}.
+	 *
+	 * @param calls the calls
+	 * @return a new {@link CallMap}
+	 */
+	public static @NotNull CallMap createGlobal(List<Call> calls) {
+		
+		var cl = new CallMap(calls != null ? calls : new ArrayList<>(0));
+		Blue.box(Key.CALL_LOG_RANK, cl);
+		return cl;
 	}
 	
 	

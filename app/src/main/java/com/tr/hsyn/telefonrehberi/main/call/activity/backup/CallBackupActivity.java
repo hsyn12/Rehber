@@ -30,15 +30,7 @@ public class CallBackupActivity extends CallBackupActivityRestore {
 	@Override
 	protected List<Call> getCallLogCalls() {
 		
-		return Blue.getObject(Key.CALL_LOG);
-	}
-	
-	@Override
-	protected void setCallBackups(@Nullable List<Backup<Call>> callBackups) {
-		
-		super.setCallBackups(callBackups);
-		
-		xlog.d("Call backup size : %d", callBackups != null ? callBackups.size() : -1);
+		return Blue.getObject(Key.CALL_LOG_CALLS);
 	}
 	
 	@Override
@@ -53,5 +45,13 @@ public class CallBackupActivity extends CallBackupActivityRestore {
 		throwable.printStackTrace();
 		
 		Show.tost(this, errorMessage);
+	}
+	
+	@Override
+	protected void setCallBackups(@Nullable List<Backup<Call>> callBackups) {
+		
+		super.setCallBackups(callBackups);
+		
+		xlog.d("Call backup size : %d", callBackups != null ? callBackups.size() : -1);
 	}
 }
