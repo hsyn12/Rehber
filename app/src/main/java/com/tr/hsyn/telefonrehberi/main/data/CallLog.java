@@ -131,9 +131,9 @@ public final class CallLog {
 	}
 	
 	/**
-	 * Returns the count of the rank.
+	 * Returns the size of the call logs.
 	 *
-	 * @return the count of the rank
+	 * @return the size of the call logs
 	 */
 	public int size() {
 		
