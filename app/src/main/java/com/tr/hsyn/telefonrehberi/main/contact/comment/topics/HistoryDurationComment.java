@@ -7,7 +7,7 @@ import android.view.View;
 
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.telefonrehberi.R;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallMap;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallRanker;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationData;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationDialog;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.ContactComment;
@@ -112,7 +112,7 @@ public class HistoryDurationComment implements ContactComment {
 		MostDurationDialog                dialog              = new MostDurationDialog(getActivity(), durationDataList, title, subtitle);
 		View.OnClickListener              listener            = view -> dialog.show();
 		String                            durationString      = stringer.durations(thisDuration.getDurations()).toString();//+ Duration string of this contact.
-		int                               rank                = CallMap.getRank(durationList, contact);
+		int                               rank                = CallRanker.getRank(durationList, contact);
 		boolean                           winner              = contact.getContactId() == winnerContact.getContactId();
 		
 		if (isTurkish) {
