@@ -8,7 +8,7 @@ import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallRanker;
+import com.tr.hsyn.telefonrehberi.main.call.data.Ranker;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationData;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationDialog;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
@@ -79,7 +79,7 @@ public class CallDurationComment implements ContactComment {
 		}
 		// endregion
 		
-		CallRanker             rankMap      = CallRanker.createForDuration(callLog.getCalls());
+		Ranker                 rankMap      = Ranker.createForDuration(callLog.getCalls());
 		int                    rank         = rankMap.getRank(contact);
 		CallRank               thisRank     = rankMap.getCallRank(rank, contact);
 		List<MostDurationData> durationList = createDurationList(rankMap, MainContacts.getWithNumber());
@@ -147,7 +147,7 @@ public class CallDurationComment implements ContactComment {
 	 * @return the list of most duration items
 	 */
 	@NotNull
-	private List<MostDurationData> createDurationList(@NotNull CallRanker rankMap, List<Contact> contacts) {
+	private List<MostDurationData> createDurationList(@NotNull Ranker rankMap, List<Contact> contacts) {
 		
 		List<MostDurationData> list = new ArrayList<>();
 		

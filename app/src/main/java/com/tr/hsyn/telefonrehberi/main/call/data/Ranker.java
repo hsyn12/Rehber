@@ -4,6 +4,8 @@ package com.tr.hsyn.telefonrehberi.main.call.data;
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
+import com.tr.hsyn.telefonrehberi.main.data.CallLog;
+import com.tr.hsyn.telefonrehberi.main.data.Groups;
 import com.tr.hsyn.telefonrehberi.main.data.MainContacts;
 import com.tr.hsyn.time.duration.DurationGroup;
 
@@ -31,43 +33,31 @@ import java.util.stream.Collectors;
  * This is related to the used criteria.
  * So, the {@link #getRank(int)} method when called returns the list of {@link CallRank}.
  */
-public class CallRanker {
+public class Ranker {
 	
 	public static final Comparator<Map.Entry<String, List<Call>>> QUANTITY_COMPARATOR = (e1, e2) -> e2.getValue().size() - e1.getValue().size();
+	private final       Groups<Integer, CallRank>                 rankGroup;
 	
 	/**
-	 * The map object that maps the ranks to the list of {@link CallRank}s
-	 */
-	private final Map<Integer, List<CallRank>> rankMap;
-	private final Map<String, List<Call>>      callMap;
-	
-	/**
-	 * Creates an instance of {@link CallRanker}.
+	 * Creates an instance of {@link Ranker}.
 	 *
-	 * @param callMap the map of {@link Call} to make rank of.
+	 * @param calls the map of {@link Call} to make rank of.
 	 */
-	private CallRanker(@NotNull Map<String, List<Call>> callMap) {
+	private Ranker(@NotNull Groups<String, Call> calls) {
 		
-		this(callMap, false);
+		this(calls, false);
 	}
 	
 	/**
-	 * Creates an instance of {@link CallRanker}.
+	 * Creates an instance of {@link Ranker}.
 	 *
-	 * @param callMap the call map to make rank of.
+	 * @param calls the call map to make rank of.
 	 */
-	private CallRanker(@NotNull Map<String, List<Call>> callMap, boolean forDuration) {
+	private Ranker(@NotNull Groups<String, Call> calls, boolean forDuration) {
 		
-		if (forDuration) {
-			
-			this.callMap = callMap;
-			rankMap      = rankByDuration();
-		}
-		else {
-			this.callMap = callMap;
-			rankMap      = rankByQuantity();
-		}
-		
+		rankGroup = forDuration ?
+				Groups.from(calls, Ranker::rankByDuration) :
+				Groups.from(calls, Ranker::rankByQuantity);
 	}
 	
 	/**
@@ -79,7 +69,7 @@ public class CallRanker {
 	@Nullable
 	public List<CallRank> getRank(int rank) {
 		
-		return rankMap.get(rank);
+		return rankGroup.get(rank);
 	}
 	
 	/**
@@ -87,7 +77,7 @@ public class CallRanker {
 	 */
 	public int getRankSize() {
 		
-		return rankMap.size();
+		return rankGroup.size();
 	}
 	
 	/**
@@ -97,7 +87,7 @@ public class CallRanker {
 	 */
 	public List<CallRank> getCallRanks() {
 		
-		return rankMap.values().stream()
+		return rankGroup.values().stream()
 				.flatMap(Collection::stream)
 				.sorted(Comparator.comparingInt(CallRank::getRank))
 				.collect(Collectors.toList());
@@ -105,7 +95,7 @@ public class CallRanker {
 	
 	public Collection<List<CallRank>> getCallRankList() {
 		
-		return rankMap.values();
+		return rankGroup.values();
 	}
 	
 	/**
@@ -116,7 +106,7 @@ public class CallRanker {
 	 */
 	public int getRank(@NotNull Contact contact) {
 		
-		for (Map.Entry<Integer, List<CallRank>> entry : rankMap.entrySet()) {
+		for (Map.Entry<Integer, List<CallRank>> entry : rankGroup.entrySet()) {
 			
 			List<CallRank> callRanks = entry.getValue();
 			
@@ -155,6 +145,11 @@ public class CallRanker {
 		return null;
 	}
 	
+	public boolean isEmpty() {
+		
+		return rankGroup.isEmpty();
+	}
+	
 	/**
 	 * Creates a ranked map from the entries.
 	 * The ranking is done by the comparator.
@@ -165,10 +160,10 @@ public class CallRanker {
 	 * 		The keys are the ranks, and the values are the call rank objects.
 	 */
 	@NotNull
-	private Map<Integer, List<CallRank>> rankByQuantity() {
+	public static Groups<Integer, CallRank> rankByQuantity(@NotNull Groups<String, Call> callMap) {
 		
 		Map<Integer, List<CallRank>>        rankMap  = new HashMap<>();
-		List<Map.Entry<String, List<Call>>> rankList = sortedList(callMap, CallRanker.QUANTITY_COMPARATOR);
+		List<Map.Entry<String, List<Call>>> rankList = sortedList(callMap.getMap(), Ranker.QUANTITY_COMPARATOR);
 		int                                 rank     = 1;
 		int                                 size     = rankList.size();
 		int                                 last     = size - 1;
@@ -188,7 +183,7 @@ public class CallRanker {
 			if (ranked.getValue().size() > next.getValue().size()) rank++;
 		}
 		
-		return rankMap;
+		return new Groups<>(rankMap);
 	}
 	
 	/**
@@ -197,17 +192,17 @@ public class CallRanker {
 	 * @return a map object that ranked by calls duration by descending
 	 */
 	@NotNull
-	public Map<Integer, List<CallRank>> rankByDuration() {
+	public static Groups<Integer, CallRank> rankByDuration(@NotNull Groups<String, Call> groups) {
 		
-		Set<String>    keys      = callMap.keySet();
+		Set<String>    keys      = groups.keySet();
 		List<CallRank> callRanks = new ArrayList<>();
 		
 		//_ create call rank objects
 		for (String key : keys) {
 			
-			List<Call> calls = callMap.get(key);
+			List<Call> calls = groups.get(key);
 			
-			if (calls == null) continue;
+			if (calls.isEmpty()) continue;
 			
 			CallRank callRank = new CallRank(key, calls);
 			
@@ -229,10 +224,10 @@ public class CallRanker {
 		//_ sort by duration descending
 		callRanks.sort((c1, c2) -> Long.compare(c2.getDuration(), c1.getDuration()));
 		
-		int                              rank    = 1;
-		int                              size    = callRanks.size();
-		int                              last    = size - 1;
-		HashMap<Integer, List<CallRank>> rankMap = new HashMap<>();
+		int                          rank    = 1;
+		int                          size    = callRanks.size();
+		int                          last    = size - 1;
+		Map<Integer, List<CallRank>> rankMap = new HashMap<>();
 		
 		//_ set ranks
 		for (int i = 0; i < size; i++) {
@@ -248,19 +243,25 @@ public class CallRanker {
 			if (callRank.getDuration() > next.getDuration()) rank++;
 		}
 		
-		return rankMap;
+		return new Groups<>(rankMap);
 	}
 	
 	@NotNull
-	public static CallRanker create(@NotNull Map<String, List<Call>> callMap) {
+	public static Ranker create(@NotNull Groups<String, Call> callGroup) {
 		
-		return new CallRanker(callMap, false);
+		return new Ranker(callGroup, false);
 	}
 	
 	@NotNull
-	public static CallRanker createForDuration(@NotNull Map<String, List<Call>> callMap) {
+	public static Ranker create(@NotNull List<Call> calls) {
 		
-		return new CallRanker(callMap, true);
+		return new Ranker(Groups.from(calls, CallLog::getKey), false);
+	}
+	
+	@NotNull
+	public static Ranker createForDuration(@NotNull List<Call> calls) {
+		
+		return new Ranker(Groups.from(calls, CallLog::getKey), true);
 	}
 	
 	/**
@@ -283,9 +284,9 @@ public class CallRanker {
 	 * @param calls the calls
 	 * @return the rank list that ordered by rank number ascending
 	 */
-	public static List<CallRank> rankListOf(@NotNull Map<String, List<Call>> calls) {
+	public static List<CallRank> rankListOf(@NotNull List<Call> calls) {
 		
-		return CallRanker.create(calls).getCallRanks();
+		return Ranker.create(calls).getCallRanks();
 	}
 	
 	/**

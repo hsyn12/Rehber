@@ -11,7 +11,7 @@ import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.dev.android.dialog.ShowCall;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallRanker;
+import com.tr.hsyn.telefonrehberi.main.call.data.Ranker;
 import com.tr.hsyn.telefonrehberi.main.call.data.Res;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationData;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationDialog;
@@ -280,7 +280,7 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 	private CharSequence commentOnDurations() {
 		
 		Spanner                comment      = new Spanner();
-		CallRanker             rankMap      = CallRanker.createForDuration(callLog.getCalls());
+		Ranker                 rankMap      = Ranker.createForDuration(callLog.getCalls());
 		int                    rank         = rankMap.getRank(contact);
 		List<MostDurationData> durationList = createDurationList(rankMap);
 		String                 title        = getString(R.string.title_speaking_durations);
@@ -303,7 +303,7 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 	 * @return the list of most duration items
 	 */
 	@NotNull
-	private List<MostDurationData> createDurationList(@NotNull CallRanker rankMap) {
+	private List<MostDurationData> createDurationList(@NotNull Ranker rankMap) {
 		
 		List<MostDurationData> list = new ArrayList<>();
 		

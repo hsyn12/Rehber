@@ -14,7 +14,7 @@ import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallRanker;
+import com.tr.hsyn.telefonrehberi.main.call.data.Ranker;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
 import com.tr.hsyn.telefonrehberi.main.contact.data.History;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
@@ -100,12 +100,13 @@ public final class CallLog {
 	 * The key is a contact ID or a phone number or whatever else unique.
 	 * In this way, it provides accessing the calls by a key practically.
 	 */
-	private final       Map<String, List<Call>>                   callMap;
+	private final       Groups<String, Call>                      callGroups;
+	
 	/**
-	 * The list of {@link Call} that created this {@link CallRanker} object
+	 * The list of {@link Call} that created this {@link Ranker} object
 	 */
-	private final       List<Call>                                calls;
-	private final       CallRanker                                callRanker;
+	private final List<Call> calls;
+	private final Ranker     ranker;
 	
 	/**
 	 * Creates a new call log.
@@ -124,9 +125,9 @@ public final class CallLog {
 	private CallLog(List<Call> calls) {
 		
 		this.calls = calls != null ? calls : new ArrayList<>(0);
-		callMap    = groupByKey(this.calls);
-		mergeSameCalls(callMap);
-		callRanker = CallRanker.create(callMap);
+		callGroups = Groups.from(this.calls, CallLog::getKey);
+		mergeSameCalls(callGroups);
+		ranker = Ranker.create(callGroups);
 	}
 	
 	/**
@@ -140,7 +141,7 @@ public final class CallLog {
 	}
 	
 	/**
-	 * @return {@code true} if the call list that created this {@link CallRanker} object is empty.
+	 * @return {@code true} if the call list that created this {@link Ranker} object is empty.
 	 */
 	public boolean isEmpty() {
 		
@@ -170,8 +171,8 @@ public final class CallLog {
 	@NotNull
 	public List<Call> getCalls(@NotNull Contact contact, int @NotNull ... callTypes) {
 		
-		var calls = callMap.getCalls(contact.getContactId());
-		assert calls != null;
+		var calls = callGroups.get(String.valueOf(contact.getContactId()));
+		
 		if (callTypes.length == 0) return calls;
 		
 		return calls.stream().filter(call -> Lister.contains(callTypes, call.getCallType())).collect(Collectors.toList());
@@ -189,7 +190,7 @@ public final class CallLog {
 		List<Call> _calls = new ArrayList<>();
 		
 		for (int callType : callTypes)
-			for (Call call : callMap.getCalls())
+			for (Call call : calls)
 				if (callType == call.getCallType() && !_calls.contains(call)) _calls.add(call);
 		
 		return _calls;
@@ -222,7 +223,7 @@ public final class CallLog {
 	 * @return the most incoming calls
 	 */
 	@NotNull
-	public CallRanker makeIncomingRank() {
+	public Ranker makeIncomingRank() {
 		
 		return makeRank(Call.INCOMING, Call.INCOMING_WIFI);
 	}
@@ -236,7 +237,7 @@ public final class CallLog {
 	 * @return the most outgoing calls
 	 */
 	@NotNull
-	public CallRanker makeOutgoingRank() {
+	public Ranker makeOutgoingRank() {
 		
 		return makeRank(Call.OUTGOING, Call.OUTGOING_WIFI);
 	}
@@ -250,7 +251,7 @@ public final class CallLog {
 	 * @return the most missed calls
 	 */
 	@NotNull
-	public CallRanker makeMissedRank() {
+	public Ranker makeMissedRank() {
 		
 		return makeRank(Call.MISSED);
 	}
@@ -264,7 +265,7 @@ public final class CallLog {
 	 * @return the most rejected calls
 	 */
 	@NotNull
-	public CallRanker makeRejectedRank() {
+	public Ranker makeRejectedRank() {
 		
 		return makeRank(Call.REJECTED);
 	}
@@ -275,7 +276,7 @@ public final class CallLog {
 	@NotNull
 	public List<Call> getCalls() {
 		
-		return callMap.getCalls();
+		return calls;
 	}
 	
 	/**
@@ -289,8 +290,8 @@ public final class CallLog {
 		if (Stringx.isNoboe(phoneNumber) || isEmpty()) return new ArrayList<>(0);
 		
 		phoneNumber = PhoneNumbers.formatNumber(phoneNumber, 10);
-		//noinspection DataFlowIssue
-		return callMap.getCallsMap().getOrDefault(phoneNumber, new ArrayList<>(0));
+		
+		return callGroups.get(phoneNumber);
 	}
 	
 	/**
@@ -312,21 +313,10 @@ public final class CallLog {
 		return calls;
 	}
 	
-	/**
-	 * @return the calls that creating this {@link CallRanker} object by.
-	 */
-	@NotNull
-	public List<Call> getCalls() {
-		
-		return calls;
-	}
-	
 	@NotNull
 	public List<Call> getCalls(long contactId) {
 		
-		//noinspection DataFlowIssue
-		return callsMap.getOrDefault(String.valueOf(contactId), new ArrayList<>(0));
-		
+		return callGroups.get(String.valueOf(contactId));
 		
 	}
 	
@@ -379,7 +369,7 @@ public final class CallLog {
 	@NotNull
 	public List<Call> getCalls(@NotNull Predicate<Call> predicate) {
 		
-		return callMap.getCalls().stream().filter(predicate).collect(Collectors.toList());
+		return calls.stream().filter(predicate).collect(Collectors.toList());
 	}
 	
 	/**
@@ -417,8 +407,8 @@ public final class CallLog {
 	public @NotNull List<Call> getCalls(String id) {
 		
 		if (Stringx.isNoboe(id) || isEmpty()) return new ArrayList<>(0);
-		//noinspection DataFlowIssue
-		return callMap.getOrDefault(id, new ArrayList<>(0));
+		
+		return callGroups.get(id);
 	}
 	
 	/**
@@ -445,9 +435,9 @@ public final class CallLog {
 	 * 		The most valuable rank is 1.
 	 */
 	@NotNull
-	public CallRanker makeRank(int @NotNull ... callTypes) {
+	public Ranker makeRank(int @NotNull ... callTypes) {
 		
-		return CallRanker.create(groupByKey(getCallsByType(callTypes)));
+		return Ranker.create(Groups.from(getCallsByType(callTypes), CallLog::getKey));
 	}
 	
 	/**
@@ -588,7 +578,7 @@ public final class CallLog {
 	 *
 	 * @param entries the map object that mapped the key to its calls.
 	 */
-	private static void mergeSameCalls(@NotNull Map<String, List<Call>> entries) {
+	private static void mergeSameCalls(@NotNull Groups<String, Call> entries) {
 		
 		// phone numbers
 		List<String> keys = new ArrayList<>(entries.keySet());
@@ -647,9 +637,9 @@ public final class CallLog {
 	private static Map<String, List<Call>> groupByKey(@NotNull List<Call> calls, @Nullable Function<Call, String> keyFunction, int @NotNull ... callTypes) {
 		
 		if (callTypes.length == 0)
-			return calls.stream().collect(Collectors.groupingBy(keyFunction != null ? keyFunction : CallRanker::getKey));
+			return calls.stream().collect(Collectors.groupingBy(keyFunction != null ? keyFunction : CallLog::getKey));
 		
-		return calls.stream().filter(c -> Lister.contains(callTypes, c.getCallType())).collect(Collectors.groupingBy(keyFunction != null ? keyFunction : CallRanker::getKey));
+		return calls.stream().filter(c -> Lister.contains(callTypes, c.getCallType())).collect(Collectors.groupingBy(keyFunction != null ? keyFunction : CallLog::getKey));
 	}
 	
 	/**
@@ -660,9 +650,10 @@ public final class CallLog {
 	 * @return the rank map
 	 */
 	@NotNull
-	public static CallRanker by(@NotNull List<Call> calls, int callType) {
+	public static Ranker by(@NotNull List<Call> calls, int callType) {
 		
-		return by(calls.stream().filter(c -> c.isType(callType)).collect(Collectors.toList()));
+		calls = calls.stream().filter(c -> c.isType(callType)).collect(Collectors.toList());
+		return Ranker.create(Groups.from(calls, CallLog::getKey));
 	}
 	
 	/**
@@ -680,7 +671,6 @@ public final class CallLog {
 		
 		return PhoneNumbers.formatNumber(call.getNumber(), PhoneNumbers.MINIMUM_NUMBER_LENGTH);
 	}
-	
 	
 	/**
 	 * Groups the calls by {@link #getKey(Call)}.
@@ -789,6 +779,6 @@ public final class CallLog {
 	 */
 	public static List<CallRank> createRankListByDuration(@NotNull List<Call> calls) {
 		
-		return CallRanker.createForDuration(groupByKey(calls)).getCallRanks();
+		return Ranker.createForDuration(calls).getCallRanks();
 	}
 }
