@@ -114,22 +114,22 @@ public class MostCallsActivity extends ActivityView {
 			
 			case CallLog.FILTER_MOST_INCOMING:
 				imgType = AppCompatResources.getDrawable(this, R.drawable.incoming_call);
-				filteredCalls = callLog.getIncomingCalls();
+				filteredCalls = callLog.incomingCalls();
 				textType = getString(R.string.call_type_incoming);
 				break;
 			case CallLog.FILTER_MOST_OUTGOING:
 				imgType = AppCompatResources.getDrawable(this, R.drawable.outgoing_call);
-				filteredCalls = callLog.getOutgoingCalls();
+				filteredCalls = callLog.outgoingCalls();
 				textType = getString(R.string.call_type_outgoing);
 				break;
 			case CallLog.FILTER_MOST_MISSED:
 				imgType = AppCompatResources.getDrawable(this, R.drawable.missed_call);
-				filteredCalls = callLog.getMissedCalls();
+				filteredCalls = callLog.missedCalls();
 				textType = getString(R.string.call_type_missed);
 				break;
 			case CallLog.FILTER_MOST_REJECTED:
 				imgType = AppCompatResources.getDrawable(this, R.drawable.rejected_call);
-				filteredCalls = callLog.getRejectedCalls();
+				filteredCalls = callLog.rejectedCalls();
 				textType = getString(R.string.call_type_rejected);
 				break;
 			case CallLog.FILTER_MOST_SPEAKING:
@@ -167,7 +167,7 @@ public class MostCallsActivity extends ActivityView {
 		
 		return (FILTER == CallLog.FILTER_MOST_SPEAKING || FILTER == CallLog.FILTER_MOST_TALKING) ?
 				CallLog.createRankListByDuration(filteredCalls) :
-				RankMap.rankListOf(filteredCalls);
+				new RankMap(CallLog.rankByQuantity(filteredCalls)).getCallRanks();
 	}
 	
 	/**

@@ -280,7 +280,7 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 	private CharSequence commentOnDurations() {
 		
 		Spanner                comment      = new Spanner();
-		RankMap                rankMap      = RankMap.createForDuration(callLog.getCalls());
+		RankMap                rankMap      = callLog.rankByDuration();
 		int                    rank         = rankMap.getRank(contact);
 		List<MostDurationData> durationList = createDurationList(rankMap);
 		String                 title        = getString(R.string.title_speaking_durations);

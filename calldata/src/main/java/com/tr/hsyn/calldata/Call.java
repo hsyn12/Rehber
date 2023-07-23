@@ -3,6 +3,7 @@ package com.tr.hsyn.calldata;
 
 import com.tr.hsyn.datboxer.DatBoxer;
 import com.tr.hsyn.identity.Identity;
+import com.tr.hsyn.tryme.Try;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -42,16 +43,6 @@ public class Call extends DatBoxer implements CallContact, CallTime, CallDuratio
 		this.callType = callType;
 		this.duration = duration;
 		this.extra    = extra;
-	}
-	
-	public String getExtra() {
-		
-		return extra;
-	}
-	
-	public void setExtra(String extra) {
-		
-		this.extra = extra;
 	}
 	
 	@Override
@@ -119,5 +110,38 @@ public class Call extends DatBoxer implements CallContact, CallTime, CallDuratio
 		       ", name='" + name + '\'' +
 		       ", extra='" + extra + '\'' +
 		       '}';
+	}
+	
+	public boolean isRandom() {
+		
+		var extra = getExtra();
+		
+		if (extra != null) {
+			
+			var info = extra.split(";");
+			return Boolean.TRUE.equals(Try.ignore(() -> info[1].equals("t")));
+		}
+		
+		return false;
+	}
+	
+	public String getExtra() {
+		
+		return extra;
+	}
+	
+	public void setExtra(String extra) {
+		
+		this.extra = extra;
+	}
+	
+	public boolean isNoNamed() {
+		
+		return name == null || name.isEmpty();
+	}
+	
+	public boolean isSpeaking() {
+		
+		return getDuration() > 0;
 	}
 }

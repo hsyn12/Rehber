@@ -132,13 +132,14 @@ public interface Calls {
 		//! true için 't', false için 'f' kullanılacak
 		//! Bilgileri ayıran karakter ise ';' işareti
 		
-		//- İlk bilgi ACCOUNT_ID
-		//- Sonra random t/f
-		//- track type int
-		//- contact id long
+		//+ İlk bilgi ACCOUNT_ID --> [0]
+		//+ Sonra random t/f --> [1]
+		//+ track type int --> [2]
+		//+ contact ID long --> [3]
 		
 		return String.format("%s;%s;%d;%d", ACCOUNT_ID, call.getBool(CallKey.RANDOM) ? "t" : "f", call.getInt(CallKey.TRACK_TYPE), call.getLong(CallKey.CONTACT_ID));
 	}
+	
 	
 	/**
 	 * Verilen listeyi sistem kayıtlarına ekler.

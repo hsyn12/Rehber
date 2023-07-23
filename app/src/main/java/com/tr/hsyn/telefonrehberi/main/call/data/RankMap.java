@@ -28,6 +28,11 @@ import java.util.stream.Collectors;
  */
 public class RankMap extends Groups<Integer, CallRank> {
 	
+	/**
+	 * The comparator used to sort the entries by rank ascending.
+	 */
+	public static final Comparator<Map.Entry<Integer, List<CallRank>>> COMPARATOR_BY_RANK = Map.Entry.comparingByKey();
+	
 	public RankMap(@NotNull Map<Integer, List<CallRank>> rankMap) {
 		
 		super(rankMap);
@@ -106,6 +111,11 @@ public class RankMap extends Groups<Integer, CallRank> {
 		return null;
 	}
 	
+	public List<Map.Entry<Integer, List<CallRank>>> sortedEntries() {
+		
+		return sortedEntries(COMPARATOR_BY_RANK);
+	}
+	
 	/**
 	 * Returns the rank of the contact.
 	 *
@@ -121,6 +131,4 @@ public class RankMap extends Groups<Integer, CallRank> {
 		
 		return 0;
 	}
-	
-	
 }

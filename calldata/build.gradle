@@ -12,6 +12,7 @@ dependencies {
 	implementation project(path: ':datakey')
 	implementation project(path: ':xlog')
 	implementation project(path: ':contactdata')
+	implementation project(path: ':tryme')
 	compileOnly "org.jetbrains:annotations:${rootProject.annotations}"
 
 

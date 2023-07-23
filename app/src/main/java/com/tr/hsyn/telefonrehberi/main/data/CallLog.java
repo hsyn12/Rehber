@@ -42,59 +42,59 @@ public final class CallLog {
 	/**
 	 * The comparator used to sort the entries by quantity descending.
 	 */
-	public static final Comparator<Map.Entry<String, List<Call>>> QUANTITY_COMPARATOR  = (e1, e2) -> e2.getValue().size() - e1.getValue().size();
+	public static final Comparator<Map.Entry<String, List<Call>>> COMPARATOR_BY_QUANTITY = (e1, e2) -> e2.getValue().size() - e1.getValue().size();
 	/**
 	 * The filter for All calls.
 	 */
-	public static final int                                       FILTER_ALL           = 0;
+	public static final int                                       FILTER_ALL             = 0;
 	/**
 	 * The filter for Incoming calls.
 	 */
-	public static final int                                       FILTER_INCOMING      = 1;
+	public static final int                                       FILTER_INCOMING        = 1;
 	/**
 	 * The filter for Outgoing calls.
 	 */
-	public static final int                                       FILTER_OUTGOING      = 2;
+	public static final int                                       FILTER_OUTGOING        = 2;
 	/**
 	 * The filter for missed calls
 	 */
-	public static final int                                       FILTER_MISSED        = 3;
+	public static final int                                       FILTER_MISSED          = 3;
 	/**
 	 * The filter for rejected calls
 	 */
-	public static final int                                       FILTER_REJECTED      = 4;
+	public static final int                                       FILTER_REJECTED        = 4;
 	/**
 	 * The filter for no-named calls
 	 */
-	public static final int                                       FILTER_NO_NAMED      = 5;
+	public static final int                                       FILTER_NO_NAMED        = 5;
 	/**
 	 * The filter for random calls
 	 */
-	public static final int                                       FILTER_RANDOM        = 6;
+	public static final int                                       FILTER_RANDOM          = 6;
 	/**
 	 * The filter for most incoming
 	 */
-	public static final int                                       FILTER_MOST_INCOMING = 7;
+	public static final int                                       FILTER_MOST_INCOMING   = 7;
 	/**
 	 * The filter for most outgoing
 	 */
-	public static final int                                       FILTER_MOST_OUTGOING = 8;
+	public static final int                                       FILTER_MOST_OUTGOING   = 8;
 	/**
 	 * The filter for most missed
 	 */
-	public static final int                                       FILTER_MOST_MISSED   = 9;
+	public static final int                                       FILTER_MOST_MISSED     = 9;
 	/**
 	 * The filter for most rejected
 	 */
-	public static final int                                       FILTER_MOST_REJECTED = 10;
+	public static final int                                       FILTER_MOST_REJECTED   = 10;
 	/**
 	 * The filter for most speaking (incoming)
 	 */
-	public static final int                                       FILTER_MOST_SPEAKING = 11;
+	public static final int                                       FILTER_MOST_SPEAKING   = 11;
 	/**
 	 * The filter for most talking (outgoing)
 	 */
-	public static final int                                       FILTER_MOST_TALKING  = 12;
+	public static final int                                       FILTER_MOST_TALKING    = 12;
 	/**
 	 * The calls get associated by a key.
 	 * The key is a contact ID or a phone number or whatever else unique.
@@ -175,13 +175,7 @@ public final class CallLog {
 	@NonNull
 	public List<Call> getCallsByType(int @NotNull ... callTypes) {
 		
-		List<Call> _calls = new ArrayList<>();
-		
-		for (int callType : callTypes)
-			for (Call call : calls)
-				if (callType == call.getCallType() && !_calls.contains(call)) _calls.add(call);
-		
-		return _calls;
+		return getCalls(call -> Lister.contains(callTypes, call.getCallType()));
 	}
 	
 	/**
@@ -194,6 +188,87 @@ public final class CallLog {
 	}
 	
 	/**
+	 * Returns the calls by the filter.
+	 *
+	 * @param filter the filter
+	 * @return the calls
+	 * @see CallFilter
+	 */
+	@NotNull
+	public List<Call> getCalls(@CallFilter int filter) {
+		
+		//@off
+		switch (filter) {
+			case FILTER_ALL:      return calls;
+			case FILTER_INCOMING: return incomingCalls();
+			case FILTER_OUTGOING: return outgoingCalls();
+			case FILTER_MISSED:   return missedCalls();
+			case FILTER_REJECTED: return rejectedCalls();
+			case FILTER_NO_NAMED: return getCalls(Call::isNoNamed);
+			case FILTER_RANDOM:   return getCalls(Call::isRandom);
+			default:              throw new IllegalArgumentException("Invalid filter: " + filter);
+		}//@on
+	}
+	
+	/**
+	 * Returns a rank map for the filter.
+	 *
+	 * @param filter the filter
+	 * @return the rank map
+	 */
+	@NotNull
+	public RankMap getMostCalls(@MostFilter int filter) {
+		
+		switch (filter) {
+			case FILTER_MOST_INCOMING: return mostIncoming();
+			case FILTER_MOST_OUTGOING: return mostOutgoing();
+			case FILTER_MOST_MISSED: return mostMissed();
+			case FILTER_MOST_REJECTED: return mostRejected();
+			case FILTER_MOST_SPEAKING: return mostSpeaking();
+			case FILTER_MOST_TALKING: return mostTalking();
+			default: throw new IllegalArgumentException("Invalid filter: " + filter);
+		}
+	}
+	
+	@NotNull
+	public RankMap mostIncoming() {
+		
+		return new RankMap(rankByQuantity(incomingCalls()));
+	}
+	
+	@NotNull
+	public RankMap mostOutgoing() {
+		
+		return new RankMap(rankByQuantity(outgoingCalls()));
+	}
+	
+	@NotNull
+	public RankMap mostMissed() {
+		
+		return new RankMap(rankByQuantity(missedCalls()));
+	}
+	
+	@NotNull
+	public RankMap mostRejected() {
+		
+		return new RankMap(rankByQuantity(rejectedCalls()));
+	}
+	
+	@NotNull
+	public RankMap mostSpeaking() {
+		
+		List<Call> ins = incomingCalls().stream().filter(Call::isSpeaking).collect(Collectors.toList());
+		return new RankMap(rankByDuration(ins));
+	}
+	
+	@NotNull
+	public RankMap mostTalking() {
+		
+		List<Call> outs = outgoingCalls().stream().filter(Call::isSpeaking).collect(Collectors.toList());
+		return new RankMap(rankByDuration(outs));
+	}
+	
+	/**
 	 * Returns the calls of the contact.
 	 *
 	 * @param contact   the contact
@@ -203,7 +278,7 @@ public final class CallLog {
 	@NotNull
 	public List<Call> getCalls(@NotNull Contact contact, int @NotNull ... callTypes) {
 		
-		var calls = callMap.get(String.valueOf(contact.getContactId()));
+		List<Call> calls = callMap.get(String.valueOf(contact.getContactId()));
 		
 		if (callTypes.length == 0) return calls;
 		
@@ -266,7 +341,7 @@ public final class CallLog {
 	 * @return incoming calls
 	 */
 	@NonNull
-	public List<Call> getIncomingCalls() {
+	public List<Call> incomingCalls() {
 		
 		return getCallsByType(Call.INCOMING, Call.INCOMING_WIFI);
 	}
@@ -275,7 +350,7 @@ public final class CallLog {
 	 * @return outgoing calls
 	 */
 	@NotNull
-	public List<Call> getOutgoingCalls() {
+	public List<Call> outgoingCalls() {
 		
 		return getCallsByType(Call.OUTGOING, Call.OUTGOING_WIFI);
 	}
@@ -284,7 +359,7 @@ public final class CallLog {
 	 * @return missed calls
 	 */
 	@NotNull
-	public List<Call> getMissedCalls() {
+	public List<Call> missedCalls() {
 		
 		return getCallsByType(Call.MISSED);
 	}
@@ -293,7 +368,7 @@ public final class CallLog {
 	 * @return rejected calls
 	 */
 	@NotNull
-	public List<Call> getRejectedCalls() {
+	public List<Call> rejectedCalls() {
 		
 		return getCallsByType(Call.REJECTED);
 	}
@@ -323,15 +398,29 @@ public final class CallLog {
 	/**
 	 * Creates a rank map for the given call types.
 	 *
-	 * @param callTypes the call types
+	 * @param callTypes the call types to select
+	 * @return the rank map that ranked by calls duration.
+	 * 		The ranking starts 1, and advances one by one.
+	 * 		The most valuable rank is 1.
+	 */
+	@NotNull
+	public RankMap rankByDuration(int @NotNull ... callTypes) {
+		
+		return new RankMap(rankByDuration(getCallsByType(callTypes)));
+	}
+	
+	/**
+	 * Creates a rank map for the given call types.
+	 *
+	 * @param callTypes the call types to select
 	 * @return the rank map that ranked by calls quantity.
 	 * 		The ranking starts 1, and advances one by one.
 	 * 		The most valuable rank is 1.
 	 */
 	@NotNull
-	public RankMap makeRank(int @NotNull ... callTypes) {
+	public RankMap rankByQuantity(int @NotNull ... callTypes) {
 		
-		return new RankMap(rankByDuration(getCallsByType(callTypes)));
+		return new RankMap(rankByQuantity(getCallsByType(callTypes)));
 	}
 	
 	/**
@@ -345,7 +434,7 @@ public final class CallLog {
 	@NotNull
 	public RankMap makeIncomingRank() {
 		
-		return makeRank(Call.INCOMING, Call.INCOMING_WIFI);
+		return rankByDuration(Call.INCOMING, Call.INCOMING_WIFI);
 	}
 	
 	/**
@@ -359,7 +448,7 @@ public final class CallLog {
 	@NotNull
 	public RankMap makeOutgoingRank() {
 		
-		return makeRank(Call.OUTGOING, Call.OUTGOING_WIFI);
+		return rankByDuration(Call.OUTGOING, Call.OUTGOING_WIFI);
 	}
 	
 	/**
@@ -373,7 +462,7 @@ public final class CallLog {
 	@NotNull
 	public RankMap makeMissedRank() {
 		
-		return makeRank(Call.MISSED);
+		return rankByDuration(Call.MISSED);
 	}
 	
 	/**
@@ -387,7 +476,7 @@ public final class CallLog {
 	@NotNull
 	public RankMap makeRejectedRank() {
 		
-		return makeRank(Call.REJECTED);
+		return rankByDuration(Call.REJECTED);
 	}
 	
 	/**
@@ -401,11 +490,11 @@ public final class CallLog {
 		switch (callType) {
 			
 			case Call.INCOMING:
-			case Call.INCOMING_WIFI: return create(getIncomingCalls());
+			case Call.INCOMING_WIFI: return create(incomingCalls());
 			case Call.OUTGOING:
-			case Call.OUTGOING_WIFI: return create(getOutgoingCalls());
-			case Call.MISSED: return create(getMissedCalls());
-			case Call.REJECTED: return create(getRejectedCalls());
+			case Call.OUTGOING_WIFI: return create(outgoingCalls());
+			case Call.MISSED: return create(missedCalls());
+			case Call.REJECTED: return create(rejectedCalls());
 			
 			default: throw new IllegalArgumentException("Unknown call type : " + callType);
 		}
@@ -475,22 +564,22 @@ public final class CallLog {
 			if (incoming != null) {
 				ip = incoming ? this::isNotEmpty : List::isEmpty;
 				ip = ip.and(c -> c.size() >= minSize);
-				il = create(getIncomingCalls());
+				il = create(incomingCalls());
 			}
 			if (outgoing != null) {
 				op = outgoing ? this::isNotEmpty : List::isEmpty;
 				op = op.and(c -> c.size() >= minSize);
-				ol = create(getOutgoingCalls());
+				ol = create(outgoingCalls());
 			}
 			if (missed != null) {
 				mp = missed ? this::isNotEmpty : List::isEmpty;
 				mp = mp.and(c -> c.size() >= minSize);
-				ml = create(getMissedCalls());
+				ml = create(missedCalls());
 			}
 			if (rejected != null) {
 				rp = rejected ? this::isNotEmpty : List::isEmpty;
 				rp = rp.and(c -> c.size() >= minSize);
-				rl = create(getRejectedCalls());
+				rl = create(rejectedCalls());
 			}
 			
 			if (ip != null) ir = ip.test(il.getCalls(contact));
@@ -584,7 +673,7 @@ public final class CallLog {
 	 * @return the rank map
 	 */
 	@NotNull
-	public static RankMap makeRank(@NotNull List<Call> calls, int callType) {
+	public static RankMap rankByDuration(@NotNull List<Call> calls, int callType) {
 		
 		calls = calls.stream().filter(c -> c.isType(callType)).collect(Collectors.toList());
 		return new RankMap(rankByDuration(calls));
@@ -702,7 +791,7 @@ public final class CallLog {
 	public static Map<Integer, List<CallRank>> rankByQuantity(@NotNull List<Call> calls) {
 		
 		Map<Integer, List<CallRank>>        rankMap  = new HashMap<>();
-		List<Map.Entry<String, List<Call>>> rankList = new CallMap(calls, CallLog::getKey).sortedEntries(QUANTITY_COMPARATOR);
+		List<Map.Entry<String, List<Call>>> rankList = new CallMap(calls, CallLog::getKey).sortedEntries(COMPARATOR_BY_QUANTITY);
 		int                                 rank     = 1;
 		int                                 size     = rankList.size();
 		int                                 last     = size - 1;

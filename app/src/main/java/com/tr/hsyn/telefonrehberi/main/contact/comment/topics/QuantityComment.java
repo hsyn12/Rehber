@@ -292,7 +292,7 @@ public class QuantityComment implements ContactComment {
 					}
 				}
 				else {
-					List<Contact>        hasNoCall = CallLog.create(callLog.getIncomingCalls()).getContactsByCalls(List::isEmpty);
+					List<Contact>        hasNoCall = CallLog.create(callLog.incomingCalls()).getContactsByCalls(List::isEmpty);
 					View.OnClickListener listener  = createContactListener(hasNoCall, R.string.no_incoming_calls);
 					comment.append(getNoCallComment(hasNoCall, Call.INCOMING, listener));
 				}
@@ -300,7 +300,7 @@ public class QuantityComment implements ContactComment {
 			//+ no outgoing
 			if (oRank == 0) {
 				
-				List<Contact>        hasNoCall = CallLog.create(callLog.getOutgoingCalls()).getContactsByCalls(List::isEmpty);
+				List<Contact>        hasNoCall = CallLog.create(callLog.outgoingCalls()).getContactsByCalls(List::isEmpty);
 				View.OnClickListener listener  = createContactListener(hasNoCall, R.string.no_outgoing_calls);
 				comment.append(getNoCallComment(hasNoCall, Call.OUTGOING, listener));
 			}
@@ -544,11 +544,11 @@ public class QuantityComment implements ContactComment {
 		assert this.callLog != null;
 		switch (callType) {
 			case Call.INCOMING:
-			case Call.INCOMING_WIFI: return RankMap.create(this.callLog.getIncomingCalls());
+			case Call.INCOMING_WIFI: return callLog.makeIncomingRank();
 			case Call.OUTGOING:
-			case Call.OUTGOING_WIFI: return RankMap.create(this.callLog.getOutgoingCalls());
-			case Call.MISSED:        return RankMap.create(this.callLog.getMissedCalls());
-			case Call.REJECTED:      return RankMap.create(this.callLog.getRejectedCalls());
+			case Call.OUTGOING_WIFI: return callLog.makeOutgoingRank();
+			case Call.MISSED:        return callLog.makeMissedRank();
+			case Call.REJECTED:      return callLog.makeRejectedRank();
 			default:                 throw new IllegalArgumentException("Unknown call type: " + callType);
 		}
 		//@on
@@ -675,7 +675,7 @@ public class QuantityComment implements ContactComment {
 			return null;
 		}
 		
-		CallLog incomingCallsLog = CallLog.create(callLog.getIncomingCalls());
+		CallLog incomingCallsLog = CallLog.create(callLog.incomingCalls());
 		
 		for (Contact contact : contacts) {
 			
