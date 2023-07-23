@@ -6,14 +6,16 @@ import com.tr.hsyn.xlog.xlog;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
 /**
  * Provides helper methods for maps.
  */
-public class Mapper {
+public class Mapple {
 	
 	/**
 	 * Creates a new {@link Map} from the given list by the given function.
@@ -33,6 +35,11 @@ public class Mapper {
 			map.put(mapper.apply(c), c);
 		
 		return map;
+	}
+	
+	public static <K, V> Map<K, List<V>> groupsFrom(@NotNull Iterable<V> iterable, @NotNull Function<V, K> mapper) {
+		
+		return Lister.listOf(iterable).stream().collect(Collectors.groupingBy(mapper));
 	}
 	
 	public static <K, V> void toStr(@NotNull Map<K, V> map) {

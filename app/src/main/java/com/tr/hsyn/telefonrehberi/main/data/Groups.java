@@ -1,14 +1,14 @@
 package com.tr.hsyn.telefonrehberi.main.data;
 
 
+import com.tr.hsyn.collection.Lister;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  */
 public class Groups<K, V> {
 	
-	private final Map<K, List<V>> groups;
+	protected final Map<K, List<V>> groups;
 	
 	/**
 	 * Creates a new instance.
@@ -64,19 +64,19 @@ public class Groups<K, V> {
 	 *
 	 * @return the all groups
 	 */
-	public List<List<V>> values() {
+	public List<List<V>> getValues() {
 		
 		return new ArrayList<>(groups.values());
 	}
 	
-	public Set<Map.Entry<K, List<V>>> entrySet() {
+	public List<K> getKeys() {
 		
-		return groups.entrySet();
+		return Lister.listOf(groups.keySet());
 	}
 	
-	public Set<K> keySet() {
+	public List<Map.Entry<K, List<V>>> getEntries() {
 		
-		return groups.keySet();
+		return Lister.listOf(groups.entrySet());
 	}
 	
 	public List<V> remove(@NotNull K key) {
@@ -89,34 +89,13 @@ public class Groups<K, V> {
 		groups.put(key, value);
 	}
 	
-	public void forEachEntry(@NotNull BiConsumer<K, List<V>> action) {
-		
-		groups.forEach(action);
-	}
-	
 	public Map<K, List<V>> getMap() {
 		
 		return groups;
 	}
 	
-	/**
-	 * Groups the list of items.
-	 *
-	 * @param list      the list to group
-	 * @param keyMapper the key mapper to map the list
-	 * @param <K>       the key type
-	 * @param <V>       the type of the list items
-	 * @return a new {@code Groups} object
-	 */
-	@NotNull
-	public static <K, V> Groups<K, V> from(@NotNull List<V> list, @NotNull Function<V, K> keyMapper) {
+	public List<Map.Entry<K, List<V>>> sortedEntries(@NotNull Comparator<Map.Entry<K, List<V>>> comparator) {
 		
-		return new Groups<>(list.stream().collect(Collectors.groupingBy(keyMapper)));
-	}
-	
-	@NotNull
-	public static <K, V, T, R> Groups<T, R> from(@NotNull Groups<K, V> groups, @NotNull Function<Groups<K, V>, Groups<T, R>> keyMapper) {
-		
-		return keyMapper.apply(groups);
+		return groups.entrySet().stream().sorted(comparator).collect(Collectors.toList());
 	}
 }
