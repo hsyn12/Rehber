@@ -23,14 +23,13 @@ import java.util.stream.Collectors;
 
 
 /**
- * <h3>RankMap</h3>
+ * <h3>Ranker</h3>
  * <p>
  * The rank is a number that is used to determine the value of the calls by some criteria.
  * And it starts from 1, advanced by 1.
  * The most valuable rank is 1.
- * And the {@code RankMap} maps the ranks to the list of {@link CallRank}s.
+ * And the {@code Ranker} maps the ranks to the list of {@link CallRank}s.
  * Because, the different call lists can have the same rank.
- * This is related to the used criteria.
  * So, the {@link #getRank(int)} method when called returns the list of {@link CallRank}.
  */
 public class Ranker {

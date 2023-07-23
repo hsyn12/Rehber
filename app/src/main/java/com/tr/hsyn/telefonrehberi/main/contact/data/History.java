@@ -222,7 +222,7 @@ public interface History {
 		
 		if (collection == null) return ofEmpty(contact);
 		
-		List<Call> calls = collection.getCalls(String.valueOf(contact.getContactId()));
+		List<Call> calls = collection.getCallsById(contact.getContactId());
 		
 		return of(contact, calls);
 	}

@@ -149,6 +149,14 @@ public final class CallLog {
 	}
 	
 	/**
+	 * @return {@code true} if the collection is not empty
+	 */
+	public boolean isNotEmpty() {
+		
+		return !isEmpty();
+	}
+	
+	/**
 	 * Returns the history of the given contact.
 	 *
 	 * @param contact the contact
@@ -158,24 +166,7 @@ public final class CallLog {
 	@NotNull
 	public History getHistoryOf(@NotNull Contact contact) {
 		
-		return History.of(contact, getCalls(String.valueOf(contact.getContactId())));
-	}
-	
-	/**
-	 * Returns the calls of the contact.
-	 *
-	 * @param contact   the contact
-	 * @param callTypes the call types to select
-	 * @return the calls
-	 */
-	@NotNull
-	public List<Call> getCalls(@NotNull Contact contact, int @NotNull ... callTypes) {
-		
-		var calls = callGroups.get(String.valueOf(contact.getContactId()));
-		
-		if (callTypes.length == 0) return calls;
-		
-		return calls.stream().filter(call -> Lister.contains(callTypes, call.getCallType())).collect(Collectors.toList());
+		return History.of(contact, getCallsById(contact.getContactId()));
 	}
 	
 	/**
@@ -197,6 +188,84 @@ public final class CallLog {
 	}
 	
 	/**
+	 * @return the calls that are creating this object by.
+	 */
+	@NotNull
+	public List<Call> getCalls() {
+		
+		return calls;
+	}
+	
+	/**
+	 * Returns the calls of the contact.
+	 *
+	 * @param contact   the contact
+	 * @param callTypes the call types to select
+	 * @return the calls
+	 */
+	@NotNull
+	public List<Call> getCalls(@NotNull Contact contact, int @NotNull ... callTypes) {
+		
+		var calls = callGroups.get(String.valueOf(contact.getContactId()));
+		
+		if (callTypes.length == 0) return calls;
+		
+		return calls.stream().filter(call -> Lister.contains(callTypes, call.getCallType())).collect(Collectors.toList());
+	}
+	
+	/**
+	 * Returns all calls with the given number.
+	 *
+	 * @param phoneNumber the number
+	 * @return calls
+	 */
+	public @NotNull List<Call> getCallsByNumber(String phoneNumber) {
+		
+		if (Stringx.isNoboe(phoneNumber) || isEmpty()) return new ArrayList<>(0);
+		
+		phoneNumber = PhoneNumbers.formatNumber(phoneNumber, 10);
+		
+		return callGroups.get(phoneNumber);
+	}
+	
+	/**
+	 * Returns all calls that match the given predicate.
+	 *
+	 * @param predicate the predicate
+	 * @return calls
+	 */
+	@NotNull
+	public List<Call> getCalls(@NotNull Predicate<Call> predicate) {
+		
+		return calls.stream().filter(predicate).collect(Collectors.toList());
+	}
+	
+	/**
+	 * Returns all calls with the given contact ID.
+	 *
+	 * @param contactId the contact ID
+	 * @return calls
+	 */
+	@NotNull
+	public List<Call> getCallsById(long contactId) {
+		
+		return callGroups.get(String.valueOf(contactId));
+	}
+	
+	/**
+	 * Returns all calls with the given contact ID.
+	 *
+	 * @param contactId the contact ID
+	 * @return calls
+	 */
+	public @NotNull List<Call> getCallsById(String contactId) {
+		
+		if (Stringx.isNoboe(contactId) || isEmpty()) return new ArrayList<>(0);
+		
+		return callGroups.get(contactId);
+	}
+	
+	/**
 	 * @return incoming calls
 	 */
 	@NonNull
@@ -212,6 +281,60 @@ public final class CallLog {
 	public List<Call> getOutgoingCalls() {
 		
 		return getCallsByType(Call.OUTGOING, Call.OUTGOING_WIFI);
+	}
+	
+	/**
+	 * @return missed calls
+	 */
+	@NotNull
+	public List<Call> getMissedCalls() {
+		
+		return getCallsByType(Call.MISSED);
+	}
+	
+	/**
+	 * @return rejected calls
+	 */
+	@NotNull
+	public List<Call> getRejectedCalls() {
+		
+		return getCallsByType(Call.REJECTED);
+	}
+	
+	/**
+	 * @return total speaking duration of all incoming calls in seconds
+	 */
+	public int getIncomingDuration(@NotNull List<Call> calls) {
+		
+		return calls.stream()
+				.map(Call::getDuration)
+				.reduce(Integer::sum)
+				.orElse(0);
+	}
+	
+	/**
+	 * @return total speaking duration of all outgoing calls in seconds
+	 */
+	public int getOutgoingDuration(@NotNull List<Call> calls) {
+		
+		return calls.stream()
+				.map(Call::getDuration)
+				.reduce(Integer::sum)
+				.orElse(0);
+	}
+	
+	/**
+	 * Creates a rank map for the given call types.
+	 *
+	 * @param callTypes the call types
+	 * @return the rank map that ranked by calls quantity.
+	 * 		The ranking starts 1, and advances one by one.
+	 * 		The most valuable rank is 1.
+	 */
+	@NotNull
+	public Ranker makeRank(int @NotNull ... callTypes) {
+		
+		return Ranker.create(Groups.from(getCallsByType(callTypes), CallLog::getKey));
 	}
 	
 	/**
@@ -268,176 +391,6 @@ public final class CallLog {
 	public Ranker makeRejectedRank() {
 		
 		return makeRank(Call.REJECTED);
-	}
-	
-	/**
-	 * @return the calls that are creating this object by.
-	 */
-	@NotNull
-	public List<Call> getCalls() {
-		
-		return calls;
-	}
-	
-	/**
-	 * Returns all calls with the given number.
-	 *
-	 * @param phoneNumber the number
-	 * @return calls
-	 */
-	public @NotNull List<Call> getCallsByNumber(String phoneNumber) {
-		
-		if (Stringx.isNoboe(phoneNumber) || isEmpty()) return new ArrayList<>(0);
-		
-		phoneNumber = PhoneNumbers.formatNumber(phoneNumber, 10);
-		
-		return callGroups.get(phoneNumber);
-	}
-	
-	/**
-	 * Returns all calls for the given numbers in the given list.
-	 *
-	 * @param numbers  the numbers
-	 * @param callList the list of calls to search
-	 * @return calls
-	 */
-	@NotNull
-	public List<Call> getCallsByNumbers(List<String> numbers, @NotNull List<Call> callList) {
-		
-		List<Call> calls = new ArrayList<>();
-		
-		if (numbers == null || isEmpty()) return calls;
-		
-		for (String number : numbers) calls.addAll(getCallsByNumber(number, callList));
-		
-		return calls;
-	}
-	
-	@NotNull
-	public List<Call> getCalls(long contactId) {
-		
-		return callGroups.get(String.valueOf(contactId));
-		
-	}
-	
-	/**
-	 * @return total speaking duration of all incoming calls in seconds
-	 */
-	public int getIncomingDuration(@NotNull List<Call> calls) {
-		
-		return calls.stream()
-				.map(Call::getDuration)
-				.reduce(Integer::sum)
-				.orElse(0);
-	}
-	
-	/**
-	 * @return total speaking duration of all outgoing calls in seconds
-	 */
-	public int getOutgoingDuration(@NotNull List<Call> calls) {
-		
-		return calls.stream()
-				.map(Call::getDuration)
-				.reduce(Integer::sum)
-				.orElse(0);
-	}
-	
-	/**
-	 * @return missed calls
-	 */
-	@NotNull
-	public List<Call> getMissedCalls() {
-		
-		return getCallsByType(Call.MISSED);
-	}
-	
-	/**
-	 * @return rejected calls
-	 */
-	@NotNull
-	public List<Call> getRejectedCalls() {
-		
-		return getCallsByType(Call.REJECTED);
-	}
-	
-	/**
-	 * Returns all calls that match the given predicate.
-	 *
-	 * @param predicate the predicate
-	 * @return calls
-	 */
-	@NotNull
-	public List<Call> getCalls(@NotNull Predicate<Call> predicate) {
-		
-		return calls.stream().filter(predicate).collect(Collectors.toList());
-	}
-	
-	/**
-	 * Returns all calls for the given numbers.
-	 *
-	 * @param numbers the numbers
-	 * @return calls
-	 */
-	@NotNull
-	public List<Call> getCallsByNumbers(List<String> numbers) {
-		
-		List<Call> calls = new ArrayList<>();
-		
-		if (numbers == null || isEmpty()) return calls;
-		
-		for (String number : numbers) calls.addAll(getCallsByNumber(number));
-		
-		return calls;
-	}
-	
-	/**
-	 * @return {@code true} if the collection is not empty
-	 */
-	public boolean isNotEmpty() {
-		
-		return !isEmpty();
-	}
-	
-	/**
-	 * Returns all calls with the given contact ID.
-	 *
-	 * @param id the contact ID
-	 * @return calls
-	 */
-	public @NotNull List<Call> getCalls(String id) {
-		
-		if (Stringx.isNoboe(id) || isEmpty()) return new ArrayList<>(0);
-		
-		return callGroups.get(id);
-	}
-	
-	/**
-	 * Returns all calls with the given number in the given list.
-	 *
-	 * @param phoneNumber the number
-	 * @param callList    the list of calls to search
-	 * @return calls
-	 */
-	public @NotNull List<Call> getCallsByNumber(String phoneNumber, @NotNull List<Call> callList) {
-		
-		if (Stringx.isNoboe(phoneNumber) || isEmpty()) return new ArrayList<>(0);
-		
-		@NotNull String _phoneNumber = PhoneNumbers.formatNumber(phoneNumber, 10);
-		return callList.stream().filter(c -> c.getNumber().equals(_phoneNumber)).collect(Collectors.toList());
-	}
-	
-	/**
-	 * Creates a rank map for the given call types.
-	 *
-	 * @param callTypes the call types
-	 * @return the rank map that ranked by calls quantity.
-	 * 		The ranking starts 1, and advances one by one.
-	 * 		The most valuable rank is 1.
-	 */
-	@NotNull
-	public Ranker makeRank(int @NotNull ... callTypes) {
-		
-		return Ranker.create(Groups.from(getCallsByType(callTypes), CallLog::getKey));
 	}
 	
 	/**

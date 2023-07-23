@@ -275,7 +275,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 					
 					callLog = CallLog.createGlobal(list);
 					
-					List<Call> calls = callLog.getCalls(String.valueOf(contact.getContactId()));
+					List<Call> calls = callLog.getCallsById(contact.getContactId());
 					
 					calls.sort((x, y) -> Long.compare(y.getTime(), x.getTime()));
 					gateLoading.exit();
