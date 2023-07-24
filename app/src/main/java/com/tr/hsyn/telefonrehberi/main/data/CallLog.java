@@ -6,7 +6,6 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 
 import com.tr.hsyn.calldata.Call;
-import com.tr.hsyn.calldata.CallType;
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.keep.Keep;
@@ -15,6 +14,7 @@ import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallType;
 import com.tr.hsyn.telefonrehberi.main.call.data.RankMap;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
 import com.tr.hsyn.telefonrehberi.main.contact.data.History;
@@ -174,7 +174,7 @@ public final class CallLog {
 	 * @return calls
 	 */
 	@NonNull
-	public List<Call> getCallsByType(int @NotNull ... callTypes) {
+	public List<Call> getCallsByType(@CallType int @NotNull ... callTypes) {
 		
 		return getCalls(call -> Lister.contains(callTypes, call.getCallType()));
 	}
@@ -295,7 +295,7 @@ public final class CallLog {
 	 * @return the calls
 	 */
 	@NotNull
-	public List<Call> getCalls(@NotNull Contact contact, int @NotNull ... callTypes) {
+	public List<Call> getCalls(@NotNull Contact contact, @CallType int @NotNull ... callTypes) {
 		
 		List<Call> calls = callMap.get(String.valueOf(contact.getContactId()));
 		
@@ -423,7 +423,7 @@ public final class CallLog {
 	 * 		The most valuable rank is 1.
 	 */
 	@NotNull
-	public RankMap rankByDuration(int @NotNull ... callTypes) {
+	public RankMap rankByDuration(@CallType int @NotNull ... callTypes) {
 		
 		return new RankMap(rankByDuration(getCallsByType(callTypes)));
 	}
@@ -437,7 +437,7 @@ public final class CallLog {
 	 * 		The most valuable rank is 1.
 	 */
 	@NotNull
-	public RankMap rankByQuantity(int @NotNull ... callTypes) {
+	public RankMap rankByQuantity(@CallType int @NotNull ... callTypes) {
 		
 		return new RankMap(rankByQuantity(getCallsByType(callTypes)));
 	}
@@ -504,7 +504,7 @@ public final class CallLog {
 	 * @param callType the call type
 	 * @return the new {@link CallLog} object
 	 */
-	public @NotNull CallLog createByCallType(int callType) {
+	public @NotNull CallLog createByCallType(@CallType int callType) {
 		
 		switch (callType) {
 			
@@ -916,15 +916,15 @@ public final class CallLog {
 	 * @param callType the call type
 	 * @return the call type array
 	 */
-	public static int @NotNull [] getCallTypeArray(int callType) {
+	public static int @NotNull [] getCallTypeArray(@CallType int callType) {
 		
 		if (callType == Call.MISSED || callType == Call.REJECTED) return new int[]{callType};
 		
 		switch (callType) {
-			case CallType.OUTGOING:
-			case CallType.OUTGOING_WIFI: return new int[]{CallType.OUTGOING, CallType.OUTGOING_WIFI};
-			case CallType.INCOMING:
-			case CallType.INCOMING_WIFI: return new int[]{CallType.INCOMING, CallType.INCOMING_WIFI};
+			case Call.OUTGOING:
+			case Call.OUTGOING_WIFI: return new int[]{Call.OUTGOING, Call.OUTGOING_WIFI};
+			case Call.INCOMING:
+			case Call.INCOMING_WIFI: return new int[]{Call.INCOMING, Call.INCOMING_WIFI};
 			default: throw new IllegalArgumentException("Unknown call type: " + callType);
 		}
 	}
