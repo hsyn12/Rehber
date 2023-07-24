@@ -7,12 +7,12 @@ import android.view.View;
 
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.telefonrehberi.R;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
 import com.tr.hsyn.telefonrehberi.main.call.data.RankMap;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationData;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationDialog;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.ContactComment;
 import com.tr.hsyn.telefonrehberi.main.contact.data.History;
-import com.tr.hsyn.telefonrehberi.main.data.CallLog;
 import com.tr.hsyn.telefonrehberi.main.data.MainContacts;
 import com.tr.hsyn.text.Spanner;
 import com.tr.hsyn.time.Unit;

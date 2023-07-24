@@ -7,11 +7,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.Size;
 
-import com.tr.hsyn.calldata.CallType;
+import com.tr.hsyn.calldata.Type;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.random.Randoom;
-import com.tr.hsyn.telefonrehberi.main.call.cast.Generator;
+import com.tr.hsyn.telefonrehberi.main.call.cast.base.Generator;
 import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
 import com.tr.hsyn.time.Time;
 import com.tr.hsyn.xlog.xlog;
@@ -58,7 +58,7 @@ public class CallGenerator implements Generator<com.tr.hsyn.calldata.Call> {
 		this.contacts    = contacts;
 		this.maxDuration = maxDuration < 1 ? 10 : maxDuration;
 		this.trackFree   = trackFree;
-		this.types       = types.length > 1 ? types : new Integer[]{CallType.INCOMING, CallType.OUTGOING};
+		this.types       = types.length > 1 ? types : new Integer[]{Type.INCOMING, Type.OUTGOING};
 		today            = Time.now();
 		
 		//- Başlama zamanı bugünden büyükse biraz geri alalım
@@ -137,9 +137,9 @@ public class CallGenerator implements Generator<com.tr.hsyn.calldata.Call> {
 		
 		com.tr.hsyn.calldata.Call call = new com.tr.hsyn.calldata.Call(contact.getName(), number, callType, date, duration);
 		
-		call.setData(CallKey.RINGING_DURATION, ringingDuration);
-		call.setData(CallKey.TRACK_TYPE, trackType);
-		call.setData(CallKey.RANDOM, true);
+		call.setData(Key.RINGING_DURATION, ringingDuration);
+		call.setData(Key.TRACK_TYPE, trackType);
+		call.setData(Key.RANDOM, true);
 		call.setExtra(Calls.createExtraInfo(call));
 		return call;
 	}

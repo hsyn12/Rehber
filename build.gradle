@@ -20,6 +20,7 @@ ext.material = 'com.google.android.material:material:1.9.0'
 ext.material_version = '1.9.0'
 ext.java_version = JavaVersion.VERSION_20
 ext.kotlin_jvm_target = '20'
+ext.androidx_annotation = "1.6.0"
 
 
 

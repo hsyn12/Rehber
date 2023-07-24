@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 
-import com.tr.hsyn.calldata.CallType;
+import com.tr.hsyn.calldata.Type;
 import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.gate.AutoGate;
 import com.tr.hsyn.gate.Gate;
@@ -348,18 +348,18 @@ public abstract class CallSummary extends ContactDetailsHistory {
 			//- Arama geçmişi güncellenmiş.
 			//- Biz de görsel elemanlardaki bilgileri güncelleyelim
 			
-			int incomingSize = callHistory.size(CallType.INCOMING);
-			int outgoingSize = callHistory.size(CallType.OUTGOING);
-			int missedSize   = callHistory.size(CallType.MISSED);
-			int rejectedSize = callHistory.size(CallType.REJECTED);
+			int incomingSize = callHistory.size(Type.INCOMING);
+			int outgoingSize = callHistory.size(Type.OUTGOING);
+			int missedSize   = callHistory.size(Type.MISSED);
+			int rejectedSize = callHistory.size(Type.REJECTED);
 			
 			incomingCall.setText(String.valueOf(incomingSize));
 			outgoingCall.setText(String.valueOf(outgoingSize));
 			missedCall.setText(String.valueOf(missedSize));
 			rejectedCall.setText(String.valueOf(rejectedSize));
 			
-			int incomingDuration = callHistory.getDuration(CallType.INCOMING, CallType.INCOMING_WIFI);
-			int outgoingDuration = callHistory.getDuration(CallType.OUTGOING, CallType.OUTGOING_WIFI);
+			int incomingDuration = callHistory.getDuration(Type.INCOMING, Type.INCOMING_WIFI);
+			int outgoingDuration = callHistory.getDuration(Type.OUTGOING, Type.OUTGOING_WIFI);
 			
 			incomingCallDuration.setText(Time.formatSeconds(incomingDuration));
 			outgoingCallDuration.setText(Time.formatSeconds(outgoingDuration));
@@ -367,10 +367,10 @@ public abstract class CallSummary extends ContactDetailsHistory {
 			totalCall.setText(String.valueOf(incomingSize + outgoingSize + missedSize + rejectedSize));
 			totalCallDuration.setText(Time.formatSeconds(incomingDuration + outgoingDuration));
 			
-			incomingRow.setOnClickListener(v -> showCalls(callHistory.getCallsByTypes(CallType.INCOMING, CallType.INCOMING_WIFI)));
-			outgoingRow.setOnClickListener(v -> showCalls(callHistory.getCallsByTypes(CallType.OUTGOING, CallType.OUTGOING_WIFI)));
-			missedRow.setOnClickListener(v -> showCalls(callHistory.getCallsByTypes(CallType.MISSED)));
-			rejectedRow.setOnClickListener(v -> showCalls(callHistory.getCallsByTypes(CallType.REJECTED)));
+			incomingRow.setOnClickListener(v -> showCalls(callHistory.getCallsByTypes(Type.INCOMING, Type.INCOMING_WIFI)));
+			outgoingRow.setOnClickListener(v -> showCalls(callHistory.getCallsByTypes(Type.OUTGOING, Type.OUTGOING_WIFI)));
+			missedRow.setOnClickListener(v -> showCalls(callHistory.getCallsByTypes(Type.MISSED)));
+			rejectedRow.setOnClickListener(v -> showCalls(callHistory.getCallsByTypes(Type.REJECTED)));
 			
 			totalRow.setOnClickListener(v -> showCalls(history.getCalls()));
 		}

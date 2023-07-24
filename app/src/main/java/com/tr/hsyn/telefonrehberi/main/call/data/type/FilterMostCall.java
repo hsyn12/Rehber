@@ -1,7 +1,9 @@
-package com.tr.hsyn.telefonrehberi.main.data;
+package com.tr.hsyn.telefonrehberi.main.call.data.type;
 
 
 import androidx.annotation.IntDef;
+
+import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
 
 
 @IntDef({
@@ -12,5 +14,5 @@ import androidx.annotation.IntDef;
 		CallLog.FILTER_MOST_SPEAKING,
 		CallLog.FILTER_MOST_TALKING
 })
-public @interface MostFilter {
+public @interface FilterMostCall {
 }

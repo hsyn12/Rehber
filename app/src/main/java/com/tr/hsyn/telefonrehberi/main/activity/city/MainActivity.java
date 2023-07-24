@@ -20,7 +20,7 @@ import com.tr.hsyn.message.snack.SnackBarListener;
 import com.tr.hsyn.shower.ShadowWomen;
 import com.tr.hsyn.shower.ShowWomen;
 import com.tr.hsyn.telefonrehberi.R;
-import com.tr.hsyn.telefonrehberi.main.call.MainHeader;
+import com.tr.hsyn.telefonrehberi.main.call.cast.MainHeader;
 import com.tr.hsyn.telefonrehberi.main.code.page.Header;
 import com.tr.hsyn.telefonrehberi.main.code.page.PageAdapter;
 import com.tr.hsyn.telefonrehberi.main.code.page.calllog.PageCallLog;
@@ -150,6 +150,55 @@ public abstract class MainActivity extends MainActivityView implements SnackBarL
 			showWomen = new ShadowWomen(pageContacts, pageCallLog);
 		}, duration);
 		
+	}
+	
+	@Override
+	protected void onDestroy() {
+		
+		Blue.clear();
+		super.onDestroy();
+	}
+	
+	@Override
+	public int getCurrentPage() {
+		
+		return currentPage;
+	}
+	
+	@Override
+	public void changeTabBehavior(int flags) {
+		
+		AppBarLayout.LayoutParams p = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+		p.setScrollFlags(flags);
+		toolbar.setLayoutParams(p);
+	}
+	
+	@Override
+	public void onSnackBarStarted(Object object) {
+		
+		isSnakeActive = true;
+		setActionButtonVisibility(false);
+	}
+	
+	@Override
+	public void onSnackBarFinished(Object object, boolean actionPressed) {
+		
+		isSnakeActive = false;
+		setActionButtonVisibility(true);
+	}
+	
+	@Override
+	public void onFastScrollStart() {
+		
+		fastScrollActive = true;
+		setActionButtonVisibility(false);
+	}
+	
+	@Override
+	public void onFastScrollStop() {
+		
+		fastScrollActive = false;
+		setActionButtonVisibility(true);
 	}
 	
 	/**
@@ -289,13 +338,6 @@ public abstract class MainActivity extends MainActivityView implements SnackBarL
 		
 	}
 	
-	@Override
-	protected void onDestroy() {
-		
-		Blue.clear();
-		super.onDestroy();
-	}
-	
 	/**
 	 * Kullanıcı talebi sebebiyle rengi değiştir.
 	 *
@@ -314,48 +356,6 @@ public abstract class MainActivity extends MainActivityView implements SnackBarL
 		});
 		
 		Colors.changeStatusBarColor(this, color);
-	}
-	
-	@Override
-	public int getCurrentPage() {
-		
-		return currentPage;
-	}
-	
-	@Override
-	public void changeTabBehavior(int flags) {
-		
-		AppBarLayout.LayoutParams p = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
-		p.setScrollFlags(flags);
-		toolbar.setLayoutParams(p);
-	}
-	
-	@Override
-	public void onSnackBarStarted(Object object) {
-		
-		isSnakeActive = true;
-		setActionButtonVisibility(false);
-	}
-	
-	@Override
-	public void onSnackBarFinished(Object object, boolean actionPressed) {
-		
-		isSnakeActive = false;
-		setActionButtonVisibility(true);
-	}
-	
-	@Override
-	public void onFastScrollStart() {
-		
-		fastScrollActive = true;
-		setActionButtonVisibility(false);
-	}
-	
-	@Override
-	public void onFastScrollStop() {
-		
-		fastScrollActive = false;
-		setActionButtonVisibility(true);
 	}
 	
 	

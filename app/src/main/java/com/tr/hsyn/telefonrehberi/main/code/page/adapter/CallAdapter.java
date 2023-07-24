@@ -25,8 +25,8 @@ import com.tr.hsyn.selection.ItemIndexListener;
 import com.tr.hsyn.selection.SelectionListener;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
 import com.tr.hsyn.telefonrehberi.main.call.data.Calls;
+import com.tr.hsyn.telefonrehberi.main.call.data.Key;
 import com.tr.hsyn.telefonrehberi.main.cast.ItemAdapter;
 import com.tr.hsyn.textdrawable.TextDrawable;
 import com.tr.hsyn.time.Time;
@@ -89,7 +89,7 @@ public class CallAdapter extends RecyclerView.Adapter<CallAdapter.Holder> implem
 		
 		holder.type.setImageDrawable(type);
 		holder.speakDuration.setText(Files.formatSeconds(call.getDuration()));
-		holder.ringingDuration.setText(Files.formatMilliSeconds(call.getLong(CallKey.RINGING_DURATION, 0L)));
+		holder.ringingDuration.setText(Files.formatMilliSeconds(call.getLong(Key.RINGING_DURATION, 0L)));
 		holder.date.setText(Time.toString(call.getTime(), "d MMMM yyyy HH:mm"));
 		
 		String letter = Stringx.getLetter(name);

@@ -10,7 +10,8 @@ import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.dev.android.dialog.ShowCall;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
+import com.tr.hsyn.telefonrehberi.main.call.data.Key;
 import com.tr.hsyn.telefonrehberi.main.call.data.RankMap;
 import com.tr.hsyn.telefonrehberi.main.call.data.Res;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationData;
@@ -26,7 +27,6 @@ import com.tr.hsyn.telefonrehberi.main.contact.comment.topics.QuantityComment;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.topics.Topic;
 import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.contact.data.History;
-import com.tr.hsyn.telefonrehberi.main.data.CallLog;
 import com.tr.hsyn.text.Spanner;
 import com.tr.hsyn.text.Spans;
 import com.tr.hsyn.time.Time;
@@ -327,7 +327,7 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 				
 				var data = new MostDurationData(name, Time.formatSeconds((int) callRank.getDuration()), rank);
 				
-				if (contactId == CallKey.getContactId(callRank.getCalls().get(0)))
+				if (contactId == Key.getContactId(callRank.getCalls().get(0)))
 					data.setSelected(true);
 				
 				list.add(data);

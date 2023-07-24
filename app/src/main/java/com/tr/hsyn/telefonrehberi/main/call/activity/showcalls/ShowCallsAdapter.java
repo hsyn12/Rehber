@@ -13,7 +13,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.tr.hsyn.calldata.Call;
-import com.tr.hsyn.calldata.CallType;
+import com.tr.hsyn.calldata.Type;
 import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.files.Files;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
@@ -21,7 +21,7 @@ import com.tr.hsyn.selection.ItemIndexListener;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.dev.fastadapter.FastAdapter;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
+import com.tr.hsyn.telefonrehberi.main.call.data.Key;
 import com.tr.hsyn.textdrawable.TextDrawable;
 import com.tr.hsyn.time.Time;
 
@@ -68,7 +68,7 @@ public class ShowCallsAdapter extends FastAdapter<Call> {
 		
 		holder.type.setImageDrawable(type);
 		holder.speakDuration.setText(Files.formatSeconds(call.getDuration()));
-		holder.ringingDuration.setText(Files.formatMilliSeconds(call.getLong(CallKey.RINGING_DURATION, 0L)));
+		holder.ringingDuration.setText(Files.formatMilliSeconds(call.getLong(Key.RINGING_DURATION, 0L)));
 		holder.date.setText(Time.toString(call.getTime(), "d MMMM yyyy HH:mm"));
 		
 		String letter = Stringx.getLetter(name);
@@ -89,23 +89,23 @@ public class ShowCallsAdapter extends FastAdapter<Call> {
 		
 		switch (type) {
 			
-			case CallType.INCOMING:
-			case CallType.INCOMING_WIFI:
+			case Type.INCOMING:
+			case Type.INCOMING_WIFI:
 				return R.drawable.incoming_call;
-			case CallType.OUTGOING:
-			case CallType.OUTGOING_WIFI:
+			case Type.OUTGOING:
+			case Type.OUTGOING_WIFI:
 				return R.drawable.outgoing_call;
-			case CallType.MISSED:
+			case Type.MISSED:
 				return R.drawable.missed_call;
-			case CallType.REJECTED:
+			case Type.REJECTED:
 				return R.drawable.rejected_call;
-			case CallType.BLOCKED:
+			case Type.BLOCKED:
 				return R.drawable.blocked_call;
-			case CallType.GET_REJECTED:
+			case Type.GET_REJECTED:
 				return R.drawable.get_rejected_call;
-			case CallType.UNREACHED:
+			case Type.UNREACHED:
 				return R.drawable.un_reached_call;
-			case CallType.UNRECEIVED:
+			case Type.UNRECEIVED:
 				return R.drawable.un_recieved_call;
 		}
 		

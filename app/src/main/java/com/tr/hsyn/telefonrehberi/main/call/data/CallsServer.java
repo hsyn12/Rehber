@@ -19,8 +19,8 @@ public class CallsServer implements Server<Call> {
 	
 	public CallsServer(@NonNull ContentResolver contentResolver) {
 		
-		ContentRequester<Call> contentRequester = new CallsRequester(contentResolver, null, null);
-		contentFetcher = new CallsFetcher(contentRequester);
+		ContentRequester<Call> contentRequester = new Requester(contentResolver, null, null);
+		contentFetcher = new Fetcher(contentRequester);
 	}
 	
 	@NonNull

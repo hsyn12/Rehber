@@ -2,11 +2,11 @@ package com.tr.hsyn.telefonrehberi.main.contact.data;
 
 
 import com.tr.hsyn.calldata.Call;
+import com.tr.hsyn.calldata.CallType;
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.key.Key;
-import com.tr.hsyn.telefonrehberi.main.call.data.Res;
-import com.tr.hsyn.telefonrehberi.main.data.CallLog;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
 import com.tr.hsyn.time.Time;
 import com.tr.hsyn.time.duration.DurationGroup;
 import com.tr.hsyn.xbox.Blue;
@@ -188,9 +188,9 @@ public interface History {
 	 * @param callType the call type
 	 * @return the size
 	 */
-	default int size(int callType) {
+	default int size(@CallType int callType) {
 		
-		int[] types = Res.getCallTypes(callType);
+		int[] types = CallLog.getCallTypes(callType);
 		
 		if (types.length == 1) {
 			

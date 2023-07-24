@@ -13,7 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.tr.hsyn.calldata.Call;
-import com.tr.hsyn.calldata.CallType;
+import com.tr.hsyn.calldata.Type;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
@@ -137,7 +137,7 @@ public interface Calls {
 		//+ track type int --> [2]
 		//+ contact ID long --> [3]
 		
-		return String.format("%s;%s;%d;%d", ACCOUNT_ID, call.getBool(CallKey.RANDOM) ? "t" : "f", call.getInt(CallKey.TRACK_TYPE), call.getLong(CallKey.CONTACT_ID));
+		return String.format("%s;%s;%d;%d", ACCOUNT_ID, call.getBool(Key.RANDOM) ? "t" : "f", call.getInt(Key.TRACK_TYPE), call.getLong(Key.CONTACT_ID));
 	}
 	
 	
@@ -292,17 +292,17 @@ public interface Calls {
 		
 		switch (type) {
 			
-			case CallType.INCOMING:
-			case CallType.INCOMING_WIFI:
+			case Type.INCOMING:
+			case Type.INCOMING_WIFI:
 				return com.tr.hsyn.resdrawcalltype.R.drawable.incoming_call;
-			case CallType.OUTGOING:
-			case CallType.OUTGOING_WIFI:
+			case Type.OUTGOING:
+			case Type.OUTGOING_WIFI:
 				return com.tr.hsyn.resdrawcalltype.R.drawable.outgoing_call;
-			case CallType.MISSED:
+			case Type.MISSED:
 				return com.tr.hsyn.resdrawcalltype.R.drawable.missed_call;
-			case CallType.REJECTED:
+			case Type.REJECTED:
 				return com.tr.hsyn.resdrawcalltype.R.drawable.rejected_call;
-			case CallType.BLOCKED:
+			case Type.BLOCKED:
 				return com.tr.hsyn.resdrawcalltype.R.drawable.blocked_call;
             /*case CallType.GET_REJECTED:
                 return com.tr.hsyn.resdrawcalltype.R.drawable.get_rejected_call;

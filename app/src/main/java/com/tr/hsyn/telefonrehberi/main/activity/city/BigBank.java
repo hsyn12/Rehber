@@ -3,7 +3,7 @@ package com.tr.hsyn.telefonrehberi.main.activity.city;
 
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.key.Key;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallDatabase;
+import com.tr.hsyn.telefonrehberi.main.call.data.Database;
 import com.tr.hsyn.telefonrehberi.main.call.story.CallStory;
 import com.tr.hsyn.telefonrehberi.main.contact.data.ContactsReader;
 import com.tr.hsyn.telefonrehberi.main.dev.Loader;
@@ -27,8 +27,8 @@ public abstract class BigBank extends NorthBridge {
 		
 		super.onCreate();
 		
-		CallDatabase callDatabase = new CallDatabase(this);
-		callStory = new CallStory(callDatabase, getContentResolver());
+		Database database = new Database(this);
+		callStory = new CallStory(database, getContentResolver());
 		
 		Blue.box(Key.CALL_STORY, callStory);
 		

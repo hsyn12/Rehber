@@ -24,7 +24,7 @@ import java.util.Set;
 /**
  * Arama kayıtları veri tabanı
  */
-public class CallDatabase extends DBBase<Call> implements DBCalls {
+public class Database extends DBBase<Call> implements DBCalls {
 	
 	//==============================================================
 	//==============================================================
@@ -51,7 +51,7 @@ public class CallDatabase extends DBBase<Call> implements DBCalls {
 	 */
 	private       boolean columnsNotSet = true;
 	
-	public CallDatabase(@NonNull Context context) {
+	public Database(@NonNull Context context) {
 		
 		super(context, new DBInterface());
 	}
@@ -90,14 +90,14 @@ public class CallDatabase extends DBBase<Call> implements DBCalls {
 		
 		Call call = new Call(name, number, type, date, duration, extra);
 		
-		if (contactId != 0L) call.setData(CallKey.CONTACT_ID, contactId);
-		if (note != null) call.setData(CallKey.NOTE, note);
-		if (deletedDate != 0L) call.setData(CallKey.DELETED_DATE, deletedDate);
-		if (ringingDuration != 0L) call.setData(CallKey.RINGING_DURATION, ringingDuration);
-		if (!labels.isEmpty()) call.setData(CallKey.LABELS, getLabels(labels));
+		if (contactId != 0L) call.setData(Key.CONTACT_ID, contactId);
+		if (note != null) call.setData(Key.NOTE, note);
+		if (deletedDate != 0L) call.setData(Key.DELETED_DATE, deletedDate);
+		if (ringingDuration != 0L) call.setData(Key.RINGING_DURATION, ringingDuration);
+		if (!labels.isEmpty()) call.setData(Key.LABELS, getLabels(labels));
 		
-		call.setData(CallKey.TRACK_TYPE, getTrackType(call));
-		call.setData(CallKey.RANDOM, getRandom(extra));
+		call.setData(Key.TRACK_TYPE, getTrackType(call));
+		call.setData(Key.RANDOM, getRandom(extra));
 		
 		return call;
 	}
@@ -115,16 +115,16 @@ public class CallDatabase extends DBBase<Call> implements DBCalls {
 		values.put(DATE, call.getTime());
 		values.put(TYPE, call.getCallType());
 		values.put(DURATION, call.getDuration());
-		values.put(CONTACT_ID, call.getLong(CallKey.CONTACT_ID, 0L));
-		values.put(DELETED_DATE, call.getLong(CallKey.DELETED_DATE, 0L));
-		values.put(RINGING_DURATION, call.getLong(CallKey.RINGING_DURATION, 0L));
+		values.put(CONTACT_ID, call.getLong(Key.CONTACT_ID, 0L));
+		values.put(DELETED_DATE, call.getLong(Key.DELETED_DATE, 0L));
+		values.put(RINGING_DURATION, call.getLong(Key.RINGING_DURATION, 0L));
 		values.put(EXTRA, call.getExtra());
 		
-		if (call.exist(CallKey.NOTE)) //noinspection ConstantConditions
-			values.put(NOTE, call.getData(CallKey.NOTE));
+		if (call.exist(Key.NOTE)) //noinspection ConstantConditions
+			values.put(NOTE, call.getData(Key.NOTE));
 		else values.putNull(Values.TYPE_STRING, NOTE);
 		
-		Set<Label> labels = call.getData(CallKey.LABELS);
+		Set<Label> labels = call.getData(Key.LABELS);
 		
 		if (labels == null || labels.isEmpty()) values.putNull(Values.TYPE_STRING, LABELS);
 		else values.put(LABELS, getLabels(labels));

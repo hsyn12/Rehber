@@ -3,7 +3,7 @@ package com.tr.hsyn.telefonrehberi.main.contact.comment.commentator;
 
 import android.app.Activity;
 
-import com.tr.hsyn.calldata.CallType;
+import com.tr.hsyn.calldata.Type;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.code.comment.CommentStore;
 import com.tr.hsyn.telefonrehberi.main.code.comment.Moody;
@@ -20,28 +20,6 @@ import org.jetbrains.annotations.NotNull;
  * All comments are provided in here.
  */
 public interface ContactCommentStore extends CommentStore {
-	
-	/**
-	 * Returns a {@link ContactCommentStore} instance.
-	 *
-	 * @param activity the activity
-	 * @param mood     the mood
-	 * @return a {@link ContactCommentStore} instance
-	 */
-	@NotNull
-	static ContactCommentStore createCommentStore(@NotNull Activity activity, @NotNull Moody mood) {
-		
-		switch (mood) {
-			
-			case DEFAULT:
-				return new DefaultContactCommentStore(activity);
-			case HAPPY:
-				xlog.d("Not yet HAPPY");
-		}
-		
-		
-		return new DefaultContactCommentStore(activity);
-	}
 	
 	@NotNull
 	CharSequence sizeCall(int size);
@@ -72,11 +50,11 @@ public interface ContactCommentStore extends CommentStore {
 		
 		switch (callType) {
 			
-			case CallType.INCOMING: return getString(R.string.call_type_incoming);
-			case CallType.OUTGOING: return getString(R.string.call_type_outgoing);
-			case CallType.MISSED: return getString(R.string.call_type_missed);
-			case CallType.REJECTED: return getString(R.string.call_type_rejected);
-			case CallType.BLOCKED: return getString(R.string.call_type_blocked);
+			case Type.INCOMING: return getString(R.string.call_type_incoming);
+			case Type.OUTGOING: return getString(R.string.call_type_outgoing);
+			case Type.MISSED: return getString(R.string.call_type_missed);
+			case Type.REJECTED: return getString(R.string.call_type_rejected);
+			case Type.BLOCKED: return getString(R.string.call_type_blocked);
 		}
 		return getString(R.string.call_type_unknown);
 	}
@@ -104,5 +82,27 @@ public interface ContactCommentStore extends CommentStore {
 	default CharSequence singleCall() {
 		
 		return getString(R.string.single_call);
+	}
+	
+	/**
+	 * Returns a {@link ContactCommentStore} instance.
+	 *
+	 * @param activity the activity
+	 * @param mood     the mood
+	 * @return a {@link ContactCommentStore} instance
+	 */
+	@NotNull
+	static ContactCommentStore createCommentStore(@NotNull Activity activity, @NotNull Moody mood) {
+		
+		switch (mood) {
+			
+			case DEFAULT:
+				return new DefaultContactCommentStore(activity);
+			case HAPPY:
+				xlog.d("Not yet HAPPY");
+		}
+		
+		
+		return new DefaultContactCommentStore(activity);
 	}
 }

@@ -12,7 +12,7 @@ import java.util.Objects;
 /**
  * Class for call data
  */
-public class Call extends DatBoxer implements CallContact, CallTime, CallDuration, CallType, Serializable, Identity {
+public class Call extends DatBoxer implements Type, Serializable, Identity {
 	
 	//- Sistemden alınacak bilgiler
 	private final String number;
@@ -46,36 +46,7 @@ public class Call extends DatBoxer implements CallContact, CallTime, CallDuratio
 	}
 	
 	@Override
-	public String getName() {
-		
-		return name;
-	}
-	
-	@Override
-	public void setName(String name) {
-		
-		this.name = name;
-	}
-	
-	@Override
-	public String getNumber() {
-		
-		return number;
-	}
-	
-	@Override
-	public int getDuration() {
-		
-		return duration;
-	}
-	
-	@Override
-	public long getTime() {
-		
-		return time;
-	}
-	
-	@Override
+	@CallType
 	public int getCallType() {
 		
 		return callType;
@@ -112,6 +83,36 @@ public class Call extends DatBoxer implements CallContact, CallTime, CallDuratio
 		       '}';
 	}
 	
+	public String getName() {
+		
+		return name;
+	}
+	
+	public void setName(String name) {
+		
+		this.name = name;
+	}
+	
+	public String getNumber() {
+		
+		return number;
+	}
+	
+	public boolean isSpoken() {
+		
+		return getDuration() != 0;
+	}
+	
+	public int getDuration() {
+		
+		return duration;
+	}
+	
+	public long getTime() {
+		
+		return time;
+	}
+	
 	public boolean isRandom() {
 		
 		var extra = getExtra();
@@ -138,10 +139,5 @@ public class Call extends DatBoxer implements CallContact, CallTime, CallDuratio
 	public boolean isNoNamed() {
 		
 		return name == null || name.isEmpty();
-	}
-	
-	public boolean isSpeaking() {
-		
-		return getDuration() > 0;
 	}
 }

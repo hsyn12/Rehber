@@ -1,4 +1,4 @@
-package com.tr.hsyn.telefonrehberi.main.call.cast;
+package com.tr.hsyn.telefonrehberi.main.call.cast.base;
 
 
 import androidx.annotation.Nullable;
@@ -10,7 +10,7 @@ import androidx.annotation.Nullable;
  * @param <T> Üretilen nesne türü
  */
 public interface Generator<T> {
-
-    @Nullable
-    T generate();
+	
+	@Nullable
+	T generate();
 }

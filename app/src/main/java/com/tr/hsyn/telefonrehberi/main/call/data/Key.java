@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Arama kaydı için veri anahtarlarını tanımlar.
  */
-public interface CallKey {
+public interface Key {
 	
 	/**
 	 * Arama kaydının contact id değeri (rehberde kayıtlı ise)

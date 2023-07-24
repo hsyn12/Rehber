@@ -11,11 +11,10 @@ import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.keep.Keep;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.regex.Nina;
-import com.tr.hsyn.registery.cast.Database;
 import com.tr.hsyn.string.Stringx;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallDatabase;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
 import com.tr.hsyn.telefonrehberi.main.call.data.Calls;
+import com.tr.hsyn.telefonrehberi.main.call.data.Database;
+import com.tr.hsyn.telefonrehberi.main.call.data.Key;
 import com.tr.hsyn.telefonrehberi.main.contact.data.bank.system.SystemContacts;
 import com.tr.hsyn.telefonrehberi.main.dev.Story;
 import com.tr.hsyn.time.Time;
@@ -32,15 +31,15 @@ import java.util.Map;
 /**
  * Arama kayıtları yöneticisi.<br>
  *
- * @see Database
+ * @see com.tr.hsyn.registery.cast.Database
  */
 @Keep
 public class CallStory implements Story<Call> {
 	
-	private final Database<Call>  database;
-	private final ContentResolver contentResolver;
+	private final com.tr.hsyn.registery.cast.Database<Call> database;
+	private final ContentResolver                           contentResolver;
 	
-	public CallStory(Database<Call> database, ContentResolver contentResolver) {
+	public CallStory(com.tr.hsyn.registery.cast.Database<Call> database, ContentResolver contentResolver) {
 		
 		this.database        = database;
 		this.contentResolver = contentResolver;
@@ -98,7 +97,7 @@ public class CallStory implements Story<Call> {
 				
 				long now = System.currentTimeMillis();
 				
-				databaseCalls.forEach(c -> c.setData(CallKey.DELETED_DATE, now));
+				databaseCalls.forEach(c -> c.setData(Key.DELETED_DATE, now));
 				database.update(databaseCalls);
 				xlog.d("Call collection created [system]");
 				return new ArrayList<>(0);
@@ -124,7 +123,7 @@ public class CallStory implements Story<Call> {
 						
 						long now = System.currentTimeMillis();
 						
-						deletedCalls.forEach(c -> c.setData(CallKey.DELETED_DATE, now));
+						deletedCalls.forEach(c -> c.setData(Key.DELETED_DATE, now));
 						
 						database.update(deletedCalls);
 						
@@ -156,7 +155,7 @@ public class CallStory implements Story<Call> {
 	@Override
 	public List<Call> loadFromDatabase() {
 		
-		return database.queryAll(CallDatabase.DELETED_DATE + "=0");
+		return database.queryAll(Database.DELETED_DATE + "=0");
 	}
 	
 	/**
@@ -319,7 +318,7 @@ public class CallStory implements Story<Call> {
 		int count = deleteFromSystem(items);
 		
 		long time = Time.now();
-		items.forEach(c -> c.setData(CallKey.DELETED_DATE, time));
+		items.forEach(c -> c.setData(Key.DELETED_DATE, time));
 		
 		updateFromDatabase(items);
 		
@@ -338,7 +337,7 @@ public class CallStory implements Story<Call> {
 		
 		for (Call call : calls) {
 			
-			long id = CallKey.getContactId(call);
+			long id = Key.getContactId(call);
 			
 			if (id == 0L || Stringx.isNoboe(call.getName())) {
 				
@@ -367,14 +366,14 @@ public class CallStory implements Story<Call> {
 						
 						if (contact.getContactId() != 0) {
 							isUpdate = true;
-							CallKey.setContactId(call, contact.getId());
+							Key.setContactId(call, contact.getId());
 							ids.put(number, contact.getContactId());
 						}
 					}
 				}
 				else {
 					
-					CallKey.setContactId(call, _id);
+					Key.setContactId(call, _id);
 					call.setName(names.get(number));
 					isUpdate = true;
 				}

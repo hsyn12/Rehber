@@ -1,7 +1,9 @@
-package com.tr.hsyn.telefonrehberi.main.data;
+package com.tr.hsyn.telefonrehberi.main.call.data.type;
 
 
 import androidx.annotation.IntDef;
+
+import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
 
 
 @IntDef(value = {
@@ -13,5 +15,5 @@ import androidx.annotation.IntDef;
 		CallLog.FILTER_NO_NAMED,
 		CallLog.FILTER_RANDOM
 })
-public @interface CallFilter {
+public @interface FilterType {
 }

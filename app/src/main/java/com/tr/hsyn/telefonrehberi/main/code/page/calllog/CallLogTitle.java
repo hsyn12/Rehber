@@ -7,8 +7,8 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
 import com.tr.hsyn.telefonrehberi.main.code.page.adapter.CallAdapter;
-import com.tr.hsyn.telefonrehberi.main.data.CallLog;
 
 
 /**

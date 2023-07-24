@@ -16,7 +16,7 @@ import com.tr.hsyn.content.requestor.ContentRequester;
 import org.jetbrains.annotations.NotNull;
 
 
-public class CallsRequester implements ContentRequester<Call> {
+public class Requester implements ContentRequester<Call> {
 	
 	private final ContentResolver contentResolver;
 	private final String          selection;
@@ -78,7 +78,7 @@ public class CallsRequester implements ContentRequester<Call> {
 		}
 	};
 	
-	public CallsRequester(ContentResolver contentResolver, String selection, String[] selectionArgs) {
+	public Requester(ContentResolver contentResolver, String selection, String[] selectionArgs) {
 		
 		this.contentResolver = contentResolver;
 		this.selection       = selection;

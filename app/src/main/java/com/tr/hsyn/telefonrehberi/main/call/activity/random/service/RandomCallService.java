@@ -25,8 +25,8 @@ import com.tr.hsyn.telefonrehberi.main.call.activity.random.cast.GenerationArgs;
 import com.tr.hsyn.telefonrehberi.main.call.activity.random.cast.GenerationService;
 import com.tr.hsyn.telefonrehberi.main.call.activity.random.cast.ServiceReference;
 import com.tr.hsyn.telefonrehberi.main.call.activity.random.listener.ProgressListener;
-import com.tr.hsyn.telefonrehberi.main.call.cast.GenerationExeption;
-import com.tr.hsyn.telefonrehberi.main.call.cast.Generator;
+import com.tr.hsyn.telefonrehberi.main.call.cast.base.GenerationExeption;
+import com.tr.hsyn.telefonrehberi.main.call.cast.base.Generator;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallGenerator;
 import com.tr.hsyn.telefonrehberi.main.call.data.Calls;
 import com.tr.hsyn.watch.observable.Observable;
@@ -320,6 +320,35 @@ public class RandomCallService extends Service implements GenerationService {
 	}
 	
 	/**
+	 * Sets the service to foreground or background
+	 *
+	 * @param isForeground <code>true</code> if foreground
+	 */
+	@Override
+	public void setFore(boolean isForeground) {
+		
+		if (this.isForeground.get() != isForeground) {
+			
+			if (isForeground) startFore();
+			else stopFore();
+			
+			this.isForeground.set(isForeground);
+		}
+	}
+	
+	@Override
+	public void listenServiceWorking(@Nullable Observer<Boolean> listener) {
+		
+		isWorking.setObserver(listener);
+	}
+	
+	@Override
+	public void listenGeneration(ProgressListener<Call> progressListener) {
+		
+		this.progressListener.set(progressListener);
+	}
+	
+	/**
 	 * Activity servisten ayrıldığında üretim bildirim alanında devam edecek.
 	 * Üretimin gidişatı bildirim ile takip edilecek.
 	 * Bildirime dokunulduğunda activity yeniden açılır.
@@ -392,35 +421,6 @@ public class RandomCallService extends Service implements GenerationService {
 		
 		setFore(false);
 		stopSelf();
-	}
-	
-	/**
-	 * Sets the service to foreground or background
-	 *
-	 * @param isForeground <code>true</code> if foreground
-	 */
-	@Override
-	public void setFore(boolean isForeground) {
-		
-		if (this.isForeground.get() != isForeground) {
-			
-			if (isForeground) startFore();
-			else stopFore();
-			
-			this.isForeground.set(isForeground);
-		}
-	}
-	
-	@Override
-	public void listenServiceWorking(@Nullable Observer<Boolean> listener) {
-		
-		isWorking.setObserver(listener);
-	}
-	
-	@Override
-	public void listenGeneration(ProgressListener<Call> progressListener) {
-		
-		this.progressListener.set(progressListener);
 	}
 	
 	/**

@@ -7,14 +7,14 @@ import android.view.View;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.telefonrehberi.R;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
+import com.tr.hsyn.telefonrehberi.main.call.data.Key;
 import com.tr.hsyn.telefonrehberi.main.call.data.RankMap;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationData;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationDialog;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.ContactComment;
 import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
-import com.tr.hsyn.telefonrehberi.main.data.CallLog;
 import com.tr.hsyn.telefonrehberi.main.data.MainContacts;
 import com.tr.hsyn.text.Spanner;
 import com.tr.hsyn.time.Time;
@@ -171,7 +171,7 @@ public class CallDurationComment implements ContactComment {
 				
 				MostDurationData data = new MostDurationData(name, Time.formatSeconds((int) callRank.getDuration()), rank);
 				
-				if (contactId == CallKey.getContactId(callRank.getCalls().get(0)))
+				if (contactId == Key.getContactId(callRank.getCalls().get(0)))
 					data.setSelected(true);
 				
 				list.add(data);

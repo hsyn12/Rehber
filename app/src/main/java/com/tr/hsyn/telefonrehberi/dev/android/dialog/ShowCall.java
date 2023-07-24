@@ -18,8 +18,8 @@ import com.tr.hsyn.files.Files;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
 import com.tr.hsyn.telefonrehberi.main.call.data.Calls;
+import com.tr.hsyn.telefonrehberi.main.call.data.Key;
 import com.tr.hsyn.textdrawable.TextDrawable;
 import com.tr.hsyn.time.Time;
 import com.tr.hsyn.xlog.xlog;
@@ -78,7 +78,7 @@ public class ShowCall {
 		
 		type.setImageDrawable(_type);
 		callDuration.setText(Files.formatSeconds(call.getDuration()));
-		ringingDuration.setText(Files.formatMilliSeconds(call.getLong(CallKey.RINGING_DURATION, 0L)));
+		ringingDuration.setText(Files.formatMilliSeconds(call.getLong(Key.RINGING_DURATION, 0L)));
 		date.setText(Time.toString(call.getTime(), "d MMMM yyyy HH:mm"));
 		
 		String letter = Stringx.getLetter(_name);

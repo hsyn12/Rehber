@@ -12,10 +12,9 @@ import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.execution.Runny;
-import com.tr.hsyn.key.Key;
 import com.tr.hsyn.telefonrehberi.R;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
 import com.tr.hsyn.telefonrehberi.main.call.data.Calls;
+import com.tr.hsyn.telefonrehberi.main.call.data.Key;
 import com.tr.hsyn.telefonrehberi.main.call.story.CallStory;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
 import com.tr.hsyn.xbox.Blue;
@@ -27,17 +26,17 @@ import java.util.List;
 
 /**
  * This is a screen which shows the call history of the selected contact.
- * Selected contact should have been set by {@link Key#SELECTED_CONTACT} key,
+ * Selected contact should have been set by {@link com.tr.hsyn.key.Key#SELECTED_CONTACT} key,
  * otherwise it will throw an exception.<br>
  * Any call can be deleted from the list.
- * If any call is deleted, {@link Key#REFRESH_CALL_LOG} key is set to true.<br>
+ * If any call is deleted, {@link com.tr.hsyn.key.Key#REFRESH_CALL_LOG} key is set to true.<br>
  */
 public class ActivityCallList extends ActivityCallHistoryView {
 	
 	/**
 	 * Manager for call log
 	 */
-	private final CallStory                       callStory = Blue.getObject(Key.CALL_STORY);
+	private final CallStory                       callStory = Blue.getObject(com.tr.hsyn.key.Key.CALL_STORY);
 	/**
 	 * Call history list of the selected contact
 	 */
@@ -52,11 +51,11 @@ public class ActivityCallList extends ActivityCallHistoryView {
 		
 		super.onCreate();
 		
-		Contact contact = Blue.getObject(Key.SELECTED_CONTACT);
+		Contact contact = Blue.getObject(com.tr.hsyn.key.Key.SELECTED_CONTACT);
 		
 		if (contact == null) throw new IllegalArgumentException("Contact is null");
 		
-		calls = Blue.getObject(Key.SHOW_CALLS);
+		calls = Blue.getObject(com.tr.hsyn.key.Key.SHOW_CALLS);
 		
 		if (calls == null) calls = new ArrayList<>(0);
 		
@@ -120,7 +119,7 @@ public class ActivityCallList extends ActivityCallHistoryView {
 			
 			com.tr.hsyn.calldata.Call call = calls.get(0);
 			
-			if (call.getLong(CallKey.CONTACT_ID, 0L) != 0L) {
+			if (call.getLong(Key.CONTACT_ID, 0L) != 0L) {
 				
 				String name = Calls.getContactName(getContentResolver(), call.getNumber());
 				
@@ -202,7 +201,7 @@ public class ActivityCallList extends ActivityCallHistoryView {
 			if (deleted == deletedCalls.size()) {
 				
 				long now = System.currentTimeMillis();
-				deletedCalls.forEach(c -> c.setData(CallKey.DELETED_DATE, now));
+				deletedCalls.forEach(c -> c.setData(Key.DELETED_DATE, now));
 				
 				int _deleted = callStory.updateFromDatabase(deletedCalls);
 				

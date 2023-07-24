@@ -62,7 +62,7 @@ public class RankMap extends Groups<Integer, CallRank> {
 	 */
 	public List<CallRank> getCallRanks() {
 		
-		return getValues().stream()
+		return values().stream()
 				.flatMap(Collection::stream)
 				.sorted(Comparator.comparingInt(CallRank::getRank))
 				.collect(Collectors.toList());
@@ -76,7 +76,7 @@ public class RankMap extends Groups<Integer, CallRank> {
 	 */
 	public int getRank(@NotNull Contact contact) {
 		
-		var entries = getEntries();
+		var entries = entrySet();
 		for (var entry : entries) {
 			
 			List<CallRank> callRanks = entry.getValue();
@@ -117,6 +117,8 @@ public class RankMap extends Groups<Integer, CallRank> {
 	}
 	
 	/**
+	 * Returns the rank list in order by rank ascending.
+	 *
 	 * @return the rank list in order by rank ascending
 	 */
 	public List<Map.Entry<Integer, List<CallRank>>> sortedEntries() {

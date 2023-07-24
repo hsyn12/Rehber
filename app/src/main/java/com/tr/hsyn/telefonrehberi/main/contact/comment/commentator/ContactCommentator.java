@@ -5,9 +5,9 @@ import android.app.Activity;
 
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.key.Key;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
 import com.tr.hsyn.telefonrehberi.main.code.comment.CommentEditor;
 import com.tr.hsyn.telefonrehberi.main.code.comment.Commentator;
-import com.tr.hsyn.telefonrehberi.main.data.CallLog;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
 import com.tr.hsyn.xbox.Blue;
 

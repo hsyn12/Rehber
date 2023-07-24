@@ -8,6 +8,7 @@ import androidx.annotation.StringRes;
 
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.calldata.CallType;
+import com.tr.hsyn.calldata.Type;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.nextension.Extension;
 import com.tr.hsyn.nextension.WordExtension;
@@ -16,7 +17,8 @@ import com.tr.hsyn.scaler.Quantity;
 import com.tr.hsyn.scaler.Scaler;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
+import com.tr.hsyn.telefonrehberi.main.call.data.Key;
 import com.tr.hsyn.telefonrehberi.main.call.data.RankMap;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.ContactListDialog;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostCallDialog;
@@ -25,7 +27,6 @@ import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.ShowCallsDialog;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.ContactComment;
 import com.tr.hsyn.telefonrehberi.main.contact.data.History;
-import com.tr.hsyn.telefonrehberi.main.data.CallLog;
 import com.tr.hsyn.telefonrehberi.main.data.MainContacts;
 import com.tr.hsyn.text.Spanner;
 import com.tr.hsyn.text.Spans;
@@ -266,8 +267,8 @@ public class QuantityComment implements ContactComment {
 				if (mRank > 0 || rRank > 0) {
 					if (mRank > 0 && rRank > 0) {
 						
-						List<Call> mCalls = this.callLog.getCalls(CallType::isMissed);
-						List<Call> rCalls = this.callLog.getCalls(CallType::isRejected);
+						List<Call> mCalls = this.callLog.getCalls(Type::isMissed);
+						List<Call> rCalls = this.callLog.getCalls(Type::isRejected);
 						
 						if (isTurkish) comment.append("Bu kişinin hiç bir aramasını cevaplamadın. ")
 								.append(fmt("Gelen %d aramayı reddettin ve %d aramayı da cevapsız bıraktın.\n", mCalls.size(), rCalls.size()));
@@ -276,7 +277,7 @@ public class QuantityComment implements ContactComment {
 					}
 					else if (rRank > 0) {
 						
-						List<Call> rCalls = this.callLog.getCalls(CallType::isRejected);
+						List<Call> rCalls = this.callLog.getCalls(Type::isRejected);
 						if (isTurkish) comment.append("Bu kişinin hiç bir aramasını cevaplamadın. ")
 								.append(fmt("Gelen %d aramayı da reddettin.\n", rCalls.size()));
 						else comment.append("You did not answer any calls from this contact.")
@@ -284,7 +285,7 @@ public class QuantityComment implements ContactComment {
 					}
 					else {
 						
-						List<Call> mCalls = this.callLog.getCalls(CallType::isMissed);
+						List<Call> mCalls = this.callLog.getCalls(Type::isMissed);
 						if (isTurkish) comment.append("Bu kişinin hiç bir aramasını cevaplamadın. ")
 								.append(fmt("Gelen %d aramayı da cevapsız bıraktın.\n", mCalls.size()));
 						else comment.append("You did not answer any calls from this contact.")
@@ -502,7 +503,7 @@ public class QuantityComment implements ContactComment {
 	 * @return the call rank or {@code null} if not found
 	 */
 	@Nullable
-	private CallRank getCallRank(int callType) {
+	private CallRank getCallRank(@CallType int callType) {
 		
 		RankMap rankMap;
 		
@@ -539,7 +540,7 @@ public class QuantityComment implements ContactComment {
 		return callRank;
 	}
 	
-	private @NotNull RankMap createRankMap(int callType) {
+	private @NotNull RankMap createRankMap(@CallType int callType) {
 		//@off
 		assert this.callLog != null;
 		switch (callType) {
@@ -795,7 +796,7 @@ public class QuantityComment implements ContactComment {
 		
 		List<MostCallItemViewData> list = new ArrayList<>();
 		
-		for (List<CallRank> rankList : map.getValues()) {
+		for (List<CallRank> rankList : map.values()) {
 			
 			for (CallRank callRank : rankList) {
 				
@@ -806,7 +807,7 @@ public class QuantityComment implements ContactComment {
 				int                  order = callRank.getRank();
 				MostCallItemViewData data  = new MostCallItemViewData(name, size, order);
 				
-				if (CallKey.getContactId(call) == contact.getContactId()) data.setSelected(true);
+				if (Key.getContactId(call) == contact.getContactId()) data.setSelected(true);
 				
 				list.add(data);
 			}

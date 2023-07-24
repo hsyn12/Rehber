@@ -8,25 +8,24 @@ import androidx.annotation.NonNull;
 
 import com.tr.hsyn.bungee.Bungee;
 import com.tr.hsyn.calldata.Call;
-import com.tr.hsyn.calldata.CallType;
+import com.tr.hsyn.calldata.Type;
 import com.tr.hsyn.colors.ColorHolder;
 import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.execution.Runny;
-import com.tr.hsyn.key.Key;
 import com.tr.hsyn.message.Show;
 import com.tr.hsyn.page.HaveCallAction;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.selection.ItemIndexListener;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
-import com.tr.hsyn.telefonrehberi.main.call.Filter;
 import com.tr.hsyn.telefonrehberi.main.call.activity.MostCallsActivity;
 import com.tr.hsyn.telefonrehberi.main.call.activity.search.CallLogSearchInfo;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
+import com.tr.hsyn.telefonrehberi.main.call.cast.base.Filter;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
+import com.tr.hsyn.telefonrehberi.main.call.data.Key;
 import com.tr.hsyn.telefonrehberi.main.call.dialog.CallLogFilters;
 import com.tr.hsyn.telefonrehberi.main.cast.BackPressObserver;
 import com.tr.hsyn.telefonrehberi.main.code.page.adapter.CallAdapter;
-import com.tr.hsyn.telefonrehberi.main.data.CallLog;
 import com.tr.hsyn.xbox.Blue;
 import com.tr.hsyn.xlog.xlog;
 
@@ -159,14 +158,14 @@ public abstract class CallLogFilter extends CallList implements Filter, HaveCall
 	
 	private void showMostCalls(int filter) {
 		
-		Blue.box(Key.MOST_CALLS_FILTER_TYPE, filter);
+		Blue.box(com.tr.hsyn.key.Key.MOST_CALLS_FILTER_TYPE, filter);
 		startActivity(new Intent(getContext(), MostCallsActivity.class));
 		Bungee.slideDown(getContext());
 	}
 	
 	private void filterAll() {
 		
-		Blue.box(Key.CALL_LOG_FILTER, new CallLogSearchInfo(getList(), filter));
+		Blue.box(com.tr.hsyn.key.Key.CALL_LOG_FILTER, new CallLogSearchInfo(getList(), filter));
 		
 		if (filteredCalls != null) {
 			
@@ -196,20 +195,20 @@ public abstract class CallLogFilter extends CallList implements Filter, HaveCall
 					filteredCalls = getList().stream().filter(Call::isIncoming).collect(Collectors.toList());
 					break;
 				case CallLog.FILTER_OUTGOING:
-					filteredCalls = getList().stream().filter(CallType::isOutgoing).collect(Collectors.toList());
+					filteredCalls = getList().stream().filter(Type::isOutgoing).collect(Collectors.toList());
 					break;
 				case CallLog.FILTER_MISSED:
-					filteredCalls = getList().stream().filter(CallType::isMissed).collect(Collectors.toList());
+					filteredCalls = getList().stream().filter(Type::isMissed).collect(Collectors.toList());
 					break;
 				case CallLog.FILTER_REJECTED:
-					filteredCalls = getList().stream().filter(CallType::isRejected).collect(Collectors.toList());
+					filteredCalls = getList().stream().filter(Type::isRejected).collect(Collectors.toList());
 					break;
 				case CallLog.FILTER_NO_NAMED:
 					filteredCalls = getList().stream().filter(c -> c.getName() == null || PhoneNumbers.isPhoneNumber(c.getName())).collect(Collectors.toList());
 					break;
 				
 				case CallLog.FILTER_RANDOM:
-					filteredCalls = getList().stream().filter(call -> call.getBool(CallKey.RANDOM)).collect(Collectors.toList());
+					filteredCalls = getList().stream().filter(call -> call.getBool(Key.RANDOM)).collect(Collectors.toList());
 					break;
 			}
 			
@@ -249,7 +248,7 @@ public abstract class CallLogFilter extends CallList implements Filter, HaveCall
 			updateSubTitle();
 			checkEmpty();
 			
-			Blue.box(Key.CALL_LOG_FILTER, new CallLogSearchInfo(filteredCalls, filter));
+			Blue.box(com.tr.hsyn.key.Key.CALL_LOG_FILTER, new CallLogSearchInfo(filteredCalls, filter));
 		}
 		else {
 			

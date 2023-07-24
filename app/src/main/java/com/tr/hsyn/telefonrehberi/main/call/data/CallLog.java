@@ -1,4 +1,4 @@
-package com.tr.hsyn.telefonrehberi.main.data;
+package com.tr.hsyn.telefonrehberi.main.call.data;
 
 
 import android.content.Context;
@@ -6,18 +6,20 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 
 import com.tr.hsyn.calldata.Call;
+import com.tr.hsyn.calldata.CallType;
+import com.tr.hsyn.calldata.Type;
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.keep.Keep;
-import com.tr.hsyn.key.Key;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallType;
-import com.tr.hsyn.telefonrehberi.main.call.data.RankMap;
+import com.tr.hsyn.telefonrehberi.main.call.data.type.FilterMostCall;
+import com.tr.hsyn.telefonrehberi.main.call.data.type.FilterType;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
 import com.tr.hsyn.telefonrehberi.main.contact.data.History;
+import com.tr.hsyn.telefonrehberi.main.data.CallMap;
+import com.tr.hsyn.telefonrehberi.main.data.MainContacts;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
 import com.tr.hsyn.time.duration.DurationGroup;
 import com.tr.hsyn.xbox.Blue;
@@ -174,7 +176,7 @@ public final class CallLog {
 	 * @return calls
 	 */
 	@NonNull
-	public List<Call> getCallsByType(@CallType int @NotNull ... callTypes) {
+	public List<Call> getCallsByType(int @NotNull ... callTypes) {
 		
 		return getCalls(call -> Lister.contains(callTypes, call.getCallType()));
 	}
@@ -193,10 +195,10 @@ public final class CallLog {
 	 *
 	 * @param filter the filter
 	 * @return the calls
-	 * @see CallFilter
+	 * @see FilterType
 	 */
 	@NotNull
-	public List<Call> getCalls(@CallFilter int filter) {
+	public List<Call> getCalls(@FilterType int filter) {
 		
 		//@off
 		switch (filter) {
@@ -218,7 +220,7 @@ public final class CallLog {
 	 * @return the rank map
 	 */
 	@NotNull
-	public RankMap getMostCalls(@MostFilter int filter) {
+	public RankMap getMostCalls(@FilterMostCall int filter) {
 		
 		switch (filter) {
 			case FILTER_MOST_INCOMING: return mostIncoming();
@@ -273,7 +275,7 @@ public final class CallLog {
 	@NotNull
 	public RankMap mostSpeaking() {
 		
-		List<Call> ins = incomingCalls().stream().filter(Call::isSpeaking).collect(Collectors.toList());
+		List<Call> ins = incomingCalls().stream().filter(Call::isSpoken).collect(Collectors.toList());
 		return new RankMap(rankByDuration(ins));
 	}
 	
@@ -283,7 +285,7 @@ public final class CallLog {
 	@NotNull
 	public RankMap mostTalking() {
 		
-		List<Call> outs = outgoingCalls().stream().filter(Call::isSpeaking).collect(Collectors.toList());
+		List<Call> outs = outgoingCalls().stream().filter(Call::isSpoken).collect(Collectors.toList());
 		return new RankMap(rankByDuration(outs));
 	}
 	
@@ -295,7 +297,7 @@ public final class CallLog {
 	 * @return the calls
 	 */
 	@NotNull
-	public List<Call> getCalls(@NotNull Contact contact, @CallType int @NotNull ... callTypes) {
+	public List<Call> getCalls(@NotNull Contact contact, int @NotNull ... callTypes) {
 		
 		List<Call> calls = callMap.get(String.valueOf(contact.getContactId()));
 		
@@ -639,7 +641,7 @@ public final class CallLog {
 	private static void mergeSameCalls(@NotNull CallMap callMap) {
 		
 		// phone numbers
-		List<String> keys = callMap.getKeys();
+		List<String> keys = Lister.listOf(callMap.keySet());
 		
 		// loop on numbers
 		for (int i = 0; i < keys.size(); i++) {
@@ -652,7 +654,7 @@ public final class CallLog {
 			
 			if (calls == null) continue;
 			
-			long contactId = CallKey.getContactId(calls.get(0));
+			long contactId = Key.getContactId(calls.get(0));
 			
 			if (contactId != 0L) {//+ Contact ID found
 				
@@ -664,7 +666,7 @@ public final class CallLog {
 					
 					if (otherCalls == null) continue;
 					
-					long otherContactId = CallKey.getContactId(otherCalls.get(0));
+					long otherContactId = Key.getContactId(otherCalls.get(0));
 					
 					// contactId cannot be zero but otherContactId maybe
 					if (contactId == otherContactId) {
@@ -692,7 +694,7 @@ public final class CallLog {
 	 * @return the rank map
 	 */
 	@NotNull
-	public static RankMap rankByDuration(@NotNull List<Call> calls, int callType) {
+	public static RankMap rankByDuration(@NotNull List<Call> calls, @CallType int callType) {
 		
 		calls = calls.stream().filter(c -> c.isType(callType)).collect(Collectors.toList());
 		return new RankMap(rankByDuration(calls));
@@ -703,14 +705,14 @@ public final class CallLog {
 	 * Also, stored on the blue cloud.
 	 *
 	 * @return the call collection
-	 * @see Key#CALL_LOG
+	 * @see com.tr.hsyn.key.Key#CALL_LOG
 	 */
 	@NotNull
 	public static CallLog createGlobal() {
 		
 		CallLog collection = new CallLog();
 		
-		Blue.box(Key.CALL_LOG, collection);
+		Blue.box(com.tr.hsyn.key.Key.CALL_LOG, collection);
 		
 		return collection;
 	}
@@ -737,7 +739,7 @@ public final class CallLog {
 		
 		CallLog collection = new CallLog(calls);
 		
-		Blue.box(Key.CALL_LOG, collection);
+		Blue.box(com.tr.hsyn.key.Key.CALL_LOG, collection);
 		
 		return collection;
 	}
@@ -842,7 +844,7 @@ public final class CallLog {
 	public static Map<Integer, List<CallRank>> rankByDuration(@NotNull List<Call> calls) {
 		
 		CallMap        callMap   = new CallMap(calls, CallLog::getKey);
-		List<String>   keys      = callMap.getKeys();
+		List<String>   keys      = Lister.listOf(callMap.keySet());
 		List<CallRank> callRanks = new ArrayList<>();
 		
 		//_ create call rank objects
@@ -903,7 +905,7 @@ public final class CallLog {
 	@NotNull
 	public static String getKey(@NotNull Call call) {
 		
-		long id = call.getLong(CallKey.CONTACT_ID, 0L);
+		long id = call.getLong(Key.CONTACT_ID, 0L);
 		
 		if (id != 0L) return id + "";
 		
@@ -911,12 +913,18 @@ public final class CallLog {
 	}
 	
 	/**
-	 * Returns the call type array.
+	 * Returns the call types for the given call type.
+	 * {@link Type#INCOMING} and {@link Type#INCOMING_WIFI} are same types.
+	 * {@link Type#OUTGOING} and {@link Type#OUTGOING_WIFI} are same types.
+	 * So, if the given call type is {@link Type#MISSED} or {@link Type#REJECTED},
+	 * this method returns {@link Type#MISSED} or {@link Type#REJECTED}.
 	 *
 	 * @param callType the call type
-	 * @return the call type array
+	 * @return the call types
+	 * @see Type
 	 */
-	public static int @NotNull [] getCallTypeArray(@CallType int callType) {
+	@CallType
+	public static int @NotNull [] getCallTypes(@CallType int callType) {
 		
 		if (callType == Call.MISSED || callType == Call.REJECTED) return new int[]{callType};
 		

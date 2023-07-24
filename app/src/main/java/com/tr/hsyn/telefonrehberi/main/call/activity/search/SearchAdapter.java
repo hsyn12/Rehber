@@ -23,8 +23,8 @@ import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.selection.ItemIndexListener;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallKey;
 import com.tr.hsyn.telefonrehberi.main.call.data.Calls;
+import com.tr.hsyn.telefonrehberi.main.call.data.Key;
 import com.tr.hsyn.telefonrehberi.main.contact.activity.search.TextChangeListener;
 import com.tr.hsyn.text.Spanner;
 import com.tr.hsyn.text.Spans;
@@ -153,7 +153,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> im
 		
 		holder.type.setImageDrawable(type);
 		holder.speakDuration.setText(Files.formatSeconds(call.getDuration()));
-		holder.ringingDuration.setText(Files.formatMilliSeconds(call.getLong(CallKey.RINGING_DURATION, 0L)));
+		holder.ringingDuration.setText(Files.formatMilliSeconds(call.getLong(Key.RINGING_DURATION, 0L)));
 		holder.date.setText(Time.toString(call.getTime(), "d MMMM yyyy HH:mm"));
 		
 		String letter = Stringx.getLetter(name);
