@@ -138,7 +138,7 @@ public final class CallLog {
 	}
 	
 	/**
-	 * @return {@code true} if the call list that created this {@link RankMap} object is empty.
+	 * @return {@code true} if the call log is empty.
 	 */
 	public boolean isEmpty() {
 		
@@ -146,7 +146,7 @@ public final class CallLog {
 	}
 	
 	/**
-	 * @return {@code true} if the collection is not empty
+	 * @return {@code true} if the call log is not empty
 	 */
 	public boolean isNotEmpty() {
 		
@@ -154,7 +154,7 @@ public final class CallLog {
 	}
 	
 	/**
-	 * Returns the history of the given contact.
+	 * Returns the history of the contact.
 	 *
 	 * @param contact the contact
 	 * @return the history
@@ -230,30 +230,45 @@ public final class CallLog {
 		}
 	}
 	
+	/**
+	 * @return new rank map for incoming calls
+	 */
 	@NotNull
 	public RankMap mostIncoming() {
 		
 		return new RankMap(rankByQuantity(incomingCalls()));
 	}
 	
+	/**
+	 * @return new rank map for outgoing calls
+	 */
 	@NotNull
 	public RankMap mostOutgoing() {
 		
 		return new RankMap(rankByQuantity(outgoingCalls()));
 	}
 	
+	/**
+	 * @return new rank map for missed calls
+	 */
 	@NotNull
 	public RankMap mostMissed() {
 		
 		return new RankMap(rankByQuantity(missedCalls()));
 	}
 	
+	/**
+	 * @return new rank map for rejected calls
+	 */
 	@NotNull
 	public RankMap mostRejected() {
 		
 		return new RankMap(rankByQuantity(rejectedCalls()));
 	}
 	
+	/**
+	 * @return new rank map for incoming calls, which have speaking duration
+	 */
 	@NotNull
 	public RankMap mostSpeaking() {
 		
@@ -261,6 +276,9 @@ public final class CallLog {
 		return new RankMap(rankByDuration(ins));
 	}
 	
+	/**
+	 * @return new rank map for outgoing calls, which have speaking duration
+	 */
 	@NotNull
 	public RankMap mostTalking() {
 		
@@ -434,7 +452,7 @@ public final class CallLog {
 	@NotNull
 	public RankMap makeIncomingRank() {
 		
-		return rankByDuration(Call.INCOMING, Call.INCOMING_WIFI);
+		return rankByQuantity(Call.INCOMING, Call.INCOMING_WIFI);
 	}
 	
 	/**
@@ -448,7 +466,7 @@ public final class CallLog {
 	@NotNull
 	public RankMap makeOutgoingRank() {
 		
-		return rankByDuration(Call.OUTGOING, Call.OUTGOING_WIFI);
+		return rankByQuantity(Call.OUTGOING, Call.OUTGOING_WIFI);
 	}
 	
 	/**
@@ -462,7 +480,7 @@ public final class CallLog {
 	@NotNull
 	public RankMap makeMissedRank() {
 		
-		return rankByDuration(Call.MISSED);
+		return rankByQuantity(Call.MISSED);
 	}
 	
 	/**
@@ -476,7 +494,7 @@ public final class CallLog {
 	@NotNull
 	public RankMap makeRejectedRank() {
 		
-		return rankByDuration(Call.REJECTED);
+		return rankByQuantity(Call.REJECTED);
 	}
 	
 	/**
@@ -775,7 +793,7 @@ public final class CallLog {
 	 */
 	public static List<CallRank> createRankListByDuration(@NotNull List<Call> calls) {
 		
-		return new RankMap(rankByQuantity(calls)).getCallRanks();
+		return new RankMap(rankByDuration(calls)).getCallRanks();
 	}
 	
 	/**

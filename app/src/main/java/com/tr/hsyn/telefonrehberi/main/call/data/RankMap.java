@@ -39,7 +39,7 @@ public class RankMap extends Groups<Integer, CallRank> {
 	}
 	
 	/**
-	 * Returns the list of {@link CallRank}  by the rank.
+	 * Returns the list of {@link CallRank} by the rank.
 	 *
 	 * @param rank the rank
 	 * @return the list of {@link CallRank} or {@code null} if the rank does not exist.
@@ -51,7 +51,7 @@ public class RankMap extends Groups<Integer, CallRank> {
 	}
 	
 	/**
-	 * Returns the list of {@link CallRank}s that had.
+	 * Returns the all {@link CallRank}s that have.
 	 *
 	 * @return the list of {@link CallRank}s
 	 */
@@ -111,6 +111,9 @@ public class RankMap extends Groups<Integer, CallRank> {
 		return null;
 	}
 	
+	/**
+	 * @return the rank list in order by rank ascending
+	 */
 	public List<Map.Entry<Integer, List<CallRank>>> sortedEntries() {
 		
 		return sortedEntries(COMPARATOR_BY_RANK);
