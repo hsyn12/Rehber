@@ -33,6 +33,11 @@ public class RankMap extends Groups<Integer, CallRank> {
 	 */
 	public static final Comparator<Map.Entry<Integer, List<CallRank>>> COMPARATOR_BY_RANK = Map.Entry.comparingByKey();
 	
+	/**
+	 * Creates a new instance.
+	 *
+	 * @param rankMap the rank map
+	 */
 	public RankMap(@NotNull Map<Integer, List<CallRank>> rankMap) {
 		
 		super(rankMap);
