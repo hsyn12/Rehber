@@ -6,6 +6,7 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 
 import com.tr.hsyn.calldata.Call;
+import com.tr.hsyn.calldata.CallType;
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.keep.Keep;
@@ -907,5 +908,24 @@ public final class CallLog {
 		if (id != 0L) return id + "";
 		
 		return PhoneNumbers.formatNumber(call.getNumber(), PhoneNumbers.MINIMUM_NUMBER_LENGTH);
+	}
+	
+	/**
+	 * Returns the call type array.
+	 *
+	 * @param callType the call type
+	 * @return the call type array
+	 */
+	public static int @NotNull [] getCallTypeArray(int callType) {
+		
+		if (callType == Call.MISSED || callType == Call.REJECTED) return new int[]{callType};
+		
+		switch (callType) {
+			case CallType.OUTGOING:
+			case CallType.OUTGOING_WIFI: return new int[]{CallType.OUTGOING, CallType.OUTGOING_WIFI};
+			case CallType.INCOMING:
+			case CallType.INCOMING_WIFI: return new int[]{CallType.INCOMING, CallType.INCOMING_WIFI};
+			default: throw new IllegalArgumentException("Unknown call type: " + callType);
+		}
 	}
 }
