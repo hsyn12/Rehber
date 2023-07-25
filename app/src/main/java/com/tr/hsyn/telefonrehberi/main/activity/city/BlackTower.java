@@ -210,7 +210,7 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 		
 		if (loadingCompleted.getAndSet(true)) {
 			
-			CallLog.createGlobal();
+			CallLog.createGlobal(Over.CallLog.Calls.getCalls());
 		}
 	}
 	

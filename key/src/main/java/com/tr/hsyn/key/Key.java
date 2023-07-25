@@ -35,7 +35,7 @@ public class Key extends AtomImpl {
 	public static final Key CALL_HISTORY           = Key.of(18, "Call History");
 	public static final Key CALL_LOG_UPDATED       = Key.of(19, "CallLog Updated");
 	/**
-	 * The object that consists of all call log calls.
+	 * CallLog object.
 	 */
 	public static final Key CALL_LOG               = Key.of(20, "Call Log");
 	/**

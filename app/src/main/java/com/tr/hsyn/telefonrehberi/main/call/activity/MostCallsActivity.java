@@ -20,6 +20,7 @@ import com.tr.hsyn.key.Key;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
 import com.tr.hsyn.telefonrehberi.main.call.data.RankMap;
+import com.tr.hsyn.telefonrehberi.main.call.data.Res;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
 import com.tr.hsyn.textdrawable.TextDrawable;
 import com.tr.hsyn.time.Time;
@@ -102,7 +103,7 @@ public class MostCallsActivity extends ActivityView {
 		Toolbarx.setToolbar(this, toolbar, this::onBackPressed);
 		
 		assert getSupportActionBar() != null;
-		getSupportActionBar().setTitle(CallLog.getCallFilterName(this, FILTER));
+		getSupportActionBar().setTitle(Res.Call.getCallFilterName(this, FILTER));
 	}
 	
 	/**
@@ -142,7 +143,7 @@ public class MostCallsActivity extends ActivityView {
 				break;
 			
 			default:
-				xlog.w("There is no proper type for filter : %d [%s]", FILTER, CallLog.getCallFilterName(this, FILTER));
+				xlog.w("There is no proper type for filter : %d [%s]", FILTER, Res.Call.getCallFilterName(this, FILTER));
 		}
 	}
 	

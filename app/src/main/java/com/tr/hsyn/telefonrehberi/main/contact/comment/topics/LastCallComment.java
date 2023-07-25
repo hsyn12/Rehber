@@ -75,7 +75,7 @@ public class LastCallComment implements ContactComment {
 		int                       type            = lastCall.getCallType();
 		int[]                     callTypes       = CallLog.getCallTypes(type);
 		List<Call>                typedCalls      = history.getCallsByTypes(callTypes);
-		String                    typeStr         = Res.getCallType(getActivity(), type);
+		String                    typeStr         = Res.Call.getCallType(getActivity(), type);
 		Duration                  timeBefore      = Time.howLongBefore(lastCall.getTime());
 		ShowCall                  showCall        = new ShowCall(getActivity(), lastCall);
 		View.OnClickListener      listener1       = view -> showCall.show();

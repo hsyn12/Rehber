@@ -230,7 +230,7 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 	private void commentOnTheSingleCall(@NotNull Call call) {
 		
 		Duration             timeBefore = Time.howLongBefore(call.getTime());
-		String               callType   = Res.getCallType(commentStore.getActivity(), call.getCallType());
+		String               callType   = Res.Call.getCallType(commentStore.getActivity(), call.getCallType());
 		View.OnClickListener listener1  = view -> new ShowCall(commentStore.getActivity(), call).show();
 		
 		if (commentStore.isTurkishLanguage()) {

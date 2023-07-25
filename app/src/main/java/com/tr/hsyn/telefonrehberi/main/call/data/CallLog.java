@@ -1,8 +1,6 @@
 package com.tr.hsyn.telefonrehberi.main.call.data;
 
 
-import android.content.Context;
-
 import androidx.annotation.NonNull;
 
 import com.tr.hsyn.calldata.Call;
@@ -13,14 +11,12 @@ import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.keep.Keep;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.string.Stringx;
-import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.call.data.type.FilterMostCall;
 import com.tr.hsyn.telefonrehberi.main.call.data.type.FilterType;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
 import com.tr.hsyn.telefonrehberi.main.contact.data.History;
 import com.tr.hsyn.telefonrehberi.main.data.CallMap;
 import com.tr.hsyn.telefonrehberi.main.data.MainContacts;
-import com.tr.hsyn.telefonrehberi.main.dev.Over;
 import com.tr.hsyn.time.duration.DurationGroup;
 import com.tr.hsyn.xbox.Blue;
 
@@ -108,15 +104,6 @@ public final class CallLog {
 	 * The list of {@link Call} that created this {@link RankMap} object
 	 */
 	private final       List<Call>                                calls;
-	
-	/**
-	 * Creates a new call log.
-	 * It uses all call log calls.
-	 */
-	private CallLog() {
-		
-		this(Over.CallLog.Calls.getCalls());
-	}
 	
 	/**
 	 * Creates a new call log.
@@ -701,38 +688,10 @@ public final class CallLog {
 	}
 	
 	/**
-	 * Creates a new call collection.
-	 * Also, stored on the blue cloud.
-	 *
-	 * @return the call collection
-	 * @see com.tr.hsyn.key.Key#CALL_LOG
-	 */
-	@NotNull
-	public static CallLog createGlobal() {
-		
-		CallLog collection = new CallLog();
-		
-		Blue.box(com.tr.hsyn.key.Key.CALL_LOG, collection);
-		
-		return collection;
-	}
-	
-	/**
-	 * Creates a new call collection.
-	 *
-	 * @return the call logs
-	 */
-	@NotNull
-	public static CallLog create() {
-		
-		return new CallLog();
-	}
-	
-	/**
-	 * Creates a new call collection.
+	 * Creates a new call log.
 	 *
 	 * @param calls the calls
-	 * @return the call collection
+	 * @return the call log
 	 */
 	@NotNull
 	public static CallLog createGlobal(List<Call> calls) {
@@ -757,7 +716,7 @@ public final class CallLog {
 	}
 	
 	/**
-	 * Finds the duration of the contact.
+	 * Returns the duration of the contact.
 	 *
 	 * @param durations the list of entry of contact to duration
 	 * @param contact   the contact
@@ -772,20 +731,6 @@ public final class CallLog {
 				.filter(e -> e.getKey().getContactId() == contact.getContactId())
 				.findFirst().map(Map.Entry::getValue)
 				.orElse(null);
-	}
-	
-	/**
-	 * Returns the name equivalent of the filtering options used in the call logs.
-	 *
-	 * @param context context
-	 * @param filter  the filter
-	 * @return the name of the filter
-	 */
-	public static String getCallFilterName(@NotNull Context context, int filter) {
-		
-		String[] filters = context.getResources().getStringArray(R.array.call_filter_items);
-		
-		return filters[filter];
 	}
 	
 	/**
