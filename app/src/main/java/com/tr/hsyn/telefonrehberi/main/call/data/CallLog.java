@@ -8,7 +8,6 @@ import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.keep.Keep;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
-import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.main.call.data.type.FilterMostCall;
 import com.tr.hsyn.telefonrehberi.main.call.data.type.FilterType;
 import com.tr.hsyn.telefonrehberi.main.contact.data.History;
@@ -31,99 +30,94 @@ import java.util.stream.Collectors;
  * Holds the call logs and provides methods for filtering, searching and analyzing.
  */
 @Keep
-public final class CallLog implements CCollection, Ranker {
+public interface CallLog extends CCollection, Ranker {
 	
 	/**
 	 * The filter for All calls.
 	 */
-	public static final int        FILTER_ALL           = 0;
+	int FILTER_ALL           = 0;
 	/**
 	 * The filter for Incoming calls.
 	 */
-	public static final int        FILTER_INCOMING      = 1;
+	int FILTER_INCOMING      = 1;
 	/**
 	 * The filter for Outgoing calls.
 	 */
-	public static final int        FILTER_OUTGOING      = 2;
+	int FILTER_OUTGOING      = 2;
 	/**
 	 * The filter for missed calls
 	 */
-	public static final int        FILTER_MISSED        = 3;
+	int FILTER_MISSED        = 3;
 	/**
 	 * The filter for rejected calls
 	 */
-	public static final int        FILTER_REJECTED      = 4;
+	int FILTER_REJECTED      = 4;
 	/**
 	 * The filter for no-named calls
 	 */
-	public static final int        FILTER_NO_NAMED      = 5;
+	int FILTER_NO_NAMED      = 5;
 	/**
 	 * The filter for random calls
 	 */
-	public static final int        FILTER_RANDOM        = 6;
+	int FILTER_RANDOM        = 6;
 	/**
 	 * The filter for most incoming
 	 */
-	public static final int        FILTER_MOST_INCOMING = 7;
+	int FILTER_MOST_INCOMING = 7;
 	/**
 	 * The filter for most outgoing
 	 */
-	public static final int        FILTER_MOST_OUTGOING = 8;
+	int FILTER_MOST_OUTGOING = 8;
 	/**
 	 * The filter for most missed
 	 */
-	public static final int        FILTER_MOST_MISSED   = 9;
+	int FILTER_MOST_MISSED   = 9;
 	/**
 	 * The filter for most rejected
 	 */
-	public static final int        FILTER_MOST_REJECTED = 10;
+	int FILTER_MOST_REJECTED = 10;
 	/**
 	 * The filter for most speaking (incoming)
 	 */
-	public static final int        FILTER_MOST_SPEAKING = 11;
+	int FILTER_MOST_SPEAKING = 11;
 	/**
 	 * The filter for most talking (outgoing)
 	 */
-	public static final int        FILTER_MOST_TALKING  = 12;
-	/**
-	 * The calls get associated by a key.
-	 * The key is a contact ID or a phone number or whatever else unique.
-	 * In this way, it provides accessing the calls by a key practically.
-	 */
-	private final       CallMap    callMap;
-	/**
-	 * The list of {@link Call} that created this {@link RankMap} object
-	 */
-	private final       List<Call> calls;
+	int FILTER_MOST_TALKING  = 12;
 	
 	/**
-	 * Creates a new call log.
+	 * Returns the calls of the contact.
 	 *
-	 * @param calls list of calls to create the call log
+	 * @param contact   the contact
+	 * @param callTypes the call types to select
+	 * @return the calls
 	 */
-	private CallLog(List<Call> calls) {
-		
-		this.calls = calls != null ? calls : new ArrayList<>(0);
-		callMap    = new CallMap(this.calls, CallLog::getKey);
-		mergeSameCalls(callMap);
-	}
+	@NotNull
+	List<Call> getCalls(@NotNull Contact contact, int @NotNull ... callTypes);
 	
 	/**
-	 * @return the calls that are creating this object by.
+	 * Returns all calls with the given contact ID.
+	 *
+	 * @param contactId the contact ID
+	 * @return calls
 	 */
-	@Override
 	@NotNull
-	public List<Call> getCalls() {
-		
-		return calls;
-	}
+	List<Call> getById(long contactId);
+	
+	/**
+	 * Returns all calls with the given contact ID.
+	 *
+	 * @param contactId the contact ID
+	 * @return calls
+	 */
+	@NotNull List<Call> getById(String contactId);
 	
 	/**
 	 * @return new rank map for incoming calls
 	 */
 	@Override
 	@NotNull
-	public RankMap incomingRank() {
+	default RankMap incomingRank() {
 		
 		return new RankMap(rankByQuantity(incomingCalls()));
 	}
@@ -133,7 +127,7 @@ public final class CallLog implements CCollection, Ranker {
 	 */
 	@Override
 	@NotNull
-	public RankMap outgoingRank() {
+	default RankMap outgoingRank() {
 		
 		return new RankMap(rankByQuantity(outgoingCalls()));
 	}
@@ -143,7 +137,7 @@ public final class CallLog implements CCollection, Ranker {
 	 */
 	@Override
 	@NotNull
-	public RankMap missedRank() {
+	default RankMap missedRank() {
 		
 		return new RankMap(rankByQuantity(missedCalls()));
 	}
@@ -153,7 +147,7 @@ public final class CallLog implements CCollection, Ranker {
 	 */
 	@Override
 	@NotNull
-	public RankMap rejectedRank() {
+	default RankMap rejectedRank() {
 		
 		return new RankMap(rankByQuantity(rejectedCalls()));
 	}
@@ -163,7 +157,7 @@ public final class CallLog implements CCollection, Ranker {
 	 */
 	@Override
 	@NotNull
-	public RankMap incomingDurationRank() {
+	default RankMap incomingDurationRank() {
 		
 		List<Call> ins = incomingCalls().stream().filter(Call::isSpoken).collect(Collectors.toList());
 		return new RankMap(rankByDuration(ins));
@@ -174,20 +168,22 @@ public final class CallLog implements CCollection, Ranker {
 	 */
 	@Override
 	@NotNull
-	public RankMap outgoingDurationRank() {
+	default RankMap outgoingDurationRank() {
 		
 		List<Call> outs = outgoingCalls().stream().filter(Call::isSpoken).collect(Collectors.toList());
 		return new RankMap(rankByDuration(outs));
 	}
 	
-	public RankMap rankByQuantity() {
+	/**
+	 * Checks if the list is not empty.
+	 *
+	 * @param list the list
+	 * @param <T>  the type of the list
+	 * @return {@code true} if the list is not empty
+	 */
+	default <T> boolean isNotEmpty(@NotNull List<T> list) {
 		
-		return rankByQuantity(calls);
-	}
-	
-	public RankMap rankByDuration() {
-		
-		return rankByDuration(calls);
+		return !list.isEmpty();
 	}
 	
 	/**
@@ -198,7 +194,7 @@ public final class CallLog implements CCollection, Ranker {
 	 * @see History
 	 */
 	@NotNull
-	public History getHistoryOf(@NotNull Contact contact) {
+	default History getHistoryOf(@NotNull Contact contact) {
 		
 		return History.of(contact, getById(contact.getContactId()));
 	}
@@ -211,11 +207,11 @@ public final class CallLog implements CCollection, Ranker {
 	 * @see FilterType
 	 */
 	@NotNull
-	public List<Call> getCalls(@FilterType int filter) {
+	default List<Call> getCalls(@FilterType int filter) {
 		
 		//@off
 		switch (filter) {
-			case FILTER_ALL:      return calls;
+			case FILTER_ALL:      return getCalls();
 			case FILTER_INCOMING: return incomingCalls();
 			case FILTER_OUTGOING: return outgoingCalls();
 			case FILTER_MISSED:   return missedCalls();
@@ -233,7 +229,7 @@ public final class CallLog implements CCollection, Ranker {
 	 * @return the rank map
 	 */
 	@NotNull
-	public RankMap getMostCalls(@FilterMostCall int filter) {
+	default RankMap getMostCalls(@FilterMostCall int filter) {
 		
 		switch (filter) {
 			case FILTER_MOST_INCOMING: return incomingRank();
@@ -246,94 +242,14 @@ public final class CallLog implements CCollection, Ranker {
 		}
 	}
 	
-	/**
-	 * Returns the calls of the contact.
-	 *
-	 * @param contact   the contact
-	 * @param callTypes the call types to select
-	 * @return the calls
-	 */
 	@NotNull
-	public List<Call> getCalls(@NotNull Contact contact, int @NotNull ... callTypes) {
+	default List<Call> getCalls(@NotNull Contact contact, @NotNull CallMap callMap, int @NotNull ... callTypes) {
 		
 		List<Call> calls = callMap.get(String.valueOf(contact.getContactId()));
 		
 		if (callTypes.length == 0) return calls;
 		
 		return calls.stream().filter(call -> Lister.contains(callTypes, call.getCallType())).collect(Collectors.toList());
-	}
-	
-	/**
-	 * Returns all calls with the given contact ID.
-	 *
-	 * @param contactId the contact ID
-	 * @return calls
-	 */
-	@NotNull
-	public List<Call> getById(long contactId) {
-		
-		return callMap.get(String.valueOf(contactId));
-	}
-	
-	/**
-	 * Returns all calls with the given contact ID.
-	 *
-	 * @param contactId the contact ID
-	 * @return calls
-	 */
-	public @NotNull List<Call> getById(String contactId) {
-		
-		if (Stringx.isNoboe(contactId) || isEmpty()) return new ArrayList<>(0);
-		
-		return callMap.get(contactId);
-	}
-	
-	/**
-	 * @return total speaking duration of all incoming calls in seconds
-	 */
-	public int getIncomingDuration(@NotNull List<Call> calls) {
-		
-		return calls.stream()
-				.map(Call::getDuration)
-				.reduce(Integer::sum)
-				.orElse(0);
-	}
-	
-	/**
-	 * @return total speaking duration of all outgoing calls in seconds
-	 */
-	public int getOutgoingDuration(@NotNull List<Call> calls) {
-		
-		return calls.stream()
-				.map(Call::getDuration)
-				.reduce(Integer::sum)
-				.orElse(0);
-	}
-	
-	/**
-	 * Creates a rank map for the given call types.
-	 *
-	 * @param callTypes the call types to select
-	 * @return the rank map that ranked by calls quantity.
-	 * 		The ranking starts 1, and advances one by one.
-	 * 		The most valuable rank is 1.
-	 */
-	@NotNull
-	public RankMap rankByQuantity(@CallType int @NotNull ... callTypes) {
-		
-		return new RankMap(rankByQuantity(getByType(callTypes)));
-	}
-	
-	/**
-	 * Checks if the list is not empty.
-	 *
-	 * @param list the list
-	 * @param <T>  the type of the list
-	 * @return {@code true} if the list is not empty
-	 */
-	public <T> boolean isNotEmpty(@NotNull List<T> list) {
-		
-		return !list.isEmpty();
 	}
 	
 	/**
@@ -362,7 +278,7 @@ public final class CallLog implements CCollection, Ranker {
 	 * @param minSize  the minimum number of calls. The number greater than zero means does not select empty calls.
 	 * @return the contacts that match the all criteria together.
 	 */
-	public @NotNull List<Contact> selectContacts(@Nullable Boolean incoming, @Nullable Boolean outgoing, @Nullable Boolean missed, @Nullable Boolean rejected, int minSize) {
+	default @NotNull List<Contact> selectContacts(@Nullable Boolean incoming, @Nullable Boolean outgoing, @Nullable Boolean missed, @Nullable Boolean rejected, int minSize) {
 		
 		List<Contact> contacts = MainContacts.getWithNumber();
 		
@@ -428,11 +344,21 @@ public final class CallLog implements CCollection, Ranker {
 	 * @param predicate the predicate to select
 	 * @return the contacts
 	 */
-	public @NotNull List<Contact> getContactsByCalls(@NotNull Predicate<@NotNull List<Call>> predicate) {
+	default @NotNull List<Contact> getContactsByCalls(@NotNull Predicate<@NotNull List<Call>> predicate) {
 		
 		return MainContacts.getWithNumber().stream()
 				.filter(contact -> predicate.test(getCalls(contact)))
 				.collect(Collectors.toList());
+	}
+	
+	default RankMap rankByQuantity() {
+		
+		return rankByQuantity(getCalls());
+	}
+	
+	default RankMap rankByDuration() {
+		
+		return rankByDuration(getCalls());
 	}
 	
 	/**
@@ -496,9 +422,9 @@ public final class CallLog implements CCollection, Ranker {
 	 * @return the call log
 	 */
 	@NotNull
-	public static CallLog createGlobal(List<Call> calls) {
+	static CallLog createGlobal(List<Call> calls) {
 		
-		CallLog collection = new CallLog(calls);
+		CallLog collection = new CallLogger(calls);
 		
 		Blue.box(com.tr.hsyn.key.Key.CALL_LOG, collection);
 		
@@ -512,9 +438,9 @@ public final class CallLog implements CCollection, Ranker {
 	 * @return new call log
 	 */
 	@NotNull
-	public static CallLog create(List<Call> calls) {
+	static CallLog create(List<Call> calls) {
 		
-		return new CallLog(calls);
+		return new CallLogger(calls);
 	}
 	
 	/**
@@ -525,7 +451,7 @@ public final class CallLog implements CCollection, Ranker {
 	 * @return the duration
 	 */
 	@Nullable
-	public static DurationGroup getDuration(@NotNull List<Map.Entry<Contact, DurationGroup>> durations, Contact contact) {
+	static DurationGroup getDuration(@NotNull List<Map.Entry<Contact, DurationGroup>> durations, Contact contact) {
 		
 		if (contact == null) return null;
 		
@@ -542,7 +468,7 @@ public final class CallLog implements CCollection, Ranker {
 	 * @return the key
 	 */
 	@NotNull
-	public static String getKey(@NotNull Call call) {
+	static String getKey(@NotNull Call call) {
 		
 		long id = call.getLong(Key.CONTACT_ID, 0L);
 		
@@ -563,7 +489,7 @@ public final class CallLog implements CCollection, Ranker {
 	 * @see Type
 	 */
 	@CallType
-	public static int @NotNull [] getCallTypes(@CallType int callType) {
+	static int @NotNull [] getCallTypes(@CallType int callType) {
 		
 		if (callType == Call.MISSED || callType == Call.REJECTED) return new int[]{callType};
 		
@@ -581,7 +507,7 @@ public final class CallLog implements CCollection, Ranker {
 	 *
 	 * @return the valid call types
 	 */
-	public static int @NotNull [] getCallTypes() {
+	static int @NotNull [] getCallTypes() {
 		
 		return new int[]{
 				Call.INCOMING,
