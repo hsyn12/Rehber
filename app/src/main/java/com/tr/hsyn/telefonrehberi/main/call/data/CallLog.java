@@ -11,7 +11,6 @@ import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.main.call.data.type.FilterMostCall;
 import com.tr.hsyn.telefonrehberi.main.call.data.type.FilterType;
-import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
 import com.tr.hsyn.telefonrehberi.main.contact.data.History;
 import com.tr.hsyn.telefonrehberi.main.data.CallMap;
 import com.tr.hsyn.telefonrehberi.main.data.MainContacts;
@@ -22,8 +21,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -34,74 +31,70 @@ import java.util.stream.Collectors;
  * Holds the call logs and provides methods for filtering, searching and analyzing.
  */
 @Keep
-public final class CallLog implements CCollection {
+public final class CallLog implements CCollection, Ranker {
 	
-	/**
-	 * The comparator used to sort the entries by quantity descending.
-	 */
-	public static final Comparator<Map.Entry<String, List<Call>>> COMPARATOR_BY_QUANTITY = (e1, e2) -> e2.getValue().size() - e1.getValue().size();
 	/**
 	 * The filter for All calls.
 	 */
-	public static final int                                       FILTER_ALL             = 0;
+	public static final int        FILTER_ALL           = 0;
 	/**
 	 * The filter for Incoming calls.
 	 */
-	public static final int                                       FILTER_INCOMING        = 1;
+	public static final int        FILTER_INCOMING      = 1;
 	/**
 	 * The filter for Outgoing calls.
 	 */
-	public static final int                                       FILTER_OUTGOING        = 2;
+	public static final int        FILTER_OUTGOING      = 2;
 	/**
 	 * The filter for missed calls
 	 */
-	public static final int                                       FILTER_MISSED          = 3;
+	public static final int        FILTER_MISSED        = 3;
 	/**
 	 * The filter for rejected calls
 	 */
-	public static final int                                       FILTER_REJECTED        = 4;
+	public static final int        FILTER_REJECTED      = 4;
 	/**
 	 * The filter for no-named calls
 	 */
-	public static final int                                       FILTER_NO_NAMED        = 5;
+	public static final int        FILTER_NO_NAMED      = 5;
 	/**
 	 * The filter for random calls
 	 */
-	public static final int                                       FILTER_RANDOM          = 6;
+	public static final int        FILTER_RANDOM        = 6;
 	/**
 	 * The filter for most incoming
 	 */
-	public static final int                                       FILTER_MOST_INCOMING   = 7;
+	public static final int        FILTER_MOST_INCOMING = 7;
 	/**
 	 * The filter for most outgoing
 	 */
-	public static final int                                       FILTER_MOST_OUTGOING   = 8;
+	public static final int        FILTER_MOST_OUTGOING = 8;
 	/**
 	 * The filter for most missed
 	 */
-	public static final int                                       FILTER_MOST_MISSED     = 9;
+	public static final int        FILTER_MOST_MISSED   = 9;
 	/**
 	 * The filter for most rejected
 	 */
-	public static final int                                       FILTER_MOST_REJECTED   = 10;
+	public static final int        FILTER_MOST_REJECTED = 10;
 	/**
 	 * The filter for most speaking (incoming)
 	 */
-	public static final int                                       FILTER_MOST_SPEAKING   = 11;
+	public static final int        FILTER_MOST_SPEAKING = 11;
 	/**
 	 * The filter for most talking (outgoing)
 	 */
-	public static final int                                       FILTER_MOST_TALKING    = 12;
+	public static final int        FILTER_MOST_TALKING  = 12;
 	/**
 	 * The calls get associated by a key.
 	 * The key is a contact ID or a phone number or whatever else unique.
 	 * In this way, it provides accessing the calls by a key practically.
 	 */
-	private final       CallMap                                   callMap;
+	private final       CallMap    callMap;
 	/**
 	 * The list of {@link Call} that created this {@link RankMap} object
 	 */
-	private final       List<Call>                                calls;
+	private final       List<Call> calls;
 	
 	/**
 	 * Creates a new call log.
@@ -124,6 +117,79 @@ public final class CallLog implements CCollection {
 		
 		return calls;
 	}
+	
+	/**
+	 * @return new rank map for incoming calls
+	 */
+	@Override
+	@NotNull
+	public RankMap incomingRank() {
+		
+		return new RankMap(rankByQuantity(incomingCalls()));
+	}
+	
+	/**
+	 * @return new rank map for outgoing calls
+	 */
+	@Override
+	@NotNull
+	public RankMap outgoingRank() {
+		
+		return new RankMap(rankByQuantity(outgoingCalls()));
+	}
+	
+	/**
+	 * @return new rank map for missed calls
+	 */
+	@Override
+	@NotNull
+	public RankMap missedRank() {
+		
+		return new RankMap(rankByQuantity(missedCalls()));
+	}
+	
+	/**
+	 * @return new rank map for rejected calls
+	 */
+	@Override
+	@NotNull
+	public RankMap rejectedRank() {
+		
+		return new RankMap(rankByQuantity(rejectedCalls()));
+	}
+	
+	/**
+	 * @return new rank map for incoming calls, which have speaking duration
+	 */
+	@Override
+	@NotNull
+	public RankMap incomingDurationRank() {
+		
+		List<Call> ins = incomingCalls().stream().filter(Call::isSpoken).collect(Collectors.toList());
+		return new RankMap(rankByDuration(ins));
+	}
+	
+	/**
+	 * @return new rank map for outgoing calls, which have speaking duration
+	 */
+	@Override
+	@NotNull
+	public RankMap outgoingDurationRank() {
+		
+		List<Call> outs = outgoingCalls().stream().filter(Call::isSpoken).collect(Collectors.toList());
+		return new RankMap(rankByDuration(outs));
+	}
+	
+	public RankMap rankByQuantity() {
+		
+		return rankByQuantity(calls);
+	}
+	
+	public RankMap rankByDuration() {
+		
+		return rankByDuration(calls);
+	}
+	
 	
 	/**
 	 * Returns the history of the contact.
@@ -171,70 +237,14 @@ public final class CallLog implements CCollection {
 	public RankMap getMostCalls(@FilterMostCall int filter) {
 		
 		switch (filter) {
-			case FILTER_MOST_INCOMING: return mostIncoming();
-			case FILTER_MOST_OUTGOING: return mostOutgoing();
-			case FILTER_MOST_MISSED: return mostMissed();
-			case FILTER_MOST_REJECTED: return mostRejected();
-			case FILTER_MOST_SPEAKING: return mostSpeaking();
-			case FILTER_MOST_TALKING: return mostTalking();
+			case FILTER_MOST_INCOMING: return incomingRank();
+			case FILTER_MOST_OUTGOING: return outgoingRank();
+			case FILTER_MOST_MISSED: return missedRank();
+			case FILTER_MOST_REJECTED: return rejectedRank();
+			case FILTER_MOST_SPEAKING: return incomingDurationRank();
+			case FILTER_MOST_TALKING: return outgoingDurationRank();
 			default: throw new IllegalArgumentException("Invalid filter: " + filter);
 		}
-	}
-	
-	/**
-	 * @return new rank map for incoming calls
-	 */
-	@NotNull
-	public RankMap mostIncoming() {
-		
-		return new RankMap(rankByQuantity(incomingCalls()));
-	}
-	
-	/**
-	 * @return new rank map for outgoing calls
-	 */
-	@NotNull
-	public RankMap mostOutgoing() {
-		
-		return new RankMap(rankByQuantity(outgoingCalls()));
-	}
-	
-	/**
-	 * @return new rank map for missed calls
-	 */
-	@NotNull
-	public RankMap mostMissed() {
-		
-		return new RankMap(rankByQuantity(missedCalls()));
-	}
-	
-	/**
-	 * @return new rank map for rejected calls
-	 */
-	@NotNull
-	public RankMap mostRejected() {
-		
-		return new RankMap(rankByQuantity(rejectedCalls()));
-	}
-	
-	/**
-	 * @return new rank map for incoming calls, which have speaking duration
-	 */
-	@NotNull
-	public RankMap mostSpeaking() {
-		
-		List<Call> ins = incomingCalls().stream().filter(Call::isSpoken).collect(Collectors.toList());
-		return new RankMap(rankByDuration(ins));
-	}
-	
-	/**
-	 * @return new rank map for outgoing calls, which have speaking duration
-	 */
-	@NotNull
-	public RankMap mostTalking() {
-		
-		List<Call> outs = outgoingCalls().stream().filter(Call::isSpoken).collect(Collectors.toList());
-		return new RankMap(rankByDuration(outs));
 	}
 	
 	/**
@@ -305,20 +315,6 @@ public final class CallLog implements CCollection {
 	 * Creates a rank map for the given call types.
 	 *
 	 * @param callTypes the call types to select
-	 * @return the rank map that ranked by calls duration.
-	 * 		The ranking starts 1, and advances one by one.
-	 * 		The most valuable rank is 1.
-	 */
-	@NotNull
-	public RankMap rankByDuration(@CallType int @NotNull ... callTypes) {
-		
-		return new RankMap(rankByDuration(getByType(callTypes)));
-	}
-	
-	/**
-	 * Creates a rank map for the given call types.
-	 *
-	 * @param callTypes the call types to select
 	 * @return the rank map that ranked by calls quantity.
 	 * 		The ranking starts 1, and advances one by one.
 	 * 		The most valuable rank is 1.
@@ -383,27 +379,6 @@ public final class CallLog implements CCollection {
 	public RankMap makeRejectedRank() {
 		
 		return rankByQuantity(Call.REJECTED);
-	}
-	
-	/**
-	 * Creates a new {@link CallLog} object based on the given call type.
-	 *
-	 * @param callType the call type
-	 * @return the new {@link CallLog} object
-	 */
-	public @NotNull CallLog createByCallType(@CallType int callType) {
-		
-		switch (callType) {
-			
-			case Call.INCOMING:
-			case Call.INCOMING_WIFI: return create(incomingCalls());
-			case Call.OUTGOING:
-			case Call.OUTGOING_WIFI: return create(outgoingCalls());
-			case Call.MISSED: return create(missedCalls());
-			case Call.REJECTED: return create(rejectedCalls());
-			
-			default: throw new IllegalArgumentException("Unknown call type : " + callType);
-		}
 	}
 	
 	/**
@@ -572,20 +547,6 @@ public final class CallLog implements CCollection {
 	}
 	
 	/**
-	 * Creates a ranked map from the calls.
-	 *
-	 * @param calls    the calls
-	 * @param callType the call type to select
-	 * @return the rank map
-	 */
-	@NotNull
-	public static RankMap rankByDuration(@NotNull List<Call> calls, @CallType int callType) {
-		
-		calls = calls.stream().filter(c -> c.isType(callType)).collect(Collectors.toList());
-		return new RankMap(rankByDuration(calls));
-	}
-	
-	/**
 	 * Creates a new call log.
 	 *
 	 * @param calls the calls
@@ -629,114 +590,6 @@ public final class CallLog implements CCollection {
 				.filter(e -> e.getKey().getContactId() == contact.getContactId())
 				.findFirst().map(Map.Entry::getValue)
 				.orElse(null);
-	}
-	
-	/**
-	 * Creates a ranked list by duration.
-	 *
-	 * @param calls the calls
-	 * @return the ranked list in order by rank ascending
-	 */
-	public static List<CallRank> createRankListByDuration(@NotNull List<Call> calls) {
-		
-		return new RankMap(rankByDuration(calls)).getCallRanks();
-	}
-	
-	/**
-	 * Creates a ranked map from the entries.
-	 * The ranking is done by the comparator.
-	 * The ranking starts from 1.
-	 * The most valuable rank is 1 and advances one by one.
-	 *
-	 * @return the ranked map.
-	 * 		The keys are the ranks, and the values are the call rank objects.
-	 */
-	@NotNull
-	public static Map<Integer, List<CallRank>> rankByQuantity(@NotNull List<Call> calls) {
-		
-		Map<Integer, List<CallRank>>        rankMap  = new HashMap<>();
-		List<Map.Entry<String, List<Call>>> rankList = new CallMap(calls, CallLog::getKey).sortedEntries(COMPARATOR_BY_QUANTITY);
-		int                                 rank     = 1;
-		int                                 size     = rankList.size();
-		int                                 last     = size - 1;
-		
-		for (int i = 0; i < size; i++) {
-			
-			//RankList sıfırdan başlayacak
-			Map.Entry<String, List<Call>> ranked    = rankList.get(i);
-			List<CallRank>                rankList1 = rankMap.computeIfAbsent(rank, r -> new ArrayList<>());
-			CallRank                      callRank  = new CallRank(rank, ranked.getKey(), ranked.getValue());
-			rankList1.add(callRank);
-			
-			if (i == last) break;
-			
-			Map.Entry<String, List<Call>> next = rankList.get(i + 1);
-			
-			if (ranked.getValue().size() > next.getValue().size()) rank++;
-		}
-		
-		return rankMap;
-	}
-	
-	/**
-	 * Returns a map object that ranked by call duration by descending.
-	 *
-	 * @return a map object that ranked by calls duration by descending
-	 */
-	@NotNull
-	public static Map<Integer, List<CallRank>> rankByDuration(@NotNull List<Call> calls) {
-		
-		CallMap        callMap   = new CallMap(calls, CallLog::getKey);
-		List<String>   keys      = Lister.listOf(callMap.keySet());
-		List<CallRank> callRanks = new ArrayList<>();
-		
-		//_ create call rank objects
-		for (String key : keys) {
-			
-			List<Call> _calls = callMap.get(key);
-			
-			if (_calls.isEmpty()) continue;
-			
-			CallRank callRank = new CallRank(key, _calls);
-			
-			long incomingDuration = 0L;
-			long outgoingDuration = 0L;
-			
-			for (Call call : _calls) {
-				
-				if (call.isIncoming()) incomingDuration += call.getDuration();
-				else if (call.isOutgoing()) outgoingDuration += call.getDuration();
-			}
-			
-			callRank.setIncomingDuration(incomingDuration);
-			callRank.setOutgoingDuration(outgoingDuration);
-			callRank.setContact(MainContacts.getById(key));
-			callRanks.add(callRank);
-		}
-		
-		//_ sort by duration descending
-		callRanks.sort((c1, c2) -> Long.compare(c2.getDuration(), c1.getDuration()));
-		
-		int                          rank    = 1;
-		int                          size    = callRanks.size();
-		int                          last    = size - 1;
-		Map<Integer, List<CallRank>> rankMap = new HashMap<>();
-		
-		//_ set ranks
-		for (int i = 0; i < size; i++) {
-			
-			CallRank callRank = callRanks.get(i);
-			callRank.setRank(rank);
-			List<CallRank> ranks = rankMap.computeIfAbsent(rank, r -> new ArrayList<>());
-			ranks.add(callRank);
-			
-			if (i == last) break;
-			
-			CallRank next = callRanks.get(i + 1);
-			if (callRank.getDuration() > next.getDuration()) rank++;
-		}
-		
-		return rankMap;
 	}
 	
 	/**

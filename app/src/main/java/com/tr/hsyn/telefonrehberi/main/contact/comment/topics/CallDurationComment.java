@@ -79,7 +79,7 @@ public class CallDurationComment implements ContactComment {
 		}
 		// endregion
 		
-		RankMap                rankMap      = new RankMap(CallLog.rankByDuration(callLog.getCalls()));
+		RankMap                rankMap      = CallLog.create(callLog.getCalls()).rankByDuration();
 		int                    rank         = rankMap.getRank(contact);
 		CallRank               thisRank     = rankMap.getCallRank(rank, contact);
 		List<MostDurationData> durationList = createDurationList(rankMap, MainContacts.getWithNumber());
