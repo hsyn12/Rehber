@@ -6,7 +6,6 @@ import com.tr.hsyn.calldata.CallType;
 import com.tr.hsyn.calldata.Type;
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.contactdata.Contact;
-import com.tr.hsyn.keep.Keep;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.telefonrehberi.main.call.data.type.FilterMostCall;
 import com.tr.hsyn.telefonrehberi.main.call.data.type.FilterType;
@@ -29,7 +28,7 @@ import java.util.stream.Collectors;
 /**
  * Holds the call logs and provides methods for filtering, searching and analyzing.
  */
-@Keep
+
 public interface CallLog extends CCollection, Ranker {
 	
 	/**

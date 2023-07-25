@@ -139,7 +139,6 @@ public class CallGenerator implements Generator<com.tr.hsyn.calldata.Call> {
 		
 		call.setData(Key.RINGING_DURATION, ringingDuration);
 		call.setData(Key.TRACK_TYPE, trackType);
-		call.setData(Key.RANDOM, true);
 		call.setExtra(Calls.createExtraInfo(call));
 		return call;
 	}

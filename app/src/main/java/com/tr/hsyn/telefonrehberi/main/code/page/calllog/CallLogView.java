@@ -28,21 +28,6 @@ public abstract class CallLogView extends FragmentEvents<Call> {
 		return R.layout.fragment_call_log;
 	}
 	
-	protected final MainActivity getMainActivity() {
-		
-		return (MainActivity) getActivity();
-	}
-	
-	protected final MenuShower getMainMenu() {
-		
-		return (MenuShower) getActivity();
-	}
-	
-	protected final int getCurrentPage() {
-		
-		return getMainActivity().getCurrentPage();
-	}
-	
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		
@@ -89,7 +74,9 @@ public abstract class CallLogView extends FragmentEvents<Call> {
 	@Override
 	public void showProgress() {
 		
-		progressBar.setVisibility(View.VISIBLE);
+		if (progressBar != null)
+			progressBar.setVisibility(View.VISIBLE);
+		
 	}
 	
 	@Override
@@ -97,6 +84,21 @@ public abstract class CallLogView extends FragmentEvents<Call> {
 		
 		progressBar.setVisibility(View.GONE);
 		refreshLayout.setRefreshing(false);
+	}
+	
+	protected final MainActivity getMainActivity() {
+		
+		return (MainActivity) getActivity();
+	}
+	
+	protected final MenuShower getMainMenu() {
+		
+		return (MenuShower) getActivity();
+	}
+	
+	protected final int getCurrentPage() {
+		
+		return getMainActivity().getCurrentPage();
 	}
 	
 }

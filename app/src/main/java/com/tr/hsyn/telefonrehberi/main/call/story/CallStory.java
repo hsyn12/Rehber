@@ -82,7 +82,6 @@ public class CallStory implements Story<Call> {
 				systemCalls.sort((x, y) -> Long.compare(y.getTime(), x.getTime()));
 				updateInfo(systemCalls);
 				
-				xlog.d("Call collection created [system]");
 				return systemCalls;
 			}
 			else {
@@ -145,7 +144,6 @@ public class CallStory implements Story<Call> {
 		
 		databaseCalls.sort((x, y) -> Long.compare(y.getTime(), x.getTime()));
 		updateInfo(databaseCalls);
-		xlog.d("Call collection created [database]");
 		return databaseCalls;
 	}
 	

@@ -161,7 +161,6 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 			commentOnSingleCall();
 		}
 		else {
-			
 			quantityComment.createComment(contact, commentStore.getActivity(), this::onComment, isTurkish);
 			lastCallComment.createComment(contact, commentStore.getActivity(), this::onComment, isTurkish);
 			historyDurationComment.createComment(contact, commentStore.getActivity(), this::onComment, isTurkish);

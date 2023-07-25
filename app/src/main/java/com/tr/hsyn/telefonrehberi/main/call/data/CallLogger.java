@@ -4,6 +4,7 @@ package com.tr.hsyn.telefonrehberi.main.call.data;
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.contactdata.Contact;
+import com.tr.hsyn.keep.Keep;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.main.data.CallMap;
 
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
+@Keep
 public class CallLogger implements CallLog {
 	
 	private final CallMap    callMap;

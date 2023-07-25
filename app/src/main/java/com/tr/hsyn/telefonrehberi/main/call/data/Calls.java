@@ -137,7 +137,7 @@ public interface Calls {
 		//+ track type int --> [2]
 		//+ contact ID long --> [3]
 		
-		return String.format("%s;%s;%d;%d", ACCOUNT_ID, call.getBool(Key.RANDOM) ? "t" : "f", call.getInt(Key.TRACK_TYPE), call.getLong(Key.CONTACT_ID));
+		return String.format("%s;%s;%d;%d", ACCOUNT_ID, call.isRandom() ? "t" : "f", call.getInt(Key.TRACK_TYPE), call.getLong(Key.CONTACT_ID));
 	}
 	
 	

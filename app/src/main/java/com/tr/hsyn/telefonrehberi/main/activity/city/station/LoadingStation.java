@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.key.Key;
+import com.tr.hsyn.message.Show;
 import com.tr.hsyn.time.Time;
 import com.tr.hsyn.xbox.Blue;
 import com.tr.hsyn.xlog.xlog;
@@ -54,6 +55,33 @@ public abstract class LoadingStation extends CallLogLoader {
 		}
 	}
 	
+	@CallSuper
+	@Override
+	protected void onCallLogLoaded(List<Call> calls, Throwable throwable) {
+		
+		callsLoaded = true;
+		long loadTime = Time.now() - getLastContactsLoadingStartTime();
+		
+		if (calls != null) {
+			
+			pageCallLog.setList(calls);
+			Blue.box(Key.CALL_LOG_CALLS, calls);
+			xlog.d("CallLog Loaded [size=%d, loadTime=%dms]", calls.size(), loadTime);
+		}
+		
+		if (throwable instanceof TimeoutException) {
+			
+			xlog.wx("CallLog could not loaded with defined duration");
+			Show.tost(this, "CallLog could not loaded in " + loadTime + "ms");
+		}
+		else {
+			if (throwable != null)
+				xlog.ex("CallLog could not loaded", throwable);
+		}
+		
+		pageCallLog.hideProgress();
+	}
+	
 	@Override
 	protected void loadCalls() {
 		
@@ -67,50 +95,6 @@ public abstract class LoadingStation extends CallLogLoader {
 		}
 		
 		super.loadCalls();
-	}
-	
-	@CallSuper
-	@Override
-	protected void onCallLogLoaded(List<Call> calls, Throwable throwable) {
-		
-		callsLoaded = true;
-		
-		if (throwable == null) {
-			
-			long loadTime = Time.now() - getLastContactsLoadingStartTime();
-			
-			pageCallLog.setList(calls);
-			Blue.box(Key.CALL_LOG_CALLS, calls);
-			xlog.d("CallLog Loaded [size=%d, loadTime=%dms]", calls.size(), loadTime);
-		}
-		else {
-			
-			if (throwable instanceof TimeoutException) {
-				
-				xlog.wx("CallLog could not loaded with defined duration");
-			}
-			else {
-				
-				xlog.ex("CallLog could not loaded", throwable);
-			}
-		}
-		
-		pageCallLog.hideProgress();
-	}
-	
-	@CallSuper
-	@Override
-	protected void loadContacts() {
-		
-		pageContacts.showProgress();
-		
-		if (!hasContactPermissions()) {
-			
-			askContactPermissions();
-			return;
-		}
-		
-		super.loadContacts();
 	}
 	
 	/**
@@ -145,6 +129,21 @@ public abstract class LoadingStation extends CallLogLoader {
 		}
 		
 		pageContacts.hideProgress();
+	}
+	
+	@CallSuper
+	@Override
+	protected void loadContacts() {
+		
+		pageContacts.showProgress();
+		
+		if (!hasContactPermissions()) {
+			
+			askContactPermissions();
+			return;
+		}
+		
+		super.loadContacts();
 	}
 	
 	@CallSuper

@@ -33,7 +33,8 @@ public interface Key {
 	/**
 	 * Arama kaydının rastgele üretilme durumu
 	 */
-	DataKey RANDOM           = DataKey.of(54, "random");
+	@Deprecated(forRemoval = true)
+	DataKey RANDOM = DataKey.of(54, "random");
 	/**
 	 * Aramanın takip türü.
 	 * <ul>
@@ -42,11 +43,11 @@ public interface Key {
 	 *    <li>2- Takip edilmedi</li>
 	 * </ul>
 	 */
-	DataKey TRACK_TYPE       = DataKey.of(55, "trackType");
+	DataKey TRACK_TYPE = DataKey.of(55, "trackType");
 	/**
 	 * Etiketler
 	 */
-	DataKey LABELS           = DataKey.of(56, "labels");
+	DataKey LABELS     = DataKey.of(56, "labels");
 	
 	/**
 	 * Verilen kişiden istenen bilgiyi döndürür.

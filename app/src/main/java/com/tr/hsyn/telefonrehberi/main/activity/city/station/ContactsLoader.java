@@ -26,24 +26,25 @@ public abstract class ContactsLoader extends BigBank implements Threaded, UIThre
 	private long contactsLoadStartTime;
 	
 	/**
-	 * Kişilerin veri tabanından alınma işlemini başlatır.
-	 */
-	@CallSuper
-	protected void loadContacts() {
-		
-		contactsLoadStartTime = Time.now();
-		completeWork(() -> getContactsLoader().load())
-				.orTimeout(15L, TimeUnit.SECONDS)
-				.whenCompleteAsync(this::onContactsLoaded, getUIThreadExecutor());
-	}
-	
-	/**
 	 * Kişiler veri tabanından alındığında çağrılır.
 	 *
 	 * @param contacts  Kişi listesi
 	 * @param throwable Varsa hata, yoksa {@code null}
 	 */
 	protected abstract void onContactsLoaded(List<Contact> contacts, Throwable throwable);
+	
+	/**
+	 * Kişilerin veri tabanından alınma işlemini başlatır.
+	 */
+	@CallSuper
+	protected void loadContacts() {
+		
+		contactsLoadStartTime = Time.now();
+		
+		completeWork(() -> getContactsLoader().load())
+				.orTimeout(3L, TimeUnit.MINUTES)
+				.whenCompleteAsync(this::onContactsLoaded, getUIThreadExecutor());
+	}
 	
 	/**
 	 * @return Kişilerin en son yükleme işleminin başlama zamanı. Hiç yükleme yapılmamışsa {@code 0L}.

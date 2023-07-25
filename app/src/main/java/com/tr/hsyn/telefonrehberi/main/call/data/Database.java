@@ -97,7 +97,7 @@ public class Database extends DBBase<Call> implements DBCalls {
 		if (!labels.isEmpty()) call.setData(Key.LABELS, getLabels(labels));
 		
 		call.setData(Key.TRACK_TYPE, getTrackType(call));
-		call.setData(Key.RANDOM, getRandom(extra));
+		call.setData(Key.RANDOM, call.isRandom());
 		
 		return call;
 	}
@@ -179,16 +179,6 @@ public class Database extends DBBase<Call> implements DBCalls {
 		}
 		
 		return 0;
-	}
-	
-	private boolean getRandom(String extra) {
-		
-		if (extra == null || !extra.startsWith(Calls.ACCOUNT_ID)) return false;
-		
-		try {return extra.split(SEPARATOR)[1].equals("t");}
-		catch (Exception ignore) {}
-		
-		return false;
 	}
 	
 	/**

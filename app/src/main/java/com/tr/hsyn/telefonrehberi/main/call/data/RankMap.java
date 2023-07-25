@@ -49,7 +49,7 @@ public class RankMap extends Groups<Integer, CallRank> {
 	 * @param rank the rank
 	 * @return the list of {@link CallRank} or {@code null} if the rank does not exist.
 	 */
-	@Nullable
+	@NotNull
 	public List<CallRank> getRank(int rank) {
 		
 		return get(rank);
@@ -107,7 +107,7 @@ public class RankMap extends Groups<Integer, CallRank> {
 		
 		List<CallRank> ranks = getRank(rank);
 		
-		if (ranks == null) return null;
+		if (ranks.isEmpty()) return null;
 		
 		for (CallRank callRank : ranks)
 			if (callRank.getKey().equals(String.valueOf(contact.getContactId())))

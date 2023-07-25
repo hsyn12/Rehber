@@ -23,6 +23,14 @@ public abstract class CallLogLoader extends ContactsLoader {
 	private long lastCallLogLoadingStartTime;
 	
 	/**
+	 * Kişiler veri tabanından alındığında çağrılır.
+	 *
+	 * @param calls     Arama kayıtları
+	 * @param throwable Varsa hata, yoksa {@code null}
+	 */
+	protected abstract void onCallLogLoaded(List<Call> calls, Throwable throwable);
+	
+	/**
 	 * Kayıtları veri tabanından alınma işlemini başlatır.
 	 */
 	@CallSuper
@@ -30,17 +38,9 @@ public abstract class CallLogLoader extends ContactsLoader {
 		
 		lastCallLogLoadingStartTime = Time.now();
 		completeWork(() -> getCallLogLoader().load())
-				.orTimeout(30L, TimeUnit.SECONDS)
+				.orTimeout(3L, TimeUnit.MINUTES)
 				.whenCompleteAsync(this::onCallLogLoaded, getUIThreadExecutor());
 	}
-	
-	/**
-	 * Kişiler veri tabanından alındığında çağrılır.
-	 *
-	 * @param calls     Arama kayıtları
-	 * @param throwable Varsa hata, yoksa {@code null}
-	 */
-	protected abstract void onCallLogLoaded(List<Call> calls, Throwable throwable);
 	
 	/**
 	 * @return Kayıtların en son yükleme işleminin başlama zamanı. Hiç yükleme yapılmamışsa {@code 0L}.
