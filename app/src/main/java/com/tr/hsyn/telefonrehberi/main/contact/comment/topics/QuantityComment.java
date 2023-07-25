@@ -699,7 +699,7 @@ public class QuantityComment implements ContactComment {
 			return;
 		}
 		
-		RankMap incomingRankMap = callLog.makeIncomingRank();
+		RankMap incomingRankMap = callLog.incomingRank();
 		
 		if (!incomingRankMap.isEmpty()) {
 			

@@ -511,7 +511,9 @@ public interface CallLog extends CCollection, Ranker {
 		
 		return new int[]{
 				Call.INCOMING,
+				Call.INCOMING_WIFI,
 				Call.OUTGOING,
+				Call.OUTGOING_WIFI,
 				Call.MISSED,
 				Call.REJECTED
 		};
