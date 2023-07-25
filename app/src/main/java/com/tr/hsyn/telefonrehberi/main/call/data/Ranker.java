@@ -23,23 +23,65 @@ public interface Ranker {
 	 */
 	Comparator<Map.Entry<String, List<Call>>> COMPARATOR_BY_QUANTITY = (e1, e2) -> e2.getValue().size() - e1.getValue().size();
 	
+	/**
+	 * Creates a rank map from incoming calls.
+	 *
+	 * @return the rank map
+	 */
 	RankMap incomingRank();
 	
+	/**
+	 * Creates a rank map from outgoing calls.
+	 *
+	 * @return the rank map
+	 */
 	RankMap outgoingRank();
 	
+	/**
+	 * Creates a rank map from missed calls.
+	 *
+	 * @return the rank map
+	 */
 	RankMap missedRank();
 	
+	/**
+	 * Creates a rank map from rejected calls.
+	 *
+	 * @return the rank map
+	 */
 	RankMap rejectedRank();
 	
+	/**
+	 * Creates a rank map from incoming durations.
+	 *
+	 * @return the rank map
+	 */
 	RankMap incomingDurationRank();
 	
+	/**
+	 * Creates a rank map from outgoing durations.
+	 *
+	 * @return the rank map
+	 */
 	RankMap outgoingDurationRank();
 	
+	/**
+	 * Creates a rank map by quantity.
+	 *
+	 * @param calls the calls
+	 * @return the rank map
+	 */
 	default RankMap rankByQuantity(@NotNull List<Call> calls) {
 		
 		return new RankMap(rankMapByQuantity(calls));
 	}
 	
+	/**
+	 * Creates a rank map from by duration.
+	 *
+	 * @param calls the calls
+	 * @return the rank map
+	 */
 	default RankMap rankByDuration(@NotNull List<Call> calls) {
 		
 		return new RankMap(rankMapByDuration(calls));
