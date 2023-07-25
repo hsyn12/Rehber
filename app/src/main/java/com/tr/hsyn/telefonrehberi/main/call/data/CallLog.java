@@ -190,7 +190,6 @@ public final class CallLog implements CCollection, Ranker {
 		return rankByDuration(calls);
 	}
 	
-	
 	/**
 	 * Returns the history of the contact.
 	 *
@@ -323,62 +322,6 @@ public final class CallLog implements CCollection, Ranker {
 	public RankMap rankByQuantity(@CallType int @NotNull ... callTypes) {
 		
 		return new RankMap(rankByQuantity(getByType(callTypes)));
-	}
-	
-	/**
-	 * Returns the most incoming calls that ranked by quantity descending.
-	 * The ranking is based on the number of incoming calls.
-	 * And it starts 1, and advances one by one.
-	 * The most valuable rank is 1.
-	 *
-	 * @return the most incoming calls
-	 */
-	@NotNull
-	public RankMap makeIncomingRank() {
-		
-		return rankByQuantity(Call.INCOMING, Call.INCOMING_WIFI);
-	}
-	
-	/**
-	 * Returns the most outgoing calls that ranked by quantity descending.
-	 * The ranking is based on the number of outgoing calls.
-	 * And it starts 1, and advances one by one.
-	 * The most valuable rank is 1.
-	 *
-	 * @return the most outgoing calls
-	 */
-	@NotNull
-	public RankMap makeOutgoingRank() {
-		
-		return rankByQuantity(Call.OUTGOING, Call.OUTGOING_WIFI);
-	}
-	
-	/**
-	 * Returns the most missed calls that ranked by quantity descending.
-	 * The ranking is based on the number of missed calls.
-	 * And it starts 1, and advances one by one.
-	 * The most valuable rank is 1.
-	 *
-	 * @return the most missed calls
-	 */
-	@NotNull
-	public RankMap makeMissedRank() {
-		
-		return rankByQuantity(Call.MISSED);
-	}
-	
-	/**
-	 * Returns the most rejected calls that ranked by quantity descending.
-	 * The ranking is based on the number of rejected calls.
-	 * And it starts 1, and advances one by one.
-	 * The most valuable rank is 1.
-	 *
-	 * @return the most rejected calls
-	 */
-	@NotNull
-	public RankMap makeRejectedRank() {
-		
-		return rankByQuantity(Call.REJECTED);
 	}
 	
 	/**

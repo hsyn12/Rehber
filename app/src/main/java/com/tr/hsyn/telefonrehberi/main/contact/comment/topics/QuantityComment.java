@@ -545,11 +545,11 @@ public class QuantityComment implements ContactComment {
 		assert this.callLog != null;
 		switch (callType) {
 			case Call.INCOMING:
-			case Call.INCOMING_WIFI: return callLog.makeIncomingRank();
+			case Call.INCOMING_WIFI: return callLog.incomingRank();
 			case Call.OUTGOING:
-			case Call.OUTGOING_WIFI: return callLog.makeOutgoingRank();
-			case Call.MISSED:        return callLog.makeMissedRank();
-			case Call.REJECTED:      return callLog.makeRejectedRank();
+			case Call.OUTGOING_WIFI: return callLog.outgoingRank();
+			case Call.MISSED:        return callLog.missedRank();
+			case Call.REJECTED:      return callLog.rejectedRank();
 			default:                 throw new IllegalArgumentException("Unknown call type: " + callType);
 		}
 		//@on
