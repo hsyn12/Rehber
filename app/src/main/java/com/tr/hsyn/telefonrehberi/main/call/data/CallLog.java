@@ -1,8 +1,6 @@
 package com.tr.hsyn.telefonrehberi.main.call.data;
 
 
-import androidx.annotation.NonNull;
-
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.calldata.CallType;
 import com.tr.hsyn.calldata.Type;
@@ -36,7 +34,7 @@ import java.util.stream.Collectors;
  * Holds the call logs and provides methods for filtering, searching and analyzing.
  */
 @Keep
-public final class CallLog {
+public final class CallLog implements CCollection {
 	
 	/**
 	 * The comparator used to sort the entries by quantity descending.
@@ -118,29 +116,13 @@ public final class CallLog {
 	}
 	
 	/**
-	 * Returns the size of the call logs.
-	 *
-	 * @return the size of the call logs
+	 * @return the calls that are creating this object by.
 	 */
-	public int size() {
+	@Override
+	@NotNull
+	public List<Call> getCalls() {
 		
-		return calls.size();
-	}
-	
-	/**
-	 * @return {@code true} if the call log is empty.
-	 */
-	public boolean isEmpty() {
-		
-		return calls.isEmpty();
-	}
-	
-	/**
-	 * @return {@code true} if the call log is not empty
-	 */
-	public boolean isNotEmpty() {
-		
-		return !isEmpty();
+		return calls;
 	}
 	
 	/**
@@ -153,28 +135,7 @@ public final class CallLog {
 	@NotNull
 	public History getHistoryOf(@NotNull Contact contact) {
 		
-		return History.of(contact, getCallsById(contact.getContactId()));
-	}
-	
-	/**
-	 * Returns all calls with the given call types.
-	 *
-	 * @param callTypes call types
-	 * @return calls
-	 */
-	@NonNull
-	public List<Call> getCallsByType(int @NotNull ... callTypes) {
-		
-		return getCalls(call -> Lister.contains(callTypes, call.getCallType()));
-	}
-	
-	/**
-	 * @return the calls that are creating this object by.
-	 */
-	@NotNull
-	public List<Call> getCalls() {
-		
-		return calls;
+		return History.of(contact, getById(contact.getContactId()));
 	}
 	
 	/**
@@ -294,40 +255,13 @@ public final class CallLog {
 	}
 	
 	/**
-	 * Returns all calls with the given number.
-	 *
-	 * @param phoneNumber the number
-	 * @return calls
-	 */
-	public @NotNull List<Call> getCallsByNumber(String phoneNumber) {
-		
-		if (Stringx.isNoboe(phoneNumber) || isEmpty()) return new ArrayList<>(0);
-		
-		phoneNumber = PhoneNumbers.formatNumber(phoneNumber, 10);
-		
-		return callMap.get(phoneNumber);
-	}
-	
-	/**
-	 * Returns all calls that match the given predicate.
-	 *
-	 * @param predicate the predicate
-	 * @return calls
-	 */
-	@NotNull
-	public List<Call> getCalls(@NotNull Predicate<Call> predicate) {
-		
-		return calls.stream().filter(predicate).collect(Collectors.toList());
-	}
-	
-	/**
 	 * Returns all calls with the given contact ID.
 	 *
 	 * @param contactId the contact ID
 	 * @return calls
 	 */
 	@NotNull
-	public List<Call> getCallsById(long contactId) {
+	public List<Call> getById(long contactId) {
 		
 		return callMap.get(String.valueOf(contactId));
 	}
@@ -338,47 +272,11 @@ public final class CallLog {
 	 * @param contactId the contact ID
 	 * @return calls
 	 */
-	public @NotNull List<Call> getCallsById(String contactId) {
+	public @NotNull List<Call> getById(String contactId) {
 		
 		if (Stringx.isNoboe(contactId) || isEmpty()) return new ArrayList<>(0);
 		
 		return callMap.get(contactId);
-	}
-	
-	/**
-	 * @return incoming calls
-	 */
-	@NonNull
-	public List<Call> incomingCalls() {
-		
-		return getCallsByType(Call.INCOMING, Call.INCOMING_WIFI);
-	}
-	
-	/**
-	 * @return outgoing calls
-	 */
-	@NotNull
-	public List<Call> outgoingCalls() {
-		
-		return getCallsByType(Call.OUTGOING, Call.OUTGOING_WIFI);
-	}
-	
-	/**
-	 * @return missed calls
-	 */
-	@NotNull
-	public List<Call> missedCalls() {
-		
-		return getCallsByType(Call.MISSED);
-	}
-	
-	/**
-	 * @return rejected calls
-	 */
-	@NotNull
-	public List<Call> rejectedCalls() {
-		
-		return getCallsByType(Call.REJECTED);
 	}
 	
 	/**
@@ -414,7 +312,7 @@ public final class CallLog {
 	@NotNull
 	public RankMap rankByDuration(@CallType int @NotNull ... callTypes) {
 		
-		return new RankMap(rankByDuration(getCallsByType(callTypes)));
+		return new RankMap(rankByDuration(getByType(callTypes)));
 	}
 	
 	/**
@@ -428,7 +326,7 @@ public final class CallLog {
 	@NotNull
 	public RankMap rankByQuantity(@CallType int @NotNull ... callTypes) {
 		
-		return new RankMap(rankByQuantity(getCallsByType(callTypes)));
+		return new RankMap(rankByQuantity(getByType(callTypes)));
 	}
 	
 	/**
@@ -880,5 +778,20 @@ public final class CallLog {
 			case Call.INCOMING_WIFI: return new int[]{Call.INCOMING, Call.INCOMING_WIFI};
 			default: throw new IllegalArgumentException("Unknown call type: " + callType);
 		}
+	}
+	
+	/**
+	 * Returns the valid call types.
+	 *
+	 * @return the valid call types
+	 */
+	public static int @NotNull [] getCallTypes() {
+		
+		return new int[]{
+				Call.INCOMING,
+				Call.OUTGOING,
+				Call.MISSED,
+				Call.REJECTED
+		};
 	}
 }

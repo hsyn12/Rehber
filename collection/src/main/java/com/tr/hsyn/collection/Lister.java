@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  * Provides helper methods for lists.
  */
 @SuppressWarnings("ForLoopReplaceableByForEach")
-public final class Lister {
+public interface Lister {
 	
 	/**
 	 * Checks if the given list has the given value.
@@ -35,7 +35,7 @@ public final class Lister {
 	 * @param <T>   type of the list element
 	 * @return {@code true} if the given list contains the given value
 	 */
-	public static <T> boolean contains(Iterable<T> list, T value) {
+	static <T> boolean contains(Iterable<T> list, T value) {
 		
 		if (list == null) return false;
 		
@@ -45,7 +45,7 @@ public final class Lister {
 		return false;
 	}
 	
-	public static <T> boolean contains(T[] list, T value) {
+	static <T> boolean contains(T[] list, T value) {
 		
 		if (list == null) return false;
 		
@@ -55,7 +55,7 @@ public final class Lister {
 		return false;
 	}
 	
-	public static boolean contains(int[] list, int value) {
+	static boolean contains(int[] list, int value) {
 		
 		if (list == null) return false;
 		
@@ -73,7 +73,7 @@ public final class Lister {
 	 * @return new list
 	 */
 	@NotNull
-	public static <T> List<T> listOf(List<? extends T> list) {
+	static <T> List<T> listOf(List<? extends T> list) {
 		
 		if (list != null) return new ArrayList<>(list);
 		
@@ -88,7 +88,7 @@ public final class Lister {
 	 * @param <T> type of the list element
 	 * @return {@code true} if the given lists are equal. No matter the order of the elements.
 	 */
-	public static <T> boolean equals(Iterable<? extends T> i1, Iterable<? extends T> i2) {
+	static <T> boolean equals(Iterable<? extends T> i1, Iterable<? extends T> i2) {
 		
 		if (i1 == null && i2 == null) return true;
 		
@@ -128,7 +128,7 @@ public final class Lister {
 	 * @return {@link Set}
 	 */
 	@NotNull
-	public static <T> Set<T> setOf(@NotNull Iterable<? extends T> iterable) {
+	static <T> Set<T> setOf(@NotNull Iterable<? extends T> iterable) {
 		
 		Set<T> l = new HashSet<>();
 		
@@ -146,7 +146,7 @@ public final class Lister {
 	 */
 	@NotNull
 	@SafeVarargs
-	public static <T> LinkedList<T> linkOf(@NotNull T @NotNull ... t) {
+	static <T> LinkedList<T> linkOf(@NotNull T @NotNull ... t) {
 		
 		if (t.length == 0) return new LinkedList<>();
 		
@@ -162,7 +162,7 @@ public final class Lister {
 	 */
 	@NotNull
 	@SuppressWarnings("unchecked")
-	public static <T> T[] arrayOf(@NotNull T @NotNull ... t) {
+	static <T> T[] arrayOf(@NotNull T @NotNull ... t) {
 		
 		return t;
 	}
@@ -173,7 +173,7 @@ public final class Lister {
 	 * @param iterable list
 	 * @return array
 	 */
-	public static int @NotNull [] toIntArray(@NotNull Iterable<Integer> iterable) {
+	static int @NotNull [] toIntArray(@NotNull Iterable<Integer> iterable) {
 		
 		int   size = getSize(iterable);
 		int[] ar   = new int[size];
@@ -190,7 +190,7 @@ public final class Lister {
 	 * @param <T>      type of the list element
 	 * @return size
 	 */
-	public static <T> int getSize(@NotNull Iterable<T> iterable) {
+	static <T> int getSize(@NotNull Iterable<T> iterable) {
 		
 		int size = 0;
 		
@@ -207,7 +207,7 @@ public final class Lister {
 	 * @param <T>   type of the list element
 	 * @return {@code true} if the given index is valid
 	 */
-	public static <T> boolean isValidIndex(Collection<T> list, int index) {
+	static <T> boolean isValidIndex(Collection<T> list, int index) {
 		
 		return index >= 0 && index < list.size();
 	}
@@ -221,7 +221,7 @@ public final class Lister {
 	 * @return A difference B
 	 */
 	@NotNull
-	public static <T> List<T> difference(@NotNull Iterable<T> A, @NotNull Iterable<T> B) {
+	static <T> List<T> difference(@NotNull Iterable<T> A, @NotNull Iterable<T> B) {
 		
 		@NotNull List<T> s1 = listOf(A);
 		@NotNull List<T> s2 = listOf(B);
@@ -245,7 +245,7 @@ public final class Lister {
 	 * @return new list
 	 */
 	@NotNull
-	public static <T> List<T> listOf(@NotNull Iterable<? extends T> iterable) {
+	static <T> List<T> listOf(@NotNull Iterable<? extends T> iterable) {
 		
 		List<T> l = new ArrayList<>();
 		
@@ -260,7 +260,7 @@ public final class Lister {
 	 * @param list     list
 	 * @param consumer loop consumer
 	 */
-	public static void loopWith(int[] list, @NotNull IntConsumer consumer) {
+	static void loopWith(int[] list, @NotNull IntConsumer consumer) {
 		
 		for (int i = 0; i < list.length; i++) consumer.accept(list[i]);
 	}
@@ -272,7 +272,7 @@ public final class Lister {
 	 * @param consumer loop consumer
 	 * @param <T>      element type
 	 */
-	public static <T> void loopWith(T @NotNull [] list, @NotNull Consumer<T> consumer) {
+	static <T> void loopWith(T @NotNull [] list, @NotNull Consumer<T> consumer) {
 		
 		for (int i = 0; i < list.length; i++) consumer.accept(list[i]);
 	}
@@ -285,7 +285,7 @@ public final class Lister {
 	 * @param <T>      element type
 	 * @return number of items removed
 	 */
-	public static <T> int removeItems(@NotNull List<? super T> mainList, @NotNull Iterable<T> toRemove) {
+	static <T> int removeItems(@NotNull List<? super T> mainList, @NotNull Iterable<T> toRemove) {
 		
 		AtomicInteger counter = new AtomicInteger();
 		
@@ -310,7 +310,7 @@ public final class Lister {
 	 * @param consumer loop consumer
 	 * @param <T>      element type
 	 */
-	public static <T> void loopWith(@NotNull Iterable<? extends T> list, @NotNull Consumer<T> consumer) {
+	static <T> void loopWith(@NotNull Iterable<? extends T> list, @NotNull Consumer<T> consumer) {
 		
 		for (T i : list) consumer.accept(i);
 	}
@@ -323,7 +323,7 @@ public final class Lister {
 	 * @param <T>          element type
 	 * @return index or -1
 	 */
-	public static <T> int indexOf(@NotNull List<T> list, @NotNull T itemToSearch) {
+	static <T> int indexOf(@NotNull List<T> list, @NotNull T itemToSearch) {
 		
 		for (int i = 0; i < list.size(); i++)
 			if (itemToSearch.equals(list.get(i)))
@@ -342,7 +342,7 @@ public final class Lister {
 	 * @return new list
 	 */
 	@NotNull
-	public static <X, Y> List<X> map(@NotNull Collection<? extends Y> list, @NotNull Function<Y, ? extends X> applier) {
+	static <X, Y> List<X> map(@NotNull Collection<? extends Y> list, @NotNull Function<Y, ? extends X> applier) {
 		
 		return list.stream().map(applier).collect(Collectors.toList());
 	}
@@ -357,7 +357,7 @@ public final class Lister {
 	 * @return new list
 	 */
 	@NotNull
-	public static <X, Y> List<X> mapNotNull(@NotNull Collection<? extends Y> list, @NotNull Function<Y, ? extends X> applier) {
+	static <X, Y> List<X> mapNotNull(@NotNull Collection<? extends Y> list, @NotNull Function<Y, ? extends X> applier) {
 		
 		return list.stream().map(applier).filter(Objects::nonNull).collect(Collectors.toList());
 	}
@@ -370,7 +370,7 @@ public final class Lister {
 	 * @param <T>  type of the list element
 	 * @return {@code true} if the given list is greater than the given size
 	 */
-	public static <T> boolean gtSize(@NotNull List<T> list, int size) {
+	static <T> boolean gtSize(@NotNull List<T> list, int size) {
 		
 		return list.size() > size;
 	}
@@ -383,7 +383,7 @@ public final class Lister {
 	 * @param <T>  type of the list element
 	 * @return {@code true} if the given list is less than the given size
 	 */
-	public static <T> boolean ltSize(@NotNull List<T> list, int size) {
+	static <T> boolean ltSize(@NotNull List<T> list, int size) {
 		
 		return list.size() < size;
 	}
@@ -396,13 +396,13 @@ public final class Lister {
 	 * @param <T>  type of the list element
 	 * @return {@code true} if the given list size is equal to the given size.
 	 */
-	public static <T> boolean eqSize(@NotNull List<T> list, int size) {
+	static <T> boolean eqSize(@NotNull List<T> list, int size) {
 		
 		return list.size() == size;
 	}
 	
 	@SuppressWarnings("UseOfSystemOutOrSystemErr")
-	public static void main(String... args) {
+	static void main(String... args) {
 		
 		var list = listOf(1, 2, 3);
 		System.out.println(list);
@@ -419,7 +419,7 @@ public final class Lister {
 	 */
 	@SafeVarargs
 	@NotNull
-	public static <T> List<T> listOf(@NotNull T... t) {
+	static <T> List<T> listOf(@NotNull T... t) {
 		
 		return new ArrayList<>(Arrays.asList(t));
 	}
@@ -443,7 +443,7 @@ public final class Lister {
 	 * @param <R>       group key type
 	 * @return group
 	 */
-	public static <T, R> @NotNull Map<R, List<T>> group(@NotNull List<? extends T> list, @NotNull Function<? super T, ? extends R> keyMapper) {
+	static <T, R> @NotNull Map<R, List<T>> group(@NotNull List<? extends T> list, @NotNull Function<? super T, ? extends R> keyMapper) {
 		
 		Map<R, List<T>> groups = new HashMap<>();
 		
@@ -483,7 +483,7 @@ public final class Lister {
 	 * @param loop     loop counter
 	 * @param runnable loop runnable
 	 */
-	public static void loopWithout(int loop, @NotNull Runnable runnable) {
+	static void loopWithout(int loop, @NotNull Runnable runnable) {
 		
 		for (int i = 0; i < loop; i++) runnable.run();
 	}
@@ -502,7 +502,7 @@ public final class Lister {
 	 * @param loop     loop count
 	 * @param consumer consumer
 	 */
-	public static void loopWith(int loop, @NotNull IntConsumer consumer) {
+	static void loopWith(int loop, @NotNull IntConsumer consumer) {
 		
 		for (int i = 0; i < loop; i++) consumer.accept(i);
 	}
@@ -513,7 +513,7 @@ public final class Lister {
 	 * @param list list
 	 * @return {@code true} if {@code list} is not {@code null} and not empty, {@code false} otherwise
 	 */
-	public static boolean exist(@Nullable List<?> list) {
+	static boolean exist(@Nullable List<?> list) {
 		
 		return list != null && !list.isEmpty();
 	}
@@ -526,7 +526,7 @@ public final class Lister {
 	 * @param <T>  element type
 	 * @return count
 	 */
-	public static <T> long count(@NotNull Iterable<T> list, T item) {
+	static <T> long count(@NotNull Iterable<T> list, T item) {
 		
 		long count = 0L;
 		
@@ -547,7 +547,7 @@ public final class Lister {
 	 * @param <R>    return type
 	 * @return count
 	 */
-	public static <T, R> long count(@NotNull Iterable<T> list, @NotNull T item, @Nullable Function<T, R> mapper) {
+	static <T, R> long count(@NotNull Iterable<T> list, @NotNull T item, @Nullable Function<T, R> mapper) {
 		
 		if (mapper == null) return count(list, item);
 		
@@ -570,7 +570,7 @@ public final class Lister {
 	 * @return removed item or {@code null}
 	 */
 	@Nullable
-	public static <T> T remove(List<T> list, int index) {
+	static <T> T remove(List<T> list, int index) {
 		
 		if (isValidIndex(list, index)) return list.remove(index);
 		
