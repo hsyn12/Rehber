@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="en">
+<resources>
 	<string name="can_not_access_the_contacts">Can not access the contacts</string>
-	<string name="no_record">No Record</string>
+	<string name="no_record">Kayıt Yok</string>
 </resources>

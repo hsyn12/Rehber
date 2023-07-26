@@ -1,4 +1,4 @@
-package com.tr.hsyn.telefonrehberi.main.code.page.calllog;
+package com.tr.hsyn.telefonrehberi.main.call.fragment;
 
 
 import android.os.Bundle;
@@ -40,14 +40,6 @@ public abstract class CallList extends CallLogMenu {
 		itemTouchHelper.attachToRecyclerView(recyclerView);
 	}
 	
-	protected void checkEmpty() {
-		
-		if (adapter != null) {
-			
-			emptyView.setVisibility(adapter.getSize() > 0 ? View.GONE : View.VISIBLE);
-		}
-	}
-	
 	@Override
 	public void setSwipeListener(SwipeListener swipeListener) {
 		
@@ -67,5 +59,13 @@ public abstract class CallList extends CallLogMenu {
 	public void showTime(boolean showTime) {
 		
 		super.showTime(showTime);
+	}
+	
+	protected void checkEmpty() {
+		
+		if (adapter != null) {
+			
+			emptyView.setVisibility(adapter.getSize() > 0 ? View.GONE : View.VISIBLE);
+		}
 	}
 }

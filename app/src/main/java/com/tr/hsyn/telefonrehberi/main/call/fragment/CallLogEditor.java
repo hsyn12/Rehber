@@ -1,4 +1,4 @@
-package com.tr.hsyn.telefonrehberi.main.code.page.calllog;
+package com.tr.hsyn.telefonrehberi.main.call.fragment;
 
 
 import com.tr.hsyn.calldata.Call;

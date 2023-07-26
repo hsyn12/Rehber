@@ -6,7 +6,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:background="@color/light_background"
-		tools:context="com.tr.hsyn.telefonrehberi.main.contact.fragment.FragmentContactsView">
+		tools:context="com.tr.hsyn.telefonrehberi.main.contact.fragment.hotlist.HotContactsView">
 
 	<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 			android:id="@+id/refresh"
@@ -21,29 +21,7 @@
 				app:fastScrollThumbActiveColor="?attr/colorAccent"
 				app:fastScrollThumbInactiveColor="?attr/colorAccent"
 				app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-				tools:listitem="@layout/contact" />
-
-
-		<!--	<com.tr.hsyn.fastscroller.views.FastScrollRecyclerView
-		app:fastScrollPopupBackgroundColor="?attr/colorAccent"
-					app:fastScrollPopupTextColor="@android:color/white"
-					app:fastScrollThumbActiveColor="?attr/colorAccent"
-					app:fastScrollThumbInactiveColor="@color/transparent"
-					android:id="@+id/recycler_view"
-					android:layout_width="match_parent"
-					android:layout_height="match_parent"
-					app:fastScrollAutoHide="false"
-					app:fastScrollEnableThumbInactiveColor="false"
-					app:fastScrollThumbColor="@color/colorPrimary"
-					app:fastScrollPopupTextColor="@color/white"
-					app:fastScrollThumbEnabled="true"
-					app:fastScrollPopupBgColor="@color/colorPrimary"
-					app:fastScrollTrackColor="@color/transparent"
-					app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-					tools:listitem="@layout/contact"
-					app:fastScrollPopupBackgroundSize="86dp"
-					app:fastScrollPopupTextSize="42sp"/>-->
-
+				tools:listitem="@layout/hot_contacts_item" />
 	</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 	<ProgressBar
@@ -77,7 +55,7 @@
 				android:layout_centerHorizontal="true"
 				android:layout_marginTop="8dp"
 				android:fontFamily="@font/text"
-				android:text="Kayıt Yok"
+				android:text="@string/no_record"
 				android:textColor="@color/grey_500"
 				android:textSize="16sp" />
 

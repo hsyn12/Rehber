@@ -1,4 +1,4 @@
-package com.tr.hsyn.telefonrehberi.main.code.page.calllog;
+package com.tr.hsyn.telefonrehberi.main.call.fragment;
 
 
 import static com.google.android.material.appbar.AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS;
@@ -58,18 +58,6 @@ public abstract class CallLogMenu extends CallLogTitle implements MenuProvider, 
 	protected abstract void onClickBackupMenu();
 	
 	protected abstract void onClickSearch();
-	
-	protected void cancelSelection() {
-		
-		getMainMenu().showMenu(true);
-	}
-	
-	protected void onLongClickItem(int position) {
-		
-		//- Bu metot, seçim modu aktif iken çağrılmıyor
-		//- Bu yüzden bu çağrı güvenli
-		getMainMenu().showMenu(false);
-	}
 	
 	@Nullable
 	@Override
@@ -184,22 +172,6 @@ public abstract class CallLogMenu extends CallLogTitle implements MenuProvider, 
 		return false;
 	}
 	
-	private void selectAllItem(boolean select) {
-		
-		loopAdapterHolders(holder -> {
-			
-			holder.selection.setChecked(select);
-			holder.itemView.invalidate();
-		});
-		
-		getAdapter().selectAllItem(select);
-		
-		if (select) selectedItemsCounter = getAdapter().getSize();
-		else selectedItemsCounter = 0;
-		
-		setSubTitle(Stringx.format("%d / %d", getAdapter().getSize(), selectedItemsCounter));
-	}
-	
 	@Override
 	public void showMenu(boolean show) {
 		
@@ -264,6 +236,34 @@ public abstract class CallLogMenu extends CallLogTitle implements MenuProvider, 
 			
 			getMainActivity().changeTabBehavior(SCROLL_FLAG_SNAP | SCROLL_FLAG_ENTER_ALWAYS | SCROLL_FLAG_SCROLL);
 		}
+	}
+	
+	protected void cancelSelection() {
+		
+		getMainMenu().showMenu(true);
+	}
+	
+	protected void onLongClickItem(int position) {
+		
+		//- Bu metot, seçim modu aktif iken çağrılmıyor
+		//- Bu yüzden bu çağrı güvenli
+		getMainMenu().showMenu(false);
+	}
+	
+	private void selectAllItem(boolean select) {
+		
+		loopAdapterHolders(holder -> {
+			
+			holder.selection.setChecked(select);
+			holder.itemView.invalidate();
+		});
+		
+		getAdapter().selectAllItem(select);
+		
+		if (select) selectedItemsCounter = getAdapter().getSize();
+		else selectedItemsCounter = 0;
+		
+		setSubTitle(Stringx.format("%d / %d", getAdapter().getSize(), selectedItemsCounter));
 	}
 	
 	private void loopAdapterHolders(Consumer<CallAdapter.Holder> consumer) {

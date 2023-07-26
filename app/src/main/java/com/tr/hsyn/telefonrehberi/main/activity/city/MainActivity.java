@@ -21,10 +21,10 @@ import com.tr.hsyn.shower.ShadowWomen;
 import com.tr.hsyn.shower.ShowWomen;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.call.cast.MainHeader;
+import com.tr.hsyn.telefonrehberi.main.call.fragment.PageCallLog;
 import com.tr.hsyn.telefonrehberi.main.code.page.Header;
 import com.tr.hsyn.telefonrehberi.main.code.page.PageAdapter;
-import com.tr.hsyn.telefonrehberi.main.code.page.calllog.PageCallLog;
-import com.tr.hsyn.telefonrehberi.main.code.page.contacts.FragmentContacts;
+import com.tr.hsyn.telefonrehberi.main.contact.fragment.FragmentContacts;
 import com.tr.hsyn.xbox.Blue;
 
 

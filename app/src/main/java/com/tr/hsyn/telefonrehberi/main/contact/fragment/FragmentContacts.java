@@ -1,4 +1,4 @@
-package com.tr.hsyn.telefonrehberi.main.code.page.contacts;
+package com.tr.hsyn.telefonrehberi.main.contact.fragment;
 
 
 import android.os.Bundle;

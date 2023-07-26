@@ -236,7 +236,6 @@ public class QuantityComment implements ContactComment {
 	
 	private void evaluateCalls() {
 		
-		
 		History history = callLog.getHistoryOf(contact);
 		
 		//+ no any calls
@@ -251,8 +250,6 @@ public class QuantityComment implements ContactComment {
 		}
 		//+ the history is not empty
 		else {
-			
-			
 			comment.append(getQuantityComment(history)).append("\n");
 			//+ call ranks
 			CallRank incomingRank = getCallRank(Call.INCOMING);

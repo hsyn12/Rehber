@@ -1,4 +1,4 @@
-package com.tr.hsyn.telefonrehberi.main.code.page.contacts;
+package com.tr.hsyn.telefonrehberi.main.contact.fragment;
 
 
 import android.os.Bundle;
@@ -58,11 +58,6 @@ public abstract class FragmentPageList extends FragmentPageColor implements IHav
 		checkEmpty();
 	}
 	
-	protected void checkEmpty() {
-		
-		emptyView.setVisibility(adapter.getItems().isEmpty() ? View.VISIBLE : View.GONE);
-	}
-	
 	@Override
 	public void showProgress() {
 		
@@ -81,5 +76,10 @@ public abstract class FragmentPageList extends FragmentPageColor implements IHav
 	public Contact getItem(int index) {
 		
 		return getList().get(index);
+	}
+	
+	protected void checkEmpty() {
+		
+		emptyView.setVisibility(adapter.getItems().isEmpty() ? View.VISIBLE : View.GONE);
 	}
 }
