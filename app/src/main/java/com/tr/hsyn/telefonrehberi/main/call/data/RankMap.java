@@ -17,12 +17,12 @@ import java.util.stream.Collectors;
 
 
 /**
- * <h3>Ranker</h3>
+ * <h3>RankMap</h3>
  * <p>
  * The rank is a number that is used to determine the value of the calls by some criteria.
  * And it starts from 1, advanced by 1.
  * The most valuable rank is 1.
- * And the {@code Ranker} maps the ranks to the list of {@link CallRank}s.
+ * And the {@code RankMap} maps the ranks to the list of {@link CallRank}s.
  * Because, the different call lists can have the same rank.
  * So, the {@link #getRank(int)} method when called returns the list of {@link CallRank}.
  */
@@ -47,7 +47,7 @@ public class RankMap extends Groups<Integer, CallRank> {
 	 * Returns the list of {@link CallRank} by the rank.
 	 *
 	 * @param rank the rank
-	 * @return the list of {@link CallRank} or {@code null} if the rank does not exist.
+	 * @return the list of {@link CallRank} or empty list if the rank does not exist.
 	 */
 	@NotNull
 	public List<CallRank> getRank(int rank) {
@@ -60,6 +60,7 @@ public class RankMap extends Groups<Integer, CallRank> {
 	 *
 	 * @return the list of {@link CallRank}s
 	 */
+	@NotNull
 	public List<CallRank> getCallRanks() {
 		
 		return values().stream()
@@ -72,12 +73,16 @@ public class RankMap extends Groups<Integer, CallRank> {
 	 * Returns the rank of the contact.
 	 *
 	 * @param contact the contact
-	 * @return the rank of the contact or –1 if not found
+	 * @return the rank of the contact or zero if not found
 	 */
 	public int getRank(@NotNull Contact contact) {
 		
-		var entries = entrySet();
-		for (var entry : entries) {
+		//noinspection DataFlowIssue
+		return getCallRanks().stream()
+				.filter(callRank -> callRank.getKey().equals(String.valueOf(contact.getContactId())))
+				.findFirst().orElse(new CallRank(0, "", null)).getRank();
+		
+		/* for (Entry<Integer, List<CallRank>> entry : entries) {
 			
 			List<CallRank> callRanks = entry.getValue();
 			
@@ -90,7 +95,7 @@ public class RankMap extends Groups<Integer, CallRank> {
 			}
 		}
 		
-		return 0;
+		return 0; */
 	}
 	
 	/**
@@ -114,6 +119,28 @@ public class RankMap extends Groups<Integer, CallRank> {
 				return callRank;
 		
 		return null;
+	}
+	
+	@Nullable
+	public CallRank getCallRank(@NotNull Contact contact) {
+		
+		return getCallRanks().stream()
+				.filter(rank -> rank.getKey().equals(String.valueOf(contact.getContactId())))
+				.findFirst()
+				.orElse(null);
+	}
+	
+	/**
+	 * Returns the count of all {@link CallRank}s.
+	 * This is the <strong>number of persons</strong>.<br>
+	 * {@link #size()} method returns the count of keys,
+	 * this is <strong>the number of ranks</strong>.
+	 *
+	 * @return the count of {@link CallRank}s
+	 */
+	public int getCallRankCount() {
+		
+		return getCallRanks().size();
 	}
 	
 	/**

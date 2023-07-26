@@ -382,7 +382,7 @@ public class QuantityComment implements ContactComment {
 	@NotNull
 	private View.OnClickListener createCallListener(@NotNull RankMap rankMap, @StringRes int title) {
 		
-		int size = rankMap.size();
+		int size = rankMap.getCallRankCount();
 		return v -> new MostCallDialog(getActivity(), createMostCallItemList(rankMap), getString(title), getString(R.string.size_contacts, size)).show();
 	}
 	
@@ -528,14 +528,12 @@ public class QuantityComment implements ContactComment {
 			default: throw new IllegalArgumentException("Unknown call type : " + callType);
 		}
 		
-		int            rank      = rankMap.getRank(contact);
-		List<CallRank> candidate = rankMap.getRank(rank);
-		CallRank       callRank  = rankMap.getCallRank(rank, contact);
+		CallRank callRank = rankMap.getCallRank(contact);
 		
 		if (callRank != null) {
 			
+			List<CallRank> candidate = rankMap.getRank(callRank.getRank());
 			callRank.setContact(contact);
-			//noinspection DataFlowIssue
 			callRank.setRankCount(candidate.size());
 		}
 		
