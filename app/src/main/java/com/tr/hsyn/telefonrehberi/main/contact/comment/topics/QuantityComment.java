@@ -319,8 +319,8 @@ public class QuantityComment implements ContactComment {
 						View.OnClickListener listener = createCallListener(iCalls, R.string.incoming_calls);
 						
 						if (isTurkish) comment.append("Bu kişiden ")
-								.append("gelen tüm aramaları ", getClickSpans(listener))
-								.append("cevapladın.\n");
+								.append("gelen tüm aramaları", getClickSpans(listener))
+								.append(" cevapladın.\n");
 						else comment.append("You answered ")
 								.append("all calls", getClickSpans(listener))
 								.append(" from this contact.\n");
@@ -343,25 +343,25 @@ public class QuantityComment implements ContactComment {
 			//+ incoming
 			if (iRank == 1) {
 				int                  iCount           = incomingRank.getRankCount();
-				View.OnClickListener incomingListener = createCallListener(createRankMap(Call.INCOMING), R.string.most_incoming_calls);
+				View.OnClickListener incomingListener = createCallListener(createRankMap(Call.INCOMING), R.string.most_incoming_calls, R.string.incoming_call);
 				comment.append(getComment(incomingListener, iCount, Call.INCOMING));
 			}
 			//+ outgoing
 			if (oRank == 1) {
 				int                  oCount           = outgoingRank.getRankCount();
-				View.OnClickListener outgoingListener = createCallListener(createRankMap(Call.OUTGOING), R.string.most_outgoing_calls);
+				View.OnClickListener outgoingListener = createCallListener(createRankMap(Call.OUTGOING), R.string.most_outgoing_calls, R.string.outgoing_call);
 				comment.append(getComment(outgoingListener, oCount, Call.OUTGOING));
 			}
 			//+ missed
 			if (mRank == 1) {
 				int                  mCount         = missedRank.getRankCount();
-				View.OnClickListener missedListener = createCallListener(createRankMap(Call.MISSED), R.string.most_missed_calls);
+				View.OnClickListener missedListener = createCallListener(createRankMap(Call.MISSED), R.string.most_missed_calls, R.string.missed_call);
 				comment.append(getComment(missedListener, mCount, Call.MISSED));
 			}
 			//+ rejected
 			if (rRank == 1) {
 				int                  rCount           = rejectedRank.getRankCount();
-				View.OnClickListener rejectedListener = createCallListener(createRankMap(Call.REJECTED), R.string.most_rejected_calls);
+				View.OnClickListener rejectedListener = createCallListener(createRankMap(Call.REJECTED), R.string.most_rejected_calls, R.string.rejected_call);
 				comment.append(getComment(rejectedListener, rCount, Call.REJECTED));
 			}
 		}
@@ -380,10 +380,10 @@ public class QuantityComment implements ContactComment {
 	}
 	
 	@NotNull
-	private View.OnClickListener createCallListener(@NotNull RankMap rankMap, @StringRes int title) {
+	private View.OnClickListener createCallListener(@NotNull RankMap rankMap, @StringRes int title, int itemSubTitle) {
 		
 		int size = rankMap.getCallRankCount();
-		return v -> new MostCallDialog(getActivity(), createMostCallItemList(rankMap), getString(title), getString(R.string.size_contacts, size)).show();
+		return v -> new MostCallDialog(getActivity(), createMostCallItemList(rankMap), getString(title), getString(R.string.size_contacts, size), getString(itemSubTitle)).show();
 	}
 	
 	/**

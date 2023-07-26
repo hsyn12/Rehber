@@ -84,8 +84,7 @@ public class CallDurationComment implements ContactComment {
 		List<MostDurationData> durationList = createDurationList(rankMap, MainContacts.getWithNumber());
 		String                 title        = getString(R.string.title_speaking_durations);
 		String                 subtitle     = getString(R.string.size_contacts, durationList.size());
-		MostDurationDialog     dialog       = new MostDurationDialog(getActivity(), durationList, title, subtitle);
-		View.OnClickListener   listener     = view -> dialog.show();
+		View.OnClickListener   listener     = view -> new MostDurationDialog(getActivity(), durationList, title, subtitle).show();
 		
 		if (thisRank != null) {
 			
@@ -106,7 +105,7 @@ public class CallDurationComment implements ContactComment {
 					
 					comment.append("Bu arama geçmişi süresi boyunca bu kişi ile aranızda toplam ")
 							.append(fmt("%s", stringer.durations(duration.getDurations()).toString()), getTextStyle())
-							.append(" konuşma gerçekleşti. Ve bu süre ile")
+							.append(" konuşma gerçekleşti. Ve bu süre ile ")
 							.append("en çok konuştuğun", getClickSpans(listener))
 							.append(" kişiler listesinde ")
 							.append(fmt("%s", rank), getTextStyle())

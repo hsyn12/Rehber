@@ -17,6 +17,11 @@
 	<string name="no_name_calls">İsimsiz Aramalar</string>
 	<!--Sadece reddedilenn arama kayıtlarının gösterileceğini bildirir-->
 	<string name="random_calls">Rastgele Aramalar</string>
+	<string name="incoming_call">Gelen Arama</string>
+	<string name="outgoing_call">Giden Arama</string>
+	<string name="missed_call">Cevapsız Arama</string>
+	<string name="rejected_call">Reddedilen Arama</string>
+	<string name="random_call">Rastgele Arama</string>
 
 	<string name="most_outgoing_calls">En Çok Arananlar</string>
 	<string name="most_incoming_calls">En Çok Arayanlar</string>

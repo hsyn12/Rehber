@@ -2,7 +2,6 @@ package com.tr.hsyn.telefonrehberi.main.code.comment.dialog;
 
 
 import android.app.Activity;
-import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
@@ -22,16 +21,14 @@ public class MostDurationDialog extends Dialog {
 	
 	public MostDurationDialog(Activity activity, List<MostDurationData> mostDurationDataList, @NotNull String title, @NotNull String subTitle) {
 		
-		AlertDialog.Builder builder = getBuilder(activity, true, null);
-		
-		View         view = inflateLayout(activity, R.layout.most_call_dialog);
-		RecyclerView list = view.findViewById(R.id.most_call_list);
+		AlertDialog.Builder builder = getBuilder(activity, R.layout.most_call_dialog, true, null);
+		RecyclerView        list    = rootView.findViewById(R.id.most_call_list);
 		list.setAdapter(new MostDurationAdapter(mostDurationDataList));
 		setHeight(list, list.getLayoutParams());
 		
-		((TextView) view.findViewById(R.id.title)).setText(title);
-		((TextView) view.findViewById(R.id.sub_title)).setText(subTitle);
-		view.findViewById(R.id.header_include).setBackgroundColor(Colors.getPrimaryColor());
+		((TextView) rootView.findViewById(R.id.title)).setText(title);
+		((TextView) rootView.findViewById(R.id.sub_title)).setText(subTitle);
+		rootView.findViewById(R.id.header_include).setBackgroundColor(Colors.getPrimaryColor());
 		dialog = builder.create();
 		
 		setAnimation(R.style.DialogAnimationBounce);

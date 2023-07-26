@@ -23,10 +23,17 @@ import java.util.Locale;
 public class MostCallDialogAdapter extends RecyclerView.Adapter<MostCallDialogAdapter.Holder> {
 	
 	private final List<MostCallItemViewData> mostCallItemViewDataList;
+	private       String                     typeText;
 	
 	public MostCallDialogAdapter(List<MostCallItemViewData> mostCallItemViewDataList) {
 		
 		this.mostCallItemViewDataList = mostCallItemViewDataList;
+	}
+	
+	public MostCallDialogAdapter(List<MostCallItemViewData> mostCallItemViewDataList, String typeText) {
+		
+		this.mostCallItemViewDataList = mostCallItemViewDataList;
+		this.typeText                 = typeText;
 	}
 	
 	@NotNull
@@ -44,9 +51,8 @@ public class MostCallDialogAdapter extends RecyclerView.Adapter<MostCallDialogAd
 		int                  order = item.getOrder();
 		
 		holder.name.setText(item.getName());
-		
 		holder.count.setImageDrawable(TextDrawable.builder().buildRound(String.valueOf(order != 0 ? order : position + 1), color));
-		holder.txtType.setText(String.format(Locale.getDefault(), "%d %s", item.getCallSize(), holder.itemView.getContext().getString(R.string.call_record)));
+		holder.txtType.setText(String.format(Locale.getDefault(), "%d %s", item.getCallSize(), typeText == null ? holder.itemView.getContext().getString(R.string.call_record) : typeText));
 		
 		if (item.isSelected()) {
 			int _color = Colors.getColor(holder.itemView.getContext(), com.tr.hsyn.rescolors.R.color.c_lightmediumorchid);
@@ -62,6 +68,11 @@ public class MostCallDialogAdapter extends RecyclerView.Adapter<MostCallDialogAd
 	public int getItemCount() {
 		
 		return mostCallItemViewDataList.size();
+	}
+	
+	public void setTypeText(String typeText) {
+		
+		this.typeText = typeText;
 	}
 	
 	public static final class Holder extends RecyclerView.ViewHolder {

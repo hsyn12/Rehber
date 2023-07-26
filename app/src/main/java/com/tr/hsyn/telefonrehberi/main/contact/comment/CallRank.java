@@ -60,6 +60,15 @@ public class CallRank {
 		name       = calls.get(0).getName();
 	}
 	
+	/**
+	 * Empty rank
+	 */
+	public CallRank() {
+		
+		key   = null;
+		calls = null;
+	}
+	
 	@Override
 	public int hashCode() {
 		

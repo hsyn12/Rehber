@@ -141,7 +141,7 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 		else {
 			
 			xlog.d("Not found the call collection");
-			onMain(this::returnComment);
+			returnComment();
 		}
 	}
 	
@@ -155,7 +155,7 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 		// Here start to generate the comment.
 		// The Call history is not 'null' and not empty at this point.
 		
-		xlog.d("Accessed the call history [contact='%s', size=%d]", contact.getName(), history.size());
+		xlog.dx("Accessed the call history [contact='%s', size=%d]", contact.getName(), history.size());
 		
 		if (history.size() == 1) {
 			commentOnSingleCall();
@@ -165,14 +165,7 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 			lastCallComment.createComment(contact, commentStore.getActivity(), this::onComment, isTurkish);
 			historyDurationComment.createComment(contact, commentStore.getActivity(), this::onComment, isTurkish);
 			callDurationComment.createComment(contact, commentStore.getActivity(), this::onComment, isTurkish);
-			
-			/* this.comment.append(commentMostQuantity());
-			this.comment.append(commentOnTheLastCall());
-			this.comment.append(commentLastCallType());
-			this.comment.append(firstLastCallComment());
-			this.comment.append(commentOnDurations()); */
 		}
-		
 	}
 	
 	private void returnComment() {
@@ -219,6 +212,7 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 		
 		comment.append(commentStore.singleCall()).append(". ");
 		commentOnTheSingleCall(history.get(0));
+		returnComment();
 	}
 	
 	/**
@@ -256,9 +250,7 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 					.append(Stringx.format("%s", timeBefore.getValue() > 1 ? "s " : " "))
 					.append(getString(R.string.word_is_ago))
 					.append(". ");
-			
 		}
-		
 	}
 	
 	@NotNull
@@ -311,7 +303,7 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 			
 			var rankList = rankMap.getRank(rank);
 			
-			if (rankList == null) break;
+			if (rankList.isEmpty()) break;
 			
 			for (CallRank callRank : rankList) {
 				

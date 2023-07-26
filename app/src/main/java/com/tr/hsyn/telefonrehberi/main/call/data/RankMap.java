@@ -77,10 +77,9 @@ public class RankMap extends Groups<Integer, CallRank> {
 	 */
 	public int getRank(@NotNull Contact contact) {
 		
-		//noinspection DataFlowIssue
 		return getCallRanks().stream()
 				.filter(callRank -> callRank.getKey().equals(String.valueOf(contact.getContactId())))
-				.findFirst().orElse(new CallRank(0, "", null)).getRank();
+				.findFirst().orElse(new CallRank()).getRank();
 		
 		/* for (Entry<Integer, List<CallRank>> entry : entries) {
 			
@@ -164,7 +163,7 @@ public class RankMap extends Groups<Integer, CallRank> {
 		
 		for (int i = 0; i < durationList.size(); i++)
 			if (durationList.get(i).getKey().getContactId() == contact.getContactId())
-				return i;
+				return i + 1;
 		
 		return 0;
 	}

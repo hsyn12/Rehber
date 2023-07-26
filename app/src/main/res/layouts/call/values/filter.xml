@@ -15,9 +15,15 @@
 	<string name="most_missed_calls">Most Missed Calls</string>
 	<string name="most_rejected_calls">Most Rejected Calls</string>
 
-	<string name="most_duration_incoming_calls">En Çok Konuşanlar</string>
-	<string name="most_duration_outgoing_calls">En Çok Konuştukların</string>
+	<string name="most_duration_incoming_calls">Most Duration Incoming Calls</string>
+	<string name="most_duration_outgoing_calls">Most Duration Outgoing Calls</string>
 	<string name="description_call_type">Call type</string>
+
+	<string name="incoming_call">@string/incoming_calls</string>
+	<string name="outgoing_call">@string/outgoing_calls</string>
+	<string name="missed_call">@string/missed_calls</string>
+	<string name="rejected_call">@string/rejected_calls</string>
+	<string name="random_call">@string/random_calls</string>
 
 	<!--Arama kayıtları filtreleme öğeleri dizisi-->
 	<string-array name="call_filter_items">

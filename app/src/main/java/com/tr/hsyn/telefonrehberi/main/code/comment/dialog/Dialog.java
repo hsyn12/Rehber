@@ -18,6 +18,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class Dialog {
 	
+	protected ViewGroup rootView;
+	
 	/**
 	 * @return the dialog
 	 */
@@ -80,6 +82,18 @@ public abstract class Dialog {
 		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 		builder.setCancelable(cancelable);
 		builder.setOnCancelListener(cancelListener != null ? cancelListener : this::onCancel);
+		return builder;
+	}
+	
+	protected AlertDialog.Builder getBuilder(@NotNull Activity activity, int layout, boolean cancelable, DialogInterface.OnCancelListener cancelListener) {
+		
+		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+		builder.setCancelable(cancelable);
+		builder.setOnCancelListener(cancelListener != null ? cancelListener : this::onCancel);
+		
+		rootView = inflateLayout(activity, layout);
+		builder.setView(rootView);
+		
 		return builder;
 	}
 	

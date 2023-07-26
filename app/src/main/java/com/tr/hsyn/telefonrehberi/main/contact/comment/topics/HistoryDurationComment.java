@@ -109,8 +109,7 @@ public class HistoryDurationComment implements ContactComment {
 		List<MostDurationData>            durationDataList    = createMostHistoryDurationList(durationList, stringer);
 		String                            title               = getString(R.string.title_most_call_history);
 		String                            subtitle            = getString(R.string.size_contacts, durationDataList.size());
-		MostDurationDialog                dialog              = new MostDurationDialog(getActivity(), durationDataList, title, subtitle);
-		View.OnClickListener              listener            = view -> dialog.show();
+		View.OnClickListener              listener            = view -> new MostDurationDialog(getActivity(), durationDataList, title, subtitle).show();
 		String                            durationString      = stringer.durations(thisDuration.getDurations()).toString();//+ Duration string of this contact.
 		int                               rank                = RankMap.getRank(durationList, contact);
 		boolean                           winner              = contact.getContactId() == winnerContact.getContactId();
