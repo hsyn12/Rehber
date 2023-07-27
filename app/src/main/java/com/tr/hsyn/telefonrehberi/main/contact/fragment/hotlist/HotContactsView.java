@@ -6,29 +6,16 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
-import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.telefonrehberi.R;
-import com.tr.hsyn.telefonrehberi.main.code.page.FragmentEvents;
 
 import org.jetbrains.annotations.NotNull;
 
 
-public abstract class HotContactsView extends FragmentEvents<Contact> {
+public abstract class HotContactsView extends Fragment {
 	
 	private CharSequence title;
-	
-	@Override
-	protected CharSequence getTitle() {
-		
-		return title;
-	}
-	
-	@Override
-	protected int getLayoutId() {
-		
-		return R.layout.fragment_hotlist_contacts;
-	}
 	
 	@Override
 	public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
@@ -36,6 +23,16 @@ public abstract class HotContactsView extends FragmentEvents<Contact> {
 		super.onViewCreated(view, savedInstanceState);
 		
 		title = getString(R.string.rehber);
-		recyclerView.setFastScrollListener(this);
+		
+	}
+	
+	protected CharSequence getTitle() {
+		
+		return title;
+	}
+	
+	protected int getLayoutId() {
+		
+		return R.layout.fragment_hotlist_contacts;
 	}
 }
