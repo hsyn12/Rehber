@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.contactdata.ContactData;
-import com.tr.hsyn.contactdata.HotContact;
 import com.tr.hsyn.content.Contents;
 import com.tr.hsyn.perfectsort.PerfectSort;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
@@ -33,12 +32,10 @@ import java.util.List;
 public interface ContactsReader extends ContactColumns {
 	
 	/**
-	 * Kişi listesini verir.<br>
-	 * Bu çağrıdan önce rehber okuma izni alınmış olmalı.<br>
-	 * Bu metot kişileri almak için kullanılan ana metot.
+	 * Gets the contacts from the given content resolver.
 	 *
-	 * @param resolver ContentResolver
-	 * @return Kişi listesi
+	 * @param resolver The content resolver
+	 * @return A list of contacts
 	 */
 	@NotNull
 	static List<Contact> getContacts(@NotNull final ContentResolver resolver) {
@@ -92,56 +89,6 @@ public interface ContactsReader extends ContactColumns {
 		return new ArrayList<>(0);
 	}
 	
-	static @NotNull List<HotContact> getHotContacts(@NotNull final ContentResolver resolver) {
-		
-		//region var cursor = resolver.query(...)
-		Cursor cursor = resolver.query(
-				ContactsContract.Contacts.CONTENT_URI,
-				PROJECTION,
-				null,
-				null,
-				null
-		);
-		//endregion
-		
-		if (cursor != null) {
-			
-			// region Setup indexes of contact column
-			int contactIdCol = cursor.getColumnIndex(PROJECTION[0]);
-			int nameCol      = cursor.getColumnIndex(PROJECTION[1]);
-			int picCol       = cursor.getColumnIndex(PROJECTION[2]);
-			int bigPicCol    = cursor.getColumnIndex(PROJECTION[3]);
-			// endregion
-			
-			// region Taking data in the while loop and creating a contact object
-			
-			List<HotContact> contacts = new ArrayList<>(cursor.getCount());
-			
-			while (cursor.moveToNext()) {
-				
-				HotContact contact = new HotContact(cursor.getLong(contactIdCol),
-				                                    cursor.getString(nameCol),
-				                                    cursor.getString(picCol),
-				                                    cursor.getString(bigPicCol));
-				
-				setHotContact(resolver, contact);
-				contacts.add(contact);
-			}
-			// endregion
-			
-			cursor.close();
-			
-			//xlog.d("Found %d contacts", contacts.size());
-			
-			contacts.sort(PerfectSort.stringComparator(HotContact::getName));
-			
-			return contacts;
-		}
-		xlog.d("No contact");
-		//+ return me
-		return new ArrayList<>(0);
-	}
-	
 	private static void setContact(@NotNull final ContentResolver contentResolver, @NotNull Contact contact) {
 		
 		android.net.Uri uri    = Contents.getContactEntityUri(contact.getContactId());
@@ -156,22 +103,6 @@ public interface ContactsReader extends ContactColumns {
 		}
 		
 		_setContactDetails(cursor, contact);
-	}
-	
-	private static void setHotContact(@NotNull final ContentResolver contentResolver, @NotNull HotContact contact) {
-		
-		android.net.Uri uri    = Contents.getContactEntityUri(contact.getContactId());
-		Cursor          cursor = contentResolver.query(uri, null, null, null, null);
-		
-		if (cursor == null) {return;}
-		
-		if (!cursor.moveToFirst()) {
-			
-			cursor.close();
-			return;
-		}
-		
-		_setHotContactDetails(cursor, contact);
 	}
 	
 	/**
@@ -229,54 +160,6 @@ public interface ContactsReader extends ContactColumns {
 		if (!events.isEmpty()) contact.setData(ContactKey.EVENTS, events);
 	}
 	
-	private static void _setHotContactDetails(@NotNull Cursor cursor, @NotNull HotContact contact) {
-		
-		int               data1Col    = cursor.getColumnIndex(DATA_COLUMNS[0]);
-		int               mimeTypeCol = cursor.getColumnIndex(DATA_COLUMNS[1]);
-		List<String>      emails      = new ArrayList<>(2);
-		List<String>      numbers     = new ArrayList<>(2);
-		List<String>      groups      = new ArrayList<>(2);
-		List<ContactData> events      = new ArrayList<>(2);
-		
-		do {
-			
-			String data1 = cursor.getString(data1Col);
-			
-			if (data1 == null) continue;
-			
-			String mimeType = cursor.getString(mimeTypeCol);
-			//var data2    = cursor.getString(data2Col);
-			
-			switch (mimeType) {
-				
-				case ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE:
-					emails.add(data1);
-					break;
-				case ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE:
-					addNumbers(cursor, data1Col, numbers);
-					break;
-				case ContactsContract.CommonDataKinds.GroupMembership.CONTENT_ITEM_TYPE:
-					groups.add(data1);
-					break;
-				case ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE:
-					addHotEvents(cursor, data1, events);
-					break;
-				case ContactsContract.CommonDataKinds.Note.CONTENT_ITEM_TYPE:
-					contact.setNote(data1);
-					break;
-			}
-			
-		}
-		while ((cursor.moveToNext()));
-		
-		cursor.close();
-		
-		if (!numbers.isEmpty()) contact.setNumbers(numbers);
-		if (!emails.isEmpty()) contact.setEmails(emails);
-		if (!groups.isEmpty()) contact.setGroups(groups);
-		if (!events.isEmpty()) contact.setEvents(events);
-	}
-	
 	static void addNumbers(@NotNull Cursor cursor, int data1Column, @NotNull List<String> numbers) {
 		
 		String          rowNumber = cursor.getString(data1Column);
@@ -290,14 +173,6 @@ public interface ContactsReader extends ContactColumns {
 	
 	@SuppressLint("Range")
 	static void addEvents(@NotNull Cursor cursor, String data1, @NotNull List<? super ContactData> events) {
-		
-		int type = cursor.getInt(cursor.getColumnIndex(DATA_COLUMNS[2]));
-		
-		events.add(ContactData.newData(data1, type));
-	}
-	
-	@SuppressLint("Range")
-	static void addHotEvents(@NotNull Cursor cursor, String data1, @NotNull List<? super ContactData> events) {
 		
 		int type = cursor.getInt(cursor.getColumnIndex(DATA_COLUMNS[2]));
 		

@@ -40,7 +40,7 @@
 
 		<!-- İsim -->
 		<TextView
-				android:id="@+id/text_name"
+				android:id="@+id/name"
 				style="@style/ContactText"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"

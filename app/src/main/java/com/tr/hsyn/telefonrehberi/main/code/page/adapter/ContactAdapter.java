@@ -172,8 +172,8 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> 
 			
 			super(itemView);
 			
-			name  = itemView.findViewById(R.id.contact_name);
-			image = itemView.findViewById(R.id.contact_image);
+			name  = itemView.findViewById(R.id.name);
+			image = itemView.findViewById(R.id.image);
 			
 			itemView.setBackgroundResource(colorHolder.getRipple());
 			itemView.setOnClickListener(v -> selectListener.onItemIndex(getAdapterPosition()));

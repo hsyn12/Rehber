@@ -122,8 +122,8 @@ public class AdapterSelectContacts extends RecyclerView.Adapter<AdapterSelectCon
 			
 			super(itemView);
 			
-			name     = itemView.findViewById(R.id.contact_name);
-			image    = itemView.findViewById(R.id.contact_image);
+			name     = itemView.findViewById(R.id.name);
+			image    = itemView.findViewById(R.id.image);
 			selected = itemView.findViewById(R.id.check_box_contact);
 			
 			itemView.setBackgroundResource(Colors.getRipple());

@@ -230,7 +230,7 @@ public class ContactSearchAdapter extends RecyclerView.Adapter<ContactSearchAdap
 			
 			super(itemView);
 			
-			name   = itemView.findViewById(R.id.text_name);
+			name   = itemView.findViewById(R.id.name);
 			number = itemView.findViewById(R.id.text_number);
 			image  = itemView.findViewById(R.id.image_contact_search);
 			
