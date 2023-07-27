@@ -12,7 +12,8 @@ import androidx.annotation.NonNull;
 
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.contactdata.Contact;
-import com.tr.hsyn.contactdata.ContactDat;
+import com.tr.hsyn.contactdata.ContactData;
+import com.tr.hsyn.contactdata.HotContact;
 import com.tr.hsyn.content.Contents;
 import com.tr.hsyn.perfectsort.PerfectSort;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
@@ -182,12 +183,12 @@ public interface ContactsReader extends ContactColumns {
 	@SuppressLint("Range")
 	private static void _setContactDetails(@NotNull Cursor cursor, @NotNull Contact contact) {
 		
-		int              data1Col    = cursor.getColumnIndex(DATA_COLUMNS[0]);
-		int              mimeTypeCol = cursor.getColumnIndex(DATA_COLUMNS[1]);
-		List<String>     emails      = new ArrayList<>(2);
-		List<String>     numbers     = new ArrayList<>(2);
-		List<String>     groups      = new ArrayList<>(2);
-		List<ContactDat> events      = new ArrayList<>(2);
+		int               data1Col    = cursor.getColumnIndex(DATA_COLUMNS[0]);
+		int               mimeTypeCol = cursor.getColumnIndex(DATA_COLUMNS[1]);
+		List<String>      emails      = new ArrayList<>(2);
+		List<String>      numbers     = new ArrayList<>(2);
+		List<String>      groups      = new ArrayList<>(2);
+		List<ContactData> events      = new ArrayList<>(2);
 		
 		do {
 			
@@ -288,11 +289,11 @@ public interface ContactsReader extends ContactColumns {
 	}
 	
 	@SuppressLint("Range")
-	static void addEvents(@NotNull Cursor cursor, String data1, @NotNull List<? super ContactDat> events) {
+	static void addEvents(@NotNull Cursor cursor, String data1, @NotNull List<? super ContactData> events) {
 		
 		int type = cursor.getInt(cursor.getColumnIndex(DATA_COLUMNS[2]));
 		
-		events.add(ContactDat.newData(data1, type));
+		events.add(ContactData.newData(data1, type));
 	}
 	
 	@SuppressLint("Range")

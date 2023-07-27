@@ -1,7 +1,5 @@
-package com.tr.hsyn.telefonrehberi.main.contact.data;
+package com.tr.hsyn.contactdata;
 
-
-import com.tr.hsyn.contactdata.ContactDat;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -49,7 +47,7 @@ public interface ContactData {
 			@Override
 			public boolean equals(Object obj) {
 				
-				return obj instanceof ContactDat && type == ((ContactDat) obj).getType() && value.equals(((ContactDat) obj).getValue());
+				return obj instanceof ContactData && type == ((ContactData) obj).getType() && value.equals(((ContactData) obj).getValue());
 			}
 			
 			@NotNull

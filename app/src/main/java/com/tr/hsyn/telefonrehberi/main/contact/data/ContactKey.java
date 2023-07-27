@@ -3,7 +3,7 @@ package com.tr.hsyn.telefonrehberi.main.contact.data;
 
 import com.tr.hsyn.contactdata.Account;
 import com.tr.hsyn.contactdata.Contact;
-import com.tr.hsyn.contactdata.ContactDat;
+import com.tr.hsyn.contactdata.ContactData;
 import com.tr.hsyn.datakey.DataKey;
 import com.tr.hsyn.label.Label;
 import com.tr.hsyn.time.Time;
@@ -34,7 +34,7 @@ public interface ContactKey {
 	 */
 	DataKey NOTE         = DataKey.of(6, "note");
 	/**
-	 * Olaylar ({@link ContactDat}) list
+	 * Olaylar ({@link ContactData}) list
 	 */
 	DataKey EVENTS       = DataKey.of(7, "events");
 	/**
@@ -67,7 +67,7 @@ public interface ContactKey {
 	}
 	
 	@Nullable
-	static List<ContactDat> getEvents(@NotNull Contact contact) {
+	static List<ContactData> getEvents(@NotNull Contact contact) {
 		
 		return contact.getData(EVENTS);
 	}
@@ -116,7 +116,7 @@ public interface ContactKey {
 		contact.setData(EMAILS, emails);
 	}
 	
-	static void setEvents(@NotNull Contact contact, List<ContactDat> events) {
+	static void setEvents(@NotNull Contact contact, List<ContactData> events) {
 		
 		contact.setData(EVENTS, events);
 	}
