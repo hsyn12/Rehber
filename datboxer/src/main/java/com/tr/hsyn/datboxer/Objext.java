@@ -108,7 +108,7 @@ public interface Objext {
 	 * @param key key
 	 * @return {@code true} if the key is readable and exists.
 	 */
-	boolean exist(@NotNull DataKey key);
+	boolean existKey(@NotNull DataKey key);
 	
 	
 }

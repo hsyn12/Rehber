@@ -139,7 +139,7 @@ public class DatBoxer implements Objext {
 	}
 	
 	@Override
-	public boolean exist(@NotNull DataKey key) {
+	public boolean existKey(@NotNull DataKey key) {
 		
 		return key.isReadable() && datamap.containsKey(key);
 	}

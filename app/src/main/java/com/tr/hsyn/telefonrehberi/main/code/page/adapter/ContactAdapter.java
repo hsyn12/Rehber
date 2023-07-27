@@ -2,7 +2,6 @@ package com.tr.hsyn.telefonrehberi.main.code.page.adapter;
 
 
 import android.annotation.SuppressLint;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,12 +10,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.colors.ColorHolder;
-import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.fastscroller.FastScrollRecyclerView;
 import com.tr.hsyn.perfectsort.PerfectSort;
@@ -24,8 +21,9 @@ import com.tr.hsyn.rsectiondecorator.SectionsAdapterInterface;
 import com.tr.hsyn.selection.ItemIndexListener;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
+import com.tr.hsyn.telefonrehberi.main.Res;
 import com.tr.hsyn.telefonrehberi.main.cast.ItemAdapter;
-import com.tr.hsyn.textdrawable.TextDrawable;
+import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
 
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +38,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> 
 	private       List<Contact>            contacts;
 	private       LayoutInflater           inflater;
 	private       SectionsAdapterInterface secAdapter;
+	private       boolean                  rankDetails;
 	
 	public ContactAdapter(@NonNull List<Contact> contacts, @NonNull ItemIndexListener selectListener, ColorHolder colorHolder) {
 		
@@ -66,33 +65,25 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> 
 	public void onBindViewHolder(@NonNull Holder holder, int position) {
 		
 		Contact contact = contacts.get(position);
+		String  name    = contact.getName();
 		
-		String name = contact.getName();
-		
-		if (name == null || name.trim().isEmpty()) {
-			
-			name = "(adsız)";
-		}
+		if (name == null || name.trim().isEmpty())
+			name = holder.itemView.getContext().getString(R.string.no_name);
 		
 		holder.name.setText(name);
 		
-		String pic   = contact.getPic();
-		int    color = Colors.getRandomColor();
+		String pic = contact.getPic();
 		
 		if (pic == null) {
 			
-			Drawable image = TextDrawable.builder()
-					.beginConfig()
-					.useFont(ResourcesCompat.getFont(holder.itemView.getContext(), com.tr.hsyn.resfont.R.font.z))
-					.endConfig()
-					.buildRound(Stringx.getLetter(contact.getName()), color);
-			
-			holder.image.setImageDrawable(image);
+			holder.image.setImageDrawable(Res.drawable(holder.itemView.getContext(), contact.getName()));
 		}
 		else {
 			
 			holder.image.setImageURI(Uri.parse(pic));
 		}
+		
+		setRankDetails(holder, position, contact);
 	}
 	
 	@Override
@@ -158,6 +149,37 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> 
 		return secAdapter.getItemCountForSection(sectionIndex);
 	}
 	
+	private void setRankDetails(@NonNull Holder holder, int position, Contact contact) {
+		
+		if (rankDetails) {
+			
+			Integer imgRes = contact.getData(ContactKey.RANK_IMG_RES);
+			String  rText  = contact.getData(ContactKey.RANK_TEXT);
+			
+			if (imgRes != null && rText != null) {
+				
+				ImageView typeImg = holder.rankDetails.findViewById(R.id.img_type);
+				TextView  typeTxt = holder.rankDetails.findViewById(R.id.text_type);
+				
+				typeImg.setImageResource(imgRes);
+				typeTxt.setText(rText);
+				holder.rankDetails.setVisibility(View.VISIBLE);
+			}
+			
+		}
+		else holder.rankDetails.setVisibility(View.GONE);
+	}
+	
+	public boolean isRankDetails() {
+		
+		return rankDetails;
+	}
+	
+	public void setRankDetails(boolean rankDetails) {
+		
+		this.rankDetails = rankDetails;
+	}
+	
 	private void setSections() {
 		
 		secAdapter = new TopSectionAdapter(contacts.stream().map(Contact::getName).collect(Collectors.toList()));
@@ -167,13 +189,15 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> 
 		
 		TextView  name;
 		ImageView image;
+		ViewGroup rankDetails;
 		
 		public Holder(@NonNull View itemView, ItemIndexListener selectListener, @NonNull ColorHolder colorHolder) {
 			
 			super(itemView);
 			
-			name  = itemView.findViewById(R.id.name);
-			image = itemView.findViewById(R.id.image);
+			name        = itemView.findViewById(R.id.name);
+			image       = itemView.findViewById(R.id.image);
+			rankDetails = itemView.findViewById(R.id.rank_layout);
 			
 			itemView.setBackgroundResource(colorHolder.getRipple());
 			itemView.setOnClickListener(v -> selectListener.onItemIndex(getAdapterPosition()));

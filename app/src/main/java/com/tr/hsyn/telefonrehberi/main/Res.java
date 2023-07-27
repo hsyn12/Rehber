@@ -1,19 +1,57 @@
-package com.tr.hsyn.telefonrehberi.main.call.data;
+package com.tr.hsyn.telefonrehberi.main;
 
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.tr.hsyn.calldata.Type;
+import com.tr.hsyn.colors.Colors;
+import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
+import com.tr.hsyn.textdrawable.TextDrawable;
 
 import org.jetbrains.annotations.NotNull;
 
 
-public class Res {
+public interface Res {
 	
-	public interface Call {
+	/**
+	 * Creates a {@link Drawable} for items image.
+	 *
+	 * @param context the context
+	 * @param name    the name to take the first letter to use in the drawable
+	 * @return the drawable
+	 */
+	static Drawable drawable(@NotNull Context context, String name) {
+		
+		return TextDrawable.builder()
+				.beginConfig()
+				.useFont(ResourcesCompat.getFont(context, com.tr.hsyn.resfont.R.font.z))
+				.endConfig()
+				.buildRound(Stringx.getLetter(name), Colors.getRandomColor());
+	}
+	
+	/**
+	 * Creates a {@link Drawable} for items image.
+	 *
+	 * @param context the context
+	 * @param name    the name to take the first letter to use in the drawable
+	 * @param fontRes the font resource
+	 * @return the drawable
+	 */
+	static Drawable drawable(@NotNull Context context, String name, int fontRes) {
+		
+		return TextDrawable.builder()
+				.beginConfig()
+				.useFont(ResourcesCompat.getFont(context, fontRes))
+				.endConfig()
+				.buildRound(Stringx.getLetter(name), Colors.getRandomColor());
+	}
+	
+	interface Call {
 		
 		/**
 		 * Returns the call type string for the given call type.
@@ -53,6 +91,4 @@ public class Res {
 			return filters[filter];
 		}
 	}
-	
-	
 }

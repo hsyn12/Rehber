@@ -120,7 +120,7 @@ public class Database extends DBBase<Call> implements DBCalls {
 		values.put(RINGING_DURATION, call.getLong(Key.RINGING_DURATION, 0L));
 		values.put(EXTRA, call.getExtra());
 		
-		if (call.exist(Key.NOTE)) //noinspection ConstantConditions
+		if (call.existKey(Key.NOTE)) //noinspection ConstantConditions
 			values.put(NOTE, call.getData(Key.NOTE));
 		else values.putNull(Values.TYPE_STRING, NOTE);
 		

@@ -18,41 +18,53 @@ import java.util.Set;
 public interface ContactKey {
 	
 	/**
-	 * Büyük resim (string)
+	 * Big pic (string)
 	 */
 	DataKey BIG_PIC      = DataKey.of(3, "bigPic");
 	/**
-	 * Telefon numaraları (string list)
+	 * Numbers (string list)
 	 */
 	DataKey NUMBERS      = DataKey.of(4, "numbers");
 	/**
-	 * Email adresleri -- string list
+	 * Emails -- string list
 	 */
 	DataKey EMAILS       = DataKey.of(5, "emails");
 	/**
-	 * Not -- string
+	 * Note -- string
 	 */
 	DataKey NOTE         = DataKey.of(6, "note");
 	/**
-	 * Olaylar ({@link ContactData}) list
+	 * Events ({@link ContactData}) list
 	 */
 	DataKey EVENTS       = DataKey.of(7, "events");
 	/**
-	 * Gruplar -- string list
+	 * Groups -- string list
 	 */
 	DataKey GROUPS       = DataKey.of(8, "groups");
 	/**
-	 * Etiketler -- label list
+	 * Labels -- label list
 	 */
 	DataKey LABELS       = DataKey.of(9, "labels");
 	/**
-	 * Hesaplar -- string list
+	 * Accounts -- string list
 	 */
 	DataKey ACCOUNTS     = DataKey.of(10, "accounts");
 	/**
-	 * Silinme zamanı (long)
+	 * Deleted date (long)
 	 */
 	DataKey DELETED_DATE = DataKey.of(11, "deletedDate");
+	/**
+	 * Rank -- int
+	 */
+	DataKey RANK         = DataKey.of(12, "rank");
+	/**
+	 * Resource ID for rank image (int)
+	 */
+	DataKey RANK_IMG_RES = DataKey.of(13, "rank image resource");
+	/**
+	 * String
+	 */
+	DataKey RANK_TEXT    = DataKey.of(14, "rank text");
 	
 	@Nullable
 	static List<String> getNumbers(@NotNull Contact contact) {
