@@ -15,14 +15,14 @@ public interface ContactData {
 	int getType();
 	
 	@NotNull
-	static ContactDat newData(String value, int type) {
+	static ContactData newData(String value, int type) {
 		
-		class Dat implements ContactDat {
+		class Data implements ContactData {
 			
 			private final String value;
 			private final int    type;
 			
-			Dat(String value, int type) {
+			Data(String value, int type) {
 				
 				this.value = value;
 				this.type  = type;
@@ -63,6 +63,6 @@ public interface ContactData {
 			}
 		}
 		
-		return new Dat(value, type);
+		return new Data(value, type);
 	}
 }
