@@ -25,7 +25,7 @@ public interface Res {
 	 * @param name    the name to take the first letter to use in the drawable
 	 * @return the drawable
 	 */
-	static Drawable drawable(@NotNull Context context, String name) {
+	static Drawable textDrawable(@NotNull Context context, String name) {
 		
 		return TextDrawable.builder()
 				.beginConfig()
@@ -42,7 +42,7 @@ public interface Res {
 	 * @param fontRes the font resource
 	 * @return the drawable
 	 */
-	static Drawable drawable(@NotNull Context context, String name, int fontRes) {
+	static Drawable textDrawable(@NotNull Context context, String name, int fontRes) {
 		
 		return TextDrawable.builder()
 				.beginConfig()

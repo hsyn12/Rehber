@@ -23,19 +23,21 @@ import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.gate.AutoGate;
 import com.tr.hsyn.gate.Gate;
 import com.tr.hsyn.page.MenuShower;
-import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
+import com.tr.hsyn.telefonrehberi.main.call.activity.backup.CallBackupActivity;
+import com.tr.hsyn.telefonrehberi.main.call.activity.random.RandomCallsActivity;
 import com.tr.hsyn.telefonrehberi.main.code.page.adapter.CallAdapter;
 import com.tr.hsyn.telefonrehberi.main.dev.menu.MenuEditor;
 import com.tr.hsyn.telefonrehberi.main.dev.menu.MenuManager;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 
 /**
- * Menüyü yönet
+ * Manages the menu.
  */
 public abstract class CallLogMenu extends CallLogTitle implements MenuProvider, MenuShower {
 	
@@ -45,19 +47,61 @@ public abstract class CallLogMenu extends CallLogTitle implements MenuProvider, 
 	private         int        menuPrepared;
 	private         MenuEditor menuManager;
 	
+	/**
+	 * Called when the filter menu item is clicked.
+	 */
 	protected abstract void onClickFilterMenu();
 	
+	/**
+	 * Called when the 'delete all' menu item is clicked.
+	 */
 	protected abstract void deleteAll();
 	
+	/**
+	 * Starts listening to the back press event.
+	 */
 	protected abstract void listenBackPress();
 	
-	protected abstract void dontListenBackPress();
+	/**
+	 * Stops listening to the back press event.
+	 */
+	protected abstract void doNotListenBackPress();
 	
+	/**
+	 * Called when the 'random calls' menu item is clicked.
+	 * This is used to open the {@link RandomCallsActivity}.
+	 */
 	protected abstract void onClickRandomCallsMenu();
 	
+	/**
+	 * Called when the 'backup' menu item is clicked.
+	 * This is used to open the {@link CallBackupActivity} to back up the call logs.
+	 */
 	protected abstract void onClickBackupMenu();
 	
+	/**
+	 * Called when the 'search' menu item is clicked.
+	 */
 	protected abstract void onClickSearch();
+	
+	/**
+	 * The call list items are selectable,
+	 * and when selection started by the user, the selection mode is activated.
+	 * This method returns {@code true} if the user activated the selection mode,
+	 * otherwise {@code false}.
+	 *
+	 * @return {@code true} if selection mode is active
+	 */
+	protected abstract boolean isSelectionMode();
+	
+	/**
+	 * Called when the 'select all' menu item is clicked while the selection mode is active.
+	 *
+	 * @param select {@code true} for select all, {@code false} for clear all selections
+	 */
+	protected abstract void selectAllItems(boolean select);
+	
+	protected abstract void loopAdapterHolders(Consumer<CallAdapter.Holder> consumer);
 	
 	@Nullable
 	@Override
@@ -72,19 +116,16 @@ public abstract class CallLogMenu extends CallLogTitle implements MenuProvider, 
 		
 		super.showTime(showTime);
 		
-		if (getAdapter() != null) {
+		if (!showTime && isSelectionMode()) {
 			
-			if (!showTime && getAdapter().isSelectionMode()) {
-				
-				cancelSelection();
-			}
-			else {
-				
-				//var menu = menuManager.getMenu();
-				
-				menuManager.setVisible(R.id.menu_call_filter, showTime);
-				menuManager.setVisible(R.id.menu_search_call, showTime);
-			}
+			cancelSelection();
+		}
+		else {
+			
+			//var menu = menuManager.getMenu();
+			
+			menuManager.setVisible(R.id.menu_call_filter, showTime);
+			menuManager.setVisible(R.id.menu_search_call, showTime);
 		}
 	}
 	
@@ -165,7 +206,7 @@ public abstract class CallLogMenu extends CallLogTitle implements MenuProvider, 
 			
 			case R.id.call_log_menu_select_all:
 				
-				selectAllItem(selectAllItem = !selectAllItem);
+				selectAllItems(selectAllItem = !selectAllItem);
 				return true;
 		}
 		
@@ -191,9 +232,9 @@ public abstract class CallLogMenu extends CallLogTitle implements MenuProvider, 
 			//- Menüye eleman ekleyen herkes elemanlarını ikinci bir emre kadar çekmeli.
 			
 			//- Ana listeyi değiştirmiyoruz, yeni bir liste oluşturuyoruz
-			java.util.@NotNull List<Integer> list = Lister.listOf(menuManager.getMenuItemResourceIds());
+			List<Integer> list = Lister.listOf(menuManager.getMenuItemResourceIds());
 			//- Bunlar seçim modu aktif oluşca iş yapacak menü elemanları
-			java.util.@NotNull List<Integer> selectionMenuItems = Lister.listOf(
+			List<Integer> selectionMenuItems = Lister.listOf(
 					R.id.call_log_menu_delete_all,
 					R.id.call_log_menu_select_all
 			);
@@ -215,9 +256,9 @@ public abstract class CallLogMenu extends CallLogTitle implements MenuProvider, 
 		}
 		else {
 			
-			dontListenBackPress();
+			doNotListenBackPress();
 			selectedItemsCounter = 0;
-			getAdapter().cancelSelection();
+			cancelSelection();
 			updateSubTitle();
 			
 			boolean visible = isShowTime();
@@ -250,32 +291,5 @@ public abstract class CallLogMenu extends CallLogTitle implements MenuProvider, 
 		getMainMenu().showMenu(false);
 	}
 	
-	private void selectAllItem(boolean select) {
-		
-		loopAdapterHolders(holder -> {
-			
-			holder.selection.setChecked(select);
-			holder.itemView.invalidate();
-		});
-		
-		getAdapter().selectAllItem(select);
-		
-		if (select) selectedItemsCounter = getAdapter().getSize();
-		else selectedItemsCounter = 0;
-		
-		setSubTitle(Stringx.format("%d / %d", getAdapter().getSize(), selectedItemsCounter));
-	}
-	
-	private void loopAdapterHolders(Consumer<CallAdapter.Holder> consumer) {
-		
-		int count = recyclerView.getChildCount();
-		
-		for (int i = 0; i < count; i++) {
-			
-			CallAdapter.Holder holder = (CallAdapter.Holder) recyclerView.getChildViewHolder(recyclerView.getChildAt(i));
-			
-			consumer.accept(holder);
-		}
-	}
 	
 }

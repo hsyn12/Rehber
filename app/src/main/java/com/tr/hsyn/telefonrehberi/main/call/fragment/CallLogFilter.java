@@ -2,9 +2,12 @@ package com.tr.hsyn.telefonrehberi.main.call.fragment;
 
 
 import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.tr.hsyn.bungee.Bungee;
 import com.tr.hsyn.calldata.Call;
@@ -22,7 +25,6 @@ import com.tr.hsyn.telefonrehberi.main.call.activity.MostCallsActivity;
 import com.tr.hsyn.telefonrehberi.main.call.activity.search.CallLogSearchInfo;
 import com.tr.hsyn.telefonrehberi.main.call.cast.base.Filter;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
-import com.tr.hsyn.telefonrehberi.main.call.data.Key;
 import com.tr.hsyn.telefonrehberi.main.call.dialog.CallLogFilters;
 import com.tr.hsyn.telefonrehberi.main.cast.BackPressObserver;
 import com.tr.hsyn.telefonrehberi.main.code.page.adapter.CallAdapter;
@@ -48,8 +50,17 @@ public abstract class CallLogFilter extends CallList implements Filter, HaveCall
 		}
 	};
 	protected     int                   filter      = CallLog.FILTER_ALL;
+	protected     String[]              filters;
 	private       List<Call>            filteredCalls;
 	private       ItemIndexListener     onCallAction;
+	
+	@Override
+	public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+		
+		super.onViewCreated(view, savedInstanceState);
+		filters = getResources().getStringArray(com.tr.hsyn.callfilter.R.array.call_filter_items);
+		setTitle(getFilterName(CallLog.FILTER_ALL));
+	}
 	
 	@Override
 	protected void onClickFilterMenu() {
@@ -75,7 +86,7 @@ public abstract class CallLogFilter extends CallList implements Filter, HaveCall
 	}
 	
 	@Override
-	protected void dontListenBackPress() {
+	protected void doNotListenBackPress() {
 		
 		callback.remove();
 	}
@@ -97,7 +108,16 @@ public abstract class CallLogFilter extends CallList implements Filter, HaveCall
 			else showMostCalls(filter);
 		}
 		
-		//xlog.d("Call Filter : %d [%s]", filter, getFilterName(filter));
+		xlog.d("Call Filter : %d [%s]", filter, getFilterName(filter));
+	}
+	
+	@Override
+	public String getFilterName() {
+		
+		if (filters != null)
+			return filters[getFilter()];
+		
+		return "";
 	}
 	
 	@Override
@@ -134,6 +154,14 @@ public abstract class CallLogFilter extends CallList implements Filter, HaveCall
 		if (filter == CallLog.FILTER_ALL) return getList().get(index);
 		
 		return filteredCalls.get(index);
+	}
+	
+	public String getFilterName(int filter) {
+		
+		if (filters != null)
+			return filters[filter];
+		
+		return "?";
 	}
 	
 	protected void onFilterSelected(int index) {
@@ -208,7 +236,7 @@ public abstract class CallLogFilter extends CallList implements Filter, HaveCall
 					break;
 				
 				case CallLog.FILTER_RANDOM:
-					filteredCalls = getList().stream().filter(call -> call.getBool(Key.RANDOM)).collect(Collectors.toList());
+					filteredCalls = getList().stream().filter(Call::isRandom).collect(Collectors.toList());
 					break;
 			}
 			

@@ -74,7 +74,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> 
 		String pic = contact.getPic();
 		
 		if (pic == null)
-			holder.image.setImageDrawable(Res.drawable(holder.itemView.getContext(), contact.getName()));
+			holder.image.setImageDrawable(Res.textDrawable(holder.itemView.getContext(), contact.getName()));
 		else holder.image.setImageURI(Uri.parse(pic));
 		
 		

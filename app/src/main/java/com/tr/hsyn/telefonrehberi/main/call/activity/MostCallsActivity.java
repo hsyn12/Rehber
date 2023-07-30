@@ -14,14 +14,12 @@ import com.example.xtoolbar.Toolbarx;
 import com.tr.hsyn.activity.ActivityView;
 import com.tr.hsyn.bungee.Bungee;
 import com.tr.hsyn.calldata.Call;
-import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.execution.Work;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.Res;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
-import com.tr.hsyn.textdrawable.TextDrawable;
 import com.tr.hsyn.time.Time;
 import com.tr.hsyn.xbox.Blue;
 import com.tr.hsyn.xlog.xlog;
@@ -210,8 +208,7 @@ public class MostCallsActivity extends ActivityView {
 	@NotNull
 	private MostCallsItemData createItemData(@NotNull CallRank callRank) {
 		
-		TextDrawable rank = TextDrawable.builder()
-				.buildRound(String.valueOf(callRank.getRank()), Colors.COLOR_GENERATOR.getRandomColor());
+		Drawable rank = Res.textDrawable(this, String.valueOf(callRank.getRank()));
 		
 		String txt;
 		
