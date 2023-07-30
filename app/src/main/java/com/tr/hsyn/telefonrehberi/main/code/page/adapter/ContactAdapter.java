@@ -22,8 +22,7 @@ import com.tr.hsyn.selection.ItemIndexListener;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.Res;
-import com.tr.hsyn.telefonrehberi.main.cast.ItemAdapter;
-import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
+import com.tr.hsyn.telefonrehberi.main.cast.ListAdapter;
 
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +30,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 
-public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> implements FastScrollRecyclerView.SectionedAdapter, ItemAdapter<Contact>, SectionsAdapterInterface {
+public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> implements FastScrollRecyclerView.SectionedAdapter, ListAdapter<Contact>, SectionsAdapterInterface {
 	
 	private final ItemIndexListener        selectListener;
 	private final ColorHolder              colorHolder;
@@ -74,16 +73,12 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> 
 		
 		String pic = contact.getPic();
 		
-		if (pic == null) {
-			
+		if (pic == null)
 			holder.image.setImageDrawable(Res.drawable(holder.itemView.getContext(), contact.getName()));
-		}
-		else {
-			
-			holder.image.setImageURI(Uri.parse(pic));
-		}
+		else holder.image.setImageURI(Uri.parse(pic));
 		
-		setRankDetails(holder, position, contact);
+		
+		//setRankDetails(holder, position, contact);
 	}
 	
 	@Override
@@ -149,27 +144,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> 
 		return secAdapter.getItemCountForSection(sectionIndex);
 	}
 	
-	private void setRankDetails(@NonNull Holder holder, int position, Contact contact) {
-		
-		if (rankDetails) {
-			
-			Integer imgRes = contact.getData(ContactKey.RANK_IMG_RES);
-			String  rText  = contact.getData(ContactKey.RANK_TEXT);
-			
-			if (imgRes != null && rText != null) {
-				
-				ImageView typeImg = holder.rankDetails.findViewById(R.id.img_type);
-				TextView  typeTxt = holder.rankDetails.findViewById(R.id.text_type);
-				
-				typeImg.setImageResource(imgRes);
-				typeTxt.setText(rText);
-				holder.rankDetails.setVisibility(View.VISIBLE);
-			}
-			
-		}
-		else holder.rankDetails.setVisibility(View.GONE);
-	}
-	
 	public boolean isRankDetails() {
 		
 		return rankDetails;
@@ -195,9 +169,8 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> 
 			
 			super(itemView);
 			
-			name        = itemView.findViewById(R.id.name);
-			image       = itemView.findViewById(R.id.image);
-			rankDetails = itemView.findViewById(R.id.rank_layout);
+			name  = itemView.findViewById(R.id.name);
+			image = itemView.findViewById(R.id.image);
 			
 			itemView.setBackgroundResource(colorHolder.getRipple());
 			itemView.setOnClickListener(v -> selectListener.onItemIndex(getAdapterPosition()));

@@ -1,0 +1,13 @@
+plugins {
+	id 'java-library'
+}
+
+dependencies {
+
+	compileOnly "org.jetbrains:annotations:${rootProject.annotations}"
+}
+
+java {
+	sourceCompatibility = rootProject.ext.java_version
+	targetCompatibility = rootProject.ext.java_version
+}

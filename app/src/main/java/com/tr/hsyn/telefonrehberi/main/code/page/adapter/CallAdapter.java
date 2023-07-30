@@ -27,7 +27,7 @@ import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.call.data.Calls;
 import com.tr.hsyn.telefonrehberi.main.call.data.Key;
-import com.tr.hsyn.telefonrehberi.main.cast.ItemAdapter;
+import com.tr.hsyn.telefonrehberi.main.cast.ListAdapter;
 import com.tr.hsyn.textdrawable.TextDrawable;
 import com.tr.hsyn.time.Time;
 import com.tr.hsyn.xlog.xlog;
@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class CallAdapter extends RecyclerView.Adapter<CallAdapter.Holder> implements FastScrollRecyclerView.SectionedAdapter, ItemAdapter<Call> {
+public class CallAdapter extends RecyclerView.Adapter<CallAdapter.Holder> implements FastScrollRecyclerView.SectionedAdapter, ListAdapter<Call> {
 	
 	private final List<Call>        selectedCalls = new ArrayList<>();
 	private final ItemIndexListener selectListener;

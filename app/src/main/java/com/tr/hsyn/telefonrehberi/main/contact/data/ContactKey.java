@@ -53,18 +53,6 @@ public interface ContactKey {
 	 * Deleted date (long)
 	 */
 	DataKey DELETED_DATE = DataKey.of(11, "deletedDate");
-	/**
-	 * Rank -- int
-	 */
-	DataKey RANK         = DataKey.of(12, "rank");
-	/**
-	 * Resource ID for rank image (int)
-	 */
-	DataKey RANK_IMG_RES = DataKey.of(13, "rank image resource");
-	/**
-	 * String
-	 */
-	DataKey RANK_TEXT    = DataKey.of(14, "rank text");
 	
 	@Nullable
 	static List<String> getNumbers(@NotNull Contact contact) {

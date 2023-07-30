@@ -4,7 +4,7 @@ package com.tr.hsyn.telefonrehberi.main.cast;
 import java.util.List;
 
 
-public interface ItemAdapter<T> {
+public interface ListAdapter<T> {
 	
 	void notifyItemChanged(int index);
 	
