@@ -15,6 +15,12 @@ import java.util.List;
 import java.util.Set;
 
 
+/**
+ * Defines the main keys for a contact.
+ * The keys are used to access the contact data,
+ * and with the keys, can be put any data in the contact.
+ * Data privacy is done via {@link DataKey}.
+ */
 public interface ContactKey {
 	
 	/**
