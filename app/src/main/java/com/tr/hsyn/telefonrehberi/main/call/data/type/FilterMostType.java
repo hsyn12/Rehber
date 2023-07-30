@@ -14,5 +14,5 @@ import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
 		CallLog.FILTER_MOST_SPEAKING,
 		CallLog.FILTER_MOST_TALKING
 })
-public @interface FilterMostCall {
+public @interface FilterMostType {
 }

@@ -7,7 +7,7 @@ import com.tr.hsyn.calldata.Type;
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
-import com.tr.hsyn.telefonrehberi.main.call.data.type.FilterMostCall;
+import com.tr.hsyn.telefonrehberi.main.call.data.type.FilterMostType;
 import com.tr.hsyn.telefonrehberi.main.call.data.type.FilterType;
 import com.tr.hsyn.telefonrehberi.main.contact.data.History;
 import com.tr.hsyn.telefonrehberi.main.data.CallMap;
@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
 /**
  * Holds the call logs and provides methods for filtering, searching and analyzing.
  */
-
 public interface CallLog extends CCollection, Ranker {
 	
 	/**
@@ -158,8 +157,7 @@ public interface CallLog extends CCollection, Ranker {
 	@NotNull
 	default RankMap incomingDurationRank() {
 		
-		List<Call> ins = incomingCalls().stream().filter(Call::isSpoken).collect(Collectors.toList());
-		return new RankMap(rankByDuration(ins));
+		return new RankMap(rankByDuration(incomingCalls()));
 	}
 	
 	/**
@@ -228,7 +226,7 @@ public interface CallLog extends CCollection, Ranker {
 	 * @return the rank map
 	 */
 	@NotNull
-	default RankMap getMostCalls(@FilterMostCall int filter) {
+	default RankMap getMostCalls(@FilterMostType int filter) {
 		
 		switch (filter) {
 			case FILTER_MOST_INCOMING: return incomingRank();
@@ -239,16 +237,6 @@ public interface CallLog extends CCollection, Ranker {
 			case FILTER_MOST_TALKING: return outgoingDurationRank();
 			default: throw new IllegalArgumentException("Invalid filter: " + filter);
 		}
-	}
-	
-	@NotNull
-	default List<Call> getCalls(@NotNull Contact contact, @NotNull CallMap callMap, int @NotNull ... callTypes) {
-		
-		List<Call> calls = callMap.get(String.valueOf(contact.getContactId()));
-		
-		if (callTypes.length == 0) return calls;
-		
-		return calls.stream().filter(call -> Lister.contains(callTypes, call.getCallType())).collect(Collectors.toList());
 	}
 	
 	/**
@@ -275,7 +263,7 @@ public interface CallLog extends CCollection, Ranker {
 	 * @param missed   have calls or not. {@code null} if not specified.
 	 * @param rejected have calls or not. {@code null} if not specified.
 	 * @param minSize  the minimum number of calls. The number greater than zero means does not select empty calls.
-	 * @return the contacts that match the all criteria together.
+	 * @return the contacts that match the all criteria together or empty list if no matches.
 	 */
 	default @NotNull List<Contact> selectContacts(@Nullable Boolean incoming, @Nullable Boolean outgoing, @Nullable Boolean missed, @Nullable Boolean rejected, int minSize) {
 		

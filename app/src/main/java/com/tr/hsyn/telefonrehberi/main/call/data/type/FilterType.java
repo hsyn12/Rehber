@@ -6,6 +6,9 @@ import androidx.annotation.IntDef;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
 
 
+/**
+ * Filter types for calls.
+ */
 @IntDef(value = {
 		CallLog.FILTER_ALL,
 		CallLog.FILTER_INCOMING,

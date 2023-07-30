@@ -30,7 +30,11 @@ public class CallLogger implements CallLog {
 	@Override
 	public @NotNull List<Call> getCalls(@NotNull Contact contact, int @NotNull ... callTypes) {
 		
-		return getById(contact.getId()).stream().filter(c -> Lister.contains(callTypes, c.getCallType())).collect(Collectors.toList());
+		List<Call> list = getById(contact.getId());
+		
+		if (callTypes.length == 0) return list;
+		
+		return list.stream().filter(c -> Lister.contains(callTypes, c.getCallType())).collect(Collectors.toList());
 	}
 	
 	@Override
