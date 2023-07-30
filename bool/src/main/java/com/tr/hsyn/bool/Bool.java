@@ -11,15 +11,15 @@ import java.util.Objects;
  */
 public class Bool implements Any<Boolean> {
 	
-	public static final     Bool    FALSE = new Bool();
 	public static final     Bool    TRUE  = new Bool(true);
-	public static final     Bool    NONE  = new Bool(null);
+	public static final     Bool    FALSE = new Bool(false);
+	public static final     Bool    NONE  = new Bool();
 	@Nullable private final Boolean value;
 	
 	/**
 	 * Creates a new Bool instance.
 	 */
-	public Bool() {
+	private Bool() {
 		
 		value = null;
 	}
@@ -29,7 +29,7 @@ public class Bool implements Any<Boolean> {
 	 *
 	 * @param value value
 	 */
-	public Bool(@Nullable Boolean value) {
+	private Bool(@Nullable Boolean value) {
 		
 		this.value = value;
 	}

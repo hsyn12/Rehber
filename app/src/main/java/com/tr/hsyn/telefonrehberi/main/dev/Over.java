@@ -194,7 +194,7 @@ public interface Over {
 			@NonNull
 			static Bool isUpdated() {
 				
-				return new Bool(Blue.getObject(Key.CALL_LOG_UPDATED));
+				return Bool.of(Blue.getObject(Key.CALL_LOG_UPDATED));
 			}
 			
 			/**
