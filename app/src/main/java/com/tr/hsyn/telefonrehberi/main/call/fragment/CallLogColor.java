@@ -8,11 +8,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.tr.hsyn.colors.Colors;
+import com.tr.hsyn.page.ColorChanger;
 
 import org.jetbrains.annotations.NotNull;
 
 
-public abstract class CallLogColor extends CallLogFilter {
+/**
+ * Manages the color related jobs.
+ */
+public abstract class CallLogColor extends CallLogFilter implements ColorChanger {
 	
 	@Override
 	public void onViewCreated(@NonNull @NotNull View view, @Nullable Bundle savedInstanceState) {

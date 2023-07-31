@@ -18,7 +18,7 @@ import java.util.List;
  *
  * @param <T> Liste elemanı türü
  */
-public abstract class ListPage<T> extends ShowPage implements ItemIndexListener, Preparation, HaveList<T>, SelectionInformation, IHaveProgress, ListEditor<T>, MenuShower, ColorChanger, HaveCallAction, DeleteAction, SwipeInformer, HasFilter {
+public abstract class ListPage<T> extends ShowPage implements ItemIndexListener, Preparation, HaveList<T>, SelectionInformation, IHaveProgress, ListEditor<T>, MenuShower, HaveCallAction, DeleteAction, SwipeInformer, HasFilter {
 	
 	/**
 	 * Sayfa gösterime hazır oluğunda çağrılır.

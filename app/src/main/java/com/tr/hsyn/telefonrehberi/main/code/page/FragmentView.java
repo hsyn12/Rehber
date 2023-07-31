@@ -29,6 +29,11 @@ public abstract class FragmentView<T> extends ListPage<T> implements IHaveAHeade
 	
 	protected abstract int getAdapterSize();
 	
+	/**
+	 * Returns the title of the call log.
+	 *
+	 * @return the title
+	 */
 	protected abstract CharSequence getTitle();
 	
 	@Nullable

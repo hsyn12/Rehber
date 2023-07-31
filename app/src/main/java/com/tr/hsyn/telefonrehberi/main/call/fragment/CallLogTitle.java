@@ -2,10 +2,13 @@ package com.tr.hsyn.telefonrehberi.main.call.fragment;
 
 
 /**
- * Başlığı ve alt başlığı yönet
+ * Manages the title and subtitle of the call log.
  */
 public abstract class CallLogTitle extends CallLogView {
 	
+	/**
+	 * That's the title of the call log.
+	 */
 	private CharSequence title;
 	
 	@Override
@@ -14,6 +17,11 @@ public abstract class CallLogTitle extends CallLogView {
 		return title;
 	}
 	
+	/**
+	 * Sets the title of the call log.
+	 *
+	 * @param title The title
+	 */
 	public void setTitle(CharSequence title) {
 		
 		if (isShowTime())
@@ -22,12 +30,20 @@ public abstract class CallLogTitle extends CallLogView {
 		this.title = title;
 	}
 	
+	/**
+	 * Sets the subtitle of the call log.
+	 *
+	 * @param subTitle The subtitle
+	 */
 	protected void setSubTitle(CharSequence subTitle) {
 		
 		if (isShowTime())
 			header.setSubTitle(subTitle);
 	}
 	
+	/**
+	 * Updates the subtitle of the call log according to the adapter size.
+	 */
 	public void updateSubTitle() {
 		
 		if (isShowTime())

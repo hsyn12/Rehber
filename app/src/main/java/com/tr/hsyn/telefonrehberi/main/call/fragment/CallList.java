@@ -21,9 +21,19 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Consumer;
 
 
+/**
+ * Applies the list related jobs.
+ * That's the class has the list adapter.
+ */
 public abstract class CallList extends CallLogMenu {
 	
+	/**
+	 * The adapter for the list.
+	 */
 	protected CallAdapter   adapter;
+	/**
+	 * The swipe callback.
+	 */
 	protected SwipeCallBack swipeCallBack;
 	
 	@Override
@@ -102,8 +112,7 @@ public abstract class CallList extends CallLogMenu {
 	}
 	
 	/**
-	 * Filtreleme seçeneği, ana listeden farklı listeler oluşturduğu için,
-	 * o an geçerli olan liste adapter üzerinde olan listedir.
+	 * Returns the adapter.
 	 *
 	 * @return Adapter
 	 */
@@ -112,6 +121,12 @@ public abstract class CallList extends CallLogMenu {
 		return adapter;
 	}
 	
+	/**
+	 * Manages the empty view.
+	 * If the active list is empty, the empty view is shown,
+	 * hides otherwise.
+	 * Should be called when executed the list related jobs.
+	 */
 	protected void checkEmpty() {
 		
 		if (adapter != null) {
