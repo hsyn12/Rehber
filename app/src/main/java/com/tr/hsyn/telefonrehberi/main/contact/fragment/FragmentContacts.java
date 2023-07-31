@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
 
 
 /**
- * Kişiler
+ * Contacts page.
  */
 public class FragmentContacts extends FragmentPageMenu {
 	

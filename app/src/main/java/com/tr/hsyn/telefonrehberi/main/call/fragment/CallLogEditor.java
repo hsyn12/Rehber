@@ -51,7 +51,7 @@ public abstract class CallLogEditor extends CallLogColor implements ListEditor<C
 	@Override
 	public List<Call> deleteAllItems() {
 		
-		@org.jetbrains.annotations.NotNull List<Call> deletedCalls = Lister.listOf(getAdapter().getItems());
+		List<Call> deletedCalls = Lister.listOf(getAdapter().getItems());
 		getAdapter().clearItems();
 		
 		//- Filtreleme durumuna göre silinen elemanları ana listeden de çıkaralım
@@ -69,7 +69,8 @@ public abstract class CallLogEditor extends CallLogColor implements ListEditor<C
 			}
 		}
 		
-		
+		updateSubTitle();
+		checkEmpty();
 		return deletedCalls;
 	}
 }

@@ -15,9 +15,9 @@ import com.tr.hsyn.telefonrehberi.R;
 
 
 /**
- * Arama kayıtlarını çeşitli kriterlere göre filtrelemek için
- * oluşturulmuş bir dialog. Filtreleme kriterlerini bir liste
- * olarak gösterecek ve listeden bir seçim yaptıracak.
+ * A dialog created to filter call logs according to various criteria.
+ * It will display the filtering criteria as a list,
+ * and it will have the user to select from the list.
  */
 public class CallLogFilters {
 	

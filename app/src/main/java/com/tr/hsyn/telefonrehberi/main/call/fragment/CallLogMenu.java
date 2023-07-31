@@ -41,7 +41,7 @@ import java.util.function.Consumer;
  */
 public abstract class CallLogMenu extends CallLogTitle implements MenuProvider, MenuShower {
 	
-	protected final Gate       gateMenuSelection = AutoGate.newGate(1000L);
+	protected final Gate       gateMenuSelection = AutoGate.newGate(1200L);
 	protected       int        selectedItemsCounter;
 	private         boolean    selectAllItem;
 	private         int        menuPrepared;
@@ -132,8 +132,9 @@ public abstract class CallLogMenu extends CallLogTitle implements MenuProvider, 
 	@Override
 	public void onPrepareMenu(@NonNull Menu menu) {
 		
-		if (menuPrepared++ == 0) {
-			
+		//+ hides the items on first loaded, because the page of contacts is not the main screen.
+		if (menuPrepared == 0) {
+			menuPrepared++;
 			menu.findItem(R.id.menu_call_filter).setVisible(false);
 			menu.findItem(R.id.menu_search_call).setVisible(false);
 			menu.findItem(R.id.menu_call_backup).setVisible(false);
@@ -143,6 +144,7 @@ public abstract class CallLogMenu extends CallLogTitle implements MenuProvider, 
 			return;
 		}
 		
+		//+ show or hides the menu items according to the page state.
 		boolean b = isShowTime();
 		
 		menu.findItem(R.id.menu_call_filter).setVisible(b);
@@ -156,8 +158,9 @@ public abstract class CallLogMenu extends CallLogTitle implements MenuProvider, 
 	@Override
 	public void onCreateMenu(@NonNull @NotNull Menu menu, @NonNull @NotNull MenuInflater menuInflater) {
 		
+		//+ inflate the menu to be able to use it
 		menuInflater.inflate(R.menu.fragment_call_log_menu, menu);
-		
+		//+ create the menu manager and add it to the menu items that will be managed.
 		menuManager = new MenuManager(menu, Lister.listOf(
 				R.id.menu_call_backup,
 				R.id.menu_call_filter,
@@ -177,40 +180,19 @@ public abstract class CallLogMenu extends CallLogTitle implements MenuProvider, 
 		
 		if (!gateMenuSelection.enter()) return false;
 		
-		switch (menuItem.getItemId()) {
-			
-			case R.id.menu_random_calls_activity:
-				
-				onClickRandomCallsMenu();
-				return true;
-			
-			case R.id.menu_call_backup:
-				
-				onClickBackupMenu();
-				return true;
-			
-			case R.id.menu_call_filter:
-				
-				onClickFilterMenu();
-				return true;
-			
-			case R.id.menu_search_call:
-				
-				onClickSearch();
-				return true;
-			
-			case R.id.delete_all_calls:
-				
-				deleteAll();
-				return true;
-			
-			case R.id.call_log_menu_select_all:
-				
-				selectAllItems(selectAllItem = !selectAllItem);
-				return true;
-		}
+		boolean handled = false;
 		
-		return false;
+		switch (menuItem.getItemId()) {
+			//@off
+			case R.id.menu_random_calls_activity: onClickRandomCallsMenu();                    handled = true;break;
+			case R.id.menu_call_backup: onClickBackupMenu();                                   handled = true;break;
+			case R.id.menu_call_filter: onClickFilterMenu();                                   handled = true;break;
+			case R.id.menu_search_call: onClickSearch();                                       handled = true;break;
+			case R.id.delete_all_calls: deleteAll();                                           handled = true;break;
+			case R.id.call_log_menu_select_all: selectAllItems(selectAllItem = !selectAllItem);handled = true;break;
+		}//@on
+		
+		return handled;
 	}
 	
 	@Override

@@ -8,15 +8,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.tr.hsyn.calldata.Call;
-import com.tr.hsyn.collection.Lister;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
-import com.tr.hsyn.xlog.xlog;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 
-
+/**
+ * Call log page.
+ */
 public class PageCallLog extends CallLogEvents {
 	
 	private boolean  ready;
@@ -47,34 +45,6 @@ public class PageCallLog extends CallLogEvents {
 	public Call deleteItem(Call item) {
 		
 		return null;
-	}
-	
-	@Override
-	public List<Call> deleteAllItems() {
-		
-		
-		@NotNull List<Call> deletedCalls = Lister.listOf(getAdapter().getItems());
-		getAdapter().clearItems();
-		
-		//- Filtreleme durumuna göre silinen elemanları ana listeden de çıkaralım
-		if (CallLog.FILTER_ALL != filter) {
-			
-			int count = Lister.removeItems(getList(), deletedCalls);
-			
-			if (count == deletedCalls.size()) {
-				
-				xlog.d("Silinen %d arama da listeden çıkarıldı", count);
-			}
-			else {
-				
-				xlog.d("%d arama silindi ancak %d tanesi listeden çıkarılabildi", deletedCalls.size(), count);
-			}
-		}
-		
-		
-		updateSubTitle();
-		checkEmpty();
-		return deletedCalls;
 	}
 	
 	@Override

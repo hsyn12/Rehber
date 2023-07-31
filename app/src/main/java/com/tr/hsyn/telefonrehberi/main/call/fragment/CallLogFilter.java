@@ -49,6 +49,7 @@ public abstract class CallLogFilter extends CallList implements Filter, HaveCall
 			onBackPressed();
 		}
 	};
+	protected     CallLog               callLog;
 	protected     int                   filter      = CallLog.FILTER_ALL;
 	protected     String[]              filters;
 	private       List<Call>            filteredCalls;
