@@ -3,15 +3,15 @@ package com.tr.hsyn.telefonrehberi.main.call.dialog;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.selection.ItemIndexListener;
 import com.tr.hsyn.telefonrehberi.R;
+import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.Dialog;
 
 
 /**
@@ -19,7 +19,7 @@ import com.tr.hsyn.telefonrehberi.R;
  * It will display the filtering criteria as a list,
  * and it will have the user to select from the list.
  */
-public class CallLogFilters {
+public class CallLogFilters extends Dialog {
 	
 	private final AlertDialog       dialog;
 	private final ItemIndexListener selectListener;
@@ -29,21 +29,22 @@ public class CallLogFilters {
 		
 		this.selectListener = selectListener;
 		
-		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-		View                view    = activity.getLayoutInflater().inflate(com.tr.hsyn.callfilter.R.layout.call_filter_dialog, null, false);
-		builder.setCancelable(true);
-		builder.setView(view);
+		AlertDialog.Builder builder = getBuilder(activity, R.layout.call_filter_dialog);
 		
-		RecyclerView list = view.findViewById(com.tr.hsyn.callfilter.R.id.list_call_filters);
-		list.setAdapter(new AdapterCallFilter(activity.getResources().getStringArray(com.tr.hsyn.callfilter.R.array.call_filter_items), this::onSelected, selected));
+		RecyclerView list = findView(R.id.list_call_filters);
+		list.setAdapter(new AdapterCallFilter(activity.getResources().getStringArray(R.array.call_filter_items), this::onSelected, selected));
 		
-		view.findViewById(com.tr.hsyn.callfilter.R.id.header).setBackgroundColor(Colors.getPrimaryColor());
+		rootView.findViewById(R.id.header).setBackgroundColor(Colors.getPrimaryColor());
 		
 		dialog = builder.create();
 		
-		dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimationBounce;
-		dialog.show();
+		setAnimation(R.style.DialogAnimationBounce);
+	}
+	
+	@Override
+	protected AlertDialog getDialog() {
 		
+		return dialog;
 	}
 	
 	private void onSelected(int index) {
@@ -52,5 +53,4 @@ public class CallLogFilters {
 		
 		dialog.dismiss();
 	}
-	
 }

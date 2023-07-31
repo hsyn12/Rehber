@@ -151,7 +151,6 @@ dependencies {
 	implementation project(path: ':bool')
 	implementation project(path: ':use')
 	implementation project(path: ':files')
-	implementation project(path: ':callfilter')
 	implementation project(path: ':resarrowdrawable')
 	implementation project(path: ':launcher')
 	implementation project(path: ':roomstorm')

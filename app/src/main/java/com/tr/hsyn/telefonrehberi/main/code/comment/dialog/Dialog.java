@@ -97,6 +97,18 @@ public abstract class Dialog {
 		return builder;
 	}
 	
+	protected AlertDialog.Builder getBuilder(@NotNull Activity activity, int layout) {
+		
+		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+		builder.setCancelable(true);
+		builder.setOnCancelListener(this::onCancel);
+		
+		rootView = inflateLayout(activity, layout);
+		builder.setView(rootView);
+		
+		return builder;
+	}
+	
 	/**
 	 * Creates the layout view.
 	 *
@@ -121,6 +133,12 @@ public abstract class Dialog {
 		
 		//noinspection unchecked
 		return (T) view.findViewById(resId);
+	}
+	
+	protected <T> T findView(int resId) {
+		
+		//noinspection unchecked
+		return (T) rootView.findViewById(resId);
 	}
 	
 	

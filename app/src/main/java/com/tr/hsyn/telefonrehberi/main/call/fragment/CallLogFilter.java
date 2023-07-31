@@ -75,7 +75,7 @@ public abstract class CallLogFilter extends CallList implements Filter, HaveCall
 		assert getActivity() != null;
 		
 		CallLogFilters filters = new CallLogFilters(getActivity(), this::onFilterSelected, filter);
-		
+		filters.show();
 	}
 	
 	@Override
