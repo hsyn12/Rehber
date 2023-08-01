@@ -14,14 +14,6 @@ import com.tr.hsyn.telefonrehberi.main.code.page.FragmentEvents;
 
 public abstract class FragmentContactsView extends FragmentEvents<Contact> {
 	
-	private CharSequence title;
-	
-	@Override
-	protected CharSequence getTitle() {
-		
-		return title;
-	}
-	
 	@Override
 	protected final int getLayoutId() {
 		
@@ -32,8 +24,6 @@ public abstract class FragmentContactsView extends FragmentEvents<Contact> {
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		
 		super.onViewCreated(view, savedInstanceState);
-		
-		title = getString(R.string.rehber);
 		recyclerView.setFastScrollListener(this);
 	}
 	

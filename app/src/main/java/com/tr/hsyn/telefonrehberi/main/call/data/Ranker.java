@@ -113,6 +113,8 @@ public interface Ranker {
 			CallRank                      callRank  = new CallRank(rank, ranked.getKey(), ranked.getValue());
 			rankList1.add(callRank);
 			
+			callRank.setContact(MainContacts.getById(ranked.getKey()));
+			
 			if (i == last) break;
 			
 			Map.Entry<String, List<Call>> next = rankList.get(i + 1);

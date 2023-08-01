@@ -237,14 +237,6 @@ public interface CallLog extends CCollection, Ranker {
 		}
 	}
 	
-	static boolean isCallTypeFilter(int filter) {
-		
-		
-		return
-		
-		
-	}
-	
 	/**
 	 * Returns the contacts that have or have no calls.<br><br>
 	 * Get all the contacts that have incoming calls,
@@ -467,5 +459,15 @@ public interface CallLog extends CCollection, Ranker {
 				Call.MISSED,
 				Call.REJECTED
 		};
+	}
+	
+	/**
+	 * Returns the global call log.
+	 *
+	 * @return the global call log
+	 */
+	static CallLog getCallLog() {
+		
+		return Blue.getObject(com.tr.hsyn.key.Key.CALL_LOG);
 	}
 }

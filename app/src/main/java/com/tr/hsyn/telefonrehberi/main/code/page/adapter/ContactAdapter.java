@@ -13,7 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tr.hsyn.collection.Lister;
-import com.tr.hsyn.colors.ColorHolder;
+import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.fastscroller.FastScrollRecyclerView;
 import com.tr.hsyn.perfectsort.PerfectSort;
@@ -23,6 +23,7 @@ import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.Res;
 import com.tr.hsyn.telefonrehberi.main.cast.ListAdapter;
+import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,17 +34,26 @@ import java.util.stream.Collectors;
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> implements FastScrollRecyclerView.SectionedAdapter, ListAdapter<Contact>, SectionsAdapterInterface {
 	
 	private final ItemIndexListener        selectListener;
-	private final ColorHolder              colorHolder;
+	private final List<CallRank>           callRanks;
 	private       List<Contact>            contacts;
 	private       LayoutInflater           inflater;
 	private       SectionsAdapterInterface secAdapter;
-	private       boolean                  rankDetails;
+	private       boolean                  detailed;
 	
-	public ContactAdapter(@NonNull List<Contact> contacts, @NonNull ItemIndexListener selectListener, ColorHolder colorHolder) {
+	public ContactAdapter(@NonNull List<Contact> contacts, @NonNull ItemIndexListener selectListener) {
 		
 		this.contacts       = contacts;
 		this.selectListener = selectListener;
-		this.colorHolder    = colorHolder;
+		callRanks           = null;
+		setHasStableIds(true);
+		setSections();
+	}
+	
+	public ContactAdapter(@NonNull ItemIndexListener selectListener, @NonNull List<CallRank> contacts) {
+		
+		this.contacts       = contacts.stream().map(CallRank::getContact).collect(Collectors.toList());
+		this.selectListener = selectListener;
+		callRanks           = contacts;
 		setHasStableIds(true);
 		setSections();
 	}
@@ -53,11 +63,11 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> 
 	public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 		
 		if (inflater != null)
-			return new Holder(inflater.inflate(R.layout.contact, parent, false), selectListener, colorHolder);
+			return new Holder(inflater.inflate(R.layout.contact, parent, false), selectListener);
 		
 		inflater = LayoutInflater.from(parent.getContext());
 		
-		return new Holder(inflater.inflate(R.layout.contact, parent, false), selectListener, colorHolder);
+		return new Holder(inflater.inflate(R.layout.contact, parent, false), selectListener);
 	}
 	
 	@Override
@@ -77,8 +87,8 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> 
 			holder.image.setImageDrawable(Res.textDrawable(holder.itemView.getContext(), contact.getName()));
 		else holder.image.setImageURI(Uri.parse(pic));
 		
-		
-		//setRankDetails(holder, position, contact);
+		if (detailed)
+			setDetails(holder, position, contact);
 	}
 	
 	@Override
@@ -144,14 +154,20 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> 
 		return secAdapter.getItemCountForSection(sectionIndex);
 	}
 	
-	public boolean isRankDetails() {
+	private void setDetails(Holder holder, int position, Contact contact) {
+		//Warn: aynı sayıda kişi olacak mı?
+		CallRank rank = callRanks.get(position);
 		
-		return rankDetails;
 	}
 	
-	public void setRankDetails(boolean rankDetails) {
+	public boolean isDetailed() {
 		
-		this.rankDetails = rankDetails;
+		return detailed;
+	}
+	
+	public void setDetailed(boolean detailed) {
+		
+		this.detailed = detailed;
 	}
 	
 	private void setSections() {
@@ -163,16 +179,16 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> 
 		
 		TextView  name;
 		ImageView image;
-		ViewGroup rankDetails;
+		ViewGroup details;
 		
-		public Holder(@NonNull View itemView, ItemIndexListener selectListener, @NonNull ColorHolder colorHolder) {
+		public Holder(@NonNull View itemView, ItemIndexListener selectListener) {
 			
 			super(itemView);
 			
 			name  = itemView.findViewById(R.id.name);
 			image = itemView.findViewById(R.id.image);
 			
-			itemView.setBackgroundResource(colorHolder.getRipple());
+			itemView.setBackgroundResource(Colors.getRipple());
 			itemView.setOnClickListener(v -> selectListener.onItemIndex(getAdapterPosition()));
 		}
 	}

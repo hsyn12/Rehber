@@ -4,17 +4,21 @@ package com.tr.hsyn.telefonrehberi.main.contact.fragment;
 import android.os.Bundle;
 import android.view.View;
 
+import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
 import com.tr.hsyn.telefonrehberi.main.call.dialog.DialogFilters;
+import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
+import com.tr.hsyn.telefonrehberi.main.data.MainContacts;
 import com.tr.hsyn.xbox.Blue;
 import com.tr.hsyn.xlog.xlog;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -22,7 +26,9 @@ public abstract class ContactsFilter extends FragmentPageMenu {
 	
 	private int           filter;
 	private String[]      filters;
+	private List<Contact> mainContacts;
 	private List<Contact> filteredContacts;
+	private CharSequence  title;
 	
 	@Override
 	public void onViewCreated(@NotNull View view, @Nullable Bundle savedInstanceState) {
@@ -30,13 +36,20 @@ public abstract class ContactsFilter extends FragmentPageMenu {
 		super.onViewCreated(view, savedInstanceState);
 		
 		filters = requireActivity().getResources().getStringArray(R.array.contact_filters);
+		title   = getString(R.string.rehber);
 	}
 	
 	@Override
 	protected void onClickFilter() {
 		
-		var dialog = DialogFilters.newInstance(requireActivity(), this::onSelected, filter, filters);
+		DialogFilters dialog = DialogFilters.newInstance(requireActivity(), this::onFilterSelected, filter, filters);
 		dialog.show();
+	}
+	
+	@Override
+	protected CharSequence getTitle() {
+		
+		return title;
 	}
 	
 	/**
@@ -44,13 +57,9 @@ public abstract class ContactsFilter extends FragmentPageMenu {
 	 *
 	 * @param index The index of the selected filter
 	 */
-	private void onSelected(int index) {
+	private void onFilterSelected(int index) {
 		
-		if (index == filter) return;
-		
-		filter = index + 7;
-		
-		var log = getCallLog();
+		CallLog log = getCallLog();
 		
 		if (log == null) {
 			
@@ -58,7 +67,56 @@ public abstract class ContactsFilter extends FragmentPageMenu {
 			return;
 		}
 		
-		var rankMap = log.getMostCalls(filter);
+		if (index == filter) return;
+		
+		filter = index + 6;//+ scale factor
+		title  = filters[index];
+		List<Contact> contacts = MainContacts.getContacts();
+		
+		if (index == CallLog.FILTER_ALL) {
+			
+			setList(contacts);
+		}
+		else {
+			
+			List<CallRank> rankList = new ArrayList<>();
+			
+			for (var contact : contacts) {
+				
+				var calls = log.getCalls(contact);
+				var rank  = new CallRank(String.valueOf(contact.getContactId()), calls);
+				rankList.add(rank);
+				rank.setContact(contact);
+				int duration = calls.stream().filter(Call::isIncoming).mapToInt(Call::getDuration).sum();
+				rank.setIncomingDuration(duration);
+				int outDuration = calls.stream().filter(Call::isOutgoing).mapToInt(Call::getDuration).sum();
+				rank.setOutgoingDuration(outDuration);
+			}
+			
+			switch (filter) {
+				
+				case CallLog.FILTER_MOST_INCOMING:
+					rankList.sort(CallRank::compareToIncoming);
+					break;
+				case CallLog.FILTER_MOST_OUTGOING:
+					rankList.sort(CallRank::compareToOutgoing);
+					break;
+				case CallLog.FILTER_MOST_MISSED:
+					rankList.sort(CallRank::compareToMissed);
+					break;
+				case CallLog.FILTER_MOST_REJECTED:
+					rankList.sort(CallRank::compareToRejected);
+					break;
+				case CallLog.FILTER_MOST_SPEAKING:
+					rankList.sort(CallRank::compareToIncomingDuration);
+					break;
+				case CallLog.FILTER_MOST_TALKING:
+					rankList.sort(CallRank::compareToOutgoingDuration);
+					break;
+				
+			}
+		}
+		
 		
 	}
 	

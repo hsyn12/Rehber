@@ -41,6 +41,55 @@ public interface History {
 	@NotNull List<Call> getCalls();
 	
 	/**
+	 * Returns the incoming calls of the contact that related to this history object.
+	 *
+	 * @return the incoming calls
+	 */
+	List<Call> getIncomingCalls();
+	
+	/**
+	 * Returns the outgoing calls of the contact that related to this history object.
+	 *
+	 * @return the outgoing calls
+	 */
+	List<Call> getOutgoingCalls();
+	
+	/**
+	 * Returns the missed calls of the contact that related to this history object.
+	 *
+	 * @return the missed calls
+	 */
+	List<Call> getMissedCalls();
+	
+	/**
+	 * Returns the rejected calls of the contact that related to this history object.
+	 *
+	 * @return the rejected calls
+	 */
+	List<Call> getRejectCalls();
+	
+	/**
+	 * Returns the total incoming call duration.
+	 *
+	 * @return the duration
+	 */
+	int getIncomingDuration();
+	
+	/**
+	 * Returns the total outgoing call duration.
+	 *
+	 * @return the duration
+	 */
+	int getOutgoingDuration();
+	
+	/**
+	 * Returns the total duration.
+	 *
+	 * @return the duration
+	 */
+	int getTotalDuration();
+	
+	/**
 	 * Returns the call at the given index
 	 *
 	 * @param index the index
@@ -107,57 +156,6 @@ public interface History {
 	default void sort(Comparator<Call> comparator) {
 		
 		getCalls().sort(comparator);
-	}
-	
-	/**
-	 * Returns the total call duration of the given call types.
-	 *
-	 * @param types the call types
-	 * @return the duration
-	 */
-	default int getDuration(int... types) {
-		
-		return getCallsByTypes(types).stream().mapToInt(Call::getDuration).sum();
-	}
-	
-	/**
-	 * Returns the incoming calls of the contact that related to this history object.
-	 *
-	 * @return the incoming calls
-	 */
-	default List<Call> getIncomingCalls() {
-		
-		return getCallsByTypes(Call.INCOMING, Call.INCOMING_WIFI);
-	}
-	
-	/**
-	 * Returns the outgoing calls of the contact that related to this history object.
-	 *
-	 * @return the outgoing calls
-	 */
-	default List<Call> getOutgoingCalls() {
-		
-		return getCallsByTypes(Call.OUTGOING, Call.OUTGOING_WIFI);
-	}
-	
-	/**
-	 * Returns the missed calls of the contact that related to this history object.
-	 *
-	 * @return the missed calls
-	 */
-	default List<Call> getMissedCalls() {
-		
-		return getCallsByTypes(Call.MISSED);
-	}
-	
-	/**
-	 * Returns the rejected calls of the contact that related to this history object.
-	 *
-	 * @return the rejected calls
-	 */
-	default List<Call> getRejectCalls() {
-		
-		return getCallsByTypes(Call.REJECTED);
 	}
 	
 	/**
@@ -237,18 +235,6 @@ public interface History {
 	static History ofEmpty(@NotNull Contact contact) {
 		
 		return new HistoryImpl(contact, new ArrayList<>(0));
-	}
-	
-	/**
-	 * Creates a new history for the given key.
-	 *
-	 * @param key the key used by this history
-	 * @return the history for the given key
-	 */
-	@NotNull
-	static History of(@NotNull String key, @NotNull List<Call> calls) {
-		
-		return new HistoryImpl(key, calls);
 	}
 	
 	/**

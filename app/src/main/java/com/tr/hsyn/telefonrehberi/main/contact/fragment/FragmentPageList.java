@@ -49,10 +49,10 @@ public abstract class FragmentPageList extends FragmentPageColor implements IHav
 		
 		super.setList(list);
 		
-		adapter = new ContactAdapter(list, this, colorHolder);
+		adapter = new ContactAdapter(list, this);
 		recyclerView.setAdapter(adapter);
 		
-		//header.setTitle(title);
+		header.setTitle(getTitle());
 		header.setSubTitle(String.valueOf(list.size()));
 		
 		checkEmpty();

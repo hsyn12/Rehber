@@ -5,6 +5,7 @@ import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
+import com.tr.hsyn.tryme.Try;
 import com.tr.hsyn.xbox.Blue;
 
 import org.jetbrains.annotations.NotNull;
@@ -30,8 +31,7 @@ public class MainContacts {
 	@Nullable
 	public static Contact getById(String contactId) {
 		
-		long id = Long.parseLong(contactId);
-		return getContacts().stream().filter(c -> c.getId() == id).findFirst().orElse(null);
+		return Try.ignore(() -> getById(Long.parseLong(contactId)));
 	}
 	
 	/**
