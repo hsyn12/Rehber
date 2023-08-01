@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="en">
+
+	<string name="filters">Filters</string>
+	<string name="all_calls">Calls</string>
+	<string name="incoming_calls">Incoming Calls</string>
+	<string name="outgoing_calls">Outgoing Calls</string>
+	<string name="missed_calls">Missed Calls</string>
+	<string name="rejected_calls">Rejected Calls</string>
+	<string name="filter_no_name">No Name</string>
+	<string name="random_calls">Random Calls</string>
+
+	<string name="most_outgoing">Most Wanted</string>
+	<string name="most_incoming">Most Callers</string>
+	<string name="most_missed">Most Missed</string>
+	<string name="most_rejected">Most Rejected</string>
+
+	<string name="most_duration_incoming">Most Talkers</string>
+	<string name="most_duration_outgoing">Most You Talked</string>
+	<string name="description_call_type">Call type</string>
+
+	<!--Arama kayıtları filtreleme öğeleri dizisi-->
+	<string-array name="filters">
+		<item>@string/all_calls</item>
+		<item>@string/incoming_calls</item>
+		<item>@string/outgoing_calls</item>
+		<item>@string/missed_calls</item>
+		<item>@string/rejected_calls</item>
+		<item>@string/filter_no_name</item>
+		<item>@string/random_calls</item>
+		<item>@string/most_incoming</item>
+		<item>@string/most_outgoing</item>
+		<item>@string/most_missed</item>
+		<item>@string/most_rejected</item>
+		<item>@string/most_duration_incoming</item>
+		<item>@string/most_duration_outgoing</item>
+
+	</string-array>
+	en çok isteyen kişiler
+	<string-array name="contact_filters">
+		<item>@string/contacts</item>
+		<item>@string/most_incoming</item>
+		<item>@string/most_outgoing</item>
+		<item>@string/most_missed</item>
+		<item>@string/most_rejected</item>
+		<item>@string/most_duration_incoming</item>
+		<item>@string/most_duration_outgoing</item>
+		<item>@string/filter_no_name</item>
+	</string-array>
+</resources>

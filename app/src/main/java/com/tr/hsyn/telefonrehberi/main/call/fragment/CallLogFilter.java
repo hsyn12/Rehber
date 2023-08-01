@@ -25,7 +25,7 @@ import com.tr.hsyn.telefonrehberi.main.call.activity.MostCallsActivity;
 import com.tr.hsyn.telefonrehberi.main.call.activity.search.CallLogSearchInfo;
 import com.tr.hsyn.telefonrehberi.main.call.cast.base.Filter;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
-import com.tr.hsyn.telefonrehberi.main.call.dialog.CallLogFilters;
+import com.tr.hsyn.telefonrehberi.main.call.dialog.DialogFilters;
 import com.tr.hsyn.telefonrehberi.main.cast.BackPressObserver;
 import com.tr.hsyn.telefonrehberi.main.code.page.adapter.CallAdapter;
 import com.tr.hsyn.xbox.Blue;
@@ -51,7 +51,7 @@ public abstract class CallLogFilter extends CallList implements Filter, HaveCall
 	};
 	protected     CallLog               callLog;
 	protected     int                   filter      = CallLog.FILTER_ALL;
-	protected     String[]              filters;
+	protected     String[]              filters     = new String[0];
 	private       List<Call>            filteredCalls;
 	private       ItemIndexListener     onCallAction;
 	
@@ -59,7 +59,7 @@ public abstract class CallLogFilter extends CallList implements Filter, HaveCall
 	public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
 		
 		super.onViewCreated(view, savedInstanceState);
-		filters = getResources().getStringArray(com.tr.hsyn.callfilter.R.array.call_filter_items);
+		filters = getResources().getStringArray(R.array.filters);
 		setTitle(getFilterName(CallLog.FILTER_ALL));
 	}
 	
@@ -74,7 +74,7 @@ public abstract class CallLogFilter extends CallList implements Filter, HaveCall
 		
 		assert getActivity() != null;
 		
-		CallLogFilters filters = new CallLogFilters(getActivity(), this::onFilterSelected, filter);
+		DialogFilters filters = new DialogFilters(getActivity(), this::onFilterSelected, filter, this.filters);
 		filters.show();
 	}
 	

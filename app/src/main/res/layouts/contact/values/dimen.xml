@@ -12,6 +12,8 @@
 	<dimen name="contact_detail_popup_item_vertical_padding">10dp</dimen>
 	<dimen name="contact_detail_popup_item_padding_start">32dp</dimen>
 	<dimen name="contact_detail_popup_item_text_size">18sp</dimen>
+	<dimen name="contact_call_type_margin">8dp</dimen>
+	<dimen name="contact_call_type_text_size">14sp</dimen>
 
 
 </resources>

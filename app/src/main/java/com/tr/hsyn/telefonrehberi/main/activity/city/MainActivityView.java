@@ -15,10 +15,9 @@ import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.htext.base.HTextView;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.cast.HasTabBehavior;
-import com.tr.hsyn.telefonrehberi.main.cast.PageOwner;
 
 
-public abstract class MainActivityView extends ActivityView implements PageOwner, HasTabBehavior {
+public abstract class MainActivityView extends ActivityView implements HasTabBehavior {
 	
 	/**
 	 * Ana activity'de olmasına rağmen Kişiler sayfasının yeni kişi eklemek için kullanılan aracı.

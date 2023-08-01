@@ -38,7 +38,7 @@ public final class AdapterCallFilter extends RecyclerView.Adapter<AdapterCallFil
 	@Override
 	public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 		
-		return new Holder(LayoutInflater.from(parent.getContext()).inflate(com.tr.hsyn.callfilter.R.layout.call_filter_dialog_item, parent, false), selectListener);
+		return new Holder(LayoutInflater.from(parent.getContext()).inflate(R.layout.call_filter_dialog_item, parent, false), selectListener);
 	}
 	
 	@Override
@@ -114,11 +114,11 @@ public final class AdapterCallFilter extends RecyclerView.Adapter<AdapterCallFil
 		
 		if (position == selected) {
 			
-			holder.itemView.findViewById(com.tr.hsyn.callfilter.R.id.call_filter_inner_layout).setBackgroundColor(Colors.lighter(Color.YELLOW, 0.9f));
+			holder.itemView.findViewById(R.id.call_filter_inner_layout).setBackgroundColor(Colors.lighter(Color.YELLOW, 0.9f));
 		}
 		else {
 			
-			holder.itemView.findViewById(com.tr.hsyn.callfilter.R.id.call_filter_inner_layout).setBackgroundColor(Color.TRANSPARENT);
+			holder.itemView.findViewById(R.id.call_filter_inner_layout).setBackgroundColor(Color.TRANSPARENT);
 		}
 	}
 	
@@ -137,8 +137,8 @@ public final class AdapterCallFilter extends RecyclerView.Adapter<AdapterCallFil
 			
 			super(itemView);
 			
-			filter = itemView.findViewById(com.tr.hsyn.callfilter.R.id.text_filter);
-			type   = itemView.findViewById(com.tr.hsyn.callfilter.R.id.type);
+			filter = itemView.findViewById(R.id.text_filter);
+			type   = itemView.findViewById(R.id.type);
 			
 			itemView.setBackgroundResource(Colors.getRipple());
 			itemView.setOnClickListener(v -> selectListener.onItemIndex(getAdapterPosition()));

@@ -14,21 +14,16 @@
 	<!--Sadece reddedilenn arama kayıtlarının gösterileceğini bildirir-->
 	<string name="rejected_calls">Reddedilen Aramalar</string>
 	<!--Sadece reddedilenn arama kayıtlarının gösterileceğini bildirir-->
-	<string name="no_name_calls">İsimsiz Aramalar</string>
+	<string name="filter_no_name">İsimsiz Aramalar</string>
 	<!--Sadece reddedilenn arama kayıtlarının gösterileceğini bildirir-->
 	<string name="random_calls">Rastgele Aramalar</string>
-	<string name="incoming_call">Gelen Arama</string>
-	<string name="outgoing_call">Giden Arama</string>
-	<string name="missed_call">Cevapsız Arama</string>
-	<string name="rejected_call">Reddedilen Arama</string>
-	<string name="random_call">Rastgele Arama</string>
 
-	<string name="most_outgoing_calls">En Çok Arananlar</string>
-	<string name="most_incoming_calls">En Çok Arayanlar</string>
-	<string name="most_missed_calls">En Çok Çağrı Atanlar</string>
-	<string name="most_rejected_calls">En Çok Reddedilenler</string>
-	<string name="most_duration_incoming_calls">En Çok Konuşanlar</string>
-	<string name="most_duration_outgoing_calls">En Çok Konuştukların</string>
+	<string name="most_outgoing">En Çok Arananlar</string>
+	<string name="most_incoming">En Çok Arayanlar</string>
+	<string name="most_missed">En Çok Çağrı Atanlar</string>
+	<string name="most_rejected">En Çok Reddedilenler</string>
+	<string name="most_duration_incoming">En Çok Konuşanlar</string>
+	<string name="most_duration_outgoing">En Çok Konuştukların</string>
 
 
 	<string name="description_call_type">Arama türü</string>

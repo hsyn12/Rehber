@@ -5,7 +5,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.tr.hsyn.fastscroller.FastScrollListener;
 import com.tr.hsyn.page.SwipeListener;
-import com.tr.hsyn.telefonrehberi.main.cast.PageOwner;
 
 
 public abstract class FragmentEvents<T> extends FragmentView<T> implements PageEventListener, SwipeListener, FastScrollListener {
@@ -13,8 +12,8 @@ public abstract class FragmentEvents<T> extends FragmentView<T> implements PageE
 	protected FastScrollListener                   fastScrollListener;
 	protected SwipeListener                        swipeListener;
 	protected SwipeRefreshLayout.OnRefreshListener refreshListener;
-	protected PageOwner                            pageOwner;
-	protected Runnable                             onReady;
+	
+	protected Runnable onReady;
 	
 	
 	@Override
@@ -47,11 +46,6 @@ public abstract class FragmentEvents<T> extends FragmentView<T> implements PageE
 		refreshListener = listener;
 	}
 	
-	@Override
-	public void setPageOwner(PageOwner pageOwner) {
-		
-		this.pageOwner = pageOwner;
-	}
 	
 	@Override
 	public void setOnReady(Runnable onReady) {

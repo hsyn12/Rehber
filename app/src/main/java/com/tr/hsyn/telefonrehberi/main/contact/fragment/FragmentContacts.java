@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 /**
  * Contacts page.
  */
-public class FragmentContacts extends FragmentPageMenu {
+public class FragmentContacts extends ContactsFilter {
 	
 	protected boolean ready;
 	

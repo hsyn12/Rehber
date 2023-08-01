@@ -19,21 +19,21 @@ import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.Dialog;
  * It will display the filtering criteria as a list,
  * and it will have the user to select from the list.
  */
-public class CallLogFilters extends Dialog {
+public class DialogFilters extends Dialog {
 	
 	private final AlertDialog       dialog;
 	private final ItemIndexListener selectListener;
 	
 	@SuppressLint("InflateParams")
-	public CallLogFilters(@NonNull Activity activity, @NonNull ItemIndexListener selectListener, int selected) {
+	public DialogFilters(@NonNull Activity activity, @NonNull ItemIndexListener selectListener, int selected, String[] filters) {
 		
 		this.selectListener = selectListener;
 		
 		AlertDialog.Builder builder = getBuilder(activity, R.layout.call_filter_dialog);
 		
 		RecyclerView list = findView(R.id.list_call_filters);
-		list.setAdapter(new AdapterCallFilter(activity.getResources().getStringArray(R.array.call_filter_items), this::onSelected, selected));
-		
+		list.setAdapter(new AdapterCallFilter(filters, this::onSelected, selected));
+		setHeight(list);
 		rootView.findViewById(R.id.header).setBackgroundColor(Colors.getPrimaryColor());
 		
 		dialog = builder.create();
@@ -52,5 +52,10 @@ public class CallLogFilters extends Dialog {
 		selectListener.onItemIndex(index);
 		
 		dialog.dismiss();
+	}
+	
+	public static DialogFilters newInstance(@NonNull Activity activity, @NonNull ItemIndexListener selectListener, int selected, String[] filters) {
+		
+		return new DialogFilters(activity, selectListener, selected, filters);
 	}
 }

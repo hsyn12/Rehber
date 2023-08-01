@@ -22,56 +22,49 @@ import com.tr.hsyn.shower.ShowWomen;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.call.cast.MainHeader;
 import com.tr.hsyn.telefonrehberi.main.call.fragment.PageCallLog;
+import com.tr.hsyn.telefonrehberi.main.cast.PageOwner;
 import com.tr.hsyn.telefonrehberi.main.code.page.Header;
 import com.tr.hsyn.telefonrehberi.main.code.page.PageAdapter;
 import com.tr.hsyn.telefonrehberi.main.contact.fragment.FragmentContacts;
 import com.tr.hsyn.xbox.Blue;
 
 
-public abstract class MainActivity extends MainActivityView implements SnackBarListener, FastScrollListener {
+public abstract class MainActivity extends MainActivityView implements SnackBarListener, FastScrollListener, PageOwner {
 	
 	
-	/**
-	 * Kişiler sayfasının {@code viewPager} içindeki index değeri
-	 */
-	public static final int              PAGE_CONTACTS      = 0;
-	/**
-	 * Arama kayıtları sayfasının {@code viewPager} içindeki index değeri
-	 */
-	public static final int              PAGE_CALL_LOG      = 1;
 	/**
 	 * Uygun bir animasyon süresi
 	 */
-	private final       long             ANIMATION_DURATION = 600L;
-	private final       ColorHolder      colorHolder        = Colors.getColorHolder();
+	private final long             ANIMATION_DURATION = 600L;
+	private final ColorHolder      colorHolder        = Colors.getColorHolder();
 	/**
 	 * Arama Kayıtları Sayfası
 	 */
-	protected           PageCallLog      pageCallLog;
+	protected     PageCallLog      pageCallLog;
 	/**
 	 * Daima kullanıcının seçtiği sayfayı işaret eder.
 	 *
 	 * @see #PAGE_CONTACTS
 	 * @see #PAGE_CALL_LOG
 	 */
-	protected           int              currentPage;
-	protected           FragmentContacts pageContacts;
+	protected     int              currentPage;
+	protected     FragmentContacts pageContacts;
 	/**
 	 * Sayfaları kullanıcının seçimine göre aktif-pasif yapan nesne
 	 */
-	private             ShowWomen        showWomen;
+	private       ShowWomen        showWomen;
 	/**
 	 * Aktif durumda bir Snack mesajı varsa {@code true} değerindedir, aksi halde {@code false}
 	 */
-	private             boolean          isSnakeActive;
+	private       boolean          isSnakeActive;
 	/**
 	 * Hızlı kaydırma aktifse {@code true}
 	 */
-	private             boolean          fastScrollActive;
+	private       boolean          fastScrollActive;
 	/**
 	 * Yeni kişi ekleme butonu görünmez durumda ise {@code true}
 	 */
-	private             boolean          actionButtonHidden;
+	private       boolean          actionButtonHidden;
 	
 	@Override
 	protected void onCreate() {

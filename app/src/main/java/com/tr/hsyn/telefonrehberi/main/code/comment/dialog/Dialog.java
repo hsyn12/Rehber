@@ -38,6 +38,18 @@ public abstract class Dialog {
 	}
 	
 	/**
+	 * Sets the height.
+	 *
+	 * @param view the view to set
+	 */
+	protected void setHeight(@NotNull View view) {
+		
+		ViewGroup.LayoutParams params = view.getLayoutParams();
+		params.height = (int) Phone.getDialogProperHeight();
+		view.setLayoutParams(params);
+	}
+	
+	/**
 	 * Shows the dialog.
 	 */
 	public void show() {

@@ -194,5 +194,15 @@
 		<item name="android:textColor">@color/black_30</item>
 	</style>
 
+	<style name="ContactCallDetails">
+		<item name="android:layout_marginStart">@dimen/contact_call_type_margin</item>
+		<item name="android:textSize">@dimen/contact_call_type_text_size</item>
+		<item name="fontFamily">@font/droidsansmono</item>
+	</style>
 
+	<style name="ContactCallDetailsText" parent="BaseText">
+		<item name="android:textSize">@dimen/contact_call_type_text_size</item>
+		<item name="fontFamily">@font/geometric_light</item>
+		<item name="android:textColor">@color/black_55</item>
+	</style>
 </resources>

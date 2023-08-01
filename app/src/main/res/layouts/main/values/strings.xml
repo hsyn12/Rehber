@@ -122,7 +122,6 @@
 	<string name="understand">Anladım</string>
 	<string name="no_number">Kişinin numarası yok</string>
 	<string name="no_information">Gerekli bilgiler alınamadı</string>
-	<string name="no_name">(İsimsiz)</string>
 	<string name="msg_group_visable">Grup rehberde görünür oldu : \'%s\'</string>
 	<string name="msg_group_invisable">Grup gizlendi : \'%s\'</string>
 	<string name="deleted">%s silindi</string>

@@ -22,6 +22,7 @@ import com.tr.hsyn.key.Key;
 import com.tr.hsyn.message.Show;
 import com.tr.hsyn.page.MenuShower;
 import com.tr.hsyn.telefonrehberi.R;
+import com.tr.hsyn.telefonrehberi.main.cast.PageOwner;
 import com.tr.hsyn.telefonrehberi.main.contact.activity.search.ContactSearch;
 import com.tr.hsyn.telefonrehberi.main.dev.menu.MenuEditor;
 import com.tr.hsyn.telefonrehberi.main.dev.menu.MenuManager;
@@ -32,9 +33,12 @@ import com.tr.hsyn.xbox.Blue;
 public abstract class FragmentPageMenu extends FragmentContactListEditor implements MenuProvider, MenuShower {
 	
 	private final Gate       gateMenuSelection = AutoGate.newGate(1000L);
+	protected     PageOwner  pageOwner;
 	private       int        menuPrepared;
 	//private       Menu       menu;
 	private       MenuEditor menuEditor;
+	
+	protected abstract void onClickFilter();
 	
 	@Nullable
 	@Override
@@ -58,7 +62,9 @@ public abstract class FragmentPageMenu extends FragmentContactListEditor impleme
 		
 		Use.ifNotNull(
 				menu.findItem(R.id.menu_search_contacts),
-				item -> item.setVisible(isShowTime() || menuPrepared++ == 0));
+				item -> item.setVisible(isShowTime() || menuPrepared == 0));
+		
+		menuPrepared++;
 	}
 	
 	@Override
@@ -66,7 +72,7 @@ public abstract class FragmentPageMenu extends FragmentContactListEditor impleme
 		
 		menuInflater.inflate(R.menu.fragment_contacts_menu, menu);
 		
-		menuEditor = new MenuManager(menu, Lister.listOf(R.id.menu_search_contacts));
+		menuEditor = new MenuManager(menu, Lister.listOf(R.id.menu_search_contacts, R.id.menu_filter));
 	}
 	
 	@Override
@@ -85,6 +91,12 @@ public abstract class FragmentPageMenu extends FragmentContactListEditor impleme
 				onClickSearch();
 				return true;
 			}
+			
+			if (id == R.id.menu_filter) {
+				
+				onClickFilter();
+				return true;
+			}
 		}
 		
 		return false;
@@ -94,6 +106,12 @@ public abstract class FragmentPageMenu extends FragmentContactListEditor impleme
 	public void showMenu(boolean show) {
 		
 		menuEditor.setVisible(menuEditor.getMenuItemResourceIds(), !show);
+	}
+	
+	@Override
+	public void setPageOwner(PageOwner pageOwner) {
+		
+		this.pageOwner = pageOwner;
 	}
 	
 	protected void onClickSearch() {

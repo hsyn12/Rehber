@@ -86,7 +86,7 @@ public interface Res {
 		 */
 		static String getCallFilterName(@NotNull Context context, int filter) {
 			
-			String[] filters = context.getResources().getStringArray(R.array.call_filter_items);
+			String[] filters = context.getResources().getStringArray(R.array.filters);
 			
 			return filters[filter];
 		}

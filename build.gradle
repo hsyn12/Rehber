@@ -23,5 +23,8 @@ ext.kotlin_jvm_target = '20'
 ext.androidx_annotation = "1.6.0"
 
 
-
-
+/*tasks.register('clean', Exec) {
+	ext.lockhunter = "C:\\Program Files\\LockHunter\\LockHunter.exe"
+	def buildDir = file(new File("build"))
+	commandLine 'cmd', "$lockhunter", '/delete', '/silent', buildDir
+}*/
