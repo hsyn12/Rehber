@@ -2,7 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:locale="en">
 
 	<string name="filters">Filters</string>
-	<string name="all_calls">Calls</string>
+	<string name="all">Calls</string>
 	<string name="incoming_calls">Incoming Calls</string>
 	<string name="outgoing_calls">Outgoing Calls</string>
 	<string name="missed_calls">Missed Calls</string>
@@ -21,13 +21,14 @@
 
 	<!--Arama kayıtları filtreleme öğeleri dizisi-->
 	<string-array name="filters">
-		<item>@string/all_calls</item>
+		<item>@string/all</item>
 		<item>@string/incoming_calls</item>
 		<item>@string/outgoing_calls</item>
 		<item>@string/missed_calls</item>
 		<item>@string/rejected_calls</item>
 		<item>@string/filter_no_name</item>
 		<item>@string/random_calls</item>
+		<!-- The most ones -->
 		<item>@string/most_incoming</item>
 		<item>@string/most_outgoing</item>
 		<item>@string/most_missed</item>
@@ -45,6 +46,5 @@
 		<item>@string/most_rejected</item>
 		<item>@string/most_duration_incoming</item>
 		<item>@string/most_duration_outgoing</item>
-		<item>@string/filter_no_name</item>
 	</string-array>
 </resources>

@@ -48,7 +48,7 @@ public abstract class ContactsFilter extends FragmentPageMenu {
 		
 		if (index == filter) return;
 		
-		filter = index;
+		filter = index + 7;
 		
 		var log = getCallLog();
 		

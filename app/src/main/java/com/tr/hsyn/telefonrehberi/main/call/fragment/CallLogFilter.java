@@ -74,7 +74,7 @@ public abstract class CallLogFilter extends CallList implements Filter, HaveCall
 		
 		assert getActivity() != null;
 		
-		DialogFilters filters = new DialogFilters(getActivity(), this::onFilterSelected, filter, this.filters);
+		DialogFilters filters = new DialogFilters(getActivity(), this::setFilter, filter, this.filters);
 		filters.show();
 	}
 	
@@ -163,11 +163,6 @@ public abstract class CallLogFilter extends CallList implements Filter, HaveCall
 			return filters[filter];
 		
 		return "?";
-	}
-	
-	protected void onFilterSelected(int index) {
-		
-		setFilter(index);
 	}
 	
 	private void changeFilter(int filter) {

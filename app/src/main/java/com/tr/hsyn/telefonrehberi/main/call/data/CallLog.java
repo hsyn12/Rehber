@@ -237,6 +237,14 @@ public interface CallLog extends CCollection, Ranker {
 		}
 	}
 	
+	static boolean isCallTypeFilter(int filter) {
+		
+		
+		return
+		
+		
+	}
+	
 	/**
 	 * Returns the contacts that have or have no calls.<br><br>
 	 * Get all the contacts that have incoming calls,

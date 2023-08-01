@@ -4,7 +4,7 @@
 	<!--Arama kayıtları için filtreler-->
 	<string name="filters">Filtreler</string>
 	<!--Varsayılan filtre. Tüm arama kayıtlarının gösterileceğini bildirir-->
-	<string name="all_calls">Arama Kayıtları</string>
+	<string name="all">Arama Kayıtları</string>
 	<!--Sadece gelen arama kayıtlarının gösterileceğini bildirir-->
 	<string name="incoming_calls">Gelen Aramalar</string>
 	<!--Sadece giden arama kayıtlarının gösterileceğini bildirir-->
