@@ -88,7 +88,7 @@ public class CallDurationComment implements ContactComment {
 		
 		if (thisRank != null) {
 			
-			long totalDuration = thisRank.getDuration() * 1000L;
+			long totalDuration = thisRank.getTotalDuration() * 1000L;
 			
 			//+ if exist any speaking
 			if (totalDuration > 0L) {
@@ -158,7 +158,7 @@ public class CallDurationComment implements ContactComment {
 			
 			for (CallRank callRank : rankList) {
 				
-				if (callRank.getDuration() == 0) continue;
+				if (callRank.getTotalDuration() == 0) continue;
 				
 				String name = callRank.getName();
 				
@@ -167,7 +167,7 @@ public class CallDurationComment implements ContactComment {
 				
 				long contactId = contact.getContactId();
 				
-				MostDurationData data = new MostDurationData(name, Time.formatSeconds((int) callRank.getDuration()), rank);
+				MostDurationData data = new MostDurationData(name, Time.formatSeconds((int) callRank.getTotalDuration()), rank);
 				
 				if (contactId == Key.getContactId(callRank.getCalls().get(0)))
 					data.setSelected(true);

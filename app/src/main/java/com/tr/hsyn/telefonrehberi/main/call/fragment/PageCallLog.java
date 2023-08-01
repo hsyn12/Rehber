@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.tr.hsyn.calldata.Call;
+import com.tr.hsyn.telefonrehberi.main.cast.PageOwner;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -60,5 +61,10 @@ public class PageCallLog extends CallLogEvents {
 			return getAdapter().getSize();
 		
 		return 0;
+	}
+	
+	@Override
+	public void setPageOwner(PageOwner pageOwner) {
+		
 	}
 }

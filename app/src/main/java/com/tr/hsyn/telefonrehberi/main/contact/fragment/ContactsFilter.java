@@ -24,11 +24,9 @@ import java.util.List;
 
 public abstract class ContactsFilter extends FragmentPageMenu {
 	
-	private int           filter;
-	private String[]      filters;
-	private List<Contact> mainContacts;
-	private List<Contact> filteredContacts;
-	private CharSequence  title;
+	private int          filter;
+	private String[]     filters;
+	private CharSequence title;
 	
 	@Override
 	public void onViewCreated(@NotNull View view, @Nullable Bundle savedInstanceState) {
@@ -42,7 +40,7 @@ public abstract class ContactsFilter extends FragmentPageMenu {
 	@Override
 	protected void onClickFilter() {
 		
-		DialogFilters dialog = DialogFilters.newInstance(requireActivity(), this::onFilterSelected, filter, filters);
+		DialogFilters dialog = DialogFilters.newInstance(requireActivity(), this::onFilterSelected, filter == 0 ? 0 : filter - 6, filters);
 		dialog.show();
 	}
 	
@@ -120,6 +118,8 @@ public abstract class ContactsFilter extends FragmentPageMenu {
 			}
 			
 			setRankList(rankList);
+			adapter.setFiltered(true);
+			adapter.setFilter(filter);
 		}
 	}
 	

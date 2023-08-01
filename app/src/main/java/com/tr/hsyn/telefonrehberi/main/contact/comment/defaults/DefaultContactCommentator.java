@@ -307,7 +307,7 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 			
 			for (CallRank callRank : rankList) {
 				
-				if (callRank.getDuration() == 0) continue;
+				if (callRank.getTotalDuration() == 0) continue;
 				
 				String name = callRank.getName();
 				
@@ -316,7 +316,7 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 				
 				long contactId = contact.getContactId();
 				
-				var data = new MostDurationData(name, Time.formatSeconds((int) callRank.getDuration()), rank);
+				var data = new MostDurationData(name, Time.formatSeconds((int) callRank.getTotalDuration()), rank);
 				
 				if (contactId == Key.getContactId(callRank.getCalls().get(0)))
 					data.setSelected(true);

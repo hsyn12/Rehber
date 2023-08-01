@@ -22,8 +22,12 @@ import com.tr.hsyn.selection.ItemIndexListener;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.Res;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
 import com.tr.hsyn.telefonrehberi.main.cast.ListAdapter;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
+import com.tr.hsyn.time.Time;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
@@ -38,7 +42,8 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> 
 	private       List<Contact>            contacts;
 	private       LayoutInflater           inflater;
 	private       SectionsAdapterInterface secAdapter;
-	private       boolean                  detailed;
+	private       boolean                  filtered;
+	private       int                      filter;
 	
 	public ContactAdapter(@NonNull List<Contact> contacts, @NonNull ItemIndexListener selectListener) {
 		
@@ -87,7 +92,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> 
 			holder.image.setImageDrawable(Res.textDrawable(holder.itemView.getContext(), contact.getName()));
 		else holder.image.setImageURI(Uri.parse(pic));
 		
-		if (detailed)
+		if (filtered)
 			setDetails(holder, position, contact);
 	}
 	
@@ -154,7 +159,17 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> 
 		return secAdapter.getItemCountForSection(sectionIndex);
 	}
 	
-	private void setDetails(Holder holder, int position, Contact contact) {
+	public int getFilter() {
+		
+		return filter;
+	}
+	
+	public void setFilter(int filter) {
+		
+		this.filter = filter;
+	}
+	
+	private void setDetails(@NotNull Holder holder, int position, Contact contact) {
 		
 		CallRank rank = callRanks.get(position);
 		
@@ -170,17 +185,22 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> 
 		o.setText(String.valueOf(rank.getOutgoingCalls().size()));
 		m.setText(String.valueOf(rank.getMissedCalls().size()));
 		r.setText(String.valueOf(rank.getRejectedCalls().size()));
-		duration.setText(String.valueOf(rank.getDuration()));
+		
+		if (filter == CallLog.FILTER_MOST_SPEAKING)
+			duration.setText(Time.formatSeconds(rank.getIncomingDuration()));
+		else if (filter == CallLog.FILTER_MOST_TALKING)
+			duration.setText(Time.formatSeconds(rank.getOutgoingDuration()));
+		else duration.setText(Time.formatSeconds(rank.getTotalDuration()));
 	}
 	
-	public boolean isDetailed() {
+	public boolean isFiltered() {
 		
-		return detailed;
+		return filtered;
 	}
 	
-	public void setDetailed(boolean detailed) {
+	public void setFiltered(boolean filtered) {
 		
-		this.detailed = detailed;
+		this.filtered = filtered;
 	}
 	
 	private void setSections() {

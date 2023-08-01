@@ -53,8 +53,11 @@ public abstract class FragmentPageMenu extends FragmentContactListEditor impleme
 		
 		super.showTime(showTime);
 		
-		if (menuEditor != null)
+		if (menuEditor != null) {
+			
 			menuEditor.setVisible(R.id.menu_search_contacts, showTime);
+			menuEditor.setVisible(R.id.menu_filter, showTime);
+		}
 	}
 	
 	@Override

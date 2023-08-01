@@ -358,8 +358,8 @@ public abstract class CallSummary extends ContactDetailsHistory {
 			missedCall.setText(String.valueOf(missedSize));
 			rejectedCall.setText(String.valueOf(rejectedSize));
 			
-			int incomingDuration = callHistory.getDuration(Type.INCOMING, Type.INCOMING_WIFI);
-			int outgoingDuration = callHistory.getDuration(Type.OUTGOING, Type.OUTGOING_WIFI);
+			int incomingDuration = callHistory.getIncomingDuration();
+			int outgoingDuration = callHistory.getOutgoingDuration();
 			
 			incomingCallDuration.setText(Time.formatSeconds(incomingDuration));
 			outgoingCallDuration.setText(Time.formatSeconds(outgoingDuration));

@@ -146,8 +146,8 @@ public interface Ranker {
 			
 			CallRank callRank = new CallRank(key, _calls);
 			
-			long incomingDuration = 0L;
-			long outgoingDuration = 0L;
+			int incomingDuration = 0;
+			int outgoingDuration = 0;
 			
 			for (Call call : _calls) {
 				
@@ -162,7 +162,7 @@ public interface Ranker {
 		}
 		
 		//_ sort by duration descending
-		callRanks.sort((c1, c2) -> Long.compare(c2.getDuration(), c1.getDuration()));
+		callRanks.sort((c1, c2) -> Long.compare(c2.getTotalDuration(), c1.getTotalDuration()));
 		
 		int                          rank    = 1;
 		int                          size    = callRanks.size();
@@ -180,7 +180,7 @@ public interface Ranker {
 			if (i == last) break;
 			
 			CallRank next = callRanks.get(i + 1);
-			if (callRank.getDuration() > next.getDuration()) rank++;
+			if (callRank.getTotalDuration() > next.getTotalDuration()) rank++;
 		}
 		
 		return rankMap;

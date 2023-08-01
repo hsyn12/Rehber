@@ -35,8 +35,8 @@ public class CallRank {
 	private final List<Call> missedCalls;
 	private final List<Call> rejectedCalls;
 	private       int        rank;
-	private       long       incomingDuration;
-	private       long       outgoingDuration;
+	private       int        incomingDuration;
+	private       int        outgoingDuration;
 	private       String     name;
 	private       Contact    contact;
 	private       int        rankCount;
@@ -169,7 +169,7 @@ public class CallRank {
 	/**
 	 * @return total speaking duration (incoming + outgoing)
 	 */
-	public long getDuration() {
+	public int getTotalDuration() {
 		
 		return incomingDuration + outgoingDuration;
 	}
@@ -177,12 +177,12 @@ public class CallRank {
 	/**
 	 * @return the incoming speaking duration
 	 */
-	public long getIncomingDuration() {
+	public int getIncomingDuration() {
 		
 		return incomingDuration;
 	}
 	
-	public void setIncomingDuration(long incomingDuration) {
+	public void setIncomingDuration(int incomingDuration) {
 		
 		this.incomingDuration = incomingDuration;
 	}
@@ -190,12 +190,12 @@ public class CallRank {
 	/**
 	 * @return the outgoing speaking duration
 	 */
-	public long getOutgoingDuration() {
+	public int getOutgoingDuration() {
 		
 		return outgoingDuration;
 	}
 	
-	public void setOutgoingDuration(long outgoingDuration) {
+	public void setOutgoingDuration(int outgoingDuration) {
 		
 		this.outgoingDuration = outgoingDuration;
 	}
@@ -341,6 +341,6 @@ public class CallRank {
 	
 	public int compareToDuration(@NotNull CallRank other) {
 		
-		return (int) (other.getDuration() - getDuration());
+		return (int) (other.getTotalDuration() - getTotalDuration());
 	}
 }
