@@ -17,6 +17,7 @@
 
 	<string name="most_duration_incoming">Most Talkers</string>
 	<string name="most_duration_outgoing">Most You Talked</string>
+	<string name="most_total_duration">Most Total Duration</string>
 	<string name="description_call_type">Call type</string>
 
 	<!--Arama kayıtları filtreleme öğeleri dizisi-->
@@ -35,6 +36,7 @@
 		<item>@string/most_rejected</item>
 		<item>@string/most_duration_incoming</item>
 		<item>@string/most_duration_outgoing</item>
+		<item>@string/most_total_duration</item>
 
 	</string-array>
 	en çok isteyen kişiler
@@ -46,5 +48,6 @@
 		<item>@string/most_rejected</item>
 		<item>@string/most_duration_incoming</item>
 		<item>@string/most_duration_outgoing</item>
+		<item>@string/most_total_duration</item>
 	</string-array>
 </resources>

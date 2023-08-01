@@ -25,13 +25,15 @@ import java.util.stream.Collectors;
  * The other information is extra.
  * For example,
  * the rankCount ({@link #getRankCount()}) is the number of keys that has the same rank.
- *
- * @noinspection SimplifyStreamApiCallChains
  */
 public class CallRank {
 	
 	private final String     key;
 	private final List<Call> calls;
+	private final List<Call> incomingCalls;
+	private final List<Call> outgoingCalls;
+	private final List<Call> missedCalls;
+	private final List<Call> rejectedCalls;
 	private       int        rank;
 	private       long       incomingDuration;
 	private       long       outgoingDuration;
@@ -64,6 +66,11 @@ public class CallRank {
 		this.calls = calls;
 		if (!calls.isEmpty())
 			name = calls.get(0).getName();
+		
+		incomingCalls = calls.stream().filter(c -> Lister.contains(new int[]{Call.INCOMING, Call.INCOMING_WIFI}, c.getCallType())).collect(Collectors.toList());
+		outgoingCalls = calls.stream().filter(c -> Lister.contains(new int[]{Call.OUTGOING, Call.OUTGOING_WIFI}, c.getCallType())).collect(Collectors.toList());
+		missedCalls   = calls.stream().filter(Call::isMissed).collect(Collectors.toList());
+		rejectedCalls = calls.stream().filter(Call::isRejected).collect(Collectors.toList());
 	}
 	
 	/**
@@ -71,8 +78,12 @@ public class CallRank {
 	 */
 	public CallRank() {
 		
-		key   = null;
-		calls = null;
+		key           = null;
+		calls         = null;
+		incomingCalls = null;
+		outgoingCalls = null;
+		missedCalls   = null;
+		rejectedCalls = null;
 	}
 	
 	@Override
@@ -96,6 +107,26 @@ public class CallRank {
 		       ", key='" + key + '\'' +
 		       ", calls=" + calls.size() +
 		       '}';
+	}
+	
+	public List<Call> getIncomingCalls() {
+		
+		return incomingCalls;
+	}
+	
+	public List<Call> getOutgoingCalls() {
+		
+		return outgoingCalls;
+	}
+	
+	public List<Call> getMissedCalls() {
+		
+		return missedCalls;
+	}
+	
+	public List<Call> getRejectedCalls() {
+		
+		return rejectedCalls;
 	}
 	
 	/**

@@ -113,11 +113,14 @@ public abstract class ContactsFilter extends FragmentPageMenu {
 				case CallLog.FILTER_MOST_TALKING:
 					rankList.sort(CallRank::compareToOutgoingDuration);
 					break;
-				
+				case CallLog.FILTER_MOST_TOTAL_DURATION:
+					rankList.sort(CallRank::compareToDuration);
+					break;
+				default: throw new IllegalArgumentException("Unknown filter : " + filter);
 			}
+			
+			setRankList(rankList);
 		}
-		
-		
 	}
 	
 	protected @Nullable CallLog getCallLog() {

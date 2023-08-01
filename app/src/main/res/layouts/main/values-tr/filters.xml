@@ -24,6 +24,7 @@
 	<string name="most_rejected">En Çok Reddedilenler</string>
 	<string name="most_duration_incoming">En Çok Konuşanlar</string>
 	<string name="most_duration_outgoing">En Çok Konuştukların</string>
+	<string name="most_total_duration">En Çok Konuşma Süresi</string>
 
 
 	<string name="description_call_type">Arama türü</string>

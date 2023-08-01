@@ -31,55 +31,59 @@ public interface CallLog extends CCollection, Ranker {
 	/**
 	 * The filter for All calls.
 	 */
-	int FILTER_ALL           = 0;
+	int FILTER_ALL                 = 0;
 	/**
 	 * The filter for Incoming calls.
 	 */
-	int FILTER_INCOMING      = 1;
+	int FILTER_INCOMING            = 1;
 	/**
 	 * The filter for Outgoing calls.
 	 */
-	int FILTER_OUTGOING      = 2;
+	int FILTER_OUTGOING            = 2;
 	/**
 	 * The filter for missed calls
 	 */
-	int FILTER_MISSED        = 3;
+	int FILTER_MISSED              = 3;
 	/**
 	 * The filter for rejected calls
 	 */
-	int FILTER_REJECTED      = 4;
+	int FILTER_REJECTED            = 4;
 	/**
 	 * The filter for no-named calls
 	 */
-	int FILTER_NO_NAMED      = 5;
+	int FILTER_NO_NAMED            = 5;
 	/**
 	 * The filter for random calls
 	 */
-	int FILTER_RANDOM        = 6;
+	int FILTER_RANDOM              = 6;
 	/**
 	 * The filter for most incoming
 	 */
-	int FILTER_MOST_INCOMING = 7;
+	int FILTER_MOST_INCOMING       = 7;
 	/**
 	 * The filter for most outgoing
 	 */
-	int FILTER_MOST_OUTGOING = 8;
+	int FILTER_MOST_OUTGOING       = 8;
 	/**
 	 * The filter for most missed
 	 */
-	int FILTER_MOST_MISSED   = 9;
+	int FILTER_MOST_MISSED         = 9;
 	/**
 	 * The filter for most rejected
 	 */
-	int FILTER_MOST_REJECTED = 10;
+	int FILTER_MOST_REJECTED       = 10;
 	/**
 	 * The filter for most speaking (incoming)
 	 */
-	int FILTER_MOST_SPEAKING = 11;
+	int FILTER_MOST_SPEAKING       = 11;
 	/**
 	 * The filter for most talking (outgoing)
 	 */
-	int FILTER_MOST_TALKING  = 12;
+	int FILTER_MOST_TALKING        = 12;
+	/**
+	 * The filter for most total speaking duration
+	 */
+	int FILTER_MOST_TOTAL_DURATION = 13;
 	
 	/**
 	 * Returns the calls of the contact.

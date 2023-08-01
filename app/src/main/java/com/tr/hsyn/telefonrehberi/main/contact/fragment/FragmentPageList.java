@@ -14,10 +14,12 @@ import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.dev.ResourceUtil;
 import com.tr.hsyn.telefonrehberi.dev.android.ui.swipe.ContactSwipeCallBack;
 import com.tr.hsyn.telefonrehberi.main.code.page.adapter.ContactAdapter;
+import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public abstract class FragmentPageList extends FragmentPageColor implements IHaveProgress {
@@ -76,6 +78,19 @@ public abstract class FragmentPageList extends FragmentPageColor implements IHav
 	public Contact getItem(int index) {
 		
 		return getList().get(index);
+	}
+	
+	public void setRankList(@NonNull @NotNull List<CallRank> list) {
+		
+		super.setList(list.stream().map(CallRank::getContact).collect(Collectors.toList()));
+		
+		adapter = new ContactAdapter(this, list);
+		recyclerView.setAdapter(adapter);
+		
+		header.setTitle(getTitle());
+		header.setSubTitle(String.valueOf(list.size()));
+		
+		checkEmpty();
 	}
 	
 	protected void checkEmpty() {

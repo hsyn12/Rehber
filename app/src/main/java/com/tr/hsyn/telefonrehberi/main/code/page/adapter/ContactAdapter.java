@@ -155,9 +155,22 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> 
 	}
 	
 	private void setDetails(Holder holder, int position, Contact contact) {
-		//Warn: aynı sayıda kişi olacak mı?
+		
 		CallRank rank = callRanks.get(position);
 		
+		holder.details.setVisibility(View.VISIBLE);
+		
+		TextView i        = holder.details.findViewById(R.id.text_incoming_count);
+		TextView o        = holder.details.findViewById(R.id.text_outgoing_count);
+		TextView m        = holder.details.findViewById(R.id.text_missed_count);
+		TextView r        = holder.details.findViewById(R.id.text_rejected_count);
+		TextView duration = holder.details.findViewById(R.id.text_duration);
+		
+		i.setText(String.valueOf(rank.getIncomingCalls().size()));
+		o.setText(String.valueOf(rank.getOutgoingCalls().size()));
+		m.setText(String.valueOf(rank.getMissedCalls().size()));
+		r.setText(String.valueOf(rank.getRejectedCalls().size()));
+		duration.setText(String.valueOf(rank.getDuration()));
 	}
 	
 	public boolean isDetailed() {
@@ -185,8 +198,9 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> 
 			
 			super(itemView);
 			
-			name  = itemView.findViewById(R.id.name);
-			image = itemView.findViewById(R.id.image);
+			name    = itemView.findViewById(R.id.name);
+			image   = itemView.findViewById(R.id.image);
+			details = itemView.findViewById(R.id.details);
 			
 			itemView.setBackgroundResource(Colors.getRipple());
 			itemView.setOnClickListener(v -> selectListener.onItemIndex(getAdapterPosition()));
