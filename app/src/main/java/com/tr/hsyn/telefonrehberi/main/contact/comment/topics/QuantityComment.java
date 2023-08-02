@@ -236,7 +236,7 @@ public class QuantityComment implements ContactComment {
 	
 	private void evaluateCalls() {
 		
-		History history = callLog.getHistoryOf(contact);
+		History history = callLog.getHistory(contact);
 		
 		//+ no any calls
 		if (history.isEmpty()) {
@@ -688,7 +688,7 @@ public class QuantityComment implements ContactComment {
 	private void evaluateIncoming() {
 		
 		assert callLog != null;
-		History    history = callLog.getHistoryOf(contact);
+		History    history = callLog.getHistory(contact);
 		List<Call> calls   = history.getIncomingCalls();
 		
 		if (calls.isEmpty()) {

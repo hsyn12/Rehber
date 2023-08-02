@@ -70,7 +70,7 @@ public class LastCallComment implements ContactComment {
 			return;
 		}
 		
-		History                   history         = callLog.getHistoryOf(contact);
+		History                   history         = callLog.getHistory(contact);
 		com.tr.hsyn.calldata.Call lastCall        = history.getLastCall();
 		int                       type            = lastCall.getCallType();
 		int[]                     callTypes       = CallLog.getCallTypes(type);

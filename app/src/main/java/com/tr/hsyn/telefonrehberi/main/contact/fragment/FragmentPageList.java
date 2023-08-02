@@ -13,19 +13,25 @@ import com.tr.hsyn.page.IHaveProgress;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.dev.ResourceUtil;
 import com.tr.hsyn.telefonrehberi.dev.android.ui.swipe.ContactSwipeCallBack;
+import com.tr.hsyn.telefonrehberi.main.code.data.History;
 import com.tr.hsyn.telefonrehberi.main.code.page.adapter.ContactAdapter;
-import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 public abstract class FragmentPageList extends FragmentPageColor implements IHaveProgress {
 	
 	protected ContactAdapter       adapter;
 	private   ContactSwipeCallBack swipeCallBack;
+	
+	/**
+	 * Returns the filter.
+	 *
+	 * @return the filter
+	 */
+	protected abstract int getFilter();
 	
 	@Override
 	public void onViewCreated(@NonNull @NotNull View view, @Nullable Bundle savedInstanceState) {
@@ -80,11 +86,12 @@ public abstract class FragmentPageList extends FragmentPageColor implements IHav
 		return getList().get(index);
 	}
 	
-	public void setRankList(@NonNull @NotNull List<CallRank> list) {
-		
-		super.setList(list.stream().map(CallRank::getContact).collect(Collectors.toList()));
+	public void setHistoryList(@NotNull List<History> list) {
 		
 		adapter = new ContactAdapter(this, list);
+		adapter.setFiltered(true);
+		adapter.setFilter(getFilter());
+		super.setList(adapter.getContacts());
 		recyclerView.setAdapter(adapter);
 		
 		header.setTitle(getTitle());

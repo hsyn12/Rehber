@@ -24,7 +24,7 @@ import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.Res;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
 import com.tr.hsyn.telefonrehberi.main.cast.ListAdapter;
-import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
+import com.tr.hsyn.telefonrehberi.main.code.data.History;
 import com.tr.hsyn.time.Time;
 
 import org.jetbrains.annotations.NotNull;
@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> implements FastScrollRecyclerView.SectionedAdapter, ListAdapter<Contact>, SectionsAdapterInterface {
 	
 	private final ItemIndexListener        selectListener;
-	private final List<CallRank>           callRanks;
+	private final List<History>            histories;
 	private       List<Contact>            contacts;
 	private       LayoutInflater           inflater;
 	private       SectionsAdapterInterface secAdapter;
@@ -49,16 +49,16 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> 
 		
 		this.contacts       = contacts;
 		this.selectListener = selectListener;
-		callRanks           = null;
+		histories           = null;
 		setHasStableIds(true);
 		setSections();
 	}
 	
-	public ContactAdapter(@NonNull ItemIndexListener selectListener, @NonNull List<CallRank> contacts) {
+	public ContactAdapter(@NonNull ItemIndexListener selectListener, @NonNull List<History> contacts) {
 		
-		this.contacts       = contacts.stream().map(CallRank::getContact).collect(Collectors.toList());
+		this.contacts       = contacts.stream().map(History::getContact).collect(Collectors.toList());
 		this.selectListener = selectListener;
-		callRanks           = contacts;
+		histories           = contacts;
 		setHasStableIds(true);
 		setSections();
 	}
@@ -159,6 +159,11 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> 
 		return secAdapter.getItemCountForSection(sectionIndex);
 	}
 	
+	public List<Contact> getContacts() {
+		
+		return contacts;
+	}
+	
 	public int getFilter() {
 		
 		return filter;
@@ -171,8 +176,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> 
 	
 	private void setDetails(@NotNull Holder holder, int position, Contact contact) {
 		
-		CallRank rank = callRanks.get(position);
-		
+		History history = histories.get(position);
 		holder.details.setVisibility(View.VISIBLE);
 		
 		TextView i        = holder.details.findViewById(R.id.text_incoming_count);
@@ -181,21 +185,16 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> 
 		TextView r        = holder.details.findViewById(R.id.text_rejected_count);
 		TextView duration = holder.details.findViewById(R.id.text_duration);
 		
-		i.setText(String.valueOf(rank.getIncomingCalls().size()));
-		o.setText(String.valueOf(rank.getOutgoingCalls().size()));
-		m.setText(String.valueOf(rank.getMissedCalls().size()));
-		r.setText(String.valueOf(rank.getRejectedCalls().size()));
+		i.setText(String.valueOf(history.getIncomingCalls().size()));
+		o.setText(String.valueOf(history.getOutgoingCalls().size()));
+		m.setText(String.valueOf(history.getMissedCalls().size()));
+		r.setText(String.valueOf(history.getRejectedCalls().size()));
 		
 		if (filter == CallLog.FILTER_MOST_SPEAKING)
-			duration.setText(Time.formatSeconds(rank.getIncomingDuration()));
+			duration.setText(Time.formatSeconds(history.getIncomingDuration()));
 		else if (filter == CallLog.FILTER_MOST_TALKING)
-			duration.setText(Time.formatSeconds(rank.getOutgoingDuration()));
-		else duration.setText(Time.formatSeconds(rank.getTotalDuration()));
-	}
-	
-	public boolean isFiltered() {
-		
-		return filtered;
+			duration.setText(Time.formatSeconds(history.getOutgoingDuration()));
+		else duration.setText(Time.formatSeconds(history.getTotalDuration()));
 	}
 	
 	public void setFiltered(boolean filtered) {

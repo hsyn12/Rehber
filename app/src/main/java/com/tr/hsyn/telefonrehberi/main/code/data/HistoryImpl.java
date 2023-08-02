@@ -78,7 +78,7 @@ public final class HistoryImpl implements History {
 	}
 	
 	@Override
-	public List<Call> getRejectCalls() {
+	public List<Call> getRejectedCalls() {
 		
 		return rejected;
 	}

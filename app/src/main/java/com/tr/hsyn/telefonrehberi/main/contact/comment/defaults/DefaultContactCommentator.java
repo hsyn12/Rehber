@@ -128,7 +128,7 @@ public class DefaultContactCommentator implements ContactCommentator, Threaded {
 		if (callLog != null) {
 			
 			this.contact = contact;
-			this.history = callLog.getHistoryOf(contact);
+			this.history = callLog.getHistory(contact);
 			
 			//if history is empty, no need to go any further.
 			if (history.isEmpty()) {

@@ -259,7 +259,7 @@ public class HistoryDurationComment implements ContactComment {
 		for (Contact contact : contacts) {
 			
 			assert callLog != null;
-			History history = callLog.getHistoryOf(contact);
+			History history = callLog.getHistory(contact);
 			
 			if (history.isEmpty()) {
 				

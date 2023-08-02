@@ -68,7 +68,7 @@ public interface History {
 	 *
 	 * @return the rejected calls
 	 */
-	List<Call> getRejectCalls();
+	List<Call> getRejectedCalls();
 	
 	/**
 	 * Returns the total incoming call duration.
@@ -257,7 +257,7 @@ public interface History {
 	 * @param types the call types
 	 * @return the calls
 	 */
-	static List<Call> getCalls(@NotNull List<Call> calls, int @NotNull ... types) {
+	static @NotNull List<Call> getCalls(@NotNull List<Call> calls, int @NotNull ... types) {
 		
 		List<Call> _calls = new ArrayList<>();
 		
@@ -274,4 +274,60 @@ public interface History {
 		
 		return _calls;
 	}
+	
+	/**
+	 * Comparator for the history
+	 */
+	enum Comparing implements Comparator<History> {
+		
+		/**
+		 * Compares the history with the incoming calls size for descending order.
+		 */
+		INCOMING,
+		/**
+		 * Compares the history with the outgoing calls size for descending order.
+		 */
+		OUTGOING,
+		/**
+		 * Compares the history with the missed calls size for descending order.
+		 */
+		MISSED,
+		/**
+		 *  Compares the history with the rejected calls size for descending order.
+		 */
+		REJECTED,
+		/**
+		 *  Compares the history with the total incoming duration for descending order.
+		 */
+		INCOMING_DURATION,
+		/**
+		 *  Compares the history with the total outgoing duration for descending order.
+		 */
+		OUTGOING_DURATION,
+		/**
+		 *  Compares the history with the total duration for descending order.
+		 */
+		TOTAL_DURATION;
+		
+		@Override
+		public int compare(History o1, History o2) {
+			
+			if (o1 == null && o2 == null) return 0;
+			if (o1 == null || o2 == null) return 1;
+			
+			switch (this) {
+				//@off
+				case INCOMING:          return o2.getIncomingCalls().size() - o1.getIncomingCalls().size();
+				case OUTGOING:          return o2.getOutgoingCalls().size() - o1.getOutgoingCalls().size();
+				case MISSED:            return o2.getMissedCalls().size() - o1.getMissedCalls().size();
+				case REJECTED:          return o2.getRejectedCalls().size() - o1.getRejectedCalls().size();
+				case INCOMING_DURATION: return o2.getIncomingDuration() - o1.getIncomingDuration();
+				case OUTGOING_DURATION: return o2.getOutgoingDuration() - o1.getOutgoingDuration();
+				case TOTAL_DURATION:    return o2.getTotalDuration() - o1.getTotalDuration();
+			}//@on
+			
+			throw new IllegalArgumentException("Impossible value: " + this);
+		}
+	}
+	
 }

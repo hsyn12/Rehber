@@ -290,7 +290,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 		}
 		else {
 			
-			return callLog.getHistoryOf(contact);
+			return callLog.getHistory(contact);
 		}
 		
 		//- İzinler yok

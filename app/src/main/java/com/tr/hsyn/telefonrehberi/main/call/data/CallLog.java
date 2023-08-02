@@ -193,9 +193,21 @@ public interface CallLog extends CCollection, Ranker {
 	 * @see History
 	 */
 	@NotNull
-	default History getHistoryOf(@NotNull Contact contact) {
+	default History getHistory(@NotNull Contact contact) {
 		
 		return History.of(contact, getById(contact.getContactId()));
+	}
+	
+	@NotNull
+	default List<History> getHistory(@NotNull List<Contact> contacts) {
+		
+		return contacts.stream().map(this::getHistory).collect(Collectors.toList());
+	}
+	
+	@NotNull
+	default List<History> getHistory() {
+		
+		return MainContacts.getContacts().stream().map(this::getHistory).collect(Collectors.toList());
 	}
 	
 	/**
