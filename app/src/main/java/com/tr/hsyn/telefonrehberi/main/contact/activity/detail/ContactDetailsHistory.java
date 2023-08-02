@@ -25,7 +25,7 @@ import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.call.activity.history.ActivityCallList;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
 import com.tr.hsyn.telefonrehberi.main.cast.PermissionHolder;
-import com.tr.hsyn.telefonrehberi.main.contact.data.History;
+import com.tr.hsyn.telefonrehberi.main.code.data.History;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
 import com.tr.hsyn.xbox.Blue;
 import com.tr.hsyn.xlog.xlog;

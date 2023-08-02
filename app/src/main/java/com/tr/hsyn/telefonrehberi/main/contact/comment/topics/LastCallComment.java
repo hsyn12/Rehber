@@ -12,8 +12,8 @@ import com.tr.hsyn.telefonrehberi.dev.android.dialog.ShowCall;
 import com.tr.hsyn.telefonrehberi.main.Res;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.ShowCallsDialog;
+import com.tr.hsyn.telefonrehberi.main.code.data.History;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.ContactComment;
-import com.tr.hsyn.telefonrehberi.main.contact.data.History;
 import com.tr.hsyn.text.Spanner;
 import com.tr.hsyn.text.Spans;
 import com.tr.hsyn.time.Time;
@@ -74,7 +74,7 @@ public class LastCallComment implements ContactComment {
 		com.tr.hsyn.calldata.Call lastCall        = history.getLastCall();
 		int                       type            = lastCall.getCallType();
 		int[]                     callTypes       = CallLog.getCallTypes(type);
-		List<Call>                typedCalls      = history.getCallsByTypes(callTypes);
+		List<Call>                typedCalls      = history.getCalls(callTypes);
 		String                    typeStr         = Res.Call.getCallType(getActivity(), type);
 		Duration                  timeBefore      = Time.howLongBefore(lastCall.getTime());
 		ShowCall                  showCall        = new ShowCall(getActivity(), lastCall);

@@ -1,4 +1,4 @@
-package com.tr.hsyn.telefonrehberi.main.contact.data;
+package com.tr.hsyn.telefonrehberi.main.code.data;
 
 
 import com.tr.hsyn.calldata.Call;
@@ -21,8 +21,8 @@ import java.util.stream.Collectors;
 
 
 /**
- * Describes the history of a contact and provides some methods to manage it.
- * History means the call history between a contact and the specific user.
+ * Defines the history of a contact.
+ * History means all calls of a contact.
  */
 public interface History {
 	
@@ -31,14 +31,16 @@ public interface History {
 	 *
 	 * @return the contact
 	 */
-	@NotNull Contact getContact();
+	@NotNull
+	Contact getContact();
 	
 	/**
 	 * Returns all calls that between the contact and the user.
 	 *
 	 * @return the calls
 	 */
-	@NotNull List<Call> getCalls();
+	@NotNull
+	List<Call> getCalls();
 	
 	/**
 	 * Returns the incoming calls of the contact that related to this history object.
@@ -164,7 +166,7 @@ public interface History {
 	 * @param types the call types
 	 * @return the calls
 	 */
-	default @NotNull List<Call> getCallsByTypes(int @NotNull ... types) {
+	default @NotNull List<Call> getCalls(int @NotNull ... types) {
 		
 		return getCalls().stream().filter(c -> Lister.IntArray.contains(types, c.getCallType())).collect(Collectors.toList());
 	}
@@ -255,7 +257,7 @@ public interface History {
 	 * @param types the call types
 	 * @return the calls
 	 */
-	static List<Call> getCallsByTypes(@NotNull List<Call> calls, int @NotNull ... types) {
+	static List<Call> getCalls(@NotNull List<Call> calls, int @NotNull ... types) {
 		
 		List<Call> _calls = new ArrayList<>();
 		

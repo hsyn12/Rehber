@@ -14,8 +14,8 @@ import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.gate.AutoGate;
 import com.tr.hsyn.gate.Gate;
 import com.tr.hsyn.telefonrehberi.R;
+import com.tr.hsyn.telefonrehberi.main.code.data.History;
 import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
-import com.tr.hsyn.telefonrehberi.main.contact.data.History;
 import com.tr.hsyn.time.Time;
 import com.tr.hsyn.vanimator.ViewAnimator;
 import com.tr.hsyn.xlog.xlog;
@@ -367,10 +367,10 @@ public abstract class CallSummary extends ContactDetailsHistory {
 			totalCall.setText(String.valueOf(incomingSize + outgoingSize + missedSize + rejectedSize));
 			totalCallDuration.setText(Time.formatSeconds(incomingDuration + outgoingDuration));
 			
-			incomingRow.setOnClickListener(v -> showCalls(callHistory.getCallsByTypes(Type.INCOMING, Type.INCOMING_WIFI)));
-			outgoingRow.setOnClickListener(v -> showCalls(callHistory.getCallsByTypes(Type.OUTGOING, Type.OUTGOING_WIFI)));
-			missedRow.setOnClickListener(v -> showCalls(callHistory.getCallsByTypes(Type.MISSED)));
-			rejectedRow.setOnClickListener(v -> showCalls(callHistory.getCallsByTypes(Type.REJECTED)));
+			incomingRow.setOnClickListener(v -> showCalls(callHistory.getCalls(Type.INCOMING, Type.INCOMING_WIFI)));
+			outgoingRow.setOnClickListener(v -> showCalls(callHistory.getCalls(Type.OUTGOING, Type.OUTGOING_WIFI)));
+			missedRow.setOnClickListener(v -> showCalls(callHistory.getCalls(Type.MISSED)));
+			rejectedRow.setOnClickListener(v -> showCalls(callHistory.getCalls(Type.REJECTED)));
 			
 			totalRow.setOnClickListener(v -> showCalls(history.getCalls()));
 		}

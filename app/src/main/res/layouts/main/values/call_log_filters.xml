@@ -21,7 +21,7 @@
 	<string name="description_call_type">Call type</string>
 
 	<!--Arama kayıtları filtreleme öğeleri dizisi-->
-	<string-array name="filters">
+	<string-array name="call_log_filters">
 		<item>@string/all</item>
 		<item>@string/incoming_calls</item>
 		<item>@string/outgoing_calls</item>
@@ -39,15 +39,5 @@
 		<item>@string/most_total_duration</item>
 
 	</string-array>
-	en çok isteyen kişiler
-	<string-array name="contact_filters">
-		<item>@string/contacts</item>
-		<item>@string/most_incoming</item>
-		<item>@string/most_outgoing</item>
-		<item>@string/most_missed</item>
-		<item>@string/most_rejected</item>
-		<item>@string/most_duration_incoming</item>
-		<item>@string/most_duration_outgoing</item>
-		<item>@string/most_total_duration</item>
-	</string-array>
+
 </resources>

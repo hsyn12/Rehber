@@ -59,7 +59,7 @@ public abstract class CallLogFilter extends CallList implements Filter, HaveCall
 	public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
 		
 		super.onViewCreated(view, savedInstanceState);
-		filters = getResources().getStringArray(R.array.filters);
+		filters = getResources().getStringArray(R.array.call_log_filters);
 		setTitle(getFilterName(CallLog.FILTER_ALL));
 	}
 	

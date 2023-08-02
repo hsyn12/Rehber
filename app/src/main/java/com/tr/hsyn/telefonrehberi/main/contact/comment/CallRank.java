@@ -6,7 +6,7 @@ import androidx.annotation.Nullable;
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.contactdata.Contact;
-import com.tr.hsyn.telefonrehberi.main.contact.data.History;
+import com.tr.hsyn.telefonrehberi.main.code.data.History;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -30,10 +30,6 @@ public class CallRank {
 	
 	private final String     key;
 	private final List<Call> calls;
-	private final List<Call> incomingCalls;
-	private final List<Call> outgoingCalls;
-	private final List<Call> missedCalls;
-	private final List<Call> rejectedCalls;
 	private       int        rank;
 	private       int        incomingDuration;
 	private       int        outgoingDuration;
@@ -66,11 +62,6 @@ public class CallRank {
 		this.calls = calls;
 		if (!calls.isEmpty())
 			name = calls.get(0).getName();
-		
-		incomingCalls = calls.stream().filter(c -> Lister.contains(new int[]{Call.INCOMING, Call.INCOMING_WIFI}, c.getCallType())).collect(Collectors.toList());
-		outgoingCalls = calls.stream().filter(c -> Lister.contains(new int[]{Call.OUTGOING, Call.OUTGOING_WIFI}, c.getCallType())).collect(Collectors.toList());
-		missedCalls   = calls.stream().filter(Call::isMissed).collect(Collectors.toList());
-		rejectedCalls = calls.stream().filter(Call::isRejected).collect(Collectors.toList());
 	}
 	
 	/**
@@ -78,12 +69,8 @@ public class CallRank {
 	 */
 	public CallRank() {
 		
-		key           = null;
-		calls         = null;
-		incomingCalls = null;
-		outgoingCalls = null;
-		missedCalls   = null;
-		rejectedCalls = null;
+		key   = null;
+		calls = null;
 	}
 	
 	@Override
@@ -111,22 +98,22 @@ public class CallRank {
 	
 	public List<Call> getIncomingCalls() {
 		
-		return incomingCalls;
+		return calls.stream().filter(c -> Lister.contains(new int[]{Call.INCOMING, Call.INCOMING_WIFI}, c.getCallType())).collect(Collectors.toList());
 	}
 	
 	public List<Call> getOutgoingCalls() {
 		
-		return outgoingCalls;
+		return calls.stream().filter(c -> Lister.contains(new int[]{Call.OUTGOING, Call.OUTGOING_WIFI}, c.getCallType())).collect(Collectors.toList());
 	}
 	
 	public List<Call> getMissedCalls() {
 		
-		return missedCalls;
+		return calls.stream().filter(Call::isMissed).collect(Collectors.toList());
 	}
 	
 	public List<Call> getRejectedCalls() {
 		
-		return rejectedCalls;
+		return calls.stream().filter(Call::isRejected).collect(Collectors.toList());
 	}
 	
 	/**

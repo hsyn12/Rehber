@@ -8,7 +8,7 @@ import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.telefonrehberi.main.call.data.type.FilterMostType;
 import com.tr.hsyn.telefonrehberi.main.call.data.type.FilterType;
-import com.tr.hsyn.telefonrehberi.main.contact.data.History;
+import com.tr.hsyn.telefonrehberi.main.code.data.History;
 import com.tr.hsyn.telefonrehberi.main.data.MainContacts;
 import com.tr.hsyn.time.duration.DurationGroup;
 import com.tr.hsyn.xbox.Blue;
