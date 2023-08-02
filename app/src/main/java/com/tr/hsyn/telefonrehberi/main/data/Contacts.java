@@ -20,7 +20,17 @@ import java.util.stream.Collectors;
 /**
  * Holds the contacts and provides methods for filtering, searching and analyzing.
  */
-public class MainContacts {
+public interface Contacts {
+	
+	int FILTER_ALL                     = 0;
+	int FILTER_INCOMING                = 1;
+	int FILTER_OUTGOING                = 2;
+	int FILTER_MISSED                  = 3;
+	int FILTER_REJECTED                = 4;
+	int FILTER_INCOMING_DURATION       = 5;
+	int FILTER_OUTGOING_DURATION       = 6;
+	int FILTER_OUTGOING_TOTAL_DURATION = 7;
+	
 	
 	/**
 	 * Returns the contact with the given ID.
@@ -29,7 +39,7 @@ public class MainContacts {
 	 * @return the contact or {@code null} if not found
 	 */
 	@Nullable
-	public static Contact getById(String contactId) {
+	static Contact getById(String contactId) {
 		
 		return Try.ignore(() -> getById(Long.parseLong(contactId)));
 	}
@@ -41,13 +51,13 @@ public class MainContacts {
 	 * @return the contact or {@code null} if not found
 	 */
 	@Nullable
-	public static Contact getById(long contactId) {
+	static Contact getById(long contactId) {
 		
 		return getContacts().stream().filter(c -> c.getId() == contactId).findFirst().orElse(null);
 	}
 	
 	@NotNull
-	public static List<Contact> getContacts() {
+	static List<Contact> getContacts() {
 		
 		List<Contact> contacts = Blue.getObject(Key.CONTACTS);
 		
@@ -59,9 +69,9 @@ public class MainContacts {
 	 *
 	 * @return the contacts
 	 */
-	public static @NotNull List<Contact> getWithNumber() {
+	static @NotNull List<Contact> getWithNumber() {
 		
-		return filter(MainContacts::hasNumber);
+		return filter(Contacts::hasNumber);
 	}
 	
 	/**
@@ -70,7 +80,7 @@ public class MainContacts {
 	 * @param predicate the predicate to select
 	 * @return the contacts
 	 */
-	public static @NotNull List<Contact> filter(@NotNull Predicate<Contact> predicate) {
+	static @NotNull List<Contact> filter(@NotNull Predicate<Contact> predicate) {
 		
 		return getContacts().stream()
 				.filter(predicate)
@@ -83,7 +93,7 @@ public class MainContacts {
 	 * @param contact the contact
 	 * @return {@code true} if the contact has a number
 	 */
-	public static boolean hasNumber(@NotNull Contact contact) {
+	static boolean hasNumber(@NotNull Contact contact) {
 		
 		List<String> numbers = ContactKey.getNumbers(contact);
 		

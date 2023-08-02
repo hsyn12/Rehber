@@ -27,7 +27,7 @@ import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.ShowCallsDialog;
 import com.tr.hsyn.telefonrehberi.main.code.data.History;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.ContactComment;
-import com.tr.hsyn.telefonrehberi.main.data.MainContacts;
+import com.tr.hsyn.telefonrehberi.main.data.Contacts;
 import com.tr.hsyn.text.Spanner;
 import com.tr.hsyn.text.Spans;
 import com.tr.hsyn.xlog.xlog;
@@ -664,7 +664,7 @@ public class QuantityComment implements ContactComment {
 		
 		assert callLog != null;
 		
-		List<Contact> contacts              = MainContacts.getWithNumber();
+		List<Contact> contacts              = Contacts.getWithNumber();
 		List<Contact> contactsHasNoIncoming = new ArrayList<>();
 		
 		if (contacts.isEmpty()) {

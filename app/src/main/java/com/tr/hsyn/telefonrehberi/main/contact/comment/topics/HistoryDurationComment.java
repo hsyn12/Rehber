@@ -13,7 +13,7 @@ import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationData;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationDialog;
 import com.tr.hsyn.telefonrehberi.main.code.data.History;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.ContactComment;
-import com.tr.hsyn.telefonrehberi.main.data.MainContacts;
+import com.tr.hsyn.telefonrehberi.main.data.Contacts;
 import com.tr.hsyn.text.Spanner;
 import com.tr.hsyn.time.Unit;
 import com.tr.hsyn.time.duration.DurationGroup;
@@ -84,7 +84,7 @@ public class HistoryDurationComment implements ContactComment {
 		
 		//+ The list that has the duration of each contact.
 		//+ And the order is by descending of the duration.
-		List<Map.Entry<Contact, DurationGroup>> durationList = createContactHistoryDurationList(MainContacts.getWithNumber());
+		List<Map.Entry<Contact, DurationGroup>> durationList = createContactHistoryDurationList(Contacts.getWithNumber());
 		//+ First item of this list is the winner.
 		//+ Possibly there are durations with the same or so close with each other.
 		

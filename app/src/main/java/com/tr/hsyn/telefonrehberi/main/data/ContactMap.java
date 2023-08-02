@@ -88,7 +88,7 @@ public class ContactMap {
 	 */
 	public @NotNull List<Contact> getContactsWithNumber() {
 		
-		return getContacts(MainContacts::hasNumber);
+		return getContacts(Contacts::hasNumber);
 	}
 	
 	/**

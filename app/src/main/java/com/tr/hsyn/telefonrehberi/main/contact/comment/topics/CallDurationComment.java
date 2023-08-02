@@ -15,7 +15,7 @@ import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationDialog;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.ContactComment;
 import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
-import com.tr.hsyn.telefonrehberi.main.data.MainContacts;
+import com.tr.hsyn.telefonrehberi.main.data.Contacts;
 import com.tr.hsyn.text.Spanner;
 import com.tr.hsyn.time.Time;
 import com.tr.hsyn.time.Unit;
@@ -81,7 +81,7 @@ public class CallDurationComment implements ContactComment {
 		RankMap                rankMap      = callLog.rankByDuration();
 		int                    rank         = rankMap.getRank(contact);
 		CallRank               thisRank     = rankMap.getCallRank(rank, contact);
-		List<MostDurationData> durationList = createDurationList(rankMap, MainContacts.getWithNumber());
+		List<MostDurationData> durationList = createDurationList(rankMap, Contacts.getWithNumber());
 		String                 title        = getString(R.string.title_speaking_durations);
 		String                 subtitle     = getString(R.string.size_contacts, durationList.size());
 		View.OnClickListener   listener     = view -> new MostDurationDialog(getActivity(), durationList, title, subtitle).show();
