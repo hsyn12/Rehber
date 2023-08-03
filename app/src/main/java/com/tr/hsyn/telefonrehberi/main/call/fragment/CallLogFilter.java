@@ -25,7 +25,7 @@ import com.tr.hsyn.telefonrehberi.main.call.activity.MostCallsActivity;
 import com.tr.hsyn.telefonrehberi.main.call.activity.search.CallLogSearchInfo;
 import com.tr.hsyn.telefonrehberi.main.call.cast.base.Filter;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
-import com.tr.hsyn.telefonrehberi.main.call.dialog.DialogFilters;
+import com.tr.hsyn.telefonrehberi.main.call.dialog.DialogCallFilter;
 import com.tr.hsyn.telefonrehberi.main.cast.BackPressObserver;
 import com.tr.hsyn.telefonrehberi.main.code.page.adapter.CallAdapter;
 import com.tr.hsyn.xbox.Blue;
@@ -74,7 +74,7 @@ public abstract class CallLogFilter extends CallList implements Filter, HaveCall
 		
 		assert getActivity() != null;
 		
-		DialogFilters filters = new DialogFilters(getActivity(), this::setFilter, filter, this.filters);
+		DialogCallFilter filters = new DialogCallFilter(getActivity(), this::setFilter, filter, this.filters);
 		filters.show();
 	}
 	

@@ -6,7 +6,7 @@ import android.view.View;
 
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
-import com.tr.hsyn.telefonrehberi.main.call.dialog.DialogFilters;
+import com.tr.hsyn.telefonrehberi.main.call.dialog.DialogContactFilter;
 import com.tr.hsyn.telefonrehberi.main.code.data.History;
 import com.tr.hsyn.telefonrehberi.main.data.Contacts;
 import com.tr.hsyn.use.Use;
@@ -34,6 +34,13 @@ public abstract class ContactsFilter extends FragmentPageMenu {
 	}
 	
 	@Override
+	public void setFilter(int filter) {
+		
+		this.filter = -1;
+		filter(filter);
+	}
+	
+	@Override
 	public void onViewCreated(@NotNull View view, @Nullable Bundle savedInstanceState) {
 		
 		super.onViewCreated(view, savedInstanceState);
@@ -43,10 +50,11 @@ public abstract class ContactsFilter extends FragmentPageMenu {
 	}
 	
 	@Override
-	protected void onClickFilter() {
+	protected void onClickFilterMenu() {
 		
-		DialogFilters dialog = DialogFilters.newInstance(requireActivity(), this::onFilterSelected, filter, filters);
-		dialog.show();
+		//todo check permission and call log
+		
+		showFilterDialog();
 	}
 	
 	@Override
@@ -55,12 +63,18 @@ public abstract class ContactsFilter extends FragmentPageMenu {
 		return title;
 	}
 	
+	private void showFilterDialog() {
+		
+		DialogContactFilter dialog = new DialogContactFilter(requireActivity(), this::filter, filter, filters);
+		dialog.show();
+	}
+	
 	/**
 	 * Listener for filter selection.
 	 *
 	 * @param index The index of the selected filter
 	 */
-	private void onFilterSelected(int index) {
+	public void filter(int index) {
 		
 		Use.ifNotNull(CallLog.getCallLog(), log -> {
 			

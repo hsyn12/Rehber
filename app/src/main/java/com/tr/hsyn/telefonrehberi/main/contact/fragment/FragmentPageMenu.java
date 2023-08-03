@@ -35,10 +35,12 @@ public abstract class FragmentPageMenu extends FragmentContactListEditor impleme
 	private final Gate       gateMenuSelection = AutoGate.newGate(1000L);
 	protected     PageOwner  pageOwner;
 	private       int        menuPrepared;
-	//private       Menu       menu;
 	private       MenuEditor menuEditor;
 	
-	protected abstract void onClickFilter();
+	/**
+	 * Called when the user clicks on the filter menu.
+	 */
+	protected abstract void onClickFilterMenu();
 	
 	@Nullable
 	@Override
@@ -97,7 +99,7 @@ public abstract class FragmentPageMenu extends FragmentContactListEditor impleme
 			
 			if (id == R.id.menu_filter) {
 				
-				onClickFilter();
+				onClickFilterMenu();
 				return true;
 			}
 		}

@@ -9,6 +9,7 @@ import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.message.Show;
+import com.tr.hsyn.telefonrehberi.main.data.Contacts;
 import com.tr.hsyn.time.Time;
 import com.tr.hsyn.xbox.Blue;
 import com.tr.hsyn.xlog.xlog;
@@ -114,6 +115,10 @@ public abstract class LoadingStation extends CallLogLoader {
 			
 			Blue.box(Key.CONTACTS, contacts);
 			pageContacts.setList(contacts);
+			
+			if (pageContacts.getFilter() != Contacts.FILTER_ALL)
+				pageContacts.setFilter(pageContacts.getFilter());
+			
 			xlog.d("Contacts Loaded [size=%d, loadTime=%dms]", contacts.size(), loadTime);
 		}
 		else {

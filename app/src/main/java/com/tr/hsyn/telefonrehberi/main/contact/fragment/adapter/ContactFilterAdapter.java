@@ -1,4 +1,4 @@
-package com.tr.hsyn.telefonrehberi.main.call.dialog;
+package com.tr.hsyn.telefonrehberi.main.contact.fragment.adapter;
 
 
 import android.graphics.Color;
@@ -15,19 +15,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.selection.ItemIndexListener;
 import com.tr.hsyn.telefonrehberi.R;
+import com.tr.hsyn.telefonrehberi.main.data.Contacts;
+
+import org.jetbrains.annotations.NotNull;
 
 
-/**
- * Arama kayıtları filtreleri için adapter.
- * Filtreleme seçeneklerini tutacak.
- */
-public final class AdapterCallFilter extends RecyclerView.Adapter<AdapterCallFilter.Holder> {
+public class ContactFilterAdapter extends RecyclerView.Adapter<ContactFilterAdapter.Holder> {
 	
 	private final String[]          filters;
 	private final ItemIndexListener selectListener;
 	private final int               selected;
 	
-	public AdapterCallFilter(@NonNull String[] filters, @NonNull ItemIndexListener selectListener, int selected) {
+	public ContactFilterAdapter(@NonNull String[] filters, @NonNull ItemIndexListener selectListener, int selected) {
 		
 		this.filters        = filters;
 		this.selectListener = selectListener;
@@ -35,66 +34,52 @@ public final class AdapterCallFilter extends RecyclerView.Adapter<AdapterCallFil
 	}
 	
 	@NonNull
+	@NotNull
 	@Override
-	public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+	public Holder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
 		
-		return new Holder(LayoutInflater.from(parent.getContext()).inflate(R.layout.call_filter_dialog_item, parent, false), selectListener);
+		return new Holder(LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_filter_item, parent, false), selectListener);
 	}
 	
 	@Override
-	public void onBindViewHolder(@NonNull Holder holder, int position) {
+	public void onBindViewHolder(@NonNull @NotNull ContactFilterAdapter.Holder holder, int position) {
 		
 		holder.filter.setText(filters[position]);
 		
 		switch (position) {
-			case 0:
-				holder.type.setImageDrawable(ResourcesCompat.getDrawable(holder.itemView.getResources(), R.drawable.all_calls, null));
+			case Contacts.FILTER_ALL:
+				holder.type.setImageDrawable(ResourcesCompat.getDrawable(holder.itemView.getResources(), R.drawable.groups_mycontacts, null));
 				break;
-			case 1:
-				holder.type.setImageDrawable(ResourcesCompat.getDrawable(holder.itemView.getResources(), R.drawable.incoming_call, null));
-				break;
-			case 2:
-				holder.type.setImageDrawable(ResourcesCompat.getDrawable(holder.itemView.getResources(), R.drawable.outgoing_call, null));
-				break;
-			case 3:
-				holder.type.setImageDrawable(ResourcesCompat.getDrawable(holder.itemView.getResources(), R.drawable.missed_call, null));
-				break;
-			case 4:
-				holder.type.setImageDrawable(ResourcesCompat.getDrawable(holder.itemView.getResources(), R.drawable.rejected_call, null));
-				break;
-			case 5:
-				holder.type.setImageDrawable(ResourcesCompat.getDrawable(holder.itemView.getResources(), R.drawable.no_name_calls, null));
-				break;
-			case 6:
-				holder.type.setImageDrawable(ResourcesCompat.getDrawable(holder.itemView.getResources(), R.drawable.random_call, null));
-				break;
-			case 7:
+			case Contacts.FILTER_MOST_INCOMING:
 				holder.type.setImageDrawable(ResourcesCompat.getDrawable(holder.itemView.getResources(), R.drawable.most_incomming, null));
 				break;
-			case 8:
+			case Contacts.FILTER_MOST_OUTGOING:
 				holder.type.setImageDrawable(ResourcesCompat.getDrawable(holder.itemView.getResources(), R.drawable.most_outgoing, null));
 				break;
-			case 9:
+			case Contacts.FILTER_MOST_MISSED:
 				holder.type.setImageDrawable(ResourcesCompat.getDrawable(holder.itemView.getResources(), R.drawable.most_missed, null));
 				break;
-			case 10:
+			case Contacts.FILTER_MOST_REJECTED:
 				holder.type.setImageDrawable(ResourcesCompat.getDrawable(holder.itemView.getResources(), R.drawable.most_rejected, null));
 				break;
-			case 11:
+			case Contacts.FILTER_MOST_INCOMING_DURATION:
 				holder.type.setImageDrawable(ResourcesCompat.getDrawable(holder.itemView.getResources(), R.drawable.most_incomming_duration, null));
 				break;
-			case 12:
+			case Contacts.FILTER_MOST_OUTGOING_DURATION:
 				holder.type.setImageDrawable(ResourcesCompat.getDrawable(holder.itemView.getResources(), R.drawable.most_outgoing_duration, null));
+				break;
+			case Contacts.FILTER_MOST_TOTAL_DURATION:
+				holder.type.setImageDrawable(ResourcesCompat.getDrawable(holder.itemView.getResources(), R.drawable.all_calls, null));
 				break;
 		}
 		
 		if (position == selected) {
 			
-			holder.itemView.findViewById(R.id.call_filter_inner_layout).setBackgroundColor(Colors.lighter(Color.YELLOW, 0.9f));
+			holder.itemView.findViewById(R.id.filter_layout).setBackgroundColor(Colors.lighter(Color.YELLOW, 0.9f));
 		}
 		else {
 			
-			holder.itemView.findViewById(R.id.call_filter_inner_layout).setBackgroundColor(Color.TRANSPARENT);
+			holder.itemView.findViewById(R.id.filter_layout).setBackgroundColor(Color.TRANSPARENT);
 		}
 	}
 	
@@ -104,12 +89,12 @@ public final class AdapterCallFilter extends RecyclerView.Adapter<AdapterCallFil
 		return filters.length;
 	}
 	
-	protected static final class Holder extends RecyclerView.ViewHolder {
+	public static final class Holder extends RecyclerView.ViewHolder {
 		
 		public TextView  filter;
 		public ImageView type;
 		
-		public Holder(@NonNull View itemView, @NonNull ItemIndexListener selectListener) {
+		public Holder(@NonNull @NotNull View itemView, @NonNull ItemIndexListener selectListener) {
 			
 			super(itemView);
 			
@@ -120,4 +105,5 @@ public final class AdapterCallFilter extends RecyclerView.Adapter<AdapterCallFil
 			itemView.setOnClickListener(v -> selectListener.onItemIndex(getAdapterPosition()));
 		}
 	}
+	
 }

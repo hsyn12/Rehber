@@ -33,6 +33,8 @@ public abstract class FragmentPageList extends FragmentPageColor implements IHav
 	 */
 	protected abstract int getFilter();
 	
+	public abstract void setFilter(int filter);
+	
 	@Override
 	public void onViewCreated(@NonNull @NotNull View view, @Nullable Bundle savedInstanceState) {
 		
