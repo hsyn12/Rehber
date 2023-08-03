@@ -6,7 +6,6 @@ import androidx.annotation.Nullable;
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.contactdata.Contact;
-import com.tr.hsyn.telefonrehberi.main.code.data.History;
 
 import org.jetbrains.annotations.NotNull;
 

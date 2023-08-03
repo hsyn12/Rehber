@@ -1,6 +1,8 @@
 package com.tr.hsyn.telefonrehberi.main.code.data;
 
 
+import android.annotation.SuppressLint;
+
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.calldata.CallType;
 import com.tr.hsyn.collection.Lister;
@@ -16,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -24,15 +27,58 @@ import java.util.stream.Collectors;
  * Defines the history of a contact.
  * History means all calls of a contact.
  */
-public interface History {
+public final class History {
+	
+	private final Contact    contact;
+	private final List<Call> calls;
+	private final List<Call> incoming;
+	private final List<Call> outgoing;
+	private final List<Call> missed;
+	private final List<Call> rejected;
+	private final int        incomingDuration;
+	private final int        outgoingDuration;
+	
+	public History(@NotNull Contact contact, @NotNull List<Call> calls) {
+		
+		this.contact  = contact;
+		this.calls    = calls;
+		this.incoming = calls.stream().filter(c -> c.getCallType() == Call.INCOMING || c.getCallType() == Call.INCOMING_WIFI).collect(Collectors.toList());
+		this.outgoing = calls.stream().filter(c -> c.getCallType() == Call.OUTGOING || c.getCallType() == Call.OUTGOING_WIFI).collect(Collectors.toList());
+		this.missed   = calls.stream().filter(c -> c.getCallType() == Call.MISSED).collect(Collectors.toList());
+		this.rejected = calls.stream().filter(c -> c.getCallType() == Call.REJECTED).collect(Collectors.toList());
+		
+		this.incomingDuration = (int) incoming.stream().mapToLong(Call::getDuration).sum();
+		this.outgoingDuration = (int) outgoing.stream().filter(Call::isSpoken).mapToLong(Call::getDuration).sum();
+	}
+	
+	@Override
+	public int hashCode() {
+		
+		return Objects.hash(contact.getContactId());
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		
+		return obj instanceof Contact o && contact.getContactId() == o.getContactId();
+	}
+	
+	@SuppressLint("DefaultLocale")
+	@Override
+	public @NotNull String toString() {
+		
+		return String.format("History{contact=%s, calls=%d}", contact, calls.size());
+	}
 	
 	/**
 	 * Returns the contact that this history belongs to.
 	 *
 	 * @return the contact
 	 */
-	@NotNull
-	Contact getContact();
+	public @NotNull Contact getContact() {
+		
+		return contact;
+	}
 	
 	/**
 	 * Returns all calls that between the contact and the user.
@@ -40,56 +86,80 @@ public interface History {
 	 * @return the calls
 	 */
 	@NotNull
-	List<Call> getCalls();
+	public List<Call> getCalls() {
+		
+		return calls;
+	}
 	
 	/**
 	 * Returns the incoming calls of the contact that related to this history object.
 	 *
 	 * @return the incoming calls
 	 */
-	List<Call> getIncomingCalls();
+	public List<Call> getIncomingCalls() {
+		
+		return incoming;
+	}
 	
 	/**
 	 * Returns the outgoing calls of the contact that related to this history object.
 	 *
 	 * @return the outgoing calls
 	 */
-	List<Call> getOutgoingCalls();
+	public List<Call> getOutgoingCalls() {
+		
+		return outgoing;
+	}
 	
 	/**
 	 * Returns the missed calls of the contact that related to this history object.
 	 *
 	 * @return the missed calls
 	 */
-	List<Call> getMissedCalls();
+	public List<Call> getMissedCalls() {
+		
+		return missed;
+	}
 	
 	/**
 	 * Returns the rejected calls of the contact that related to this history object.
 	 *
 	 * @return the rejected calls
 	 */
-	List<Call> getRejectedCalls();
+	public List<Call> getRejectedCalls() {
+		
+		return rejected;
+	}
 	
 	/**
 	 * Returns the total incoming call duration.
 	 *
 	 * @return the duration
 	 */
-	int getIncomingDuration();
+	public int getIncomingDuration() {
+		
+		return incomingDuration;
+	}
 	
 	/**
 	 * Returns the total outgoing call duration.
 	 *
 	 * @return the duration
 	 */
-	int getOutgoingDuration();
+	public int getOutgoingDuration() {
+		
+		return outgoingDuration;
+	}
 	
 	/**
 	 * Returns the total duration.
 	 *
 	 * @return the duration
 	 */
-	int getTotalDuration();
+	public int getTotalDuration() {
+		
+		return incomingDuration + outgoingDuration;
+	}
 	
 	/**
 	 * Returns the call at the given index
@@ -97,7 +167,7 @@ public interface History {
 	 * @param index the index
 	 * @return the call
 	 */
-	default Call get(int index) {
+	public Call get(int index) {
 		
 		return getCalls().get(index);
 	}
@@ -107,7 +177,7 @@ public interface History {
 	 *
 	 * @return the {@link DurationGroup}
 	 */
-	default DurationGroup getHistoryDuration() {
+	public DurationGroup getHistoryDuration() {
 		
 		if (size() > 1) {
 			
@@ -125,7 +195,7 @@ public interface History {
 	 *
 	 * @return the size of the call history
 	 */
-	default int size() {
+	public int size() {
 		
 		return getCalls().size();
 	}
@@ -135,7 +205,7 @@ public interface History {
 	 *
 	 * @return the first call
 	 */
-	default Call getFirstCall() {
+	public Call getFirstCall() {
 		
 		return getCalls().get(size() - 1);
 	}
@@ -145,7 +215,7 @@ public interface History {
 	 *
 	 * @return the most recent call
 	 */
-	default Call getLastCall() {
+	public Call getLastCall() {
 		
 		return getCalls().get(0);
 	}
@@ -155,7 +225,7 @@ public interface History {
 	 *
 	 * @param comparator the comparator
 	 */
-	default void sort(Comparator<Call> comparator) {
+	public void sort(Comparator<Call> comparator) {
 		
 		getCalls().sort(comparator);
 	}
@@ -166,7 +236,7 @@ public interface History {
 	 * @param types the call types
 	 * @return the calls
 	 */
-	default @NotNull List<Call> getCalls(int @NotNull ... types) {
+	public @NotNull List<Call> getCalls(int @NotNull ... types) {
 		
 		return getCalls().stream().filter(c -> Lister.IntArray.contains(types, c.getCallType())).collect(Collectors.toList());
 	}
@@ -177,7 +247,7 @@ public interface History {
 	 * @param predicate the predicate
 	 * @return the calls
 	 */
-	default @NotNull List<Call> getCalls(@NotNull Predicate<Call> predicate) {
+	public @NotNull List<Call> getCalls(@NotNull Predicate<Call> predicate) {
 		
 		return getCalls().stream().filter(predicate).collect(Collectors.toList());
 	}
@@ -188,7 +258,7 @@ public interface History {
 	 * @param callType the call type
 	 * @return the size
 	 */
-	default int size(@CallType int callType) {
+	public int size(@CallType int callType) {
 		
 		int[] types = CallLog.getCallTypes(callType);
 		
@@ -205,7 +275,7 @@ public interface History {
 	 *
 	 * @return {@code true} if the call history is empty
 	 */
-	default boolean isEmpty() {
+	public boolean isEmpty() {
 		
 		return getCalls().isEmpty();
 	}
@@ -216,7 +286,7 @@ public interface History {
 	 * @param contact the contact
 	 * @return the history
 	 */
-	static History getHistory(@NotNull Contact contact) {
+	public static History getHistory(@NotNull Contact contact) {
 		
 		CallLog collection = Blue.getObject(Key.CALL_LOG);
 		
@@ -234,9 +304,9 @@ public interface History {
 	 * @return the history for the given contact
 	 */
 	@NotNull
-	static History ofEmpty(@NotNull Contact contact) {
+	public static History ofEmpty(@NotNull Contact contact) {
 		
-		return new HistoryImpl(contact, new ArrayList<>(0));
+		return new History(contact, new ArrayList<>(0));
 	}
 	
 	/**
@@ -245,9 +315,9 @@ public interface History {
 	 * @param contact the contact used by this history
 	 * @return the history for the given contact
 	 */
-	static @NotNull History of(@NotNull Contact contact, @NotNull List<Call> calls) {
+	public static @NotNull History of(@NotNull Contact contact, @NotNull List<Call> calls) {
 		
-		return new HistoryImpl(contact, calls);
+		return new History(contact, calls);
 	}
 	
 	/**
@@ -257,7 +327,7 @@ public interface History {
 	 * @param types the call types
 	 * @return the calls
 	 */
-	static @NotNull List<Call> getCalls(@NotNull List<Call> calls, int @NotNull ... types) {
+	public static @NotNull List<Call> getCalls(@NotNull List<Call> calls, int @NotNull ... types) {
 		
 		List<Call> _calls = new ArrayList<>();
 		
@@ -278,7 +348,7 @@ public interface History {
 	/**
 	 * Comparator for the history
 	 */
-	enum Comparing implements Comparator<History> {
+	public enum Comparing implements Comparator<History> {
 		
 		/**
 		 * Compares the history with the incoming calls size for descending order.
@@ -293,19 +363,19 @@ public interface History {
 		 */
 		MISSED,
 		/**
-		 *  Compares the history with the rejected calls size for descending order.
+		 * Compares the history with the rejected calls size for descending order.
 		 */
 		REJECTED,
 		/**
-		 *  Compares the history with the total incoming duration for descending order.
+		 * Compares the history with the total incoming duration for descending order.
 		 */
 		INCOMING_DURATION,
 		/**
-		 *  Compares the history with the total outgoing duration for descending order.
+		 * Compares the history with the total outgoing duration for descending order.
 		 */
 		OUTGOING_DURATION,
 		/**
-		 *  Compares the history with the total duration for descending order.
+		 * Compares the history with the total duration for descending order.
 		 */
 		TOTAL_DURATION;
 		
@@ -329,5 +399,4 @@ public interface History {
 			throw new IllegalArgumentException("Impossible value: " + this);
 		}
 	}
-	
 }
