@@ -74,15 +74,18 @@ public abstract class ContactsFilter extends FragmentPageMenu {
 				setList(Contacts.getContacts());
 			}
 			else {
-				//@start region=filter
 				List<History> historyList = log.getHistory();
 				sortHistoryList(historyList);
 				setHistoryList(historyList);
-				//@end region=filter
 			}
 		}).isNotUsed(() -> xlog.i("CallLog not found"));
 	}
 	
+	/**
+	 * Sorts the history list according to the filter.
+	 *
+	 * @param historyList The history list
+	 */
 	private void sortHistoryList(List<History> historyList) {
 		
 		switch (filter) {

@@ -47,67 +47,43 @@ public final class AdapterCallFilter extends RecyclerView.Adapter<AdapterCallFil
 		holder.filter.setText(filters[position]);
 		
 		switch (position) {
-			
 			case 0:
-				
 				holder.type.setImageDrawable(ResourcesCompat.getDrawable(holder.itemView.getResources(), R.drawable.all_calls, null));
 				break;
-			
 			case 1:
-				
 				holder.type.setImageDrawable(ResourcesCompat.getDrawable(holder.itemView.getResources(), R.drawable.incoming_call, null));
 				break;
-			
 			case 2:
-				
 				holder.type.setImageDrawable(ResourcesCompat.getDrawable(holder.itemView.getResources(), R.drawable.outgoing_call, null));
 				break;
-			
 			case 3:
-				
 				holder.type.setImageDrawable(ResourcesCompat.getDrawable(holder.itemView.getResources(), R.drawable.missed_call, null));
 				break;
-			
 			case 4:
-				
 				holder.type.setImageDrawable(ResourcesCompat.getDrawable(holder.itemView.getResources(), R.drawable.rejected_call, null));
 				break;
-			
 			case 5:
-				
 				holder.type.setImageDrawable(ResourcesCompat.getDrawable(holder.itemView.getResources(), R.drawable.no_name_calls, null));
 				break;
 			case 6:
-				
 				holder.type.setImageDrawable(ResourcesCompat.getDrawable(holder.itemView.getResources(), R.drawable.random_call, null));
 				break;
 			case 7:
-				
 				holder.type.setImageDrawable(ResourcesCompat.getDrawable(holder.itemView.getResources(), R.drawable.most_incomming, null));
 				break;
-			
 			case 8:
-				
 				holder.type.setImageDrawable(ResourcesCompat.getDrawable(holder.itemView.getResources(), R.drawable.most_outgoing, null));
 				break;
-			
 			case 9:
-				
 				holder.type.setImageDrawable(ResourcesCompat.getDrawable(holder.itemView.getResources(), R.drawable.most_missed, null));
 				break;
-			
 			case 10:
-				
 				holder.type.setImageDrawable(ResourcesCompat.getDrawable(holder.itemView.getResources(), R.drawable.most_rejected, null));
 				break;
-			
 			case 11:
-				
 				holder.type.setImageDrawable(ResourcesCompat.getDrawable(holder.itemView.getResources(), R.drawable.most_incomming_duration, null));
 				break;
-			
 			case 12:
-				
 				holder.type.setImageDrawable(ResourcesCompat.getDrawable(holder.itemView.getResources(), R.drawable.most_outgoing_duration, null));
 				break;
 		}
