@@ -16,6 +16,7 @@ import com.tr.hsyn.telefonrehberi.main.call.data.Key;
 import com.tr.hsyn.telefonrehberi.main.call.data.RankMap;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationData;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationDialog;
+import com.tr.hsyn.telefonrehberi.main.code.data.History;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.ContactComment;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.commentator.ContactCommentStore;
