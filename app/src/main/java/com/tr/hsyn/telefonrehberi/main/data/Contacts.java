@@ -22,14 +22,14 @@ import java.util.stream.Collectors;
  */
 public interface Contacts {
 	
-	int FILTER_ALL                     = 0;
-	int FILTER_INCOMING                = 1;
-	int FILTER_OUTGOING                = 2;
-	int FILTER_MISSED                  = 3;
-	int FILTER_REJECTED                = 4;
-	int FILTER_INCOMING_DURATION       = 5;
-	int FILTER_OUTGOING_DURATION       = 6;
-	int FILTER_OUTGOING_TOTAL_DURATION = 7;
+	int FILTER_ALL                    = 0;
+	int FILTER_MOST_INCOMING          = 1;
+	int FILTER_MOST_OUTGOING          = 2;
+	int FILTER_MOST_MISSED            = 3;
+	int FILTER_MOST_REJECTED          = 4;
+	int FILTER_MOST_INCOMING_DURATION = 5;
+	int FILTER_MOST_OUTGOING_DURATION = 6;
+	int FILTER_MOST_TOTAL_DURATION    = 7;
 	
 	
 	/**

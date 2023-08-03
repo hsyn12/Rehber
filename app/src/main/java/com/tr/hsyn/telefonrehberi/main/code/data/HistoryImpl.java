@@ -13,9 +13,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 
-/**
- * @inheritDoc
- */
 public final class HistoryImpl implements History {
 	
 	private final Contact    contact;
@@ -40,18 +37,12 @@ public final class HistoryImpl implements History {
 		this.outgoingDuration = (int) outgoing.stream().filter(Call::isSpoken).mapToLong(Call::getDuration).sum();
 	}
 	
-	/**
-	 * @inheritDoc
-	 */
 	@Override
 	public @NotNull Contact getContact() {
 		
 		return contact;
 	}
 	
-	/**
-	 * @inheritDoc
-	 */
 	@Override
 	@NotNull
 	public List<Call> getCalls() {
@@ -104,25 +95,19 @@ public final class HistoryImpl implements History {
 	@Override
 	public int hashCode() {
 		
-		return Objects.hash(contact, calls);
+		return Objects.hash(contact.getContactId());
 	}
 	
 	@Override
 	public boolean equals(Object obj) {
 		
-		if (obj == this) return true;
-		if (obj == null || obj.getClass() != this.getClass()) return false;
-		var that = (HistoryImpl) obj;
-		return Objects.equals(this.contact, that.contact) &&
-		       Objects.equals(this.calls, that.calls);
+		return obj instanceof Contact o && contact.getContactId() == o.getContactId();
 	}
 	
 	@SuppressLint("DefaultLocale")
-	@NotNull
 	@Override
-	public String toString() {
+	public @NotNull String toString() {
 		
-		return String.format("History{calls=%d}", calls.size());
+		return String.format("History{contact=%s, calls=%d}", contact, calls.size());
 	}
-	
 }

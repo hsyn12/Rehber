@@ -74,10 +74,11 @@ public abstract class ContactsFilter extends FragmentPageMenu {
 				setList(Contacts.getContacts());
 			}
 			else {
-				
+				//@start region=filter
 				List<History> historyList = log.getHistory();
 				sortHistoryList(historyList);
 				setHistoryList(historyList);
+				//@end region=filter
 			}
 		}).isNotUsed(() -> xlog.i("CallLog not found"));
 	}
@@ -86,25 +87,25 @@ public abstract class ContactsFilter extends FragmentPageMenu {
 		
 		switch (filter) {
 			
-			case CallLog.FILTER_MOST_INCOMING:
+			case Contacts.FILTER_MOST_INCOMING:
 				historyList.sort(History.Comparing.INCOMING);
 				break;
-			case CallLog.FILTER_MOST_OUTGOING:
+			case Contacts.FILTER_MOST_OUTGOING:
 				historyList.sort(History.Comparing.OUTGOING);
 				break;
-			case CallLog.FILTER_MOST_MISSED:
+			case Contacts.FILTER_MOST_MISSED:
 				historyList.sort(History.Comparing.MISSED);
 				break;
-			case CallLog.FILTER_MOST_REJECTED:
+			case Contacts.FILTER_MOST_REJECTED:
 				historyList.sort(History.Comparing.REJECTED);
 				break;
-			case CallLog.FILTER_MOST_SPEAKING:
+			case Contacts.FILTER_MOST_INCOMING_DURATION:
 				historyList.sort(History.Comparing.INCOMING_DURATION);
 				break;
-			case CallLog.FILTER_MOST_TALKING:
+			case Contacts.FILTER_MOST_OUTGOING_DURATION:
 				historyList.sort(History.Comparing.OUTGOING_DURATION);
 				break;
-			case CallLog.FILTER_MOST_TOTAL_DURATION:
+			case Contacts.FILTER_MOST_TOTAL_DURATION:
 				historyList.sort(History.Comparing.TOTAL_DURATION);
 				break;
 			default: throw new IllegalArgumentException("Unknown filter : " + filter);
