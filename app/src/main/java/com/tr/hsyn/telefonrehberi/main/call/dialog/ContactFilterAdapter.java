@@ -1,4 +1,4 @@
-package com.tr.hsyn.telefonrehberi.main.contact.fragment.adapter;
+package com.tr.hsyn.telefonrehberi.main.call.dialog;
 
 
 import android.graphics.Color;

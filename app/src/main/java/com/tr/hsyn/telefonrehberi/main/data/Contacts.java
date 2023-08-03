@@ -20,17 +20,42 @@ import java.util.stream.Collectors;
 /**
  * Holds the contacts and provides methods for filtering, searching and analyzing.
  */
-public interface Contacts {
+public final class Contacts {
 	
-	int FILTER_ALL                    = 0;
-	int FILTER_MOST_INCOMING          = 1;
-	int FILTER_MOST_OUTGOING          = 2;
-	int FILTER_MOST_MISSED            = 3;
-	int FILTER_MOST_REJECTED          = 4;
-	int FILTER_MOST_INCOMING_DURATION = 5;
-	int FILTER_MOST_OUTGOING_DURATION = 6;
-	int FILTER_MOST_TOTAL_DURATION    = 7;
+	/**
+	 * The filter for all contacts
+	 */
+	public static final int FILTER_ALL                    = 0;
+	/**
+	 * The filter for the contacts that have the most incoming calls
+	 */
+	public static final int FILTER_MOST_INCOMING          = 1;
+	/**
+	 * The filter for the contacts that have the most outgoing calls
+	 */
+	public static final int FILTER_MOST_OUTGOING          = 2;
+	/**
+	 * The filter for the contacts that have the most missed calls
+	 */
+	public static final int FILTER_MOST_MISSED            = 3;
+	/**
+	 * The filter for the contacts that have the most rejected calls
+	 */
+	public static final int FILTER_MOST_REJECTED          = 4;
+	/**
+	 * The filter for the contacts that have the most incoming duration
+	 */
+	public static final int FILTER_MOST_INCOMING_DURATION = 5;
+	/**
+	 * The filter for the contacts that have the most outgoing duration
+	 */
+	public static final int FILTER_MOST_OUTGOING_DURATION = 6;
+	/**
+	 * The filter for the contacts that have the most total duration
+	 */
+	public static final int FILTER_MOST_TOTAL_DURATION    = 7;
 	
+	private static ContactMap contactsMap;
 	
 	/**
 	 * Returns the contact with the given ID.
@@ -39,7 +64,7 @@ public interface Contacts {
 	 * @return the contact or {@code null} if not found
 	 */
 	@Nullable
-	static Contact getById(String contactId) {
+	public static Contact getById(String contactId) {
 		
 		return Try.ignore(() -> getById(Long.parseLong(contactId)));
 	}
@@ -51,17 +76,37 @@ public interface Contacts {
 	 * @return the contact or {@code null} if not found
 	 */
 	@Nullable
-	static Contact getById(long contactId) {
+	public static Contact getById(long contactId) {
+		
+		if (contactsMap != null) return contactsMap.get(contactId);
 		
 		return getContacts().stream().filter(c -> c.getId() == contactId).findFirst().orElse(null);
 	}
 	
-	@NotNull
-	static List<Contact> getContacts() {
+	/**
+	 * Returns the contacts.
+	 *
+	 * @return the contacts
+	 */
+	public static @NotNull List<Contact> getContacts() {
 		
 		List<Contact> contacts = Blue.getObject(Key.CONTACTS);
 		
+		if (contactsMap == null && contacts != null) {
+			
+			contactsMap = new ContactMap(contacts);
+			return contacts;
+		}
+		
 		return contacts != null ? contacts : new ArrayList<>(0);
+	}
+	
+	/**
+	 * @return {@code true} if the contacts are loaded
+	 */
+	public static boolean isContactsLoaded() {
+		
+		return Blue.getObject(Key.CONTACTS) != null;
 	}
 	
 	/**
@@ -69,7 +114,7 @@ public interface Contacts {
 	 *
 	 * @return the contacts
 	 */
-	static @NotNull List<Contact> getWithNumber() {
+	public static @NotNull List<Contact> getWithNumber() {
 		
 		return filter(Contacts::hasNumber);
 	}
@@ -80,7 +125,7 @@ public interface Contacts {
 	 * @param predicate the predicate to select
 	 * @return the contacts
 	 */
-	static @NotNull List<Contact> filter(@NotNull Predicate<Contact> predicate) {
+	public static @NotNull List<Contact> filter(@NotNull Predicate<Contact> predicate) {
 		
 		return getContacts().stream()
 				.filter(predicate)
@@ -93,7 +138,7 @@ public interface Contacts {
 	 * @param contact the contact
 	 * @return {@code true} if the contact has a number
 	 */
-	static boolean hasNumber(@NotNull Contact contact) {
+	public static boolean hasNumber(@NotNull Contact contact) {
 		
 		List<String> numbers = ContactKey.getNumbers(contact);
 		
@@ -105,6 +150,4 @@ public interface Contacts {
 		
 		return false;
 	}
-	
-	
 }

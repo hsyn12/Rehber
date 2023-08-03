@@ -10,7 +10,6 @@ import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.selection.ItemIndexListener;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.Dialog;
-import com.tr.hsyn.telefonrehberi.main.contact.fragment.adapter.ContactFilterAdapter;
 
 import org.jetbrains.annotations.NotNull;
 

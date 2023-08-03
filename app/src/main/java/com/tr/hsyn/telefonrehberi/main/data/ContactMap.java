@@ -10,7 +10,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 
@@ -35,7 +34,7 @@ public class ContactMap {
 	}
 	
 	/**
-	 * @return all contacts that creating this object by.
+	 * @return a new list consists of the all contacts
 	 */
 	public List<Contact> getContacts() {
 		
@@ -49,7 +48,7 @@ public class ContactMap {
 	 * @return the contact or {@code null} if not found
 	 */
 	@Nullable
-	public Contact getContact(String contactId) {
+	public Contact get(String contactId) {
 		
 		return Try.ignore(() -> contacts.get(Long.parseLong(contactId)));
 	}
@@ -61,34 +60,9 @@ public class ContactMap {
 	 * @return the contact or {@code null} if not found
 	 */
 	@Nullable
-	public Contact getContact(long contactId) {
+	public Contact get(long contactId) {
 		
 		return contacts.get(contactId);
-	}
-	
-	/**
-	 * Returns the contacts that match the predicate.
-	 *
-	 * @param predicate the predicate to select.
-	 * @return the selected contacts or all contacts if predicate is {@code null}.
-	 */
-	public @NotNull List<Contact> getContacts(@Nullable Predicate<Contact> predicate) {
-		
-		if (predicate == null) return getContacts();
-		
-		return getContacts().stream()
-				.filter(predicate)
-				.collect(Collectors.toList());
-	}
-	
-	/**
-	 * Returns the contacts that have any real phone number.
-	 *
-	 * @return the contacts with number
-	 */
-	public @NotNull List<Contact> getContactsWithNumber() {
-		
-		return getContacts(Contacts::hasNumber);
 	}
 	
 	/**

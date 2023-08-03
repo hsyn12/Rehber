@@ -3,5 +3,6 @@
 	<string name="app_name">Contacts</string>
 	<string name="call_log_in_progress">Call log loading is in progress</string>
 	<string name="call_log_not_loaded">Call log is not loaded yet</string>
+	<string name="contacts_not_loaded">Contacts is not loaded</string>
 
 </resources>

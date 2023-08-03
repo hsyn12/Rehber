@@ -39,7 +39,7 @@ public class Rehber extends Application {
 		//- Bulutların üstünde
 		Blue.box(Key.CONTEXT, getApplicationContext());
 		
-		//- Have a nice day
+		//+ Have a nice day
 		xlog.w(DayTime.toString(this));
 		
 		com.tr.hsyn.colors.Rehber.Color.init(this);

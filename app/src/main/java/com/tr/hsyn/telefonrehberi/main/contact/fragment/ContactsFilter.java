@@ -56,8 +56,12 @@ public abstract class ContactsFilter extends FragmentPageMenu implements Permiss
 		
 		CallLog log = CallLog.getCallLog();
 		
-		if (log != null) showFilterDialog();
-		else Show.tost(requireActivity(), getString(R.string.call_log_not_loaded));
+		if (log != null && Contacts.isContactsLoaded()) showFilterDialog();
+		else {
+			
+			if (!Contacts.isContactsLoaded()) Show.tost(requireActivity(), getString(R.string.contacts_not_loaded));
+			else if (log == null) Show.tost(requireActivity(), getString(R.string.call_log_not_loaded));
+		}
 	}
 	
 	@Override
