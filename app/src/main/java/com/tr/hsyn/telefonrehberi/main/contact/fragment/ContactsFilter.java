@@ -4,10 +4,6 @@ package com.tr.hsyn.telefonrehberi.main.contact.fragment;
 import android.os.Bundle;
 import android.view.View;
 
-import androidx.activity.result.ActivityResultCallback;
-
-import com.tr.hsyn.key.Key;
-import com.tr.hsyn.launcher.RequestMultiplePermissionsLauncher;
 import com.tr.hsyn.message.Show;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
@@ -16,15 +12,12 @@ import com.tr.hsyn.telefonrehberi.main.cast.PermissionHolder;
 import com.tr.hsyn.telefonrehberi.main.code.data.History;
 import com.tr.hsyn.telefonrehberi.main.data.Contacts;
 import com.tr.hsyn.use.Use;
-import com.tr.hsyn.xbox.Blue;
 import com.tr.hsyn.xlog.xlog;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -61,40 +54,10 @@ public abstract class ContactsFilter extends FragmentPageMenu implements Permiss
 	@Override
 	protected void onClickFilterMenu() {
 		
-		//todo check permission and call log
 		CallLog log = CallLog.getCallLog();
 		
-		if (log != null) {
-			showFilterDialog();
-		}
-		else {
-			
-			if (hasCallLogPermissions()) {
-				
-				if (Blue.getBool(Key.CALL_LOG_LOADING)) {
-					Show.snake(requireActivity(), getString(R.string.call_log_in_progress));
-				}
-				else {
-					Show.snake(requireActivity(), getString(R.string.call_log_not_loaded));
-				}
-			}
-			else {
-				
-				new RequestMultiplePermissionsLauncher(requireActivity()).launch(CALL_LOG_PERMISSIONS, (ActivityResultCallback<Map<String, Boolean>>) r -> {
-					
-					var f = r.values().stream().anyMatch(b -> !b);
-					
-					if (f) {
-						xlog.i("Permission denied : %s", Arrays.toString(r.values().toArray()));
-					}
-					else {
-						
-					}
-				});
-			}
-		}
-		
-		
+		if (log != null) showFilterDialog();
+		else Show.tost(requireActivity(), getString(R.string.call_log_not_loaded));
 	}
 	
 	@Override

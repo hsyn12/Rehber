@@ -179,7 +179,6 @@ dependencies {
 	implementation project(path: ':datakey')
 	implementation project(path: ':contactdata')
 	implementation project(path: ':tryme')
-	implementation project(path: ':objext')
 	annotationProcessor project(path: ':warnerbros')
 	//endregion
 

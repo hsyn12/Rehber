@@ -4,7 +4,7 @@ package com.tr.hsyn.objext;
 import org.jetbrains.annotations.Nullable;
 
 
-public class Obje<T> implements Objex<T> {
+class Obje<T> implements Objex<T> {
 	
 	private ChangeListener<T> listener;
 	private T                 object;

@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.concurrent.atomic.AtomicReference;
 
 
-public class SafeObje<T> implements SafeObjex<T> {
+class SafeObje<T> implements SafeObjex<T> {
 	
 	private final AtomicReference<T> object = new AtomicReference<>();
 	private       ChangeListener<T>  listener;

@@ -3,5 +3,5 @@
 
 	<string name="app_name">Rehber</string>
 	<string name="call_log_in_progress">Yükleme işlemi devam ediyor</string>
-	<string name="call_log_not_loaded">Arama kayıtları henüz yüklenmiş değil</string>
+	<string name="call_log_not_loaded">Arama kayıtları henüz yüklenmedi</string>
 </resources>
