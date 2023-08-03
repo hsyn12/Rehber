@@ -39,10 +39,11 @@ public class Key extends AtomImpl {
 	 */
 	public static final Key CALL_LOG               = Key.of(20, "Call Log");
 	/**
-	 * Contacts object that has the all contacts.
+	 * Contacts loading state, true-false.
+	 * If true, contacts are loading.
 	 */
-	public static final Key CONTACTS_RANK          = Key.of(21, "Contacts Rank");
-	public static final Key CALL_LOG_RANK          = Key.of(22, "Call Log Rank");
+	public static final Key CONTACTS_LOADING       = Key.of(21, "Contacts Loading");
+	public static final Key CALL_LOG_LOADING       = Key.of(21, "CallLog Loading");
 	
 	public Key(long id, @NotNull String name) {
 		

@@ -212,6 +212,18 @@ public final class Blue {
 	public static <T> T getObject(@NotNull Key key) {return hotel.room(key);}
 	
 	/**
+	 * Gets the boolean value of the specified key.
+	 *
+	 * @param key the key
+	 * @return {@code true} if the value is not null and {@code true}
+	 */
+	public static boolean getBool(@NotNull Key key) {
+		
+		Boolean r = getObject(key);
+		return r != null && r;
+	}
+	
+	/**
 	 * Verilen anahtar ile nesneyi kaydeder.<br>
 	 * Ancak bunun için nesnenin bekleyen bir <u>takipçisi olmamalı</u>.
 	 * Eğer bir takipçi varsa, nesne kaydedilmez,

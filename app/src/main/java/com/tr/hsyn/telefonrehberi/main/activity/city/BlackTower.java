@@ -201,6 +201,8 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 			
 			CallLog.createGlobal(calls);
 		}
+		
+		Blue.remove(Key.CALL_LOG_LOADING);
 	}
 	
 	@Override
@@ -212,6 +214,8 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 			
 			CallLog.createGlobal(Over.CallLog.Calls.getCalls());
 		}
+		
+		Blue.remove(Key.CONTACTS_LOADING);
 	}
 	
 	@Override

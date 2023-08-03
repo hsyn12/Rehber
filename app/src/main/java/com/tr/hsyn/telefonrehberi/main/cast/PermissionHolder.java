@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.tr.hsyn.xlog.xlog;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,6 +51,7 @@ public interface PermissionHolder extends ActivityCompat.OnRequestPermissionsRes
 		return !((Activity) this).shouldShowRequestPermissionRationale(permission);
 	}
 	
+	
 	/**
 	 * @return Rehber için okuma-yazma ve hesaplara erişim izni varsa <code>true</code>
 	 */
@@ -85,7 +88,9 @@ public interface PermissionHolder extends ActivityCompat.OnRequestPermissionsRes
 	 */
 	default void askPermissions(int requestCode, String... permissions) {
 		
-		((Activity) this).requestPermissions(permissions, requestCode);
+		if (this instanceof Activity a)
+			a.requestPermissions(permissions, requestCode);
+		else xlog.d("PermissionHolder askPermissions() called in Fragment. No way");
 	}
 	
 	default void onPermissionResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

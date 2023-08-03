@@ -4,10 +4,12 @@ package com.tr.hsyn.telefonrehberi.main.activity.city.station;
 import androidx.annotation.CallSuper;
 
 import com.tr.hsyn.contactdata.Contact;
+import com.tr.hsyn.key.Key;
 import com.tr.hsyn.telefonrehberi.app.UIThread;
 import com.tr.hsyn.telefonrehberi.main.activity.city.BigBank;
 import com.tr.hsyn.time.Time;
 import com.tr.hsyn.treadedwork.Threaded;
+import com.tr.hsyn.xbox.Blue;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -39,6 +41,7 @@ public abstract class ContactsLoader extends BigBank implements Threaded, UIThre
 	@CallSuper
 	protected void loadContacts() {
 		
+		Blue.box(Key.CONTACTS_LOADING, true);
 		contactsLoadStartTime = Time.now();
 		
 		completeWork(() -> getContactsLoader().load())

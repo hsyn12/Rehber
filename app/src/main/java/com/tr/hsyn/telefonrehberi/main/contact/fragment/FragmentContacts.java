@@ -7,6 +7,8 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.util.Map;
+
 
 /**
  * Contacts page.
@@ -50,5 +52,10 @@ public class FragmentContacts extends ContactsFilter {
 		
 		adapter.notifyItemChanged(index);
 		super.onSwipe(index);
+	}
+	
+	@Override
+	public void onPermissionsResult(int requestCode, Map<String, Boolean> result) {
+		// noop
 	}
 }
