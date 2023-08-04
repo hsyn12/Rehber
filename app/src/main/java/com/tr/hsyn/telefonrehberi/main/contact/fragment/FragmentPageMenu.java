@@ -18,16 +18,17 @@ import com.tr.hsyn.bungee.Bungee;
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.gate.AutoGate;
 import com.tr.hsyn.gate.Gate;
-import com.tr.hsyn.key.Key;
 import com.tr.hsyn.message.Show;
 import com.tr.hsyn.page.MenuShower;
 import com.tr.hsyn.telefonrehberi.R;
+import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
 import com.tr.hsyn.telefonrehberi.main.cast.PageOwner;
 import com.tr.hsyn.telefonrehberi.main.contact.activity.search.ContactSearch;
+import com.tr.hsyn.telefonrehberi.main.data.ContactLog;
 import com.tr.hsyn.telefonrehberi.main.dev.menu.MenuEditor;
 import com.tr.hsyn.telefonrehberi.main.dev.menu.MenuManager;
 import com.tr.hsyn.use.Use;
-import com.tr.hsyn.xbox.Blue;
+import com.tr.hsyn.xlog.xlog;
 
 
 public abstract class FragmentPageMenu extends FragmentContactListEditor implements MenuProvider, MenuShower {
@@ -85,24 +86,40 @@ public abstract class FragmentPageMenu extends FragmentContactListEditor impleme
 		
 		if (pageOwner == null || pageOwner.getCurrentPage() == 1) return false;
 		
-		if (Blue.getObject(Key.CONTACTS) == null) return false;
+		var callsLoaded    = CallLog.isLoaded();
+		var contactsLoaded = ContactLog.isLoaded();
 		
-		if (gateMenuSelection.enter()) {
+		if (callsLoaded && contactsLoaded) {
 			
-			int id = menuItem.getItemId();
-			
-			if (id == R.id.menu_search_contacts) {
+			if (gateMenuSelection.enter()) {
 				
-				onClickSearch();
-				return true;
-			}
-			
-			if (id == R.id.menu_filter) {
+				int id = menuItem.getItemId();
 				
-				onClickFilterMenu();
-				return true;
+				if (id == R.id.menu_search_contacts) {
+					
+					onClickSearch();
+					return true;
+				}
+				
+				if (id == R.id.menu_filter) {
+					
+					onClickFilterMenu();
+					return true;
+				}
 			}
 		}
+		else {
+			
+			if (!contactsLoaded) {
+				xlog.d("Contacts not loaded");
+				Show.tost(requireActivity(), getString(R.string.contacts_not_loaded));
+			}
+			else {
+				xlog.d("Call log not loaded");
+				Show.tost(requireActivity(), getString(R.string.call_log_not_loaded));
+			}
+		}
+		
 		
 		return false;
 	}

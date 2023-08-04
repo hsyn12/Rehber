@@ -55,8 +55,7 @@ public abstract class BigBank extends NorthBridge {
 		return this::loadContacts;
 	}
 	
-	private @NotNull
-	List<Contact> loadContacts() {
+	private @NotNull List<Contact> loadContacts() {
 		
 		return ContactsReader.getContacts(getContentResolver());
 	}

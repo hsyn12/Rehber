@@ -122,6 +122,8 @@
 	<string name="text_notification_listener_state">Servis Durumu</string>
 	<string name="destek_ol">Destek Ol</string>
 	<string name="turkish_locale_tr">tr</string>
-
+	<string name="call_log_in_progress">Yükleme işlemi devam ediyor</string>
+	<string name="call_log_not_loaded">Arama kayıtları henüz yüklenmedi</string>
+	<string name="contacts_not_loaded">Kişiler henüz yüklenmedi</string>
 
 </resources>

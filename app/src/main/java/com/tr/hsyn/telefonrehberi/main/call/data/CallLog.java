@@ -486,4 +486,9 @@ public interface CallLog extends CCollection, Ranker {
 		
 		return Blue.getObject(com.tr.hsyn.key.Key.CALL_LOG);
 	}
+	
+	static boolean isLoaded() {
+		
+		return Blue.getObject(com.tr.hsyn.key.Key.CALL_LOG) != null;
+	}
 }

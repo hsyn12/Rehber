@@ -139,9 +139,9 @@ public final class ContactLog {
 	/**
 	 * @return {@code true} if the contacts are loaded
 	 */
-	public static boolean isContactsLoaded() {
+	public static boolean isLoaded() {
 		
-		return Blue.getObject(Key.CONTACTS) != null;
+		return Blue.getObject(Key.CONTACT_LOG) != null;
 	}
 	
 	/**
@@ -173,5 +173,11 @@ public final class ContactLog {
 		var log = getLog();
 		
 		return log != null ? log : new ContactLog(new ArrayList<>(0));
+	}
+	
+	public static void createGlobal(@NotNull List<Contact> contacts) {
+		
+		var log = new ContactLog(contacts);
+		Blue.box(Key.CONTACT_LOG, log);
 	}
 }

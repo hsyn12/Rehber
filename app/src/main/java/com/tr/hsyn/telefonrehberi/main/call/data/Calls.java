@@ -74,8 +74,6 @@ public interface Calls {
 			
 			while (cursor.moveToNext()) {
 				
-				String extra = cursor.getString(extraCol);
-				
 				Call c = new Call(
 						cursor.getString(nameCol),
 						cursor.getString(numberCol),
@@ -85,8 +83,6 @@ public interface Calls {
 						cursor.getString(extraCol)
 				);
 				
-				//xlog.d("%s %s - Extra : %s", c.getName(), c.getNumber(), extra);
-				c.setExtra(extra);
 				calls.add(c);
 			}
 			

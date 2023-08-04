@@ -65,7 +65,10 @@ public abstract class CallList extends CallLogMenu {
 	@Override
 	protected boolean isSelectionMode() {
 		
-		return getAdapter().isSelectionMode();
+		if (getAdapter() != null)
+			return getAdapter().isSelectionMode();
+		
+		return false;
 	}
 	
 	@Override

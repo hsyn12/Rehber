@@ -160,7 +160,7 @@ public class CallStory implements Story<Call> {
 	 * @return Tüm sistem kayıtları
 	 */
 	@Override
-	public List<com.tr.hsyn.calldata.Call> loadFromSystem() {
+	public List<Call> loadFromSystem() {
 		
 		return Calls.getCalls(contentResolver);
 	}

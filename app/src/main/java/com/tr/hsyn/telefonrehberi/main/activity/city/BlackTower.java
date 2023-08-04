@@ -47,6 +47,7 @@ import com.tr.hsyn.xlog.xlog;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
@@ -200,7 +201,8 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 		
 		if (loadingCompleted.getAndSet(true)) {
 			
-			CallLog.createGlobal(calls);
+			if (throwable == null)
+				setGlobals();
 		}
 		
 		Blue.remove(Key.CALL_LOG_LOADING);
@@ -213,8 +215,8 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 		
 		if (loadingCompleted.getAndSet(true)) {
 			
-			CallLog.createGlobal(Over.CallLog.Calls.getCalls());
-			Blue.box(Key.CONTACT_LOG, new ContactLog(contacts));
+			if (throwable == null)
+				setGlobals();
 		}
 		
 		Blue.remove(Key.CONTACTS_LOADING);
@@ -226,6 +228,12 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 		super.onResume();
 		
 		Use.ifNotNull(Over.Contacts.getSelectedContact(), this::checkSelectedContact);
+	}
+	
+	private void setGlobals() {
+		
+		ContactLog.createGlobal(Objects.requireNonNull(Blue.getObject(Key.CONTACTS)));
+		CallLog.createGlobal(Objects.requireNonNull(Blue.getObject(Key.CALL_LOG)));
 	}
 	
 	/**

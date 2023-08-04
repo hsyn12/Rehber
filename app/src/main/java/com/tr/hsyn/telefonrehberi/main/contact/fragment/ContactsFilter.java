@@ -4,7 +4,6 @@ package com.tr.hsyn.telefonrehberi.main.contact.fragment;
 import android.os.Bundle;
 import android.view.View;
 
-import com.tr.hsyn.message.Show;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
 import com.tr.hsyn.telefonrehberi.main.call.dialog.DialogContactFilter;
@@ -54,26 +53,14 @@ public abstract class ContactsFilter extends FragmentPageMenu implements Permiss
 	@Override
 	protected void onClickFilterMenu() {
 		
-		CallLog log = CallLog.getCallLog();
-		
-		if (log != null && ContactLog.isContactsLoaded()) showFilterDialog();
-		else {
-			
-			if (!ContactLog.isContactsLoaded()) Show.tost(requireActivity(), getString(R.string.contacts_not_loaded));
-			else if (log == null) Show.tost(requireActivity(), getString(R.string.call_log_not_loaded));
-		}
+		DialogContactFilter dialog = new DialogContactFilter(requireActivity(), this::filter, filter, filters);
+		dialog.show();
 	}
 	
 	@Override
 	protected CharSequence getTitle() {
 		
 		return title;
-	}
-	
-	private void showFilterDialog() {
-		
-		DialogContactFilter dialog = new DialogContactFilter(requireActivity(), this::filter, filter, filters);
-		dialog.show();
 	}
 	
 	/**
@@ -86,6 +73,19 @@ public abstract class ContactsFilter extends FragmentPageMenu implements Permiss
 		Use.ifNotNull(CallLog.getCallLog(), log -> {
 			
 			if (index == filter) return;
+			
+			ContactLog contactLog = ContactLog.getLog();
+			
+			if (contactLog != null) {
+				
+				xlog.d(contactLog.getContacts().size() + " contacts");
+			}
+			else {
+				
+				xlog.d("Contacts not found");
+				return;
+			}
+			
 			
 			filter = index;
 			title  = filters[filter];

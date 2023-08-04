@@ -81,7 +81,6 @@ public interface ContactsReader extends ContactColumns {
 			//xlog.d("Found %d contacts", contacts.size());
 			
 			contacts.sort(PerfectSort.stringComparator(Contact::getName));
-			
 			return contacts;
 		}
 		xlog.d("No contact");

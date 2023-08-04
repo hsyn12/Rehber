@@ -129,5 +129,7 @@
 	<string name="is_delete">%s silinsin mi?</string>
 
 	<string name="msg_directory_selection">Bazı kayıtlar uygulamadan bağımsız kalıcı olarak kaydedilebilir. Uygulama kaldırılsa bile bu bilgiler kayıtlı kalır ve tekrar yüklendiğinde aynı klasör seçilerek daha önce kaydedilmiş bilgiler kullanılabilir.</string>
-
+	<string name="call_log_in_progress">Call log loading is in progress</string>
+	<string name="call_log_not_loaded">Call log is not loaded yet</string>
+	<string name="contacts_not_loaded">Contacts is not loaded</string>
 </resources>
