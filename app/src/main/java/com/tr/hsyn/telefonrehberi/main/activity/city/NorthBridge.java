@@ -27,27 +27,9 @@ public abstract class NorthBridge extends MainActivity implements PermissionHold
 	 */
 	protected final String  CONTACTS_R  = Manifest.permission.READ_CONTACTS;
 	/**
-	 * Rehber yazma izni.<br>
-	 * Bu izin rehberde değişiklik yapma yetkisi tanır.
-	 */
-	protected final String  CONTACTS_W  = Manifest.permission.WRITE_CONTACTS;
-	/**
-	 * Kullanıcı hesaplarına erişim izni.<br>
-	 * Bu izin tüm hesap bilgilerini görmeyi sağlar.
-	 */
-	protected final String  ACCOUNTS    = Manifest.permission.GET_ACCOUNTS;
-	/**
 	 * Arama kayıtları okuma izni
 	 */
 	protected final String  CALLS_R     = Manifest.permission.READ_CALL_LOG;
-	/**
-	 * Arama kayıtları yazma izni
-	 */
-	protected final String  CALLS_W     = Manifest.permission.WRITE_CALL_LOG;
-	/**
-	 * Telefon durumuna erişim izni
-	 */
-	protected final String  CALL_STATE  = Manifest.permission.READ_PHONE_STATE;
 	/**
 	 * Arama yapma izni
 	 */
@@ -67,21 +49,14 @@ public abstract class NorthBridge extends MainActivity implements PermissionHold
 	protected       boolean gotoAppSettings;
 	
 	/**
-	 * Rehber izinlerini kullanıcıdan ister.<br>
-	 * Bu izinler şunlardır ; {@link #CONTACTS_R}, {@link #CONTACTS_W}, {@link #ACCOUNTS}
+	 * Rehber izinleri kullanıcı tarafından onaylandığında çağrılır.
 	 */
-	protected void askContactPermissions() {
-		
-		requestPermissions(new String[]{CONTACTS_R, CONTACTS_W, ACCOUNTS}, RC_CONTACTS);
-	}
+	protected abstract void onGrantContactsPermissions();
 	
 	/**
-	 * Arama izinlerini kullanıcıdan ister.
+	 * Arama kaydı izinleri kullanıcı tarafından onaylandığında çağrılır.
 	 */
-	protected void askCallLogPermissions() {
-		
-		requestPermissions(new String[]{CALLS_R, CALLS_W, CALL_STATE, CALL_PHONE}, RC_CALLS);
-	}
+	protected abstract void onGrantCallsPermissions();
 	
 	@Override
 	protected void onResume() {
@@ -132,9 +107,32 @@ public abstract class NorthBridge extends MainActivity implements PermissionHold
 	}
 	
 	/**
-	 * Rehber izinleri kullanıcı tarafından onaylandığında çağrılır.
+	 * Talep edilen izinlerin sonuçları.
+	 * Bu metot sonuçlar üzerinde hiçbir işlem yapmaz.
+	 * İşlem yapma sorumluluğu izni talep eden yukarıdaki görevlilerindir.
+	 *
+	 * @param requestCode İzin kodu
+	 * @param result      İzin sonuçları
 	 */
-	abstract protected void onGrantContactsPermissions();
+	@Override
+	public void onPermissionsResult(int requestCode, Map<String, Boolean> result) {}
+	
+	/**
+	 * Rehber izinlerini kullanıcıdan ister.<br>
+	 * Bu izinler şunlardır ; {@link #CONTACTS_R}, {@link #CONTACTS_W}, {@link #ACCOUNTS}
+	 */
+	protected void askContactPermissions() {
+		
+		requestPermissions(PermissionHolder.REQUIRED_PERMISSIONS, RC_CONTACTS);
+	}
+	
+	/**
+	 * Arama izinlerini kullanıcıdan ister.
+	 */
+	protected void askCallLogPermissions() {
+		
+		requestPermissions(PermissionHolder.REQUIRED_PERMISSIONS, RC_CALLS);
+	}
 	
 	/**
 	 * Rehber izinleri kullanıcıya sorulduğunda, sorulan izinlerden herhangi biri reddedilirse çağrılır.
@@ -175,11 +173,6 @@ public abstract class NorthBridge extends MainActivity implements PermissionHold
 		
 		xlog.w("Rehber izni reddedildi : %s", result);
 	}
-	
-	/**
-	 * Arama kaydı izinleri kullanıcı tarafından onaylandığında çağrılır.
-	 */
-	abstract protected void onGrantCallsPermissions();
 	
 	/**
 	 * Arama kaydı izinleri kullanıcıya sorulduğunda, sorulan izinlerden herhangi biri reddedilirse çağrılır.
@@ -229,15 +222,4 @@ public abstract class NorthBridge extends MainActivity implements PermissionHold
 		
 		return !shouldShowRequestPermissionRationale(permission);
 	}
-	
-	/**
-	 * Talep edilen izinlerin sonuçları.
-	 * Bu metot sonuçlar üzerinde hiçbir işlem yapmaz.
-	 * İşlem yapma sorumluluğu izni talep eden yukarıdaki görevlilerindir.
-	 *
-	 * @param requestCode İzin kodu
-	 * @param result      İzin sonuçları
-	 */
-	@Override
-	public void onPermissionsResult(int requestCode, Map<String, Boolean> result) {}
 }

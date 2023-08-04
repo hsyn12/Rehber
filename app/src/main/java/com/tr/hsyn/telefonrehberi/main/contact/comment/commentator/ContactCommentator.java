@@ -78,7 +78,7 @@ public interface ContactCommentator extends Commentator<Contact>, CommentEditor 
 	@Nullable
 	default List<Contact> getContacts() {
 		
-		return Over.Contacts.getContacts();
+		return Over.Content.Contacts.getContacts();
 	}
 	
 	/**

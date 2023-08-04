@@ -165,8 +165,8 @@ public class ActivityCallList extends ActivityCallHistoryView {
 			//- Arama kayıtlarında kalıcı bir değişiklik oldu
 			//- Bu bilgiye ihtiyaç duyanlar için bir işaret bırak
 			
-			Over.CallLog.refreshCallLog();
-			Over.CallLog.Calls.Editor.delete(call);
+			Over.Content.CallLog.refreshCallLog();
+			Over.Content.CallLog.Calls.Editor.delete(call);
 		}, false);
 	}
 	
@@ -236,8 +236,8 @@ public class ActivityCallList extends ActivityCallHistoryView {
 			//- Arama kayıtlarında kalıcı bir değişiklik oldu
 			//- Bu bilgiye ihtiyaç duyanlar için bir işaret bırak
 			
-			Over.CallLog.refreshCallLog();
-			Over.CallLog.Calls.Editor.delete(deletedCalls.toArray(new com.tr.hsyn.calldata.Call[0]));
+			Over.Content.CallLog.refreshCallLog();
+			Over.Content.CallLog.Calls.Editor.delete(deletedCalls.toArray(new com.tr.hsyn.calldata.Call[0]));
 		}, false);
 	}
 }

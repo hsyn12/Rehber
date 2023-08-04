@@ -47,7 +47,6 @@ import com.tr.hsyn.xlog.xlog;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
@@ -189,8 +188,8 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 	@Override
 	public void showMenu(boolean show) {
 		
-		pageContacts.showMenu(show);
-		pageCallLog.showMenu(show);
+		//pageContacts.showMenu(currentPage == PAGE_CONTACTS);
+		//pageCallLog.showMenu(currentPage == PAGE_CALL_LOG);
 		menuManager.setVisible(menuManager.getMenuItemResourceIds(), show);
 	}
 	
@@ -198,12 +197,8 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 	protected void onCallLogLoaded(List<Call> calls, Throwable throwable) {
 		
 		super.onCallLogLoaded(calls, throwable);
-		
-		if (loadingCompleted.getAndSet(true)) {
-			
-			if (throwable == null)
-				setGlobals();
-		}
+		if (throwable == null)
+			CallLog.createGlobal(calls);
 		
 		Blue.remove(Key.CALL_LOG_LOADING);
 	}
@@ -213,11 +208,8 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 		
 		super.onContactsLoaded(contacts, throwable);
 		
-		if (loadingCompleted.getAndSet(true)) {
-			
-			if (throwable == null)
-				setGlobals();
-		}
+		if (throwable == null)
+			ContactLog.createGlobal(contacts);
 		
 		Blue.remove(Key.CONTACTS_LOADING);
 	}
@@ -227,13 +219,7 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 		
 		super.onResume();
 		
-		Use.ifNotNull(Over.Contacts.getSelectedContact(), this::checkSelectedContact);
-	}
-	
-	private void setGlobals() {
-		
-		ContactLog.createGlobal(Objects.requireNonNull(Blue.getObject(Key.CONTACTS)));
-		CallLog.createGlobal(Objects.requireNonNull(Blue.getObject(Key.CALL_LOG)));
+		Use.ifNotNull(Over.Content.Contacts.getSelectedContact(), this::checkSelectedContact);
 	}
 	
 	/**

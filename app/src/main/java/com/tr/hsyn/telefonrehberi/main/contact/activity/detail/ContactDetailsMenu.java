@@ -49,15 +49,6 @@ public class ContactDetailsMenu extends CallSummary {
 		}
 	});
 	
-	/**
-	 * Called when edit contact is completed
-	 */
-	protected void onEditCompleted() {
-		
-		Over.Contacts.refreshContacts();
-		finishAndRemoveTask();
-	}
-	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		
@@ -83,27 +74,6 @@ public class ContactDetailsMenu extends CallSummary {
 		}
 		
 		return super.onOptionsItemSelected(item);
-	}
-	
-	/**
-	 * Kullanıcı menüden kişiyi silmek istediğinde
-	 */
-	@CallSuper
-	protected void onClickDeleteMenu() {
-		
-		//- Nihai silme işlemi bu kişiyi dönüşte kontrol edecek olan kişiye ait.
-		contact.setData(ContactKey.DELETED_DATE, Time.now());
-		
-		//- Dön
-		onBackPressed();
-	}
-	
-	/**
-	 * Kişi için düzenleme sayfasına yönlendirir. (menu item click)
-	 */
-	protected void onClickEditMenu() {
-		
-		editContact();
 	}
 	
 	@Override
@@ -135,5 +105,35 @@ public class ContactDetailsMenu extends CallSummary {
 					.build()
 					.showOn(this);
 		}
+	}
+	
+	/**
+	 * Called when edit contact is completed
+	 */
+	protected void onEditCompleted() {
+		
+		Over.Content.Contacts.refreshContacts();
+		finishAndRemoveTask();
+	}
+	
+	/**
+	 * Kullanıcı menüden kişiyi silmek istediğinde
+	 */
+	@CallSuper
+	protected void onClickDeleteMenu() {
+		
+		//- Nihai silme işlemi bu kişiyi dönüşte kontrol edecek olan kişiye ait.
+		contact.setData(ContactKey.DELETED_DATE, Time.now());
+		
+		//- Dön
+		onBackPressed();
+	}
+	
+	/**
+	 * Kişi için düzenleme sayfasına yönlendirir. (menu item click)
+	 */
+	protected void onClickEditMenu() {
+		
+		editContact();
 	}
 }

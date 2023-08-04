@@ -22,11 +22,13 @@ import androidx.core.view.MenuProvider;
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.gate.AutoGate;
 import com.tr.hsyn.gate.Gate;
+import com.tr.hsyn.message.Show;
 import com.tr.hsyn.page.MenuShower;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.call.activity.backup.CallBackupActivity;
 import com.tr.hsyn.telefonrehberi.main.call.activity.random.RandomCallsActivity;
 import com.tr.hsyn.telefonrehberi.main.code.page.adapter.CallAdapter;
+import com.tr.hsyn.telefonrehberi.main.dev.Over;
 import com.tr.hsyn.telefonrehberi.main.dev.menu.MenuEditor;
 import com.tr.hsyn.telefonrehberi.main.dev.menu.MenuManager;
 
@@ -176,23 +178,27 @@ public abstract class CallLogMenu extends CallLogTitle implements MenuProvider, 
 	@Override
 	public boolean onMenuItemSelected(@NonNull @NotNull MenuItem menuItem) {
 		
-		if (getCurrentPage() == 0) return false;
-		
-		if (!gateMenuSelection.enter()) return false;
-		
-		boolean handled = false;
-		
-		switch (menuItem.getItemId()) {
-			//@off
-			case R.id.menu_random_calls_activity: onClickRandomCallsMenu();                    handled = true;break;
-			case R.id.menu_call_backup: onClickBackupMenu();                                   handled = true;break;
-			case R.id.menu_call_filter: onClickFilterMenu();                                   handled = true;break;
-			case R.id.menu_search_call: onClickSearch();                                       handled = true;break;
-			case R.id.delete_all_calls: deleteAll();                                           handled = true;break;
-			case R.id.call_log_menu_select_all: selectAllItems(selectAllItem = !selectAllItem);handled = true;break;
-		}//@on
-		
-		return handled;
+		if (Over.Content.loadComplete()) {
+			
+			if (!gateMenuSelection.enter()) return false;
+			
+			boolean handled = false;
+			
+			switch (menuItem.getItemId()) {
+				//@off
+				case R.id.menu_random_calls_activity: onClickRandomCallsMenu();                    handled = true;break;
+				case R.id.menu_call_backup: onClickBackupMenu();                                   handled = true;break;
+				case R.id.menu_call_filter: onClickFilterMenu();                                   handled = true;break;
+				case R.id.menu_search_call: onClickSearch();                                       handled = true;break;
+				case R.id.delete_all_calls: deleteAll();                                           handled = true;break;
+				case R.id.call_log_menu_select_all: selectAllItems(selectAllItem = !selectAllItem);handled = true;break;
+			}//@on
+			
+			return handled;
+		}
+		else if (Over.Content.Contacts.isLoaded()) Show.tost(requireActivity(), getString(R.string.call_log_not_loaded));
+		else Show.tost(requireActivity(), getString(R.string.contacts_not_loaded));
+		return false;
 	}
 	
 	@Override
@@ -200,7 +206,7 @@ public abstract class CallLogMenu extends CallLogTitle implements MenuProvider, 
 		
 		if (show) {
 			
-			//- Buna gerek yok, ayarlamayı aşağıda yapacağız
+			//+ Buna gerek yok, ayarlamayı aşağıda yapacağız
 			//menuManager.clearMenuItems();
 			
 			listenBackPress();
@@ -210,12 +216,12 @@ public abstract class CallLogMenu extends CallLogTitle implements MenuProvider, 
 			//- Simgenin biri seçili elemanları silme,
 			//- diğeri toplu seçim işlemi için. Yani 'hepsini seç' yada 'tüm seçimi kaldır' şeklinde.
 			//- Tabi tüm menüyü kaldırmak için çevre illere de haber salmamız
-			//- gerek çünkü tek menü elemanı sadece şuanki bu sayfaya ait değil.
+			//- gerek çünkü tek menü elemanı sadece şuan ki bu sayfaya ait değil.
 			//- Menüye eleman ekleyen herkes elemanlarını ikinci bir emre kadar çekmeli.
 			
 			//- Ana listeyi değiştirmiyoruz, yeni bir liste oluşturuyoruz
 			List<Integer> list = Lister.listOf(menuManager.getMenuItemResourceIds());
-			//- Bunlar seçim modu aktif oluşca iş yapacak menü elemanları
+			//- Bunlar seçim modu aktif olunca iş yapacak menü elemanları
 			List<Integer> selectionMenuItems = Lister.listOf(
 					R.id.call_log_menu_delete_all,
 					R.id.call_log_menu_select_all
@@ -246,7 +252,6 @@ public abstract class CallLogMenu extends CallLogTitle implements MenuProvider, 
 			boolean visible = isShowTime();
 			
 			menuManager.setVisible(menuManager.getMenuItemResourceIds(), visible);
-			
 			menuManager.setVisible(R.id.call_log_menu_delete_all, false);
 			menuManager.setVisible(R.id.call_log_menu_select_all, false);
 			
@@ -263,6 +268,7 @@ public abstract class CallLogMenu extends CallLogTitle implements MenuProvider, 
 	
 	protected void cancelSelection() {
 		
+		showMenu(false);
 		getMainMenu().showMenu(true);
 	}
 	
@@ -271,6 +277,7 @@ public abstract class CallLogMenu extends CallLogTitle implements MenuProvider, 
 		//- Bu metot, seçim modu aktif iken çağrılmıyor
 		//- Bu yüzden bu çağrı güvenli
 		getMainMenu().showMenu(false);
+		showMenu(true);
 	}
 	
 	

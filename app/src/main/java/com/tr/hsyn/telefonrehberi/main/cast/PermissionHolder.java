@@ -37,6 +37,16 @@ public interface PermissionHolder extends ActivityCompat.OnRequestPermissionsRes
 			Manifest.permission.WRITE_CONTACTS,
 			Manifest.permission.GET_ACCOUNTS
 	};
+	String[] REQUIRED_PERMISSIONS = new String[]{
+			
+			Manifest.permission.READ_CONTACTS,
+			Manifest.permission.WRITE_CONTACTS,
+			Manifest.permission.GET_ACCOUNTS,
+			Manifest.permission.READ_CALL_LOG,
+			Manifest.permission.WRITE_CALL_LOG,
+			Manifest.permission.READ_PHONE_STATE,
+			Manifest.permission.CALL_PHONE
+	};
 	
 	/**
 	 * İzinlerin sonuçları için çağrılır.

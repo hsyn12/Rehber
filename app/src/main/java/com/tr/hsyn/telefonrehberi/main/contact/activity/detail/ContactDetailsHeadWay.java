@@ -48,7 +48,7 @@ public abstract class ContactDetailsHeadWay extends ContactDetailsView implement
 		
 		//! We have to have the selected contact
 		
-		contact = Over.Contacts.getSelectedContact();
+		contact = Over.Content.Contacts.getSelectedContact();
 		
 		if (contact == null) {
 			

@@ -21,10 +21,9 @@ import com.tr.hsyn.gate.Gate;
 import com.tr.hsyn.message.Show;
 import com.tr.hsyn.page.MenuShower;
 import com.tr.hsyn.telefonrehberi.R;
-import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
 import com.tr.hsyn.telefonrehberi.main.cast.PageOwner;
 import com.tr.hsyn.telefonrehberi.main.contact.activity.search.ContactSearch;
-import com.tr.hsyn.telefonrehberi.main.data.ContactLog;
+import com.tr.hsyn.telefonrehberi.main.dev.Over;
 import com.tr.hsyn.telefonrehberi.main.dev.menu.MenuEditor;
 import com.tr.hsyn.telefonrehberi.main.dev.menu.MenuManager;
 import com.tr.hsyn.use.Use;
@@ -86,10 +85,7 @@ public abstract class FragmentPageMenu extends FragmentContactListEditor impleme
 		
 		if (pageOwner == null || pageOwner.getCurrentPage() == 1) return false;
 		
-		var callsLoaded    = CallLog.isLoaded();
-		var contactsLoaded = ContactLog.isLoaded();
-		
-		if (callsLoaded && contactsLoaded) {
+		if (Over.Content.loadComplete()) {
 			
 			if (gateMenuSelection.enter()) {
 				
@@ -110,7 +106,7 @@ public abstract class FragmentPageMenu extends FragmentContactListEditor impleme
 		}
 		else {
 			
-			if (!contactsLoaded) {
+			if (!Over.Content.Contacts.isLoaded()) {
 				xlog.d("Contacts not loaded");
 				Show.tost(requireActivity(), getString(R.string.contacts_not_loaded));
 			}
@@ -127,7 +123,7 @@ public abstract class FragmentPageMenu extends FragmentContactListEditor impleme
 	@Override
 	public void showMenu(boolean show) {
 		
-		menuEditor.setVisible(menuEditor.getMenuItemResourceIds(), !show);
+		menuEditor.setVisible(menuEditor.getMenuItemResourceIds(), show);
 	}
 	
 	@Override

@@ -163,7 +163,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 		
 		//- Arama kayıtlarında bir güncelleme varsa bilgilerin tekrar düzenlenmesi gerek
 		
-		if (Over.CallLog.Calls.isUpdated(Bool.NONE).bool()) {
+		if (Over.Content.CallLog.Calls.isUpdated(Bool.NONE).bool()) {
 			
 			xlog.d("There is an update of call log");
 			setHistory();
@@ -271,7 +271,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 				
 				if (gateLoading.enter()) {
 					
-					var list = Over.CallLog.getCallLogManager().load();
+					var list = Over.Content.CallLog.getCallLogManager().load();
 					
 					callLog = CallLog.createGlobal(list);
 					
@@ -381,7 +381,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay implem
 			//- arama kayıtları için bir yenileme bilgisi kaydedilir
 			//- Bu bilgi aslında ana ekran için
 			//- Ancak kullanıcı buradan çıkmadığı için bazı ayarlamalar yapmamız gerekiyor
-			if (Over.CallLog.Calls.isUpdated().bool()) {
+			if (Over.Content.CallLog.Calls.isUpdated().bool()) {
 				
 				//- Evet kayıtların yenilenmesi gerek
 				//- Ancak bu bilgiye ana ekranın ihtiyaç duyması silinmesini engelliyor
