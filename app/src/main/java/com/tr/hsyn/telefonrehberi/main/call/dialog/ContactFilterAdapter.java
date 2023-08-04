@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.tr.hsyn.colors.Colors;
 import com.tr.hsyn.selection.ItemIndexListener;
 import com.tr.hsyn.telefonrehberi.R;
-import com.tr.hsyn.telefonrehberi.main.data.Contacts;
+import com.tr.hsyn.telefonrehberi.main.data.ContactLog;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -47,28 +47,28 @@ public class ContactFilterAdapter extends RecyclerView.Adapter<ContactFilterAdap
 		holder.filter.setText(filters[position]);
 		
 		switch (position) {
-			case Contacts.FILTER_ALL:
+			case ContactLog.FILTER_ALL:
 				holder.type.setImageDrawable(ResourcesCompat.getDrawable(holder.itemView.getResources(), R.drawable.groups_mycontacts, null));
 				break;
-			case Contacts.FILTER_MOST_INCOMING:
+			case ContactLog.FILTER_MOST_INCOMING:
 				holder.type.setImageDrawable(ResourcesCompat.getDrawable(holder.itemView.getResources(), R.drawable.most_incomming, null));
 				break;
-			case Contacts.FILTER_MOST_OUTGOING:
+			case ContactLog.FILTER_MOST_OUTGOING:
 				holder.type.setImageDrawable(ResourcesCompat.getDrawable(holder.itemView.getResources(), R.drawable.most_outgoing, null));
 				break;
-			case Contacts.FILTER_MOST_MISSED:
+			case ContactLog.FILTER_MOST_MISSED:
 				holder.type.setImageDrawable(ResourcesCompat.getDrawable(holder.itemView.getResources(), R.drawable.most_missed, null));
 				break;
-			case Contacts.FILTER_MOST_REJECTED:
+			case ContactLog.FILTER_MOST_REJECTED:
 				holder.type.setImageDrawable(ResourcesCompat.getDrawable(holder.itemView.getResources(), R.drawable.most_rejected, null));
 				break;
-			case Contacts.FILTER_MOST_INCOMING_DURATION:
+			case ContactLog.FILTER_MOST_INCOMING_DURATION:
 				holder.type.setImageDrawable(ResourcesCompat.getDrawable(holder.itemView.getResources(), R.drawable.most_incomming_duration, null));
 				break;
-			case Contacts.FILTER_MOST_OUTGOING_DURATION:
+			case ContactLog.FILTER_MOST_OUTGOING_DURATION:
 				holder.type.setImageDrawable(ResourcesCompat.getDrawable(holder.itemView.getResources(), R.drawable.most_outgoing_duration, null));
 				break;
-			case Contacts.FILTER_MOST_TOTAL_DURATION:
+			case ContactLog.FILTER_MOST_TOTAL_DURATION:
 				holder.type.setImageDrawable(ResourcesCompat.getDrawable(holder.itemView.getResources(), R.drawable.all_calls, null));
 				break;
 		}

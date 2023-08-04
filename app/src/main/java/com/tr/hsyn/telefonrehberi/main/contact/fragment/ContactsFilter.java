@@ -10,7 +10,7 @@ import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
 import com.tr.hsyn.telefonrehberi.main.call.dialog.DialogContactFilter;
 import com.tr.hsyn.telefonrehberi.main.cast.PermissionHolder;
 import com.tr.hsyn.telefonrehberi.main.code.data.History;
-import com.tr.hsyn.telefonrehberi.main.data.Contacts;
+import com.tr.hsyn.telefonrehberi.main.data.ContactLog;
 import com.tr.hsyn.use.Use;
 import com.tr.hsyn.xlog.xlog;
 
@@ -56,10 +56,10 @@ public abstract class ContactsFilter extends FragmentPageMenu implements Permiss
 		
 		CallLog log = CallLog.getCallLog();
 		
-		if (log != null && Contacts.isContactsLoaded()) showFilterDialog();
+		if (log != null && ContactLog.isContactsLoaded()) showFilterDialog();
 		else {
 			
-			if (!Contacts.isContactsLoaded()) Show.tost(requireActivity(), getString(R.string.contacts_not_loaded));
+			if (!ContactLog.isContactsLoaded()) Show.tost(requireActivity(), getString(R.string.contacts_not_loaded));
 			else if (log == null) Show.tost(requireActivity(), getString(R.string.call_log_not_loaded));
 		}
 	}
@@ -90,9 +90,9 @@ public abstract class ContactsFilter extends FragmentPageMenu implements Permiss
 			filter = index;
 			title  = filters[filter];
 			
-			if (filter == Contacts.FILTER_ALL) {
+			if (filter == ContactLog.FILTER_ALL) {
 				
-				setList(Contacts.getContacts());
+				setList(ContactLog.getLogOrEmpty().getContacts());
 			}
 			else {
 				List<History> historyList = log.getHistory();
@@ -111,25 +111,25 @@ public abstract class ContactsFilter extends FragmentPageMenu implements Permiss
 		
 		switch (filter) {
 			
-			case Contacts.FILTER_MOST_INCOMING:
+			case ContactLog.FILTER_MOST_INCOMING:
 				historyList.sort(History.Comparing.INCOMING);
 				break;
-			case Contacts.FILTER_MOST_OUTGOING:
+			case ContactLog.FILTER_MOST_OUTGOING:
 				historyList.sort(History.Comparing.OUTGOING);
 				break;
-			case Contacts.FILTER_MOST_MISSED:
+			case ContactLog.FILTER_MOST_MISSED:
 				historyList.sort(History.Comparing.MISSED);
 				break;
-			case Contacts.FILTER_MOST_REJECTED:
+			case ContactLog.FILTER_MOST_REJECTED:
 				historyList.sort(History.Comparing.REJECTED);
 				break;
-			case Contacts.FILTER_MOST_INCOMING_DURATION:
+			case ContactLog.FILTER_MOST_INCOMING_DURATION:
 				historyList.sort(History.Comparing.INCOMING_DURATION);
 				break;
-			case Contacts.FILTER_MOST_OUTGOING_DURATION:
+			case ContactLog.FILTER_MOST_OUTGOING_DURATION:
 				historyList.sort(History.Comparing.OUTGOING_DURATION);
 				break;
-			case Contacts.FILTER_MOST_TOTAL_DURATION:
+			case ContactLog.FILTER_MOST_TOTAL_DURATION:
 				historyList.sort(History.Comparing.TOTAL_DURATION);
 				break;
 			default: throw new IllegalArgumentException("Unknown filter : " + filter);

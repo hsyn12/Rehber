@@ -5,7 +5,7 @@ import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
 import com.tr.hsyn.telefonrehberi.main.data.CallMap;
-import com.tr.hsyn.telefonrehberi.main.data.Contacts;
+import com.tr.hsyn.telefonrehberi.main.data.ContactLog;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -113,7 +113,7 @@ public interface Ranker {
 			CallRank                      callRank  = new CallRank(rank, ranked.getKey(), ranked.getValue());
 			rankList1.add(callRank);
 			
-			callRank.setContact(Contacts.getById(ranked.getKey()));
+			callRank.setContact(ContactLog.getLogOrEmpty().getById(ranked.getKey()));
 			
 			if (i == last) break;
 			
@@ -157,7 +157,7 @@ public interface Ranker {
 			
 			callRank.setIncomingDuration(incomingDuration);
 			callRank.setOutgoingDuration(outgoingDuration);
-			callRank.setContact(Contacts.getById(key));
+			callRank.setContact(ContactLog.getLogOrEmpty().getById(key));
 			callRanks.add(callRank);
 		}
 		

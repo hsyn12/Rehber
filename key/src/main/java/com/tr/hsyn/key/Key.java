@@ -44,6 +44,7 @@ public class Key extends AtomImpl {
 	 */
 	public static final Key CONTACTS_LOADING       = Key.of(21, "Contacts Loading");
 	public static final Key CALL_LOG_LOADING       = Key.of(21, "CallLog Loading");
+	public static final Key CONTACT_LOG            = Key.of(20, "Contact Log");
 	
 	public Key(long id, @NotNull String name) {
 		

@@ -13,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 /**
  * Holds the contacts and provides methods for filtering, searching and analyzing.
  */
-public final class Contacts {
+public final class ContactLog {
 	
 	/**
 	 * The filter for all contacts
@@ -55,7 +56,17 @@ public final class Contacts {
 	 */
 	public static final int FILTER_MOST_TOTAL_DURATION    = 7;
 	
-	private static ContactMap contactsMap;
+	/**
+	 * The map object that has a key by contact ID and a contact as value.
+	 */
+	private final Map<Long, Contact> contactMap;
+	private final List<Contact>      contacts;
+	
+	public ContactLog(@NotNull List<Contact> contacts) {
+		
+		this.contacts   = contacts;
+		this.contactMap = mapContacts(contacts);
+	}
 	
 	/**
 	 * Returns the contact with the given ID.
@@ -64,7 +75,7 @@ public final class Contacts {
 	 * @return the contact or {@code null} if not found
 	 */
 	@Nullable
-	public static Contact getById(String contactId) {
+	public Contact getById(String contactId) {
 		
 		return Try.ignore(() -> getById(Long.parseLong(contactId)));
 	}
@@ -76,11 +87,9 @@ public final class Contacts {
 	 * @return the contact or {@code null} if not found
 	 */
 	@Nullable
-	public static Contact getById(long contactId) {
+	public Contact getById(long contactId) {
 		
-		if (contactsMap != null) return contactsMap.get(contactId);
-		
-		return getContacts().stream().filter(c -> c.getId() == contactId).findFirst().orElse(null);
+		return contactMap.get(contactId);
 	}
 	
 	/**
@@ -88,25 +97,9 @@ public final class Contacts {
 	 *
 	 * @return the contacts
 	 */
-	public static @NotNull List<Contact> getContacts() {
+	public @NotNull List<Contact> getContacts() {
 		
-		List<Contact> contacts = Blue.getObject(Key.CONTACTS);
-		
-		if (contactsMap == null && contacts != null) {
-			
-			contactsMap = new ContactMap(contacts);
-			return contacts;
-		}
-		
-		return contacts != null ? contacts : new ArrayList<>(0);
-	}
-	
-	/**
-	 * @return {@code true} if the contacts are loaded
-	 */
-	public static boolean isContactsLoaded() {
-		
-		return Blue.getObject(Key.CONTACTS) != null;
+		return contacts;
 	}
 	
 	/**
@@ -114,9 +107,9 @@ public final class Contacts {
 	 *
 	 * @return the contacts
 	 */
-	public static @NotNull List<Contact> getWithNumber() {
+	public @NotNull List<Contact> getWithNumber() {
 		
-		return filter(Contacts::hasNumber);
+		return filter(ContactLog::hasNumber);
 	}
 	
 	/**
@@ -125,11 +118,30 @@ public final class Contacts {
 	 * @param predicate the predicate to select
 	 * @return the contacts
 	 */
-	public static @NotNull List<Contact> filter(@NotNull Predicate<Contact> predicate) {
+	public @NotNull List<Contact> filter(@NotNull Predicate<Contact> predicate) {
 		
-		return getContacts().stream()
+		return contacts.stream()
 				.filter(predicate)
 				.collect(Collectors.toList());
+	}
+	
+	/**
+	 * Creates the map object that has a key by contact ID, and a contact as value.
+	 *
+	 * @param contacts the contacts to map
+	 * @return the map object
+	 */
+	private static Map<Long, Contact> mapContacts(@NotNull List<Contact> contacts) {
+		
+		return contacts.stream().collect(Collectors.toMap(Contact::getContactId, c -> c));
+	}
+	
+	/**
+	 * @return {@code true} if the contacts are loaded
+	 */
+	public static boolean isContactsLoaded() {
+		
+		return Blue.getObject(Key.CONTACTS) != null;
 	}
 	
 	/**
@@ -149,5 +161,17 @@ public final class Contacts {
 				return true;
 		
 		return false;
+	}
+	
+	public static @Nullable ContactLog getLog() {
+		
+		return Blue.getObject(Key.CONTACT_LOG);
+	}
+	
+	public static @NotNull ContactLog getLogOrEmpty() {
+		
+		var log = getLog();
+		
+		return log != null ? log : new ContactLog(new ArrayList<>(0));
 	}
 }

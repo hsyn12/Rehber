@@ -9,7 +9,7 @@ import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.telefonrehberi.main.call.data.type.FilterMostType;
 import com.tr.hsyn.telefonrehberi.main.call.data.type.FilterType;
 import com.tr.hsyn.telefonrehberi.main.code.data.History;
-import com.tr.hsyn.telefonrehberi.main.data.Contacts;
+import com.tr.hsyn.telefonrehberi.main.data.ContactLog;
 import com.tr.hsyn.time.duration.DurationGroup;
 import com.tr.hsyn.xbox.Blue;
 
@@ -207,7 +207,7 @@ public interface CallLog extends CCollection, Ranker {
 	@NotNull
 	default List<History> getHistory() {
 		
-		return Contacts.getContacts().stream().map(this::getHistory).collect(Collectors.toList());
+		return ContactLog.getLogOrEmpty().getContacts().stream().map(this::getHistory).collect(Collectors.toList());
 	}
 	
 	/**
@@ -281,7 +281,7 @@ public interface CallLog extends CCollection, Ranker {
 	 */
 	default @NotNull List<Contact> selectContacts(@Nullable Boolean incoming, @Nullable Boolean outgoing, @Nullable Boolean missed, @Nullable Boolean rejected, int minSize) {
 		
-		List<Contact> contacts = Contacts.getWithNumber();
+		List<Contact> contacts = ContactLog.getLogOrEmpty().getWithNumber();
 		
 		if (contacts.isEmpty()) return new ArrayList<>();
 		
@@ -347,7 +347,7 @@ public interface CallLog extends CCollection, Ranker {
 	 */
 	default @NotNull List<Contact> getContactsByCalls(@NotNull Predicate<@NotNull List<Call>> predicate) {
 		
-		return Contacts.getWithNumber().stream()
+		return ContactLog.getLogOrEmpty().getWithNumber().stream()
 				.filter(contact -> predicate.test(getCalls(contact)))
 				.collect(Collectors.toList());
 	}

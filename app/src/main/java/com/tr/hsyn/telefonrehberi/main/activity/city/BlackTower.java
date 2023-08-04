@@ -34,6 +34,7 @@ import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
 import com.tr.hsyn.telefonrehberi.main.contact.activity.detail.ContactDetails;
 import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.contact.data.ContactsReader;
+import com.tr.hsyn.telefonrehberi.main.data.ContactLog;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
 import com.tr.hsyn.telefonrehberi.main.dev.menu.MenuEditor;
 import com.tr.hsyn.telefonrehberi.main.dev.menu.MenuManager;
@@ -213,6 +214,7 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 		if (loadingCompleted.getAndSet(true)) {
 			
 			CallLog.createGlobal(Over.CallLog.Calls.getCalls());
+			Blue.box(Key.CONTACT_LOG, new ContactLog(contacts));
 		}
 		
 		Blue.remove(Key.CONTACTS_LOADING);
