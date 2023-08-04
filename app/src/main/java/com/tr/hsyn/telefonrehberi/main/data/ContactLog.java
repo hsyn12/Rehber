@@ -2,6 +2,7 @@ package com.tr.hsyn.telefonrehberi.main.data;
 
 
 import com.tr.hsyn.contactdata.Contact;
+import com.tr.hsyn.keep.Keep;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 /**
  * Holds the contacts and provides methods for filtering, searching and analyzing.
  */
+@Keep
 public final class ContactLog {
 	
 	/**

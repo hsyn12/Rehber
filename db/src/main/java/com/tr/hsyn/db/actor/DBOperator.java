@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.tr.hsyn.identity.Identity;
-import com.tr.hsyn.registery.Value;
 import com.tr.hsyn.registery.Values;
 import com.tr.hsyn.registery.cast.DB;
 import com.tr.hsyn.registery.cast.Database;
@@ -76,18 +75,6 @@ public abstract class DBOperator<T extends Identity> extends SQLiteOpenHelper im
 		return getReadableDatabase().compileStatement("select count(*) from " + databaseInterface.getTableName()).simpleQueryForLong();
 	}
 	
-	@NonNull
-	public List<T> query(@NonNull Function<Cursor, ? extends T> function, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
-		
-		return COperator.<T>on(getReadableDatabase())
-				.selection(selection)
-				.selectionArgs(selectionArgs)
-				.sortOrder(sortOrder)
-				.objectFunction(function)
-				.performQuery(databaseInterface.getTableName())
-				.execute();
-	}
-	
 	@Override
 	public long insert(@NotNull String table, @Nullable String nullColumnHack, @NotNull Values values) {
 		
@@ -96,7 +83,6 @@ public abstract class DBOperator<T extends Identity> extends SQLiteOpenHelper im
 	
 	@Override
 	public int update(@NotNull String table, @NotNull Values values, @NotNull String whereClause, @Nullable @org.jetbrains.annotations.Nullable String[] whereArgs) {
-		
 		
 		return getWritableDatabase().update(table, convertFrom(values), whereClause, whereArgs);
 	}
@@ -126,43 +112,47 @@ public abstract class DBOperator<T extends Identity> extends SQLiteOpenHelper im
 	}
 	
 	@NonNull
+	public List<T> query(@NonNull Function<Cursor, ? extends T> function, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
+		
+		return COperator.<T>on(getReadableDatabase())
+				.selection(selection)
+				.selectionArgs(selectionArgs)
+				.sortOrder(sortOrder)
+				.objectFunction(function)
+				.performQuery(databaseInterface.getTableName())
+				.execute();
+	}
+	
+	@NonNull
 	public static ContentValues convertFrom(@NonNull Values values) {
 		
-		ContentValues  valuesCopy = new ContentValues();
-		Value<String>  strings    = values.getValue(Values.TYPE_STRING);
-		Value<Integer> ints       = values.getValue(Values.TYPE_INT);
-		Value<Long>    longs      = values.getValue(Values.TYPE_LONG);
-		Value<Boolean> bools      = values.getValue(Values.TYPE_BOOL);
+		ContentValues valuesCopy = new ContentValues();
+		var           strings    = values.getEntries(Values.TYPE_STRING);
+		var           longs      = values.getEntries(Values.TYPE_LONG);
+		var           bools      = values.getEntries(Values.TYPE_BOOL);
 		
 		if (strings != null) {
 			
-			for (String key : strings.keySet()) {
+			for (var entry : strings) {
 				
-				valuesCopy.put(key, strings.get(key));
+				valuesCopy.put(entry.getKey(), (String) entry.getValue());
 			}
 		}
 		
-		if (ints != null) {
-			
-			for (String key : ints.keySet()) {
-				
-				valuesCopy.put(key, ints.get(key));
-			}
-		}
 		
 		if (longs != null) {
 			
-			for (String key : longs.keySet()) {
+			for (var entry : longs) {
 				
-				valuesCopy.put(key, longs.get(key));
+				valuesCopy.put(entry.getKey(), (Long) entry.getValue());
 			}
 		}
 		
 		if (bools != null) {
 			
-			for (String key : bools.keySet()) {
+			for (var entry : bools) {
 				
-				valuesCopy.put(key, bools.get(key));
+				valuesCopy.put(entry.getKey(), (Boolean) entry.getValue());
 			}
 		}
 		

@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  * bir otelde yarı zamanlı kayıt görevlisi ({@link Writer}) olarak çalışmakta.<br>
  * Elbette bu iş sadece arkadaşlarından kaçmak için değil,
  * Alice takıntılı denecek kadar disiplinli ve düzenli bir genç kız.
- * Bir konferansa giderken otobüste fazla yolcunun olmaması nedeniyle herkesin heryerde
+ * Bir konferansa giderken otobüste fazla yolcunun olmaması nedeniyle herkesin her yerde
  * oturabildiğini görünce panik atak geçirerek hızla giden otobüsten aşağı atladığı için ölen amcasından
  * miras kaldığını düşünmüştür hep bu düzen takıntısının.<br>
  * Ve otelde yaptığı iş onu büyük ölçüde rahatlatmaktadır onu.<br>
@@ -58,7 +58,7 @@ public class Alice implements Writer {
 			return;
 		}
 		
-		Visitor data = register.find(key.getName());
+		Visitor data = register.find(key.getId());
 		
 		if (data == null) {
 			
@@ -67,6 +67,8 @@ public class Alice implements Writer {
 		}
 		
 		data.setExit();
+		
+		xlog.d(data);
 		
 		if (register.update(data)) {
 			
@@ -87,7 +89,7 @@ public class Alice implements Writer {
 			return;
 		}
 		
-		Visitor data = register.find(key.getName());
+		Visitor data = register.find(key.getId());
 		
 		if (data == null) {
 			
@@ -117,7 +119,7 @@ public class Alice implements Writer {
 	@Override
 	public void add(@NotNull Key key) {
 		
-		Visitor data = register.find(key.getName());
+		Visitor data = register.find(key.getId());
 		//Visitor data = keyMap.get(key);
 		
 		if (data == null) {

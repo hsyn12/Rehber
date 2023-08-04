@@ -26,4 +26,13 @@ public class AtomImpl implements Atom {
 		
 		return id;
 	}
+	
+	@Override
+	public String toString() {
+		
+		return "Atom{" +
+		       "id=" + id +
+		       ", name='" + name + '\'' +
+		       '}';
+	}
 }

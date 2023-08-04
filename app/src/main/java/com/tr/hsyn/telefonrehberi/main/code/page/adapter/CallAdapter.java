@@ -284,7 +284,7 @@ public class CallAdapter extends RecyclerView.Adapter<CallAdapter.Holder> implem
 		
 		private boolean onLongClick(View v) {
 			
-			xlog.w("Selection mode : %s", selectionMode);
+			xlog.d("Selection mode : %s", selectionMode);
 			
 			
 			Call call = calls.get(getAdapterPosition());
@@ -299,7 +299,7 @@ public class CallAdapter extends RecyclerView.Adapter<CallAdapter.Holder> implem
 				
 				makeSelection(call, selectionMode = true);
 				selection.setChecked(true);
-				//- Sadece seçim modu aktif olursa çağrılacak
+				//+ Sadece seçim modu aktif olursa çağrılacak
 				longClickListener.onItemIndex(getAdapterPosition());
 			}
 			

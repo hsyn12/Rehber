@@ -97,7 +97,6 @@ public class Database extends DBBase<Call> implements DBCalls {
 		if (!labels.isEmpty()) call.setData(Key.LABELS, getLabels(labels));
 		
 		call.setData(Key.TRACK_TYPE, getTrackType(call));
-		call.setData(Key.RANDOM, call.isRandom());
 		
 		return call;
 	}
@@ -108,26 +107,26 @@ public class Database extends DBBase<Call> implements DBCalls {
 		
 		Values values = new Values();
 		
-		if (call.getName() != null) values.put(NAME, call.getName());
+		if (call.getName() != null) values.putString(NAME, call.getName());
 		else values.putNull(Values.TYPE_STRING, NAME);
 		
-		values.put(NUMBER, call.getNumber());
-		values.put(DATE, call.getTime());
-		values.put(TYPE, call.getCallType());
-		values.put(DURATION, call.getDuration());
-		values.put(CONTACT_ID, call.getLong(Key.CONTACT_ID, 0L));
-		values.put(DELETED_DATE, call.getLong(Key.DELETED_DATE, 0L));
-		values.put(RINGING_DURATION, call.getLong(Key.RINGING_DURATION, 0L));
-		values.put(EXTRA, call.getExtra());
+		values.putString(NUMBER, call.getNumber());
+		values.putLong(DATE, call.getTime());
+		values.putLong(TYPE, call.getCallType());
+		values.putLong(DURATION, call.getDuration());
+		values.putLong(CONTACT_ID, call.getLong(Key.CONTACT_ID, 0L));
+		values.putLong(DELETED_DATE, call.getLong(Key.DELETED_DATE, 0L));
+		values.putLong(RINGING_DURATION, call.getLong(Key.RINGING_DURATION, 0L));
+		values.putString(EXTRA, call.getExtra());
 		
 		if (call.existKey(Key.NOTE)) //noinspection ConstantConditions
-			values.put(NOTE, call.getData(Key.NOTE));
+			values.putString(NOTE, call.getData(Key.NOTE));
 		else values.putNull(Values.TYPE_STRING, NOTE);
 		
 		Set<Label> labels = call.getData(Key.LABELS);
 		
 		if (labels == null || labels.isEmpty()) values.putNull(Values.TYPE_STRING, LABELS);
-		else values.put(LABELS, getLabels(labels));
+		else values.putString(LABELS, getLabels(labels));
 		
 		return values;
 	}

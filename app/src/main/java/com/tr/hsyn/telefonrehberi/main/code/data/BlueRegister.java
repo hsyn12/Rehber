@@ -37,7 +37,7 @@ public class BlueRegister extends DBBase<Visitor> {
 	/**
 	 * Kayıt kimliği
 	 */
-	private static final String ID          = "id";
+	private static final String ID          = "key";
 	/**
 	 * Erişim sayısı
 	 */
@@ -66,11 +66,11 @@ public class BlueRegister extends DBBase<Visitor> {
 	public @NotNull Values contentValuesOf(@NotNull Visitor item) {
 		
 		Values v = new Values();
-		v.put(TIME_ENTER, item.getTimeEnter());
-		v.put(TIME_EXIT, item.getTimeExit());
-		v.put(NAME, item.getKey().getName());
-		v.put(ID, item.getKey().getId());
-		v.put(INTERACTION, item.getInteraction());
+		v.putLong(TIME_ENTER, item.getTimeEnter());
+		v.putLong(TIME_EXIT, item.getTimeExit());
+		v.putString(NAME, item.getKey().getName());
+		v.putLong(ID, item.getKey().getId());
+		v.putLong(INTERACTION, item.getInteraction());
 		
 		return v;
 	}
@@ -80,8 +80,8 @@ public class BlueRegister extends DBBase<Visitor> {
 		private final DBColumn[] columns = {
 				
 				DB.number(TIME_ENTER),
-				DB.text(NAME).primaryKey(),
-				DB.number(ID).notNull(),
+				DB.text(NAME),
+				DB.number(ID).primaryKey(),
 				DB.number(TIME_EXIT).defaultValue(0L),
 				DB.number(INTERACTION).defaultValue(0L)
 		};
@@ -95,7 +95,7 @@ public class BlueRegister extends DBBase<Visitor> {
 		@Override
 		public @NotNull String getPrimaryKey() {
 			
-			return NAME;
+			return ID;
 		}
 		
 		@Override

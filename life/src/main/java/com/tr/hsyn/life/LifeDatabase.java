@@ -50,9 +50,9 @@ public class LifeDatabase extends DBBase<Life> implements LifeRecorder {
 		
 		Values values = new Values();
 		
-		values.put(NAME, life.getName());
-		values.put(START, life.getStartTime());
-		values.put(END, life.getEndTime());
+		values.putString(NAME, life.getName());
+		values.putLong(START, life.getStartTime());
+		values.putLong(END, life.getEndTime());
 		
 		return values;
 	}

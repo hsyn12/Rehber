@@ -246,7 +246,7 @@ public abstract class CallLogMenu extends CallLogTitle implements MenuProvider, 
 			
 			doNotListenBackPress();
 			selectedItemsCounter = 0;
-			cancelSelection();
+			//cancelSelection();
 			updateSubTitle();
 			
 			boolean visible = isShowTime();
@@ -272,7 +272,12 @@ public abstract class CallLogMenu extends CallLogTitle implements MenuProvider, 
 		getMainMenu().showMenu(true);
 	}
 	
-	protected void onLongClickItem(int position) {
+	/**
+	 * Called when a menu item is clicked for long.
+	 *
+	 * @param ignoredPosition the position of the clicked item
+	 */
+	protected void onLongClickItem(int ignoredPosition) {
 		
 		//- Bu metot, seçim modu aktif iken çağrılmıyor
 		//- Bu yüzden bu çağrı güvenli
