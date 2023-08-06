@@ -1,0 +1,14 @@
+plugins {
+	id 'java-library'
+	id 'org.jetbrains.kotlin.jvm'
+}
+
+java {
+	sourceCompatibility = rootProject.ext.java_version
+	targetCompatibility = rootProject.ext.java_version
+}
+
+dependencies {
+	implementation project(path: ':codefinder')
+	implementation project(path: ':xlog')
+}

@@ -71,7 +71,6 @@ public final class xlog {
 	public static void d(Object msg, Object... args) {
 		
 		logger.fine(CodeFinder.formatAsLog() + " " + format(msg, args));
-		//logger.fine(format(findPlace() + " " + msg, args));
 	}
 	
 	/**
@@ -113,7 +112,7 @@ public final class xlog {
 	}
 	
 	/**
-	 * Warn log with thread name.
+	 * A warning log with thread name.
 	 *
 	 * @param msg  message
 	 * @param args Args
