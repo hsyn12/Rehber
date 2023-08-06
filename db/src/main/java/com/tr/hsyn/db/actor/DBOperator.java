@@ -18,6 +18,7 @@ import com.tr.hsyn.xlog.xlog;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
@@ -82,7 +83,10 @@ public abstract class DBOperator<T extends Identity> extends SQLiteOpenHelper im
 	}
 	
 	@Override
-	public int update(@NotNull String table, @NotNull Values values, @NotNull String whereClause, @Nullable @org.jetbrains.annotations.Nullable String[] whereArgs) {
+	public int update(@NotNull String table, @NotNull Values values, @NotNull String whereClause, @Nullable String[] whereArgs) {
+		
+		xlog.d("Table name : %s, where=%s, whereArgs=%s", table, whereClause, Arrays.toString(whereArgs));
+		
 		
 		return getWritableDatabase().update(table, convertFrom(values), whereClause, whereArgs);
 	}
@@ -127,35 +131,19 @@ public abstract class DBOperator<T extends Identity> extends SQLiteOpenHelper im
 	public static ContentValues convertFrom(@NonNull Values values) {
 		
 		ContentValues valuesCopy = new ContentValues();
-		var           strings    = values.getEntries(Values.TYPE_STRING);
-		var           longs      = values.getEntries(Values.TYPE_LONG);
-		var           bools      = values.getEntries(Values.TYPE_BOOL);
 		
-		if (strings != null) {
+		for (var entry : values.getEntries()) {
 			
-			for (var entry : strings) {
-				
-				valuesCopy.put(entry.getKey(), (String) entry.getValue());
-			}
-		}
-		
-		
-		if (longs != null) {
+			var value = entry.getValue();
 			
-			for (var entry : longs) {
-				
-				valuesCopy.put(entry.getKey(), (Long) entry.getValue());
-			}
+			if (value == null) valuesCopy.putNull(entry.getKey());
+			else if (value instanceof String str) valuesCopy.put(entry.getKey(), str);
+			else if (value instanceof Integer i) valuesCopy.put(entry.getKey(), i);
+			else if (value instanceof Long longValue) valuesCopy.put(entry.getKey(), longValue);
+			else if (value instanceof Boolean boolValue) valuesCopy.put(entry.getKey(), boolValue);
+			else valuesCopy.put(entry.getKey(), value.toString());
 		}
-		
-		if (bools != null) {
-			
-			for (var entry : bools) {
-				
-				valuesCopy.put(entry.getKey(), (Boolean) entry.getValue());
-			}
-		}
-		
+		//xlog.d("Converted values : %s", valuesCopy);
 		return valuesCopy;
 	}
 }

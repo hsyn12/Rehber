@@ -107,26 +107,26 @@ public class Database extends DBBase<Call> implements DBCalls {
 		
 		Values values = new Values();
 		
-		if (call.getName() != null) values.putString(NAME, call.getName());
-		else values.putNull(Values.TYPE_STRING, NAME);
+		if (call.getName() != null) values.put(NAME, call.getName());
+		else values.put(NAME, null);
 		
-		values.putString(NUMBER, call.getNumber());
-		values.putLong(DATE, call.getTime());
-		values.putLong(TYPE, call.getCallType());
-		values.putLong(DURATION, call.getDuration());
-		values.putLong(CONTACT_ID, call.getLong(Key.CONTACT_ID, 0L));
-		values.putLong(DELETED_DATE, call.getLong(Key.DELETED_DATE, 0L));
-		values.putLong(RINGING_DURATION, call.getLong(Key.RINGING_DURATION, 0L));
-		values.putString(EXTRA, call.getExtra());
+		values.put(NUMBER, call.getNumber());
+		values.put(DATE, call.getTime());
+		values.put(TYPE, call.getCallType());
+		values.put(DURATION, call.getDuration());
+		values.put(CONTACT_ID, call.getLong(Key.CONTACT_ID, 0L));
+		values.put(DELETED_DATE, call.getLong(Key.DELETED_DATE, 0L));
+		values.put(RINGING_DURATION, call.getLong(Key.RINGING_DURATION, 0L));
+		values.put(EXTRA, call.getExtra());
 		
 		if (call.existKey(Key.NOTE)) //noinspection ConstantConditions
-			values.putString(NOTE, call.getData(Key.NOTE));
-		else values.putNull(Values.TYPE_STRING, NOTE);
+			values.put(NOTE, call.getData(Key.NOTE));
+		else values.put(NOTE, null);
 		
 		Set<Label> labels = call.getData(Key.LABELS);
 		
-		if (labels == null || labels.isEmpty()) values.putNull(Values.TYPE_STRING, LABELS);
-		else values.putString(LABELS, getLabels(labels));
+		if (labels == null || labels.isEmpty()) values.put(LABELS, null);
+		else values.put(LABELS, getLabels(labels));
 		
 		return values;
 	}

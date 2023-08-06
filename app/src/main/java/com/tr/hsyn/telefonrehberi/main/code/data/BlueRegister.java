@@ -66,11 +66,11 @@ public class BlueRegister extends DBBase<Visitor> {
 	public @NotNull Values contentValuesOf(@NotNull Visitor item) {
 		
 		Values v = new Values();
-		v.putLong(TIME_ENTER, item.getTimeEnter());
-		v.putLong(TIME_EXIT, item.getTimeExit());
-		v.putString(NAME, item.getKey().getName());
-		v.putLong(ID, item.getKey().getId());
-		v.putLong(INTERACTION, item.getInteraction());
+		v.put(TIME_ENTER, item.getTimeEnter());
+		v.put(TIME_EXIT, item.getTimeExit());
+		v.put(NAME, item.getKey().getName());
+		v.put(ID, item.getKey().getId());
+		v.put(INTERACTION, item.getInteraction());
 		
 		return v;
 	}

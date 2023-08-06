@@ -41,6 +41,35 @@ public class Visitor implements Identity {
 		this.interaction = interaction;
 	}
 	
+	@Override
+	public int hashCode() {
+		
+		return Objects.hash(timeEnter);
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		
+		return o instanceof Visitor && timeEnter == ((Visitor) o).timeEnter;
+	}
+	
+	@Override
+	public String toString() {
+		
+		return "Data{" +
+		       "key=" + key +
+		       ", timeEnter=" + timeEnter +
+		       ", timeExit=" + timeExit +
+		       ", interaction=" + interaction +
+		       '}';
+	}
+	
+	@Override
+	public long getId() {
+		
+		return key.getId();
+	}
+	
 	/**
 	 * Çıkış zamanını kaydeder.
 	 */
@@ -114,34 +143,5 @@ public class Visitor implements Identity {
 	public Key getKey() {
 		
 		return key;
-	}
-	
-	@Override
-	public boolean equals(Object o) {
-		
-		return o instanceof Visitor && timeEnter == ((Visitor) o).timeEnter;
-	}
-	
-	@Override
-	public int hashCode() {
-		
-		return Objects.hash(timeEnter);
-	}
-	
-	@Override
-	public String toString() {
-		
-		return "Data{" +
-		       "key=" + key +
-		       ", timeEnter=" + timeEnter +
-		       ", timeExit=" + timeExit +
-		       ", interaction=" + interaction +
-		       '}';
-	}
-	
-	@Override
-	public long getId() {
-		
-		return timeEnter;
 	}
 }

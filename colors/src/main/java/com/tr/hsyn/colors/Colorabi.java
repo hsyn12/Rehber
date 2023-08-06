@@ -61,10 +61,10 @@ public class Colorabi extends DBBase<ColorRegister> implements ColorRegisters {
 		
 		Values value = new Values();
 		
-		value.putString(NAME, colorData.getName());
-		value.putLong(COLOR, colorData.getColor());
-		value.putLong(TIME_SELECTED, colorData.getLifeTime().getStartTime());
-		value.putLong(TIME_UNSELECTED, colorData.getLifeTime().getEndTime());
+		value.put(NAME, colorData.getName());
+		value.put(COLOR, colorData.getColor());
+		value.put(TIME_SELECTED, colorData.getLifeTime().getStartTime());
+		value.put(TIME_UNSELECTED, colorData.getLifeTime().getEndTime());
 		
 		return value;
 	}
