@@ -20,6 +20,7 @@ public final class xlog {
 	private static final String TAG    = "Rehber";
 	public static final  Logger logger = Logger.getLogger(TAG);
 	
+	
 	static {
 		logger.setLevel(Level.ALL);
 	}
@@ -44,6 +45,11 @@ public final class xlog {
 	public static void i(Object msg, Object... args) {
 		
 		logger.info(format(findPlace() + " " + msg, args));
+	}
+	
+	public static void i(Object msg, int placeFactor, Object... args) {
+		
+		logger.info(format(findPlace(placeFactor) + " " + msg, args));
 	}
 	
 	/**

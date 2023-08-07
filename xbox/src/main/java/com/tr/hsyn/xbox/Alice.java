@@ -68,8 +68,6 @@ public class Alice implements Writer {
 		
 		data.setExit();
 		
-		xlog.d(data);
-		
 		if (register.update(data)) {
 			
 			xlog.i("The visitor exited : [%s]", key.getName());
