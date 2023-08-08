@@ -26,16 +26,16 @@ private fun decorateLog(log: String, msg: String): String {
 	}
 }
 
-val String.debug: Unit
-	get() = xlog.logger.fine(decorateLog(CodeFinder.formatAsLog(CodeFinder.getLocation(placeFactor)), this))
+val Any?.debug: Unit
+	get() = xlog.logger.fine(decorateLog(CodeFinder.formatAsLog(CodeFinder.getLocation(placeFactor)), this?.toString() ?: "null"))
 
-val String.info: Unit
-	get() = xlog.logger.info(decorateLog(CodeFinder.formatAsLog(CodeFinder.getLocation(placeFactor)), this))
+val Any?.info: Unit
+	get() = xlog.logger.info(decorateLog(CodeFinder.formatAsLog(CodeFinder.getLocation(placeFactor)), this?.toString() ?: "null"))
 
-val String.warn: Unit
-	get() = xlog.logger.warning(decorateLog(CodeFinder.formatAsLog(CodeFinder.getLocation(placeFactor)), this))
+val Any?.warn: Unit
+	get() = xlog.logger.warning(decorateLog(CodeFinder.formatAsLog(CodeFinder.getLocation(placeFactor)), this?.toString() ?: "null"))
 
-val String.error: Unit
-	get() = xlog.logger.severe(decorateLog(CodeFinder.formatAsLog(CodeFinder.getLocation(placeFactor)), this))
+val Any?.error: Unit
+	get() = xlog.logger.severe(decorateLog(CodeFinder.formatAsLog(CodeFinder.getLocation(placeFactor)), this?.toString() ?: "null"))
 
 

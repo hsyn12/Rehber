@@ -6,9 +6,7 @@ import tr.xyz.klog.info
 class KBlack : Black() {
 	
 	override fun onCreate() {
-		
 		super.onCreate()
 		DayTime.toString(this).info
-		
 	}
 }

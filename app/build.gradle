@@ -1,17 +1,17 @@
 plugins {
 	id 'com.android.application'
 	id 'kotlin-android'
-	//id "systems.manifold.manifold-gradle-plugin" version "0.0.2-alpha"
+	// id "systems.manifold.manifold-gradle-plugin" version "0.0.2-alpha"
 }
 
 
 android {
 	namespace 'com.tr.hsyn.telefonrehberi'
 	compileSdk rootProject.compileSdk
-
-
+	
+	
 	def configKeyPath = "C:\\Users\\xyz\\StudioProjects\\Rehber\\tr_hsyn.jks"
-
+	
 	signingConfigs {
 		myconfig {
 			storeFile file(configKeyPath)
@@ -26,61 +26,60 @@ android {
 			keyPassword 'android'
 		}
 	}
-
+	
 	defaultConfig {
 		applicationId "com.tr.hsyn.telefonrehberi"
 		minSdk rootProject.minSdk
 		targetSdk rootProject.targetSdk
 		versionCode 1
 		versionName "1.0"
-
+		
 		testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 		resourceConfigurations += ['tr', 'en']
-
-
+		
 	}
-
+	
 	buildTypes {
 		release {
 			minifyEnabled false
 			proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 		}
 	}
-
+	
 	compileOptions {
 		sourceCompatibility rootProject.ext.java_version
 		targetCompatibility rootProject.ext.java_version
 	}
-
+	
 	sourceSets {
 		main {
 			res.srcDirs =
-					[
-							'src/main/res/layouts/dialog',
-							'src/main/res/layouts/reporter',
-							'src/main/res/layouts/contact',
-							'src/main/res/layouts/call',
-							'src/main/res/layouts/search',
-							'src/main/res/layouts/colors',
-							'src/main/res/layouts/main',
-							'src/main/res/layouts/time',
-							'src/main/res/layouts/loader',
-							'src/main/res/layouts/dialog',
-							'src/main/res/layouts/io',
-							'src/main/res/layouts/settings',
-							'src/main/res/layouts/extra',
-							'src/main/res/layouts/contract',
-							'src/main/res/layouts/view',
-							'src/main/res/layouts',
-							'src/main/res/layout',
-							'src/main/res/values',
-							'src/main/res/'
-
-
-					]
+				[
+					'src/main/res/layouts/dialog',
+					'src/main/res/layouts/reporter',
+					'src/main/res/layouts/contact',
+					'src/main/res/layouts/call',
+					'src/main/res/layouts/search',
+					'src/main/res/layouts/colors',
+					'src/main/res/layouts/main',
+					'src/main/res/layouts/time',
+					'src/main/res/layouts/loader',
+					'src/main/res/layouts/dialog',
+					'src/main/res/layouts/io',
+					'src/main/res/layouts/settings',
+					'src/main/res/layouts/extra',
+					'src/main/res/layouts/contract',
+					'src/main/res/layouts/view',
+					'src/main/res/layouts',
+					'src/main/res/layout',
+					'src/main/res/values',
+					'src/main/res/'
+				
+				
+				]
 		}
 	}
-
+	
 	packagingOptions {
 		jniLibs {
 			excludes += ['META-INF/*']
@@ -89,7 +88,7 @@ android {
 			excludes += ['META-INF/gradle/incremental.annotation.processors', 'META-INF/proguard/androidx-annotations.pro', 'META-INF/services/javax.annotation.processing.Processor', 'META-INF/*', 'META-INF/DEPENDENCIES', 'META-INF/MANIFEST.MF', 'META-INF/LICENSE', 'META-INF/LICENSE.txt', 'META-INF/license.txt', 'META-INF/NOTICE', 'META-INF/NOTICE.txt', 'META-INF/notice.txt', 'META-INF/ASL2.0', 'META-INF/atomicfu.kotlin_module', 'META-INF/rxjava.properties', 'META-INF/groovy-release-info.properties', 'LICENSE.txt', 'META-INF/ECLIPSE_.SF', 'META-INF/ECLIPSE_.RSA', 'META-INF/*.kotlin_module']
 		}
 	}
-
+	
 	kotlinOptions {
 		jvmTarget = rootProject.kotlin_jvm_target
 		freeCompilerArgs = ['-Xjvm-default=all']
@@ -97,8 +96,8 @@ android {
 }
 
 dependencies {
-
-	//region local dependencies
+	
+	// region local dependencies
 	implementation project(path: ':xlog')
 	implementation project(path: ':klog')
 	implementation project(path: ':executors')
@@ -181,20 +180,20 @@ dependencies {
 	implementation project(path: ':contactdata')
 	implementation project(path: ':tryme')
 	annotationProcessor project(path: ':warnerbros')
-	//endregion
-
+	// endregion
+	
 	implementation "androidx.appcompat:appcompat:${rootProject.appcompat}"
 	implementation "com.google.android.material:material:${rootProject.material_version}"
 	implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 	testImplementation 'junit:junit:4.13.2'
 	androidTestImplementation 'androidx.test.ext:junit:1.1.5'
 	androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-
-
+	
+	
 	implementation 'io.github.pilgr:paperdb:2.7.2'
-
+	
 	//------------------------- mail -------------------------------------------------------------
-	//def work_version = '1.0.1'
+	// def work_version = '1.0.1'
 	implementation 'com.google.android.gms:play-services-auth:20.6.0'
 	implementation('com.google.api-client:google-api-client-android:2.2.0') {
 		exclude group: 'org.apache.httpcomponents'
@@ -206,18 +205,15 @@ dependencies {
 		 exclude group: 'com.google.guava', module: 'listenablefuture'
 	}*/
 	//--------------------------------------------------------------------------------------
-
-
+	
+	
 	implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 	implementation "com.google.guava:guava:${rootProject.guava}"
 	implementation "com.google.code.gson:gson:${rootProject.gson}"
-
-
 	implementation 'net.sourceforge.streamsupport:android-retrofuture:1.7.4'
 	implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.24'
 	implementation 'de.hdodenhof:circleimageview:3.1.0'
-
 	implementation 'com.github.nisrulz:packagehunter:1.1.5'
-
-
+	
+	implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${rootProject.koroutine_android}"
 }
