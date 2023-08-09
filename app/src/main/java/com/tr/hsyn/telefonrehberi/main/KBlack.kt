@@ -1,12 +1,16 @@
 package com.tr.hsyn.telefonrehberi.main
 
-import com.tr.hsyn.daytimes.DayTime
-import tr.xyz.klog.info
+import tr.xyz.klog.debug
 
 class KBlack : Black() {
 	
 	override fun onCreate() {
 		super.onCreate()
-		DayTime.toString(this).info
+		
+	}
+	
+	private fun test() {
+		
+		"This is a test function on ${Thread.currentThread().name}".debug
 	}
 }
