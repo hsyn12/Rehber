@@ -3,46 +3,51 @@
 package tr.xyz.koncurrent
 
 import kotlinx.coroutines.*
+import tr.xyz.klog.warn
+
+private val exceptionHandler = CoroutineExceptionHandler {_, e -> e.warn}
+
+val contextMain = Dispatchers.Main
+val contextIO = Dispatchers.IO
+val contextDefault = Dispatchers.Default
+val contextWorker = Dispatchers.Default
 
 /**
  * This is the UI scope
  */
-val mainScope = CoroutineScope(Job() + Dispatchers.Main)
+val mainScope = CoroutineScope(Job() + contextMain + exceptionHandler)
 /**
  * This is the IO scope
  */
-val ioScope = CoroutineScope(Job() + Dispatchers.IO)
+val ioScope = CoroutineScope(Job() + contextIO + exceptionHandler)
 /**
  * This is the default background scope
  */
-val defaultScope = CoroutineScope(Job() + Dispatchers.Default)
+val defaultScope = CoroutineScope(Job() + contextDefault + exceptionHandler)
 /**
  * This is the Worker scope
  */
-val workerScope = CoroutineScope(Job() + Dispatchers.Default)
+val workerScope = CoroutineScope(Job() + contextWorker + exceptionHandler)
 
 /**
  *  Runs the action on the main thread
  */
-fun onMain(action: () -> Unit): Job = mainScope.launch { action() }
+fun onMain(action: () -> Unit): Job = mainScope.launch {action()}
 
 /**
  *  Runs the action on the IO thread
  */
-fun onIO(action: () -> Unit): Job = ioScope.launch { action() }
+fun onIO(action: () -> Unit): Job = ioScope.launch {action()}
 
 /**
  *  Runs the action on the background thread
  */
-fun onBackground(action: () -> Unit): Job = defaultScope.launch { action() }
+fun onBackground(action: () -> Unit): Job = defaultScope.launch {action()}
 
 /**
  *  Runs the action on the worker thread
  */
-fun onWorker(action: suspend () -> Unit): Job = workerScope.launch { action() }
-fun onWorker(start: Boolean = true, action: suspend () -> Unit): Job = workerScope.launch(start = if (start) CoroutineStart.DEFAULT else CoroutineStart.LAZY) {
-	action()
-}
+fun onWorker(action: suspend () -> Unit): Job = workerScope.launch {action()}
 
 /**
  *  Runs the action on the main thread
@@ -63,38 +68,3 @@ fun (() -> Unit).runOnBackground(): Job = onBackground(this)
  *  Runs the action on the worker thread
  */
 fun (() -> Unit).runOnWorker(): Job = onWorker(this)
-
-suspend fun onMain(delay: Long = 0L, action: () -> Unit): Job {
-	if (delay > 0) {
-		delay(delay)
-	}
-	return onMain(action)
-}
-
-suspend fun onIO(delay: Long = 0L, action: () -> Unit): Job {
-	if (delay > 0) {
-		delay(delay)
-	}
-	return onIO(action)
-}
-
-suspend fun onBackground(delay: Long = 0L, action: () -> Unit): Job {
-	if (delay > 0) {
-		delay(delay)
-	}
-	return onBackground(action)
-}
-
-suspend fun onWorker(delay: Long = 0L, action: suspend () -> Unit): Job {
-	if (delay > 0) {
-		delay(delay)
-	}
-	return onWorker(action)
-}
-
-suspend fun onWorker(start: Boolean = true, delay: Long = 0L, action: suspend () -> Unit): Job {
-	if (delay > 0) {
-		delay(delay)
-	}
-	return onWorker(start, action)
-}

@@ -1,35 +1,31 @@
 package com.tr.hsyn.telefonrehberi.main
 
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancelAndJoin
 import tr.xyz.klog.debug
-import tr.xyz.klog.error
-import tr.xyz.koncurrent.onWorker
 
 class KBlack : Black() {
 	
 	override fun onCreate() {
 		super.onCreate()
-		
-		var one: Job? = null
-		
-		val main = onWorker {
-			
-			one = onWorker(6000L) {
-				try {
-					test()
-				} catch (e: Exception) {
-					e.error
+		/* 		val main = onWorker {
+					try {
+						test()
+						delay(10000L)
+						// if (true) throw CancellationException("This is a fucking exception")
+						test()
+					}
+					catch (e: CancellationException) {
+						e.error
+						throw e
+					}
 				}
-			}
-		}
+				
+				onWorker {
+					delay(8000L)
+					main.cancel(CancellationException("I cancelled"))
+					main.join()
+					"The end".debug
+				} */
 		
-		onWorker {
-			onWorker(5000L) {
-				main.cancelAndJoin()
-				"The end".debug
-			}
-		}
 		
 	}
 	
