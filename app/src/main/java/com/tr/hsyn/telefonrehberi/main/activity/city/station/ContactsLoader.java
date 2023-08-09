@@ -4,11 +4,11 @@ package com.tr.hsyn.telefonrehberi.main.activity.city.station;
 import androidx.annotation.CallSuper;
 
 import com.tr.hsyn.contactdata.Contact;
+import com.tr.hsyn.execution.Runny;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.telefonrehberi.app.UIThread;
 import com.tr.hsyn.telefonrehberi.main.activity.city.BigBank;
 import com.tr.hsyn.time.Time;
-import com.tr.hsyn.treadedwork.Threaded;
 import com.tr.hsyn.xbox.Blue;
 
 import java.util.List;
@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
  * Kişileri alma işlemi her başlatıldığında bir değişken güncel zamanla kaydedilir.<br>
  * Bu zaman bilgisi {@link #getLastContactsLoadingStartTime()} metoduyla elde edilebilir.
  */
-public abstract class ContactsLoader extends BigBank implements Threaded, UIThread {
+public abstract class ContactsLoader extends BigBank implements UIThread {
 	
 	/**
 	 * Kişileri alma işleminin başlama zamanı
@@ -44,9 +44,9 @@ public abstract class ContactsLoader extends BigBank implements Threaded, UIThre
 		Blue.box(Key.CONTACTS_LOADING, true);
 		contactsLoadStartTime = Time.now();
 		
-		completeWork(() -> getContactsLoader().load())
-				.orTimeout(3L, TimeUnit.MINUTES)
-				.whenCompleteAsync(this::onContactsLoaded, getUIThreadExecutor());
+		Runny.complete(() -> getContactsLoader().load())
+			.orTimeout(3L, TimeUnit.MINUTES)
+			.whenCompleteAsync(this::onContactsLoaded, getUIThreadExecutor());
 	}
 	
 	/**

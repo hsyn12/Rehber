@@ -1,3 +1,5 @@
+@file:JvmName("Concurrent")
+
 package tr.xyz.koncurrent
 
 import kotlinx.coroutines.*
@@ -37,7 +39,10 @@ fun onBackground(action: () -> Unit): Job = defaultScope.launch { action() }
 /**
  *  Runs the action on the worker thread
  */
-fun onWorker(action: () -> Unit): Job = workerScope.launch { action() }
+fun onWorker(action: suspend () -> Unit): Job = workerScope.launch { action() }
+fun onWorker(start: Boolean = true, action: suspend () -> Unit): Job = workerScope.launch(start = if (start) CoroutineStart.DEFAULT else CoroutineStart.LAZY) {
+	action()
+}
 
 /**
  *  Runs the action on the main thread
@@ -80,9 +85,16 @@ suspend fun onBackground(delay: Long = 0L, action: () -> Unit): Job {
 	return onBackground(action)
 }
 
-suspend fun onWorker(delay: Long = 0L, action: () -> Unit): Job {
+suspend fun onWorker(delay: Long = 0L, action: suspend () -> Unit): Job {
 	if (delay > 0) {
 		delay(delay)
 	}
 	return onWorker(action)
+}
+
+suspend fun onWorker(start: Boolean = true, delay: Long = 0L, action: suspend () -> Unit): Job {
+	if (delay > 0) {
+		delay(delay)
+	}
+	return onWorker(start, action)
 }

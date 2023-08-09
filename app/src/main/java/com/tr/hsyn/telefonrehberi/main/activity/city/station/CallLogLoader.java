@@ -4,6 +4,7 @@ package com.tr.hsyn.telefonrehberi.main.activity.city.station;
 import androidx.annotation.CallSuper;
 
 import com.tr.hsyn.calldata.Call;
+import com.tr.hsyn.execution.Runny;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.time.Time;
 import com.tr.hsyn.xbox.Blue;
@@ -40,9 +41,9 @@ public abstract class CallLogLoader extends ContactsLoader {
 		
 		Blue.box(Key.CALL_LOG_LOADING, true);
 		lastCallLogLoadingStartTime = Time.now();
-		completeWork(() -> getCallLogLoader().load())
-				.orTimeout(3L, TimeUnit.MINUTES)
-				.whenCompleteAsync(this::onCallLogLoaded, getUIThreadExecutor());
+		Runny.complete(() -> getCallLogLoader().load())
+			.orTimeout(3L, TimeUnit.MINUTES)
+			.whenCompleteAsync(this::onCallLogLoaded, getUIThreadExecutor());
 	}
 	
 	/**

@@ -127,7 +127,7 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 		addMenuProvider(this);
 		
 		setListeners();
-		//lifeStart();
+		// lifeStart();
 		
 		
 	}
@@ -141,7 +141,7 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 	@Override
 	protected void onDestroy() {
 		
-		//lifeEnd();
+		// lifeEnd();
 		super.onDestroy();
 	}
 	
@@ -158,7 +158,7 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 		
 		int id = item.getItemId();
 		
-		//noinspection SwitchStatementWithTooFewBranches
+		// noinspection SwitchStatementWithTooFewBranches
 		switch (id) {
 			
 			case R.id.main_menu_colors:
@@ -188,8 +188,8 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 	@Override
 	public void showMenu(boolean show) {
 		
-		//pageContacts.showMenu(currentPage == PAGE_CONTACTS);
-		//pageCallLog.showMenu(currentPage == PAGE_CALL_LOG);
+		// pageContacts.showMenu(currentPage == PAGE_CONTACTS);
+		// pageCallLog.showMenu(currentPage == PAGE_CALL_LOG);
 		menuManager.setVisible(menuManager.getMenuItemResourceIds(), show);
 	}
 	
@@ -234,7 +234,7 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 		
 		pageContacts.setScrollListener(this);
 		pageContacts.setPageOwner(this);
-		//pageCallLog.setScrollListener(this);
+		// pageCallLog.setScrollListener(this);
 		pageCallLog.setPageOwner(this);
 		
 		pageContacts.setItemSelectListener(this::onContactSelected);
@@ -316,7 +316,7 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 		
 		if (keepCallAction.enter()) {
 			
-			//todo Aramayı gerçekleştir
+			// todo Aramayı gerçekleştir
 			
 			Call call = pageCallLog.getItem(index);
 			xlog.d("Call action : %s", Stringx.overWrite(call.getNumber()));
@@ -329,12 +329,12 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 		Dialog dialog = Dialog.newDialog(this);
 		
 		dialog.title(getString(R.string.confirm_delete_action))
-				.message(new Spanner()
-						         .append(Stringx.format("%s ", pageCallLog.getFilterName()), Spans.bold())
-						         .append(getString(R.string.will_delete)))
-				.confirmText(getString(R.string.delete_all))
-				.onConfirm(() -> deleteCalls(pageCallLog.deleteAllItems(), dialog))
-				.show();
+			.message(new Spanner()
+				         .append(Stringx.format("%s ", pageCallLog.getFilterName()), Spans.bold())
+				         .append(getString(R.string.will_delete)))
+			.confirmText(getString(R.string.delete_all))
+			.onConfirm(() -> deleteCalls(pageCallLog.deleteAllItems(), dialog))
+			.show();
 		
 		
 		/*DialogConfirmation confirmation = new DialogConfirmation(this);
@@ -349,7 +349,7 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 	
 	private void deleteCalls(List<com.tr.hsyn.calldata.Call> deletedCalls, @NonNull Dialog dialog) {
 		
-		onBackground(() -> {
+		Runny.run(() -> {
 			
 			int count = getCallStory().delete(deletedCalls);
 			
@@ -361,7 +361,7 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 				
 				xlog.d("%d arama kaydından %d tanesi silindi", deletedCalls.size(), count);
 			}
-		});
+		}, false);
 		
 		dialog.dismiss();
 	}
