@@ -73,21 +73,10 @@ fun (() -> Unit).runOnIO(): Job = onIO(this)
 fun (() -> Unit).runOnBackground(): Job = onBackground(this)
 
 /**
- *  Extension to run the action on the worker thread
- */
-fun (() -> Unit).runOnWorker(): Job = onWorker(this)
-
-/**
  *  Extension for functions that no parameters and no return value
  *  to execute directly on the worker thread
  */
-fun Function0<Unit>.goWorker(): Job = workerScope.launch {invoke()}
-
-/**
- *  Extension for functions that no parameters and have a return value
- *  to execute directly on the worker thread
- */
-suspend fun <R> Function0<R>.goAsync(): R = workerScope.async {invoke()}.await()
+fun Function0<Unit>.runOnWorker(): Job = workerScope.launch {invoke()}
 
 /**
  *  Extension for functions that have a parameter and no return value
@@ -101,17 +90,7 @@ fun <P> Function1<P, Unit>.goWorker(param: P): Job = workerScope.launch {invoke(
  */
 fun <P1, P2> Function2<P1, P2, Unit>.goWorker(param1: P1, param2: P2): Job = workerScope.launch {invoke(param1, param2)}
 
-/**
- *  Extension for functions that have a parameter and have return value
- *  to execute directly on the worker thread
- */
-suspend fun <P, R> Function1<P, R>.goWorker(param: P): R = workerScope.async {invoke(param)}.await()
 
-/**
- *  Extension for functions that have two parameters and have return value
- *  to execute directly on the worker thread
- */
-suspend fun <P1, P2, R> Function2<P1, P2, R>.goWorker(param1: P1, param2: P2): R = workerScope.async {invoke(param1, param2)}.await()
 
 
 

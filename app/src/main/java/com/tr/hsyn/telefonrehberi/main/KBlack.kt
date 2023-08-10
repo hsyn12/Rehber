@@ -4,7 +4,6 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
 import tr.xyz.klog.debug
 import tr.xyz.klog.error
-import tr.xyz.koncurrent.goAsync
 import tr.xyz.koncurrent.newWorker
 import tr.xyz.koncurrent.onWorker
 
@@ -15,8 +14,6 @@ class KBlack : Black() {
 		super.onCreate()
 		
 		val main = newWorker("TestingWorker") {
-			
-			val f = this::tester.goAsync()
 			
 			try {
 				test()
