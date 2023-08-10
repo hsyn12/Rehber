@@ -1,8 +1,6 @@
 package com.tr.hsyn.integer;
 
-
 import org.jetbrains.annotations.NotNull;
-
 
 /**
  * Holds an integer value like {@link java.lang.Integer}.
