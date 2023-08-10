@@ -4,45 +4,50 @@ package tr.xyz.koncurrent
 
 import kotlinx.coroutines.*
 import tr.xyz.klog.warn
+import kotlin.coroutines.CoroutineContext
 
-private val exceptionHandler = CoroutineExceptionHandler {_, e -> e.warn}
+private val _exceptionHandler = CoroutineExceptionHandler {_, e -> e.warn}
+private val contextMain = Dispatchers.Main
+private val contextIO = Dispatchers.IO
+private val contextDefault = Dispatchers.Default
+private val contextWorker = Dispatchers.Default
 
-val contextMain = Dispatchers.Main
-val contextIO = Dispatchers.IO
-val contextDefault = Dispatchers.Default
-val contextWorker = Dispatchers.Default
+fun newScope(context: CoroutineContext = contextDefault, name: String = "Routine", exceptionHandler: CoroutineExceptionHandler = _exceptionHandler) = CoroutineScope(Job() + context + exceptionHandler + CoroutineName(name))
+
+val newWorkerScope: CoroutineScope
+	get() = newScope(contextWorker)
 
 /**
  * This is the UI scope
  */
-val mainScope = CoroutineScope(Job() + contextMain + exceptionHandler)
+val mainScope = newScope(contextMain)
 /**
  * This is the IO scope
  */
-val ioScope = CoroutineScope(Job() + contextIO + exceptionHandler)
+val ioScope = newScope(contextIO)
 /**
  * This is the default background scope
  */
-val defaultScope = CoroutineScope(Job() + contextDefault + exceptionHandler)
+val defaultScope = newScope(contextDefault)
 /**
  * This is the Worker scope
  */
-val workerScope = CoroutineScope(Job() + contextWorker + exceptionHandler)
+val workerScope = newScope(contextWorker)
 
 /**
  *  Runs the action on the main thread
  */
-fun onMain(action: () -> Unit): Job = mainScope.launch {action()}
+fun onMain(action: suspend () -> Unit): Job = mainScope.launch {action()}
 
 /**
  *  Runs the action on the IO thread
  */
-fun onIO(action: () -> Unit): Job = ioScope.launch {action()}
+fun onIO(action: suspend () -> Unit): Job = ioScope.launch {action()}
 
 /**
  *  Runs the action on the background thread
  */
-fun onBackground(action: () -> Unit): Job = defaultScope.launch {action()}
+fun onBackground(action: suspend () -> Unit): Job = defaultScope.launch {action()}
 
 /**
  *  Runs the action on the worker thread
