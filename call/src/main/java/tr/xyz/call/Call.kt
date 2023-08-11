@@ -1,6 +1,7 @@
 package tr.xyz.call
 
 import tr.xyz.dict.DatBox
+import tr.xyz.phonenumber.PhoneNumber
 
 /**
  * Call data.
@@ -15,7 +16,7 @@ import tr.xyz.dict.DatBox
  */
 class Call(
 	val name: String,
-	val number: String,
+	val number: PhoneNumber,
 	val callType: Int,
 	val time: Long,
 	val duration: Int,
@@ -35,7 +36,7 @@ class Call(
 	
 	override fun toString(): String = "Call($name, $number, $callType, $time, $duration, $extra)"
 	
-	fun copy(name: String = this.name, number: String = this.number, callType: Int = this.callType, time: Long = this.time, duration: Int = this.duration, extra: String? = this.extra): Call = Call(name, number, callType, time, duration, extra)
+	fun copy(name: String = this.name, number: PhoneNumber = this.number, callType: Int = this.callType, time: Long = this.time, duration: Int = this.duration, extra: String? = this.extra): Call = Call(name, number, callType, time, duration, extra)
 	
 	operator fun compareTo(other: Call): Int = other.time.compareTo(time)
 	

@@ -12,6 +12,8 @@ open class DatBox {
 	
 	operator fun <V> get(key: Key): V? = dict[key] as V?
 	
+	fun getBoolData(key: Key): Boolean = dict[key] as Boolean? ?: false
+	
 	/**
 	 * Removes the data associated with the specified key.
 	 *

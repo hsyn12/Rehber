@@ -1,3 +1,5 @@
 package tr.xyz.kkey
 
-open class Key(val key: Int, val name: String)
+data class Key(val key: Int, val name: String)
+
+val CONTACT_ID = Key(1, "contact Id")

@@ -1,2 +1,0 @@
-package tr.xyz.ksext
-

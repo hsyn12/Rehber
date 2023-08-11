@@ -4,11 +4,7 @@ plugins {
 }
 
 dependencies {
-	
-	implementation project(path: ':dict')
-	implementation project(path: ':contact')
-	implementation project(path: ':kkey')
-	implementation project(path: ':phonenumber')
+	implementation project(path: ':ksext')
 	
 }
 
