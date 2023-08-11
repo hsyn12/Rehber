@@ -8,6 +8,8 @@ dependencies {
 	implementation project(path: ':dict')
 	implementation project(path: ':contact')
 	implementation project(path: ':kkey')
+	implementation project(path: ':kiext')
+	implementation project(path: ':kbext')
 	implementation project(path: ':phonenumber')
 	
 }

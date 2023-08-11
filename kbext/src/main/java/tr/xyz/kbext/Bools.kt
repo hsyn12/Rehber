@@ -135,3 +135,18 @@ inline infix fun Any?.ifFalse(action: () -> Unit): Boolean {
 	
 	return false
 }
+
+fun <R> Boolean.ifElse(actionTrue: () -> R, actionFalse: () -> R): R {
+	
+	return if (this) actionTrue()
+	else actionFalse()
+}
+
+val Any?.bool: Boolean
+	get() {
+		if (this == null) return false
+		if (this is Boolean) return this
+		if (this is Int) return this != 0
+		if (this is Long) return this != 0L
+		return true
+	}
