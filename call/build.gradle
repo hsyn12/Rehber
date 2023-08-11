@@ -1,0 +1,15 @@
+plugins {
+	id 'java-library'
+	id 'org.jetbrains.kotlin.jvm'
+}
+
+dependencies {
+	
+	implementation project(path: ':dict')
+	
+}
+
+java {
+	sourceCompatibility = rootProject.ext.java_version
+	targetCompatibility = rootProject.ext.java_version
+}
