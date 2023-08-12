@@ -1,5 +1,19 @@
 package tr.xyz.kkey
 
-data class Key(val key: Int, val name: String)
+/**
+ * Key
+ *
+ * @property id ID of the key
+ * @property name name of the key
+ * @constructor Create new `Key`
+ */
+data class Key(val id: Int, val name: String)
 
-val CONTACT_ID = Key(1, "contact Id")
+val INVALID = Key(0, "Invalid")
+val CONTACT_ID = Key(1, "Contact Id")
+
+
+
+
+
+

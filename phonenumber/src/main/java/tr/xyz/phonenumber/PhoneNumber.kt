@@ -18,10 +18,13 @@ const val MINIMUM_NUMBER_LENGTH = 10
 const val MAXIMUM_NUMBER_LENGTH = 15
 
 @JvmInline
-value class PhoneNumber(val number: String) {
+value class PhoneNumber(private val number: String) {
 	
+	val asString: String get() = number
 	val isPhoneNumber: Boolean get() = number.matches(PHONE_NUMBER_REGEX)
 	val formatted: String get() = format()
+	
+	override fun toString(): String = number
 	
 	fun normalize(): String = number.replace("[^0-9+]".toRegex(), "")
 	
@@ -74,4 +77,4 @@ value class PhoneNumber(val number: String) {
 	
 }
 
-fun String.toPhoneNumber(): PhoneNumber = PhoneNumber(this)
+val String.asPhoneNumber: PhoneNumber get() = PhoneNumber(this)
