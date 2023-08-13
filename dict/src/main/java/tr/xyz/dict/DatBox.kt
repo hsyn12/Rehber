@@ -8,7 +8,7 @@ open class DatBox {
 	
 	private val dict: MutableMap<Key, Any> = hashMapOf()
 	
-	operator fun <V> set(key: Key, value: Any): V? = dict.put(key, value) as V?
+	operator fun <V> set(key: Key, value: V): V? = dict.put(key, value as Any) as V?
 	
 	operator fun <V> get(key: Key): V? = dict[key] as V?
 	
