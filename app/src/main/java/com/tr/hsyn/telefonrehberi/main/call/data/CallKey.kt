@@ -35,8 +35,8 @@ object CallKey {
 
 // region Extensions for call
 // region var Call.contactId: Long?
-var Call.contactId: Long?
-	get() = this[CallKey.CONTACT_ID]
+var Call.contactId: Long
+	get() = this[CallKey.CONTACT_ID] ?: 0L
 	set(value) {
 		this[CallKey.CONTACT_ID] = value
 	}
