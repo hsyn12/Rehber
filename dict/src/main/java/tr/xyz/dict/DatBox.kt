@@ -20,8 +20,14 @@ open class DatBox {
 	 * @param key the key
 	 * @return previous value or `null`
 	 */
-	fun <V> removeData(key: Key): V? = dict.remove(key) as V?
+	fun <V> removeKey(key: Key): V? = dict.remove(key) as V?
 	
+	/**
+	 * Checks if the map contains the specified key.
+	 *
+	 * @param key the key
+	 * @return `true` if the map contains the specified key
+	 */
 	operator fun contains(key: Key): Boolean = dict.containsKey(key)
 	
 }
