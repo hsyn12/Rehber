@@ -12,19 +12,31 @@ import tr.xyz.contact.Contact
  */
 class CallLog(val calls: List<Call>) {
 
-	/** Call map by contact ID */
+	/** Call map by contact ID. */
 	private val callMap = calls.groupBy(CallLog::createKey)
-	/** Incoming calls */
-	val incomingCalls = calls.filter(Call::isIncoming)
-	/** Outgoing calls */
-	val outgoingCalls = calls.filter(Call::isOutgoing)
-	/** Missed calls */
-	val missedCalls = calls.filter(Call::isMissed)
-	/** Rejected calls */
-	val rejectedCalls = calls.filter(Call::isRejected)
-	/** Blocked calls */
-	val blockedCalls = calls.filter(Call::isBlocked)
 
+	/** Blocked calls. */
+	val blockedCalls = calls.filter(Call::isBlocked)
+	/** Incoming calls. */
+	val incomingCalls = calls.filter(Call::isIncoming)
+	/** Missed calls. */
+	val missedCalls = calls.filter(Call::isMissed)
+	/** Outgoing calls. */
+	val outgoingCalls = calls.filter(Call::isOutgoing)
+	/** Rejected calls. */
+	val rejectedCalls = calls.filter(Call::isRejected)
+	/**
+	 * Checks if the given call exists.
+	 *
+	 * @param call call
+	 */
+	operator fun contains(call: Call) = calls.contains(call)
+	/**
+	 * Checks if the given contact has any call.
+	 *
+	 * @param contact contact
+	 */
+	operator fun contains(contact: Contact) = calls.any {(it.contactId) == contact.contactId}
 	/**
 	 * Gets calls of the given contact ID.
 	 *
@@ -32,7 +44,6 @@ class CallLog(val calls: List<Call>) {
 	 * @return calls of the given contact ID
 	 */
 	operator fun get(id: String): List<Call> = callMap[id] ?: emptyList()
-
 	/**
 	 * Gets calls of the given `contact` ID.
 	 *
@@ -40,7 +51,6 @@ class CallLog(val calls: List<Call>) {
 	 * @return calls of the given contact ID
 	 */
 	operator fun get(id: Long): List<Call> = callMap[id.toString()] ?: emptyList()
-
 	/**
 	 * Gets calls of the given contact.
 	 *
@@ -48,21 +58,6 @@ class CallLog(val calls: List<Call>) {
 	 * @return calls of the given contact
 	 */
 	operator fun get(contact: Contact): List<Call> = callMap[contact.contactId.toString()] ?: emptyList()
-
-	/**
-	 * Checks if the given call exists.
-	 *
-	 * @param call call
-	 */
-	operator fun contains(call: Call) = calls.contains(call)
-
-	/**
-	 * Checks if the given contact has any call.
-	 *
-	 * @param contact contact
-	 */
-	operator fun contains(contact: Contact) = calls.any {(it.contactId) == contact.contactId}
-
 	/**
 	 * Returns all calls of the given contact.
 	 *
@@ -70,18 +65,20 @@ class CallLog(val calls: List<Call>) {
 	 * @return calls of the given contact
 	 */
 	fun getCalls(contact: Contact) = calls.filter {it.contactId == contact.contactId}
-
-	companion object {
-
-		/**
-		 * Returns the unique key for the given call.
-		 *
-		 * @param call call
-		 * @return the key
-		 */
-		fun createKey(call: Call): String = if (call.contactId != 0L) call.contactId.toString() else call.number.formatted
-	}
-
+	/**
+	 * Creates a [RankList] from the incoming calls by the duration.
+	 *
+	 * @return the rank list that is ranked by the duration descending order
+	 */
+	fun rankByIncomingSpeakingDuration(): RankList = rankBySpeakingDuration(incomingCalls.groupBy(
+		CallLog::createKey))
+	/**
+	 * Creates a [RankList] from the outgoing calls by the duration.
+	 *
+	 * @return the rank list that is ranked by the duration descending order
+	 */
+	fun rankByOutgoingSpeakingDuration(): RankList = rankBySpeakingDuration(outgoingCalls.groupBy(
+		CallLog::createKey))
 	/**
 	 * Creates a [RankList] from the call map by the count of the call.
 	 *
@@ -110,7 +107,6 @@ class CallLog(val calls: List<Call>) {
 
 		return RankList(rankList)
 	}
-
 	/**
 	 * Creates a [RankList] from the call map by the duration.
 	 *
@@ -146,19 +142,16 @@ class CallLog(val calls: List<Call>) {
 		return RankList(rankList)
 	}
 
-	/**
-	 * Creates a [RankList] from the incoming calls by the duration.
-	 *
-	 * @return the rank list that is ranked by the duration descending order
-	 */
-	fun rankByIncomingSpeakingDuration(): RankList = rankBySpeakingDuration(incomingCalls.groupBy(
-		CallLog::createKey))
+	companion object {
 
-	/**
-	 * Creates a [RankList] from the outgoing calls by the duration.
-	 *
-	 * @return the rank list that is ranked by the duration descending order
-	 */
-	fun rankByOutgoingSpeakingDuration(): RankList = rankBySpeakingDuration(outgoingCalls.groupBy(
-		CallLog::createKey))
+		/**
+		 * Returns the unique key for the given call.
+		 *
+		 * @param call call
+		 * @return the key
+		 */
+		fun createKey(call: Call): String = if (call.contactId != 0L) call.contactId.toString() else call.number.formatted
+	}
+
+
 }
