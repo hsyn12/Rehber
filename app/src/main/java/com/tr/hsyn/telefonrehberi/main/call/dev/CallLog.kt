@@ -43,7 +43,7 @@ class CallLog(val calls: List<Call>) {
 	 * @param id contact ID
 	 * @return calls of the given contact ID
 	 */
-	operator fun get(id: String): List<Call>? = callMap[id]
+	operator fun get(id: String): List<Call> = callMap[id] ?: emptyList()
 
 	/**
 	 * Gets calls of the given contact ID.
@@ -51,7 +51,7 @@ class CallLog(val calls: List<Call>) {
 	 * @param id contact ID
 	 * @return calls of the given contact ID
 	 */
-	operator fun get(id: Long): List<Call>? = callMap[id.toString()]
+	operator fun get(id: Long): List<Call> = callMap[id.toString()] ?: emptyList()
 
 	/**
 	 * Gets calls of the given contact.
@@ -59,7 +59,8 @@ class CallLog(val calls: List<Call>) {
 	 * @param contact contact
 	 * @return calls of the given contact
 	 */
-	operator fun get(contact: Contact): List<Call>? = callMap[contact.contactId.toString()]
+	operator fun get(contact: Contact): List<Call> = callMap[contact.contactId.toString()]
+	                                                 ?: emptyList()
 
 	/**
 	 * Checks if the given call exists.
@@ -73,7 +74,7 @@ class CallLog(val calls: List<Call>) {
 	 *
 	 * @param contact contact
 	 */
-	operator fun contains(contact: Contact) = calls.any {(it.contactId) == contact.contactId}
+	operator fun contains(contact: Contact) = calls.any { (it.contactId) == contact.contactId }
 
 	/**
 	 * Returns all calls of the given contact.
@@ -81,7 +82,7 @@ class CallLog(val calls: List<Call>) {
 	 * @param contact contact
 	 * @return calls of the given contact
 	 */
-	fun getCalls(contact: Contact) = calls.filter {it.contactId == contact.contactId}
+	fun getCalls(contact: Contact) = calls.filter { it.contactId == contact.contactId }
 
 	/**
 	 * Returns the key for the given call.
