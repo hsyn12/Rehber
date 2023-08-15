@@ -15,12 +15,12 @@ import tr.xyz.phonenumber.PhoneNumber
  * @constructor Create a Call object
  */
 class Call(
-	val name: String?,
+	var name: String? = null,
 	val number: PhoneNumber,
 	@CallType val type: Int,
 	val time: Long,
 	val duration: Int,
-	var extra: String?) : DatBox() {
+	var extra: String? = null) : DatBox() {
 
 	//@off
 	val isIncoming: Boolean get() = type == Type.INCOMING || type == Type.INCOMING_WIFI
@@ -52,6 +52,7 @@ class Call(
 	 *  equal to or less than the specified object [time].
 	 */
 	operator fun compareTo(other: Call): Int = other.time.compareTo(time)
+
 }
 
 

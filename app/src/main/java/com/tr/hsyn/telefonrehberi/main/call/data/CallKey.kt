@@ -34,7 +34,7 @@ object CallKey {
 }
 
 // region Extensions for call
-// region var Call.contactId: Long?
+// region var Call.contactId: Long
 var Call.contactId: Long
 	get() = this[CallKey.CONTACT_ID] ?: 0L
 	set(value) {
@@ -51,16 +51,16 @@ var Call.note: String?
 // endregion
 
 // region var Call.deletedDate: Long?
-var Call.deletedDate: Long?
-	get() = this[CallKey.DELETED_DATE]
+var Call.deletedDate: Long
+	get() = this[CallKey.DELETED_DATE] ?: 0
 	set(value) {
 		this[CallKey.DELETED_DATE] = value
 	}
 // endregion
 
 // region var Call.ringingDuration: Long?
-var Call.ringingDuration: Long?
-	get() = this[CallKey.RINGING_DURATION]
+var Call.ringingDuration: Long
+	get() = this[CallKey.RINGING_DURATION] ?: 0
 	set(value) {
 		this[CallKey.RINGING_DURATION] = value
 	}
