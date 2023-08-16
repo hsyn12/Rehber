@@ -29,9 +29,9 @@ import com.tr.hsyn.telefonrehberi.dev.android.dialog.Dialog;
 import com.tr.hsyn.telefonrehberi.main.activity.city.station.LoadingStation;
 import com.tr.hsyn.telefonrehberi.main.activity.color.ColorsActivity;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
+import com.tr.hsyn.telefonrehberi.main.contact.SystemContacts;
 import com.tr.hsyn.telefonrehberi.main.contact.activity.detail.ContactDetails;
 import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKeyKt;
-import com.tr.hsyn.telefonrehberi.main.contact.data.ContactsReader;
 import com.tr.hsyn.telefonrehberi.main.data.ContactLog;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
 import com.tr.hsyn.telefonrehberi.main.dev.menu.MenuEditor;
@@ -134,7 +134,7 @@ public abstract class BlackTower extends LoadingStation implements MenuProvider,
 	@Override
 	protected void onClickNewContact(View view) {
 
-		newContactCallBack.launch(ContactsReader.createNewContactIntent());
+		newContactCallBack.launch(SystemContacts.INSTANCE.createNewContactIntent());
 	}
 
 	@Override
