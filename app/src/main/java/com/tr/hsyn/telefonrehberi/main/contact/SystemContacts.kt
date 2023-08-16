@@ -20,7 +20,7 @@ import com.tr.hsyn.telefonrehberi.main.contact.data.pic
 import tr.xyz.contact.Contact
 import tr.xyz.contact.ContactId
 
-class SystemContacts {
+object SystemContacts {
 
 	val ContactId.entityUri: Uri get() = Contents.getContactEntityUri(this.id)
 	fun Uri.contactCursor(resolver: ContentResolver): Cursor? = resolver.query(this,
@@ -117,10 +117,7 @@ class SystemContacts {
 		val rowNumber = cursor.getString(data1Column)
 		val number = PhoneNumbers.formatNumber(rowNumber, PhoneNumbers.MINIMUM_NUMBER_LENGTH)
 		val notExist = numbers.stream()
-			.noneMatch {num: String? ->
-				PhoneNumbers.equals(number,
-					num!!)
-			}
+			.noneMatch {num: String -> PhoneNumbers.equals(number, num)}
 		if (notExist) numbers.add(rowNumber)
 	}
 

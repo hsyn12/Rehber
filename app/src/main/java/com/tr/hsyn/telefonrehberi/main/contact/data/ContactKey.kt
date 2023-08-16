@@ -4,11 +4,9 @@ import com.tr.hsyn.contactdata.ContactData
 import tr.xyz.contact.Contact
 import tr.xyz.kkey.Key
 
-/**
- * Keys for contact.
- */
+/** Keys for contact. */
 object ContactKey {
-	
+
 	//@off
 	val PIC          : Key = Key(10, "pic")
 	val BIG_PIC      : Key = Key(1, "bigPic")
@@ -96,12 +94,15 @@ var Contact.accounts: List<String>?
 	}
 // endregion
 
-// region var Contact.deletedDate: Long?
-var Contact.deletedDate: Long?
-	get() = this[ContactKey.DELETED_DATE]
+// region var Contact.deletedDate: Long
+var Contact.deletedDate: Long
+	get() = this[ContactKey.DELETED_DATE] ?: 0
 	set(value) {
 		this[ContactKey.DELETED_DATE] = value
 	}
 // endregion
+
+val Contact.isDeleted: Boolean get() = deletedDate > 0
+
 // endregion
 

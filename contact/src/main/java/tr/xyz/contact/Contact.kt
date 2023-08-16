@@ -19,9 +19,9 @@ class Contact(contactId: Long, _name: String?) : DatBox() {
 
 	constructor(contactId: Long) : this(contactId, null)
 
-	override fun equals(other: Any?): Boolean = other is Contact && contactId == other.contactId
-	override fun hashCode(): Int = contactId.id.hashCode()
-	override fun toString(): String = "Contact($contactId, $contactName)"
+	override fun equals(other: Any?): Boolean = other is Contact && id == other.id
+	override fun hashCode(): Int = id.hashCode()
+	override fun toString(): String = "Contact($id, $name)"
 
 	/**
 	 * Compares this object with the specified object by [contactName].
@@ -31,6 +31,5 @@ class Contact(contactId: Long, _name: String?) : DatBox() {
 	 *     [name] is less than, equal to or greater than the specified object
 	 *     [name].
 	 */
-	operator fun compareTo(other: Contact): Int = PerfectSort.compare(contactName.name,
-		other.contactName.name)
+	operator fun compareTo(other: Contact): Int = PerfectSort.compare(name, other.name)
 }
