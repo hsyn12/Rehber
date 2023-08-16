@@ -218,3 +218,4 @@ class History(val contact: Contact, val calls: List<Call>) {
 		}
 	}
 }
+
