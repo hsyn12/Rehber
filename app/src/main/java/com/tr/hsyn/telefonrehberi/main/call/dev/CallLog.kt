@@ -14,7 +14,6 @@ class CallLog(val calls: List<Call>) {
 
 	/** Call map by contact ID. */
 	private val callMap = calls.groupBy(CallLog::createKey)
-
 	/** Blocked calls. */
 	val blockedCalls = calls.filter(Call::isBlocked)
 	/** Incoming calls. */
@@ -25,6 +24,7 @@ class CallLog(val calls: List<Call>) {
 	val outgoingCalls = calls.filter(Call::isOutgoing)
 	/** Rejected calls. */
 	val rejectedCalls = calls.filter(Call::isRejected)
+
 	/**
 	 * Checks if the given call exists.
 	 *
@@ -37,13 +37,6 @@ class CallLog(val calls: List<Call>) {
 	 * @param contact contact
 	 */
 	operator fun contains(contact: Contact) = calls.any {(it.contactId) == contact.contactId}
-	/**
-	 * Gets calls of the given contact ID.
-	 *
-	 * @param id contact ID
-	 * @return calls of the given contact ID
-	 */
-	operator fun get(id: String): List<Call> = callMap[id] ?: emptyList()
 	/**
 	 * Gets calls of the given `contact` ID.
 	 *
@@ -58,6 +51,13 @@ class CallLog(val calls: List<Call>) {
 	 * @return calls of the given contact
 	 */
 	operator fun get(contact: Contact): List<Call> = callMap[contact.contactId.toString()] ?: emptyList()
+	/**
+	 * Gets calls of the given contact ID.
+	 *
+	 * @param id contact ID
+	 * @return calls of the given contact ID
+	 */
+	operator fun get(id: String): List<Call> = callMap[id] ?: emptyList()
 	/**
 	 * Returns all calls of the given contact.
 	 *
@@ -150,7 +150,10 @@ class CallLog(val calls: List<Call>) {
 		 * @param call call
 		 * @return the key
 		 */
+		// generate a code document in kotlin for the following code :
 		fun createKey(call: Call): String = if (call.contactId != 0L) call.contactId.toString() else call.number.formatted
+
+
 	}
 
 

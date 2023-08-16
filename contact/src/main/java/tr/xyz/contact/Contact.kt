@@ -8,22 +8,29 @@ import tr.xyz.dict.DatBox
  *
  * @constructor Create new `Contact`
  * @property contactId contact id
- * @property name name
+ * @property contactName name
  */
-class Contact(val contactId: Long, val name: String?) : DatBox() {
-	
+class Contact(contactId: Long, _name: String?) : DatBox() {
+
+	val id: Long = contactId
+	val name: String = _name ?: ""
+	val contactId: ContactId = ContactId(contactId)
+	val contactName: ContactName = ContactName(_name)
+
+	constructor(contactId: Long) : this(contactId, null)
+
 	override fun equals(other: Any?): Boolean = other is Contact && contactId == other.contactId
-	
-	override fun hashCode(): Int = contactId.hashCode()
-	
-	override fun toString(): String = "Contact($contactId, $name)"
-	
+	override fun hashCode(): Int = contactId.id.hashCode()
+	override fun toString(): String = "Contact($contactId, $contactName)"
+
 	/**
-	 * Compares this object with the specified object by [name].
+	 * Compares this object with the specified object by [contactName].
 	 *
 	 * @param other the object to be compared
-	 * @return a negative integer, zero or a positive integer as this object [name] is less than,
-	 *   equal to or greater than the specified object [name].
+	 * @return a negative integer, zero or a positive integer as this object
+	 *     [name] is less than, equal to or greater than the specified object
+	 *     [name].
 	 */
-	operator fun compareTo(other: Contact): Int = PerfectSort.compare(name, other.name)
+	operator fun compareTo(other: Contact): Int = PerfectSort.compare(contactName.name,
+		other.contactName.name)
 }
