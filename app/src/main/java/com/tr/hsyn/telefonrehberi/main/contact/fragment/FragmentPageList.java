@@ -11,7 +11,6 @@ import com.tr.hsyn.page.IHaveProgress;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.dev.ResourceUtil;
 import com.tr.hsyn.telefonrehberi.dev.android.ui.swipe.ContactSwipeCallBack;
-import com.tr.hsyn.telefonrehberi.main.code.data.History;
 import com.tr.hsyn.telefonrehberi.main.code.page.adapter.ContactAdapter;
 
 import org.jetbrains.annotations.NotNull;

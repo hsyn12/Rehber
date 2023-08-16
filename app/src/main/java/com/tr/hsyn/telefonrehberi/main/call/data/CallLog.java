@@ -1,6 +1,5 @@
 package com.tr.hsyn.telefonrehberi.main.call.data;
 
-
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.calldata.CallType;
 import com.tr.hsyn.calldata.Type;
@@ -27,7 +26,7 @@ import java.util.stream.Collectors;
  * Holds the call logs and provides methods for filtering, searching and analyzing.
  */
 public interface CallLog extends CCollection, Ranker {
-	
+
 	/**
 	 * The filter for All calls.
 	 */
@@ -84,142 +83,148 @@ public interface CallLog extends CCollection, Ranker {
 	 * The filter for most total speaking duration
 	 */
 	int FILTER_MOST_TOTAL_DURATION = 13;
-	
+
 	/**
 	 * Returns the calls of the contact.
 	 *
 	 * @param contact   the contact
 	 * @param callTypes the call types to select
+	 *
 	 * @return the calls
 	 */
 	@NotNull
 	List<Call> getCalls(@NotNull Contact contact, int @NotNull ... callTypes);
-	
+
 	/**
 	 * Returns all calls with the given contact ID.
 	 *
 	 * @param contactId the contact ID
+	 *
 	 * @return calls
 	 */
 	@NotNull
 	List<Call> getById(long contactId);
-	
+
 	/**
 	 * Returns all calls with the given contact ID.
 	 *
 	 * @param contactId the contact ID
+	 *
 	 * @return calls
 	 */
 	@NotNull List<Call> getById(String contactId);
-	
+
 	/**
 	 * @return new rank map for incoming calls
 	 */
 	@Override
 	@NotNull
 	default RankMap incomingRank() {
-		
+
 		return new RankMap(rankByQuantity(incomingCalls()));
 	}
-	
+
 	/**
 	 * @return new rank map for outgoing calls
 	 */
 	@Override
 	@NotNull
 	default RankMap outgoingRank() {
-		
+
 		return new RankMap(rankByQuantity(outgoingCalls()));
 	}
-	
+
 	/**
 	 * @return new rank map for missed calls
 	 */
 	@Override
 	@NotNull
 	default RankMap missedRank() {
-		
+
 		return new RankMap(rankByQuantity(missedCalls()));
 	}
-	
+
 	/**
 	 * @return new rank map for rejected calls
 	 */
 	@Override
 	@NotNull
 	default RankMap rejectedRank() {
-		
+
 		return new RankMap(rankByQuantity(rejectedCalls()));
 	}
-	
+
 	/**
 	 * @return new rank map for incoming calls, which have speaking duration
 	 */
 	@Override
 	@NotNull
 	default RankMap incomingDurationRank() {
-		
+
 		return new RankMap(rankByDuration(incomingCalls()));
 	}
-	
+
 	/**
 	 * @return new rank map for outgoing calls, which have speaking duration
 	 */
 	@Override
 	@NotNull
 	default RankMap outgoingDurationRank() {
-		
+
 		List<Call> outs = outgoingCalls().stream().filter(Call::isSpoken).collect(Collectors.toList());
 		return new RankMap(rankByDuration(outs));
 	}
-	
+
 	/**
 	 * Checks if the list is not empty.
 	 *
 	 * @param list the list
 	 * @param <T>  the type of the list
+	 *
 	 * @return {@code true} if the list is not empty
 	 */
 	default <T> boolean isNotEmpty(@NotNull List<T> list) {
-		
+
 		return !list.isEmpty();
 	}
-	
+
 	/**
 	 * Returns the history of the contact.
 	 *
 	 * @param contact the contact
+	 *
 	 * @return the history
 	 * @see History
 	 */
 	@NotNull
 	default History getHistory(@NotNull Contact contact) {
-		
-		return History.of(contact, getById(contact.getContactId()));
+
+		return History.Companion.of(contact, getById(contact.getContactId()));
 	}
-	
+
 	@NotNull
 	default List<History> getHistory(@NotNull List<Contact> contacts) {
-		
+
 		return contacts.stream().map(this::getHistory).collect(Collectors.toList());
 	}
-	
+
 	@NotNull
 	default List<History> getHistory() {
-		
+
 		return ContactLog.getLogOrEmpty().getContacts().stream().map(this::getHistory).collect(Collectors.toList());
 	}
-	
+
 	/**
 	 * Returns the calls by the filter.
 	 *
 	 * @param filter the filter
+	 *
 	 * @return the calls
 	 * @see FilterType
 	 */
 	@NotNull
 	default List<Call> getCalls(@FilterType int filter) {
-		
+
 		//@off
 		switch (filter) {
 			case FILTER_ALL:      return getCalls();
@@ -232,16 +237,17 @@ public interface CallLog extends CCollection, Ranker {
 			default:              throw new IllegalArgumentException("Invalid filter: " + filter);
 		}//@on
 	}
-	
+
 	/**
 	 * Returns a rank map for the filter.
 	 *
 	 * @param filter the filter
+	 *
 	 * @return the rank map
 	 */
 	@NotNull
 	default RankMap getMostCalls(@FilterMostType int filter) {
-		
+
 		switch (filter) {
 			case FILTER_MOST_INCOMING: return incomingRank();
 			case FILTER_MOST_OUTGOING: return outgoingRank();
@@ -252,7 +258,7 @@ public interface CallLog extends CCollection, Ranker {
 			default: throw new IllegalArgumentException("Invalid filter: " + filter);
 		}
 	}
-	
+
 	/**
 	 * Returns the contacts that have or have no calls.<br><br>
 	 * Get all the contacts that have incoming calls,
@@ -277,18 +283,19 @@ public interface CallLog extends CCollection, Ranker {
 	 * @param missed   have calls or not. {@code null} if not specified.
 	 * @param rejected have calls or not. {@code null} if not specified.
 	 * @param minSize  the minimum number of calls. The number greater than zero means does not select empty calls.
+	 *
 	 * @return the contacts that match the all criteria together or empty list if no matches.
 	 */
 	default @NotNull List<Contact> selectContacts(@Nullable Boolean incoming, @Nullable Boolean outgoing, @Nullable Boolean missed, @Nullable Boolean rejected, int minSize) {
-		
+
 		List<Contact> contacts = ContactLog.getLogOrEmpty().getWithNumber();
-		
+
 		if (contacts.isEmpty()) return new ArrayList<>();
-		
+
 		List<Contact> _contacts = new ArrayList<>();
-		
+
 		for (Contact contact : contacts) {
-			
+
 			Predicate<List<Call>> ip = null;
 			CallLog               il = null;
 			Predicate<List<Call>> op = null;
@@ -301,7 +308,7 @@ public interface CallLog extends CCollection, Ranker {
 			Boolean               or = null;
 			Boolean               mr = null;
 			Boolean               rr = null;
-			
+
 			if (incoming != null) {
 				ip = incoming ? this::isNotEmpty : List::isEmpty;
 				ip = ip.and(c -> c.size() >= minSize);
@@ -322,119 +329,123 @@ public interface CallLog extends CCollection, Ranker {
 				rp = rp.and(c -> c.size() >= minSize);
 				rl = create(rejectedCalls());
 			}
-			
+
 			if (ip != null) ir = ip.test(il.getCalls(contact));
 			if (op != null) or = op.test(ol.getCalls(contact));
 			if (mp != null) mr = mp.test(ml.getCalls(contact));
 			if (rp != null) rr = rp.test(rl.getCalls(contact));
-			
+
 			if ((ir != null ? ir : true) &&
 			    (or != null ? or : true) &&
 			    (mr != null ? mr : true) &&
 			    (rr != null ? rr : true))
 				_contacts.add(contact);
 		}
-		
+
 		return _contacts;
-		
+
 	}
-	
+
 	/**
 	 * Returns the contacts by the predicate.
 	 *
 	 * @param predicate the predicate to select
+	 *
 	 * @return the contacts
 	 */
 	default @NotNull List<Contact> getContactsByCalls(@NotNull Predicate<@NotNull List<Call>> predicate) {
-		
+
 		return ContactLog.getLogOrEmpty().getWithNumber().stream()
-				.filter(contact -> predicate.test(getCalls(contact)))
-				.collect(Collectors.toList());
+			.filter(contact -> predicate.test(getCalls(contact)))
+			.collect(Collectors.toList());
 	}
-	
+
 	/**
 	 * Returns a rank map by quantity.
 	 *
 	 * @return the rank map
 	 */
 	default RankMap rankByQuantity() {
-		
+
 		return rankByQuantity(getCalls());
 	}
-	
+
 	/**
 	 * Returns a rank map by duration.
 	 *
 	 * @return the rank map
 	 */
 	default RankMap rankByDuration() {
-		
+
 		return rankByDuration(getCalls());
 	}
-	
-	
+
 	/**
 	 * Creates a new call log.
 	 *
 	 * @param calls the calls
+	 *
 	 * @return the call log
 	 */
 	@NotNull
 	static CallLog createGlobal(List<Call> calls) {
-		
+
 		CallLog collection = new CallLogger(calls);
-		
+
 		Blue.box(com.tr.hsyn.key.Key.CALL_LOG, collection);
-		
+
 		return collection;
 	}
-	
+
 	/**
 	 * Creates a new call log.
 	 *
 	 * @param calls the calls
+	 *
 	 * @return new call log
 	 */
 	@NotNull
 	static CallLog create(List<Call> calls) {
-		
+
 		return new CallLogger(calls);
 	}
-	
+
 	/**
 	 * Returns the duration of the contact.
 	 *
 	 * @param durations the list of entry of contact to duration
 	 * @param contact   the contact
+	 *
 	 * @return the duration
 	 */
 	@Nullable
 	static DurationGroup getDuration(@NotNull List<Map.Entry<Contact, DurationGroup>> durations, Contact contact) {
-		
+
 		if (contact == null) return null;
-		
+
 		return durations.stream()
-				.filter(e -> e.getKey().getContactId() == contact.getContactId())
-				.findFirst().map(Map.Entry::getValue)
-				.orElse(null);
+			.filter(e -> e.getKey().getContactId() == contact.getContactId())
+			.findFirst().map(Map.Entry::getValue)
+			.orElse(null);
 	}
-	
+
 	/**
 	 * Returns a unique key for the given call.
 	 *
 	 * @param call the call
+	 *
 	 * @return the key
 	 */
 	@NotNull
 	static String getKey(@NotNull Call call) {
-		
+
 		long id = call.getLong(Key.CONTACT_ID, 0L);
-		
+
 		if (id != 0L) return id + "";
-		
+
 		return PhoneNumbers.formatNumber(call.getNumber(), PhoneNumbers.MINIMUM_NUMBER_LENGTH);
 	}
-	
+
 	/**
 	 * Returns the call types for the given call type.
 	 * {@link Type#INCOMING} and {@link Type#INCOMING_WIFI} are same types.
@@ -443,52 +454,53 @@ public interface CallLog extends CCollection, Ranker {
 	 * this method returns {@link Type#MISSED} or {@link Type#REJECTED}.
 	 *
 	 * @param callType the call type
+	 *
 	 * @return the call types
 	 * @see Type
 	 */
 	@CallType
 	static int @NotNull [] getCallTypes(@CallType int callType) {
-		
-		if (callType == Call.MISSED || callType == Call.REJECTED) return new int[]{callType};
-		
+
+		if (callType == Call.MISSED || callType == Call.REJECTED) return new int[]{ callType };
+
 		switch (callType) {
 			case Call.OUTGOING:
-			case Call.OUTGOING_WIFI: return new int[]{Call.OUTGOING, Call.OUTGOING_WIFI};
+			case Call.OUTGOING_WIFI: return new int[]{ Call.OUTGOING, Call.OUTGOING_WIFI };
 			case Call.INCOMING:
-			case Call.INCOMING_WIFI: return new int[]{Call.INCOMING, Call.INCOMING_WIFI};
+			case Call.INCOMING_WIFI: return new int[]{ Call.INCOMING, Call.INCOMING_WIFI };
 			default: throw new IllegalArgumentException("Unknown call type: " + callType);
 		}
 	}
-	
+
 	/**
 	 * Returns the valid call types.
 	 *
 	 * @return the valid call types
 	 */
 	static int @NotNull [] getCallTypes() {
-		
+
 		return new int[]{
-				Call.INCOMING,
-				Call.INCOMING_WIFI,
-				Call.OUTGOING,
-				Call.OUTGOING_WIFI,
-				Call.MISSED,
-				Call.REJECTED
+			Call.INCOMING,
+			Call.INCOMING_WIFI,
+			Call.OUTGOING,
+			Call.OUTGOING_WIFI,
+			Call.MISSED,
+			Call.REJECTED
 		};
 	}
-	
+
 	/**
 	 * Returns the global call log.
 	 *
 	 * @return the global call log
 	 */
 	static CallLog getCallLog() {
-		
+
 		return Blue.getObject(com.tr.hsyn.key.Key.CALL_LOG);
 	}
-	
+
 	static boolean isLoaded() {
-		
+
 		return Blue.getObject(com.tr.hsyn.key.Key.CALL_LOG) != null;
 	}
 }

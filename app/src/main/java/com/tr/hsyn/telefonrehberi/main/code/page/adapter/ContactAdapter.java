@@ -22,7 +22,6 @@ import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.Res;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
 import com.tr.hsyn.telefonrehberi.main.cast.ListAdapter;
-import com.tr.hsyn.telefonrehberi.main.code.data.History;
 import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKeyKt;
 import com.tr.hsyn.time.Time;
 
@@ -36,7 +35,9 @@ import java.util.stream.Collectors;
 import tr.xyz.contact.Contact;
 
 
-public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> implements FastScrollRecyclerView.SectionedAdapter, ListAdapter<Contact>, SectionsAdapterInterface {
+public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder>
+	implements FastScrollRecyclerView.SectionedAdapter, ListAdapter<Contact>,
+	SectionsAdapterInterface {
 
 	private final ItemIndexListener        selectListener;
 	private final List<History>            histories;

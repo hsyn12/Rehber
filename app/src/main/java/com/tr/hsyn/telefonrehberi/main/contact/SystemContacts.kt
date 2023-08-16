@@ -27,13 +27,15 @@ import tr.xyz.contact.ContactId
 object SystemContacts {
 
 	val ContactId.entityUri: Uri get() = Contents.getContactEntityUri(this.id)
-	fun Uri.contactCursor(resolver: ContentResolver): Cursor? = resolver.query(this,
+	fun Uri.contactCursor(resolver: ContentResolver): Cursor? = resolver.query(
+		this,
 		ContactColumns.PROJECTION,
 		null,
 		null,
 		null)
 
-	fun Uri.entityCursor(resolver: ContentResolver): Cursor? = resolver.query(this,
+	fun Uri.entityCursor(resolver: ContentResolver): Cursor? = resolver.query(
+		this,
 		null,
 		null,
 		null,

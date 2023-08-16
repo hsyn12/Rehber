@@ -36,7 +36,7 @@ class CallLog(val calls: List<Call>) {
 	 *
 	 * @param contact contact
 	 */
-	operator fun contains(contact: Contact) = calls.any {(it.contactId) == contact.contactId}
+	operator fun contains(contact: Contact) = calls.any {(it.contactId) == contact.id}
 	/**
 	 * Gets calls of the given `contact` ID.
 	 *
@@ -64,21 +64,19 @@ class CallLog(val calls: List<Call>) {
 	 * @param contact contact
 	 * @return calls of the given contact
 	 */
-	fun getCalls(contact: Contact) = calls.filter {it.contactId == contact.contactId}
+	fun getCalls(contact: Contact) = calls.filter {it.contactId == contact.id}
 	/**
 	 * Creates a [RankList] from the incoming calls by the duration.
 	 *
 	 * @return the rank list that is ranked by the duration descending order
 	 */
-	fun rankByIncomingSpeakingDuration(): RankList = rankBySpeakingDuration(incomingCalls.groupBy(
-		CallLog::createKey))
+	fun rankByIncomingSpeakingDuration(): RankList = rankBySpeakingDuration(incomingCalls.groupBy(CallLog::createKey))
 	/**
 	 * Creates a [RankList] from the outgoing calls by the duration.
 	 *
 	 * @return the rank list that is ranked by the duration descending order
 	 */
-	fun rankByOutgoingSpeakingDuration(): RankList = rankBySpeakingDuration(outgoingCalls.groupBy(
-		CallLog::createKey))
+	fun rankByOutgoingSpeakingDuration(): RankList = rankBySpeakingDuration(outgoingCalls.groupBy(CallLog::createKey))
 	/**
 	 * Creates a [RankList] from the call map by the count of the call.
 	 *
@@ -150,10 +148,7 @@ class CallLog(val calls: List<Call>) {
 		 * @param call call
 		 * @return the key
 		 */
-		// generate a code document in kotlin for the following code :
 		fun createKey(call: Call): String = if (call.contactId != 0L) call.contactId.toString() else call.number.formatted
-
-
 	}
 
 
