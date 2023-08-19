@@ -14,6 +14,14 @@ import java.time.format.DateTimeFormatter
  */
 val currentTimeMillis: Long get() = System.currentTimeMillis()
 
+/**
+ * Represents a time in the timeline.
+ *
+ * @property millis The number of milliseconds since January 1, 1970 00:00:00 GMT.
+ * If the value is negative, it represents a time before January 1, 1970 00:00:00 GMT.
+ * If skipped, it represents the current time.
+ * @constructor Creates a new time point with optional milliseconds.
+ */
 class Time(val millis: Long = currentTimeMillis) {
 
 	operator fun minus(time: Time): Time = Time(millis - time.millis)
@@ -22,12 +30,27 @@ class Time(val millis: Long = currentTimeMillis) {
 	operator fun compareTo(time: Long): Int = millis.compareTo(time)
 	operator fun contains(time: Time): Boolean = millis >= time.millis
 	operator fun contains(time: Long): Boolean = millis >= time
-
+	/**
+	 *  Creates a new time point.
+	 * @param year year value
+	 * @param month month value
+	 * @param day day value
+	 * @param hour hour value
+	 * @param minute minute value
+	 * @constructor Creates a new time point.
+	 */
 	constructor(year: Int = 0, month: Int = 0, day: Int = 0, hour: Int = 0, minute: Int = 0) : this(LocalDateTime.of(year, month, day, hour, minute).toEpochSecond(ZoneOffset.UTC) * 1000)
-
+	/**
+	 *
+	 * @return formatted time string with default pattern [DEFAULT_DATE_TIME_PATTERN]
+	 */
 	override fun toString() = toString(DEFAULT_DATE_TIME_PATTERN)
-
-	fun toString(pattern: String): String = DateTimeFormatter.ofPattern(pattern).format(LocalDateTime.ofInstant(Instant.ofEpochMilli(millis), ZoneId.systemDefault()))
+	/**
+	 *
+	 * @param pattern pattern
+	 * @return formatted time string
+	 */
+	fun toString(pattern: String) = toString(millis, pattern)
 
 	companion object {
 
@@ -88,7 +111,12 @@ class Time(val millis: Long = currentTimeMillis) {
 		 *     [DateTimeFormatter](https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html)
 		 */
 		const val DEFAULT_DATE_TIME_PATTERN = "d MMMM yyyy EEEE HH:mm"
-
+		/**
+		 * @param time time
+		 * @param pattern pattern
+		 * @return formatted time string
+		 * @see [DEFAULT_DATE_TIME_PATTERN]
+		 */
 		fun toString(time: Long, pattern: String = DEFAULT_DATE_TIME_PATTERN): String = LocalDateTime.ofInstant(Instant.ofEpochMilli(time), ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(pattern));
 	}
 }
