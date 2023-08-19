@@ -4,6 +4,23 @@ package tr.xyz.timek
 
 import kotlin.math.absoluteValue
 
+/**
+ * Represents a duration of time with different units (year, month, day, hour, minute, second, millisecond).
+ * The duration is calculated based on a given value in milliseconds.
+ * ###
+ *
+ * @property value  number of milliseconds to calculate the duration
+ * @property durations list of calculated durations
+ * @property year duration of year
+ * @property month duration of month
+ * @property day duration of day
+ * @property hour duration of hour
+ * @property minute duration of minute
+ * @property second duration of second
+ * @property millisecond duration of millisecond
+ * @constructor Creates a new time duration with optional value of zero.
+ * @see TimeMillis
+ */
 class TimeDuration(val value: Long = 0) {
 
 	val durations: List<Duration>

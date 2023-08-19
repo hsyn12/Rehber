@@ -14,6 +14,9 @@ import java.time.format.DateTimeFormatter
  */
 val currentTimeMillis: Long get() = System.currentTimeMillis()
 
+val DEFAULT_ZONE_OFFSET: ZoneOffset = ZoneOffset.of(ZoneId.systemDefault().rules.getOffset(Instant.now()).id)
+
+
 /**
  * Represents a time in the timeline.
  *
@@ -39,7 +42,7 @@ class Time(val millis: Long = currentTimeMillis) {
 	 * @param minute minute value
 	 * @constructor Creates a new time point.
 	 */
-	constructor(year: Int = 0, month: Int = 0, day: Int = 0, hour: Int = 0, minute: Int = 0) : this(LocalDateTime.of(year, month, day, hour, minute).toEpochSecond(ZoneOffset.UTC) * 1000)
+	constructor(year: Int = 0, month: Int = 1, day: Int = 1, hour: Int = 0, minute: Int = 0) : this(LocalDateTime.of(year, month, day, hour, minute).toEpochSecond(ZoneOffset.UTC) * 1000)
 	/**
 	 *
 	 * @return formatted time string with default pattern [DEFAULT_DATE_TIME_PATTERN]
@@ -118,12 +121,43 @@ class Time(val millis: Long = currentTimeMillis) {
 		 * @see [DEFAULT_DATE_TIME_PATTERN]
 		 */
 		fun toString(time: Long, pattern: String = DEFAULT_DATE_TIME_PATTERN): String = LocalDateTime.ofInstant(Instant.ofEpochMilli(time), ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(pattern));
+		/**
+		 *  Returns the duration between now and the given time point.
+		 *
+		 *
+		 * @param time time point to compare to the now
+		 * @return [Duration]
+		 */
+		fun howLongBefore(time: Long): Duration {
+
+			val now: LocalDateTime = LocalDateTime.now()
+			val date: LocalDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(time), DEFAULT_ZONE_OFFSET)
+
+			require(!date.isAfter(now)) {"The time must be before now"}
+
+			val year = now.year - date.year
+			if (year >= 1) return Duration.year(year)
+
+			val days = now.dayOfYear - date.dayOfYear
+			if (days > 30) return Duration.month(days / 30)
+			if (days >= 1) return Duration.day(days)
+
+			val hours = now.minusHours(date.hour.toLong()).hour
+			if (hours >= 1) return Duration.hour(hours)
+
+			val minute = now.minusMinutes(date.minute.toLong()).minute
+			if (minute >= 1) return Duration.minute(minute)
+
+			return Duration.second(now.minusSeconds(date.second.toLong()).second)
+		}
 	}
 }
 
 fun main() {
 
-	println(TimeDuration((Time() - Time(1981, 4, 12)).millis))
+	val birthDay = Time(1981, 4, 12)
+	println(birthDay)
+	println(TimeDuration(birthDay.millis))
 }
 
 
