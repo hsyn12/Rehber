@@ -3,12 +3,6 @@ plugins {
 	id 'org.jetbrains.kotlin.jvm'
 }
 
-
-dependencies {
-	implementation project(path: ':kandom')
-	implementation project(path: ':digit')
-}
-
 java {
 	sourceCompatibility = rootProject.ext.java_version
 	targetCompatibility = rootProject.ext.java_version

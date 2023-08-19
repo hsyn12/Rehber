@@ -1,15 +1,33 @@
+@file:JvmName("Times")
+
 package tr.xyz.timek
 
-const val SECOND = 1000L
-const val MINUTE = 60 * SECOND
-const val HOUR = 60 * MINUTE
-const val DAY = 24 * HOUR
-const val MONTH = 30 * DAY
-const val YEAR = 365 * DAY
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 
-sealed class Time(val milliseconds: Long) {
+/**
+ * Milliseconds of the current time according to the system time. That milliseconds are the number
+ * of milliseconds since January 1, 1970 00:00:00 GMT.
+ */
+val currentTimeMillis: Long get() = System.currentTimeMillis()
 
-	operator fun compareTo(other: Time) = milliseconds.compareTo(other.milliseconds)
+class Time(val millis: Long = currentTimeMillis) {
+
+	operator fun minus(time: Time): Time = Time(millis - time.millis)
+	operator fun plus(time: Time): Time = Time(millis + time.millis)
+	operator fun compareTo(time: Time): Int = millis.compareTo(time.millis)
+	operator fun compareTo(time: Long): Int = millis.compareTo(time)
+	operator fun contains(time: Time): Boolean = millis >= time.millis
+	operator fun contains(time: Long): Boolean = millis >= time
+
+	constructor(year: Int = 0, month: Int = 0, day: Int = 0, hour: Int = 0, minute: Int = 0) : this(LocalDateTime.of(year, month, day, hour, minute).toEpochSecond(ZoneOffset.UTC) * 1000)
+
+	override fun toString() = toString(DEFAULT_DATE_TIME_PATTERN)
+
+	fun toString(pattern: String): String = DateTimeFormatter.ofPattern(pattern).format(LocalDateTime.ofInstant(Instant.ofEpochMilli(millis), ZoneId.systemDefault()))
 
 	companion object {
 
@@ -71,15 +89,17 @@ sealed class Time(val milliseconds: Long) {
 		 */
 		const val DEFAULT_DATE_TIME_PATTERN = "d MMMM yyyy EEEE HH:mm"
 
-		val now get() = System.currentTimeMillis()
+		fun toString(time: Long, pattern: String = DEFAULT_DATE_TIME_PATTERN): String = LocalDateTime.ofInstant(Instant.ofEpochMilli(time), ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(pattern));
 	}
 }
 
-class Milliseconds(milliseconds: Long) : Time(milliseconds)
-class Seconds(seconds: Long) : Time(seconds * SECOND)
-class Minutes(minutes: Long) : Time(minutes * MINUTE)
-class Hours(hours: Long) : Time(hours * HOUR)
-class Days(days: Long) : Time(days * DAY)
-class Months(months: Long) : Time(months * MONTH)
-class Years(years: Long) : Time(years * YEAR)
+fun main() {
+
+	println(TimeDuration((Time() - Time(1981, 4, 12)).millis))
+}
+
+
+
+
+
 
