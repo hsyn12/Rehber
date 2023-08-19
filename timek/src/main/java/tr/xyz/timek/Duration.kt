@@ -3,8 +3,12 @@
 package tr.xyz.timek
 
 import tr.xyz.digit.Digit
+import java.util.*
 
-sealed class Duration(val durationValue: Digit) {
+sealed class Duration(val durationValue: Digit, val unit: TimeUnit) {
+
+	val isZero get() = durationValue.digitValue == 0
+	val isNotZero get() = durationValue.digitValue != 0
 
 	operator fun plus(duration: Int): Duration {
 		return when (this) {
@@ -56,6 +60,9 @@ sealed class Duration(val durationValue: Digit) {
 
 	override fun toString() = "${durationValue.digitValue}"
 
+	override fun equals(other: Any?): Boolean = other is Duration && durationValue.digitValue == other.durationValue.digitValue && unit == other.unit
+	override fun hashCode() = Objects.hash(durationValue.digitValue, unit)
+
 	companion object {
 		fun millisecond(value: Int): Duration = Millis(value)
 		fun second(value: Int): Duration = Second(value)
@@ -67,10 +74,10 @@ sealed class Duration(val durationValue: Digit) {
 	}
 }
 
-class Year(value: Int = 0) : Duration(Digit.newDigit(value = value))
-class Month(value: Int = 0) : Duration(Digit.newDigit(0, 12, value))
-class Day(value: Int = 0) : Duration(Digit.newDigit(0, 30, value))
-class Hour(value: Int = 0) : Duration(Digit.newDigit(0, 24, value))
-class Minute(value: Int = 0) : Duration(Digit.newDigit(0, 60, value))
-class Second(value: Int = 0) : Duration(Digit.newDigit(0, 60, value))
-class Millis(value: Int = 0) : Duration(Digit.newDigit(0, 1000, value))
+class Year(value: Int = 0) : Duration(Digit.newDigit(value = value), TimeUnit.YEAR)
+class Month(value: Int = 0) : Duration(Digit.newDigit(0, 12, value), TimeUnit.MONTH)
+class Day(value: Int = 0) : Duration(Digit.newDigit(0, 30, value), TimeUnit.DAY)
+class Hour(value: Int = 0) : Duration(Digit.newDigit(0, 24, value), TimeUnit.HOUR)
+class Minute(value: Int = 0) : Duration(Digit.newDigit(0, 60, value), TimeUnit.MINUTE)
+class Second(value: Int = 0) : Duration(Digit.newDigit(0, 60, value), TimeUnit.SECOND)
+class Millis(value: Int = 0) : Duration(Digit.newDigit(0, 1000, value), TimeUnit.MILLISECOND)

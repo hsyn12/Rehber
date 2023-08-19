@@ -5,9 +5,27 @@ package tr.xyz.timek
 import kotlin.math.absoluteValue
 
 /**
- * Represents a duration of time with different units (year, month, day, hour, minute, second, millisecond).
+ * Represents a duration of time with units (year, month, day, hour, minute, second, millisecond).
  * The duration is calculated based on a given value in milliseconds.
- * ###
+ * ```
+ * ```
+ * [TimeDuration] is a time duration,
+ * not a time point. And each unit has its own limit.
+ * For example, the duration of a month is exactly 30 days,
+ * an hour is exactly 60 minutes, and a minute is exactly 60 seconds.
+ *
+ * ```
+ *
+ * val timeDuration = TimeDuration(TimeMillis.MINUTE * 6565)
+ * println(timeDuration.toStringNonZero())
+ * println(timeDuration.toString())
+ * println(timeDuration.toString("%1\$04d years %2\$02d months %3\$02d days %4\$02d hours %5\$02d minutes %6\$02d seconds %7\$03d milliseconds"))
+ * // toStringNonZero : 4 day 13 hour 25 minute
+ * // toString        : 0 years 0 months 4 days 13 hours 25 minutes 0 seconds 0 milliseconds
+ * // toString(format): 0000 years 00 months 04 days 13 hours 25 minutes 00 seconds 000 milliseconds
+ * ```
+ *
+ *
  *
  * @property value  number of milliseconds to calculate the duration
  * @property durations list of calculated durations
@@ -31,6 +49,9 @@ class TimeDuration(val value: Long = 0) {
 	val minute: Duration get() = durations[4]
 	val second: Duration get() = durations[5]
 	val millisecond: Duration get() = durations[6]
+
+	val nonZeroDurations get() = durations.filter {it.isNotZero}
+	val nonZeroUnits get() = nonZeroDurations.map {it.unit}
 
 	init {
 
@@ -95,7 +116,28 @@ class TimeDuration(val value: Long = 0) {
 		)
 	}
 
-	override fun toString() = "$year.$month.$day.$hour.$minute.$second.$millisecond"
+	override fun toString() = "$year years $month months $day days $hour hours $minute minutes $second seconds $millisecond milliseconds"
 
+	fun toString(format: String) = format.format(year.durationValue.digitValue, month.durationValue.digitValue, day.durationValue.digitValue, hour.durationValue.digitValue, minute.durationValue.digitValue, second.durationValue.digitValue, millisecond.durationValue.digitValue)
 
+	fun toString(vararg units: TimeUnit): String {
+
+		return buildString {
+			for (duration in durations) {
+				if (units.contains(duration.unit)) append("${duration.durationValue.digitValue} ${duration.unit}").append(" ")
+			}
+		}.trim()
+	}
+
+	fun toStringNonZero(): String = toString(*nonZeroUnits.toTypedArray())
+
+	operator fun compareTo(other: TimeDuration): Int = value.compareTo(other.value)
+	operator fun compareTo(other: Long): Int = value.compareTo(other)
+}
+
+fun main() {
+
+	val timeDuration = TimeDuration(TimeMillis.MINUTE * 6565)
+	println(timeDuration.toString())
+	println(timeDuration.toString("%1\$04d years %2\$02d months %3\$02d days %4\$02d hours %5\$02d minutes %6\$02d seconds %7\$03d milliseconds"))
 }
