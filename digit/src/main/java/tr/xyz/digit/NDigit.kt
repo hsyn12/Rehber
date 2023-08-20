@@ -51,14 +51,36 @@ interface Digit : Limited {
 		return this
 	}
 
-	operator fun plus(value: Int): Digit {
-		this.digitValue += value
-		return this
+	operator fun plusAssign(value: Int) {
+		digitValue += value
 	}
 
-	operator fun minus(value: Int): Digit {
-		this.digitValue -= value
-		return this
+	operator fun minusAssign(value: Int) {
+		digitValue -= value
+	}
+
+	operator fun plusAssign(value: Digit) {
+		digitValue += value.digitValue
+	}
+
+	operator fun minusAssign(value: Digit) {
+		digitValue -= value.digitValue
+	}
+
+	operator fun plus(value: Int): Digit = newDigit(min, max, digitValue + value)
+
+	operator fun minus(value: Int): Digit = newDigit(min, max, digitValue - value)
+
+	operator fun times(value: Int): Digit = newDigit(min, max, digitValue * value)
+
+	operator fun times(value: Digit): Digit = newDigit(min, max, digitValue * value.digitValue)
+
+	operator fun timesAssign(value: Int) {
+		digitValue *= value
+	}
+
+	operator fun timesAssign(value: Digit) {
+		digitValue *= value.digitValue
 	}
 
 	/**
@@ -88,17 +110,15 @@ interface Digit : Limited {
 class NDigit internal constructor(override val max: Int = Int.MAX_VALUE, override val min: Int = 0, digitValue: Int = 0) :
 	Digit {
 
+	private val interval = max - min
 	override var left: Digit? = null
 	override var right: Digit? = null
-	private val interval = max - min
-
 	override var cycle = 0
 		private set(value) {
 			field = value
 			if (value > 0) left?.onCycle(value)
 			else if (value < 0) right?.onCycle(value)
 		}
-
 	override var digitValue: Int = 0
 		set(value) {
 			cycle = 0
@@ -136,22 +156,18 @@ class NDigit internal constructor(override val max: Int = Int.MAX_VALUE, overrid
 	override fun toString(): String = "$digitValue"
 }
 
+object log {
+
+	infix fun debug(msg: Any?) {
+		println(msg)
+	}
+}
+
 fun main() {
 
-	val seconds = Digit.newDigit(0, 60)
-	val minute = Digit.newDigit(0, 60)
-	seconds.left = minute
-	seconds.right = minute
-
-
-	Thread {
-		while (true) {
-
-			Thread.sleep(100)
-			seconds.inc()
-			println("${minute.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}")
-		}
-	}.start()
-
+	val seconds = Digit.newDigit(0, 60, 4)
+	val minute = Digit.newDigit(0, 60, 5)
+	seconds *= minute
+	log debug (seconds)
 
 }

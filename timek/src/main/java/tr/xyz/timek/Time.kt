@@ -136,19 +136,19 @@ class Time(val millis: Long = currentTimeMillis) {
 			require(!date.isAfter(now)) {"The time must be before now"}
 
 			val year = now.year - date.year
-			if (year >= 1) return duration years year
+			if (year >= 1) return Duration years year
 
 			val days = now.dayOfYear - date.dayOfYear
-			if (days > 30) return duration months (days / 30)
-			if (days >= 1) return duration days days
+			if (days > 30) return Duration months (days / 30)
+			if (days >= 1) return Duration days days
 
 			val hours = now.minusHours(date.hour.toLong()).hour
-			if (hours >= 1) return duration hours hours
+			if (hours >= 1) return Duration hours hours
 
 			val minute = now.minusMinutes(date.minute.toLong()).minute
-			if (minute >= 1) return duration minutes minute
+			if (minute >= 1) return Duration minutes minute
 
-			return duration seconds (now.minusSeconds(date.second.toLong()).second)
+			return Duration seconds (now.minusSeconds(date.second.toLong()).second)
 		}
 	}
 }

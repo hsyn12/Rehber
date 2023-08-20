@@ -30,7 +30,6 @@ sealed class Duration(val durationValue: Digit, val unit: TimeUnit) {
 	val isNotZero: Boolean get() = durationValue.digitValue != 0
 
 	fun toMillis(): Long {
-
 		return when (this) {
 			is Millis -> durationValue.digitValue.toLong()
 			is Second -> durationValue.digitValue.toLong() * 1000
