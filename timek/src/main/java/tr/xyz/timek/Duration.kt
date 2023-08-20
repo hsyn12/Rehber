@@ -2,6 +2,7 @@
 
 package tr.xyz.timek
 
+import androidx.annotation.IntRange
 import tr.xyz.digit.Digit
 import java.util.*
 
@@ -28,7 +29,11 @@ sealed class Duration(val durationValue: Digit, val unit: TimeUnit) {
 	 *  `true` if the duration is not zero
 	 */
 	val isNotZero: Boolean get() = durationValue.digitValue != 0
-
+	/**
+	 * Converts the duration to milliseconds
+	 *
+	 * @return milliseconds value of the duration
+	 */
 	fun toMillis(): Long {
 		return when (this) {
 			is Millis -> durationValue.digitValue.toLong()
@@ -40,7 +45,7 @@ sealed class Duration(val durationValue: Digit, val unit: TimeUnit) {
 			is Year   -> durationValue.digitValue.toLong() * 365 * 24 * 60 * 60 * 1000
 		}
 	}
-
+	
 	operator fun plus(duration: Int): Duration {
 		return when (this) {
 			is Millis -> Millis(duration + durationValue.digitValue)
@@ -52,7 +57,7 @@ sealed class Duration(val durationValue: Digit, val unit: TimeUnit) {
 			is Year   -> Year(duration + durationValue.digitValue)
 		}
 	}
-
+	
 	operator fun plus(duration: Duration): Duration {
 		return when (this) {
 			is Millis -> Millis(duration.durationValue.digitValue + duration.durationValue.digitValue)
@@ -64,7 +69,7 @@ sealed class Duration(val durationValue: Digit, val unit: TimeUnit) {
 			is Year   -> Year(duration.durationValue.digitValue + duration.durationValue.digitValue)
 		}
 	}
-
+	
 	operator fun minus(duration: Duration): Duration {
 		return when (this) {
 			is Millis -> Millis(durationValue.digitValue - duration.durationValue.digitValue)
@@ -76,7 +81,7 @@ sealed class Duration(val durationValue: Digit, val unit: TimeUnit) {
 			is Year   -> Year(durationValue.digitValue - duration.durationValue.digitValue)
 		}
 	}
-
+	
 	operator fun minus(duration: Int): Duration {
 		return when (this) {
 			is Millis -> Millis(durationValue.digitValue - duration)
@@ -88,12 +93,12 @@ sealed class Duration(val durationValue: Digit, val unit: TimeUnit) {
 			is Year   -> Year(durationValue.digitValue - duration)
 		}
 	}
-
+	
 	override fun toString() = "${durationValue.digitValue}"
-
+	
 	override fun equals(other: Any?): Boolean = other is Duration && durationValue.digitValue == other.durationValue.digitValue && unit == other.unit
 	override fun hashCode() = Objects.hash(durationValue.digitValue, unit)
-
+	
 	companion object {
 		infix fun milliseconds(value: Int): Duration = Millis(value)
 		infix fun seconds(value: Int): Duration = Second(value)
@@ -105,10 +110,10 @@ sealed class Duration(val durationValue: Digit, val unit: TimeUnit) {
 	}
 }
 
-class Year(value: Int = 0) : Duration(Digit.newDigit(value = value), TimeUnit.YEAR)
-class Month(value: Int = 0) : Duration(Digit.newDigit(0, 12, value), TimeUnit.MONTH)
-class Day(value: Int = 0) : Duration(Digit.newDigit(0, 30, value), TimeUnit.DAY)
-class Hour(value: Int = 0) : Duration(Digit.newDigit(0, 24, value), TimeUnit.HOUR)
-class Minute(value: Int = 0) : Duration(Digit.newDigit(0, 60, value), TimeUnit.MINUTE)
-class Second(value: Int = 0) : Duration(Digit.newDigit(0, 60, value), TimeUnit.SECOND)
-class Millis(value: Int = 0) : Duration(Digit.newDigit(0, 1000, value), TimeUnit.MILLISECOND)
+class Year(@IntRange(from = 0, to = 999_999_999) value: Int = 0) : Duration(Digit.newDigit(0, 999_999_999, value), TimeUnit.YEAR)
+class Month(@IntRange(from = 0, to = 12) value: Int = 0) : Duration(Digit.newDigit(0, 12, value), TimeUnit.MONTH)
+class Day(@IntRange(from = 0, to = 30) value: Int = 0) : Duration(Digit.newDigit(0, 30, value), TimeUnit.DAY)
+class Hour(@IntRange(from = 0, to = 24) value: Int = 0) : Duration(Digit.newDigit(0, 24, value), TimeUnit.HOUR)
+class Minute(@IntRange(from = 0, to = 60) value: Int = 0) : Duration(Digit.newDigit(0, 60, value), TimeUnit.MINUTE)
+class Second(@IntRange(from = 0, to = 60) value: Int = 0) : Duration(Digit.newDigit(0, 60, value), TimeUnit.SECOND)
+class Millis(@IntRange(from = 0, to = 1000) value: Int = 0) : Duration(Digit.newDigit(0, 1000, value), TimeUnit.MILLISECOND)
