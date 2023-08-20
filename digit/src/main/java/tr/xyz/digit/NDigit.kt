@@ -156,8 +156,7 @@ interface Digit : Limited {
 	}
 }
 
-class NDigit internal constructor(override val max: Int = Int.MAX_VALUE, override val min: Int = 0, digitValue: Int = 0) :
-	Digit {
+class NDigit internal constructor(override val max: Int = Int.MAX_VALUE, override val min: Int = 0, digitValue: Int = 0) : Digit {
 	
 	private val interval = max - min
 	override var left: Digit? = null

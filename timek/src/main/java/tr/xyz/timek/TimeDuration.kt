@@ -2,6 +2,7 @@
 
 package tr.xyz.timek
 
+import tr.xyz.timek.unit.TimeUnit
 import kotlin.math.absoluteValue
 
 /**
@@ -38,7 +39,7 @@ import kotlin.math.absoluteValue
  * @see TimeMillis
  */
 class TimeDuration(val value: Long = 0) {
-
+	
 	val durations: List<Duration>
 	val year: Duration get() = durations[0]
 	val month: Duration get() = durations[1]
@@ -47,14 +48,14 @@ class TimeDuration(val value: Long = 0) {
 	val minute: Duration get() = durations[4]
 	val second: Duration get() = durations[5]
 	val millisecond: Duration get() = durations[6]
-
+	
 	val nonZeroDurations: List<Duration> get() = durations.filter {it.isNotZero}
 	val nonZeroUnits: List<TimeUnit> get() = nonZeroDurations.map {it.unit}
-
+	
 	constructor(vararg duration: Duration) : this(duration.sumOf {it.toMillis()})
-
+	
 	init {
-
+		
 		val isNegative = value < 0
 		var year = 0
 		var month = 0
@@ -64,9 +65,9 @@ class TimeDuration(val value: Long = 0) {
 		var second = 0
 		var millisecond = 0
 		var _duration = value.absoluteValue
-
+		
 		while (true) {
-
+			
 			if (_duration >= TimeMillis.YEAR) {
 				year = (_duration / TimeMillis.YEAR).toInt()
 				if (isNegative) year = -year
@@ -88,7 +89,7 @@ class TimeDuration(val value: Long = 0) {
 				_duration %= TimeMillis.HOUR
 			}
 			else if (_duration >= TimeMillis.MINUTE) {
-
+				
 				minute = (_duration / TimeMillis.MINUTE).toInt()
 				if (isNegative) minute = -minute
 				_duration %= TimeMillis.MINUTE
@@ -104,7 +105,7 @@ class TimeDuration(val value: Long = 0) {
 				break
 			}
 		}
-
+		
 		val yearDuration = Duration years year
 		val monthDuration = Duration months month
 		val dayDuration = Duration days day
@@ -112,7 +113,7 @@ class TimeDuration(val value: Long = 0) {
 		val minuteDuration = Duration minutes minute
 		val secondDuration = Duration seconds second
 		val millisecondDuration = Duration milliseconds millisecond
-
+		
 		millisecondDuration.durationValue.left = secondDuration.durationValue
 		secondDuration.durationValue.left = minuteDuration.durationValue
 		minuteDuration.durationValue.left = hourDuration.durationValue
@@ -125,7 +126,7 @@ class TimeDuration(val value: Long = 0) {
 		hourDuration.durationValue.right = minuteDuration.durationValue
 		minuteDuration.durationValue.right = secondDuration.durationValue
 		secondDuration.durationValue.right = millisecondDuration.durationValue
-
+		
 		durations = listOf(
 			yearDuration,
 			monthDuration,
@@ -133,33 +134,33 @@ class TimeDuration(val value: Long = 0) {
 			hourDuration,
 			minuteDuration,
 			secondDuration,
-			millisecondDuration
+			millisecondDuration,
 		)
 	}
-
+	
 	override fun toString() = "$year years $month months $day days $hour hours $minute minutes $second seconds $millisecond milliseconds"
-
+	
 	fun toString(format: String) = format.format(year.durationValue.digitValue, month.durationValue.digitValue, day.durationValue.digitValue, hour.durationValue.digitValue, minute.durationValue.digitValue, second.durationValue.digitValue, millisecond.durationValue.digitValue)
-
+	
 	fun toString(vararg units: TimeUnit): String {
-
+		
 		return buildString {
 			for (duration in durations) {
 				if (units.contains(duration.unit)) append("${duration.durationValue.digitValue} ${duration.unit}").append(" ")
 			}
 		}.trim()
 	}
-
+	
 	fun toStringNonZero(): String = toString(*nonZeroUnits.toTypedArray())
-
+	
 	operator fun compareTo(other: TimeDuration): Int = value.compareTo(other.value)
 	operator fun compareTo(other: Long): Int = value.compareTo(other)
-
+	
 	operator fun plus(duration: Duration) = TimeDuration(value + duration.toMillis())
 }
 
 fun main() {
-
+	
 	val minutes = Duration minutes 6
 	val timeDuration = TimeDuration(minutes)
 	println(timeDuration.toString())
