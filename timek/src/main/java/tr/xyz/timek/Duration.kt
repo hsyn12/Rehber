@@ -5,10 +5,42 @@ package tr.xyz.timek
 import tr.xyz.digit.Digit
 import java.util.*
 
+/**
+ * Represents a duration.
+ * Duration is an amount of time with certain unit (year, month, day, hour, minute, second, millisecond).
+ * And this duration is a time duration.
+ * So, the time units have a limit.
+ * For example, maximum value of an hour is 23,
+ * maximum value of a `minute` is 59 etc.
+ *
+ *
+ * @property durationValue [Digit] of the duration.
+ * @property unit unit of the duration
+ * @constructor Creates a new duration
+ * @see TimeUnit
+ */
 sealed class Duration(val durationValue: Digit, val unit: TimeUnit) {
+	/**
+	 *  `true` if the duration is zero
+	 */
+	val isZero: Boolean get() = durationValue.digitValue == 0
+	/**
+	 *  `true` if the duration is not zero
+	 */
+	val isNotZero: Boolean get() = durationValue.digitValue != 0
 
-	val isZero get() = durationValue.digitValue == 0
-	val isNotZero get() = durationValue.digitValue != 0
+	fun toMillis(): Long {
+
+		return when (this) {
+			is Millis -> durationValue.digitValue.toLong()
+			is Second -> durationValue.digitValue.toLong() * 1000
+			is Minute -> durationValue.digitValue.toLong() * 60 * 1000
+			is Hour   -> durationValue.digitValue.toLong() * 60 * 60 * 1000
+			is Day    -> durationValue.digitValue.toLong() * 24 * 60 * 60 * 1000
+			is Month  -> durationValue.digitValue.toLong() * 30 * 24 * 60 * 60 * 1000
+			is Year   -> durationValue.digitValue.toLong() * 365 * 24 * 60 * 60 * 1000
+		}
+	}
 
 	operator fun plus(duration: Int): Duration {
 		return when (this) {
@@ -64,13 +96,13 @@ sealed class Duration(val durationValue: Digit, val unit: TimeUnit) {
 	override fun hashCode() = Objects.hash(durationValue.digitValue, unit)
 
 	companion object {
-		fun millisecond(value: Int): Duration = Millis(value)
-		fun second(value: Int): Duration = Second(value)
-		fun minute(value: Int): Duration = Minute(value)
-		fun hour(value: Int): Duration = Hour(value)
-		fun day(value: Int): Duration = Day(value)
-		fun month(value: Int): Duration = Month(value)
-		fun year(value: Int): Duration = Year(value)
+		infix fun milliseconds(value: Int): Duration = Millis(value)
+		infix fun seconds(value: Int): Duration = Second(value)
+		infix fun minutes(value: Int): Duration = Minute(value)
+		infix fun hours(value: Int): Duration = Hour(value)
+		infix fun days(value: Int): Duration = Day(value)
+		infix fun months(value: Int): Duration = Month(value)
+		infix fun years(value: Int): Duration = Year(value)
 	}
 }
 

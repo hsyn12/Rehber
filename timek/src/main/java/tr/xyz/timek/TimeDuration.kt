@@ -1,4 +1,4 @@
-@file:JvmName("Durations")
+@file:JvmName("TimeDurations")
 
 package tr.xyz.timek
 
@@ -25,8 +25,6 @@ import kotlin.math.absoluteValue
  * // toString(format): 0000 years 00 months 04 days 13 hours 25 minutes 00 seconds 000 milliseconds
  * ```
  *
- *
- *
  * @property value  number of milliseconds to calculate the duration
  * @property durations list of calculated durations
  * @property year duration of year
@@ -50,8 +48,10 @@ class TimeDuration(val value: Long = 0) {
 	val second: Duration get() = durations[5]
 	val millisecond: Duration get() = durations[6]
 
-	val nonZeroDurations get() = durations.filter {it.isNotZero}
-	val nonZeroUnits get() = nonZeroDurations.map {it.unit}
+	val nonZeroDurations: List<Duration> get() = durations.filter {it.isNotZero}
+	val nonZeroUnits: List<TimeUnit> get() = nonZeroDurations.map {it.unit}
+
+	constructor(vararg duration: Duration) : this(duration.sumOf {it.toMillis()})
 
 	init {
 
@@ -63,56 +63,77 @@ class TimeDuration(val value: Long = 0) {
 		var minute = 0
 		var second = 0
 		var millisecond = 0
-		var duration = value.absoluteValue
+		var _duration = value.absoluteValue
 
 		while (true) {
 
-			if (duration >= TimeMillis.YEAR) {
-				year = (duration / TimeMillis.YEAR).toInt()
+			if (_duration >= TimeMillis.YEAR) {
+				year = (_duration / TimeMillis.YEAR).toInt()
 				if (isNegative) year = -year
-				duration %= TimeMillis.YEAR
+				_duration %= TimeMillis.YEAR
 			}
-			else if (duration >= TimeMillis.MONTH) {
-				month = (duration / TimeMillis.MONTH).toInt()
+			else if (_duration >= TimeMillis.MONTH) {
+				month = (_duration / TimeMillis.MONTH).toInt()
 				if (isNegative) month = -month
-				duration %= TimeMillis.MONTH
+				_duration %= TimeMillis.MONTH
 			}
-			else if (duration >= TimeMillis.DAY) {
-				day = (duration / TimeMillis.DAY).toInt()
+			else if (_duration >= TimeMillis.DAY) {
+				day = (_duration / TimeMillis.DAY).toInt()
 				if (isNegative) day = -day
-				duration %= TimeMillis.DAY
+				_duration %= TimeMillis.DAY
 			}
-			else if (duration >= TimeMillis.HOUR) {
-				hour = (duration / TimeMillis.HOUR).toInt()
+			else if (_duration >= TimeMillis.HOUR) {
+				hour = (_duration / TimeMillis.HOUR).toInt()
 				if (isNegative) hour = -hour
-				duration %= TimeMillis.HOUR
+				_duration %= TimeMillis.HOUR
 			}
-			else if (duration >= TimeMillis.MINUTE) {
+			else if (_duration >= TimeMillis.MINUTE) {
 
-				minute = (duration / TimeMillis.MINUTE).toInt()
+				minute = (_duration / TimeMillis.MINUTE).toInt()
 				if (isNegative) minute = -minute
-				duration %= TimeMillis.MINUTE
+				_duration %= TimeMillis.MINUTE
 			}
-			else if (duration >= TimeMillis.SECOND) {
-				second = (duration / TimeMillis.SECOND).toInt()
+			else if (_duration >= TimeMillis.SECOND) {
+				second = (_duration / TimeMillis.SECOND).toInt()
 				if (isNegative) second = -second
-				duration %= TimeMillis.SECOND
+				_duration %= TimeMillis.SECOND
 			}
 			else {
-				millisecond = duration.toInt()
+				millisecond = _duration.toInt()
 				if (isNegative) millisecond = -millisecond
 				break
 			}
 		}
 
+		val yearDuration = Duration years year
+		val monthDuration = Duration months month
+		val dayDuration = Duration days day
+		val hourDuration = Duration hours hour
+		val minuteDuration = Duration minutes minute
+		val secondDuration = Duration seconds second
+		val millisecondDuration = Duration milliseconds millisecond
+
+		millisecondDuration.durationValue.left = secondDuration.durationValue
+		secondDuration.durationValue.left = minuteDuration.durationValue
+		minuteDuration.durationValue.left = hourDuration.durationValue
+		hourDuration.durationValue.left = dayDuration.durationValue
+		dayDuration.durationValue.left = monthDuration.durationValue
+		monthDuration.durationValue.left = yearDuration.durationValue
+		yearDuration.durationValue.right = monthDuration.durationValue
+		monthDuration.durationValue.right = dayDuration.durationValue
+		dayDuration.durationValue.right = hourDuration.durationValue
+		hourDuration.durationValue.right = minuteDuration.durationValue
+		minuteDuration.durationValue.right = secondDuration.durationValue
+		secondDuration.durationValue.right = millisecondDuration.durationValue
+
 		durations = listOf(
-			Duration.year(year),
-			Duration.month(month),
-			Duration.day(day),
-			Duration.hour(hour),
-			Duration.minute(minute),
-			Duration.second(second),
-			Duration.millisecond(millisecond)
+			yearDuration,
+			monthDuration,
+			dayDuration,
+			hourDuration,
+			minuteDuration,
+			secondDuration,
+			millisecondDuration
 		)
 	}
 
@@ -133,11 +154,15 @@ class TimeDuration(val value: Long = 0) {
 
 	operator fun compareTo(other: TimeDuration): Int = value.compareTo(other.value)
 	operator fun compareTo(other: Long): Int = value.compareTo(other)
+
+	operator fun plus(duration: Duration) = TimeDuration(value + duration.toMillis())
 }
 
 fun main() {
 
-	val timeDuration = TimeDuration(TimeMillis.MINUTE * 6565)
+	val minutes = Duration minutes 6
+	val timeDuration = TimeDuration(minutes)
 	println(timeDuration.toString())
+	println(timeDuration + (Duration minutes 55))
 	println(timeDuration.toString("%1\$04d years %2\$02d months %3\$02d days %4\$02d hours %5\$02d minutes %6\$02d seconds %7\$03d milliseconds"))
 }
