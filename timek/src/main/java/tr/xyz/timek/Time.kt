@@ -157,7 +157,7 @@ fun main() {
 	
 	val birthDay = Time(1981, 4, 12)
 	println(birthDay)
-	println(TimeDuration(birthDay.millis))
+	println(TimeDurations(birthDay.millis))
 }
 
 

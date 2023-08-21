@@ -2,21 +2,37 @@
 
 package tr.xyz.timek
 
-import tr.xyz.digit.Digit
 import tr.xyz.timek.unit.TimeUnit
 import java.util.*
 import kotlin.reflect.KProperty
 
 /**
  * Represents a duration.
+ *
  * Duration is an amount of time with certain unit (year, month, day, hour, minute, second, millisecond).
- * And this duration --is not-- a time duration.
- * So, the time units have a limit.
- * For example, maximum value of an hour is 23,
- * maximum value of a `minute` is 59 etc.
+ * And this duration **is not** a time duration.
+ * So, the time units have no limit.
+ * For example, can be defined a duration of a month with value `2_000`.
+ *
+ * ```
+ *
+ *    val _duration = Duration months 2000
+ *    println(_duration) // 2000 months
+ * ```
+ *
+ * And a duration can be converted to any unit.
+ *
+ * ```
+ *
+ *    val _duration = Duration months 2000 to TimeUnit.YEAR
+ *    println(_duration) // 166 years
+ *    println(_duration to TimeUnit.DAY) // 60590 days
+ * ```
+ *
+ * If a duration is converted to bigger unit, it will be truncated.
  *
  *
- * @property value [Digit] of the duration.
+ * @property value value of the duration.
  * @property unit unit of the duration
  * @constructor Creates a new duration
  * @see TimeUnit
@@ -198,8 +214,9 @@ class Duration(val value: Long, val unit: TimeUnit) {
 
 fun main() {
 	
-	val _duration = Duration minutes 55 to TimeUnit.SECOND
+	val _duration = Duration months 2000 to TimeUnit.YEAR
 	println(_duration)
+	println(_duration to TimeUnit.DAY)
 	
 }
 

@@ -109,13 +109,13 @@ interface Digit : Limited {
 		digitValue -= value.digitValue
 	}
 	
-	operator fun plus(value: Int): Digit = newDigit(min, max, digitValue + value)
+	// operator fun plus(value: Int): Digit = newDigit(min, max, digitValue + value)
 	
-	operator fun minus(value: Int): Digit = newDigit(min, max, digitValue - value)
+	// operator fun minus(value: Int): Digit = newDigit(min, max, digitValue - value)
 	
-	operator fun times(value: Int): Digit = newDigit(min, max, digitValue * value)
+	// operator fun times(value: Int): Digit = newDigit(min, max, digitValue * value)
 	
-	operator fun times(value: Digit): Digit = newDigit(min, max, digitValue * value.digitValue)
+	// operator fun times(value: Digit): Digit = newDigit(min, max, digitValue * value.digitValue)
 	
 	operator fun timesAssign(value: Int) {
 		digitValue *= value
@@ -176,11 +176,11 @@ class NDigit internal constructor(override val max: Int = Int.MAX_VALUE, overrid
 					val _cycle = value / if (max != 0) max else 1
 					if (_cycle == 0 || _cycle == 1) {
 						cycle = 1
-						min
+						value % if (max != 0) max else 1
 					}
 					else {
 						cycle = _cycle
-						value % interval
+						value % if (max != 0) max else 1
 					}
 				}
 				else {
@@ -208,11 +208,11 @@ fun main() {
 	
 	val row = Digit.newDigit(min = 0, max = 9, digitValue = 4)
 	val col = Digit.newDigit(5)
-	val anotherRow = Digit.newDigit(6)
+	val anotherRow = Digit.newDigit(0)
 	
 	row.left = anotherRow
 	
-	row *= col
+	row += 8
 	println(row) // 2
 	println(anotherRow) // 8
 	
