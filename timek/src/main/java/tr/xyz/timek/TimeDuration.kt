@@ -52,7 +52,7 @@ class TimeDuration(val value: Long = 0) {
 	val nonZeroDurations: List<Duration> get() = durations.filter {it.isNotZero}
 	val nonZeroUnits: List<TimeUnit> get() = nonZeroDurations.map {it.unit}
 	
-	constructor(vararg duration: Duration) : this(duration.sumOf {it.toMillis()})
+	constructor(vararg duration: Duration) : this(duration.sumOf {it.asMillisecond()})
 	
 	init {
 		
@@ -156,7 +156,7 @@ class TimeDuration(val value: Long = 0) {
 	operator fun compareTo(other: TimeDuration): Int = value.compareTo(other.value)
 	operator fun compareTo(other: Long): Int = value.compareTo(other)
 	
-	operator fun plus(duration: Duration) = TimeDuration(value + duration.toMillis())
+	operator fun plus(duration: Duration) = TimeDuration(value + duration.asMillisecond())
 }
 
 fun main() {
