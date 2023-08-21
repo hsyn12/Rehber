@@ -142,9 +142,9 @@ class Duration(val value: Long, val unit: TimeUnit) {
 	
 	operator fun plus(duration: Long): Duration = newDuration(value + duration)
 	
-	operator fun plus(duration: Duration): Duration = if (unit == duration.unit) newDuration(value + duration.value) else newDuration(value + (duration to unit).value)
+	operator fun plus(duration: Duration): Duration = newDuration(value + duration.asUnit(unit).value)
 	
-	operator fun minus(duration: Duration): Duration = if (unit == duration.unit) newDuration(value - duration.value) else newDuration(value - (duration to unit).value)
+	operator fun minus(duration: Duration): Duration = newDuration(value - duration.asUnit(unit).value)
 	
 	operator fun minus(duration: Long): Duration = newDuration(value - duration)
 	
