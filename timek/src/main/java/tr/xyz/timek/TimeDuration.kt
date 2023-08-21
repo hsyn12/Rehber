@@ -114,18 +114,18 @@ class TimeDuration(val value: Long = 0) {
 		val secondDuration = Duration seconds second
 		val millisecondDuration = Duration milliseconds millisecond
 		
-		millisecondDuration.durationValue.left = secondDuration.durationValue
-		secondDuration.durationValue.left = minuteDuration.durationValue
-		minuteDuration.durationValue.left = hourDuration.durationValue
-		hourDuration.durationValue.left = dayDuration.durationValue
-		dayDuration.durationValue.left = monthDuration.durationValue
-		monthDuration.durationValue.left = yearDuration.durationValue
-		yearDuration.durationValue.right = monthDuration.durationValue
-		monthDuration.durationValue.right = dayDuration.durationValue
-		dayDuration.durationValue.right = hourDuration.durationValue
-		hourDuration.durationValue.right = minuteDuration.durationValue
-		minuteDuration.durationValue.right = secondDuration.durationValue
-		secondDuration.durationValue.right = millisecondDuration.durationValue
+		millisecondDuration.value.left = secondDuration.value
+		secondDuration.value.left = minuteDuration.value
+		minuteDuration.value.left = hourDuration.value
+		hourDuration.value.left = dayDuration.value
+		dayDuration.value.left = monthDuration.value
+		monthDuration.value.left = yearDuration.value
+		yearDuration.value.right = monthDuration.value
+		monthDuration.value.right = dayDuration.value
+		dayDuration.value.right = hourDuration.value
+		hourDuration.value.right = minuteDuration.value
+		minuteDuration.value.right = secondDuration.value
+		secondDuration.value.right = millisecondDuration.value
 		
 		durations = listOf(
 			yearDuration,
@@ -140,13 +140,13 @@ class TimeDuration(val value: Long = 0) {
 	
 	override fun toString() = "$year years $month months $day days $hour hours $minute minutes $second seconds $millisecond milliseconds"
 	
-	fun toString(format: String) = format.format(year.durationValue.digitValue, month.durationValue.digitValue, day.durationValue.digitValue, hour.durationValue.digitValue, minute.durationValue.digitValue, second.durationValue.digitValue, millisecond.durationValue.digitValue)
+	fun toString(format: String) = format.format(year.value.digitValue, month.value.digitValue, day.value.digitValue, hour.value.digitValue, minute.value.digitValue, second.value.digitValue, millisecond.value.digitValue)
 	
 	fun toString(vararg units: TimeUnit): String {
 		
 		return buildString {
 			for (duration in durations) {
-				if (units.contains(duration.unit)) append("${duration.durationValue.digitValue} ${duration.unit}").append(" ")
+				if (units.contains(duration.unit)) append("${duration.value.digitValue} ${duration.unit}").append(" ")
 			}
 		}.trim()
 	}
