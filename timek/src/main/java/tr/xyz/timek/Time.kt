@@ -26,7 +26,7 @@ val DEFAULT_ZONE_OFFSET: ZoneOffset = ZoneOffset.of(ZoneId.systemDefault().rules
  * @constructor Creates a new time point with optional milliseconds.
  */
 class Time(val millis: Long = currentTimeMillis) {
-
+	
 	operator fun minus(time: Time): Time = Time(millis - time.millis)
 	operator fun plus(time: Time): Time = Time(millis + time.millis)
 	operator fun compareTo(time: Time): Int = millis.compareTo(time.millis)
@@ -54,9 +54,9 @@ class Time(val millis: Long = currentTimeMillis) {
 	 * @return formatted time string
 	 */
 	fun toString(pattern: String) = toString(millis, pattern)
-
+	
 	companion object {
-
+		
 		/**
 		 * ```
 		 * All letters 'A' to 'Z' and 'a' to 'z' are reserved as pattern letters. The following pattern letters are defined:
@@ -129,32 +129,32 @@ class Time(val millis: Long = currentTimeMillis) {
 		 * @return [Duration]
 		 */
 		fun howLongBefore(time: Long): Duration {
-
+			
 			val now: LocalDateTime = LocalDateTime.now()
 			val date: LocalDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(time), DEFAULT_ZONE_OFFSET)
-
+			
 			require(!date.isAfter(now)) {"The time must be before now"}
-
-			val year = now.year - date.year
+			
+			val year = (now.year - date.year).toLong()
 			if (year >= 1) return Duration years year
-
-			val days = now.dayOfYear - date.dayOfYear
+			
+			val days = (now.dayOfYear - date.dayOfYear).toLong()
 			if (days > 30) return Duration months (days / 30)
 			if (days >= 1) return Duration days days
-
-			val hours = now.minusHours(date.hour.toLong()).hour
+			
+			val hours = (now.minusHours(date.hour.toLong()).hour).toLong()
 			if (hours >= 1) return Duration hours hours
-
-			val minute = now.minusMinutes(date.minute.toLong()).minute
+			
+			val minute = (now.minusMinutes(date.minute.toLong()).minute).toLong()
 			if (minute >= 1) return Duration minutes minute
-
-			return Duration seconds (now.minusSeconds(date.second.toLong()).second)
+			
+			return Duration seconds (now.minusSeconds(date.second.toLong()).second).toLong()
 		}
 	}
 }
 
 fun main() {
-
+	
 	val birthDay = Time(1981, 4, 12)
 	println(birthDay)
 	println(TimeDuration(birthDay.millis))

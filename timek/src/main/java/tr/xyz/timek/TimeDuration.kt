@@ -49,58 +49,60 @@ class TimeDuration(val value: Long = 0) {
 	val second: Duration get() = durations[5]
 	val millisecond: Duration get() = durations[6]
 	
-	val nonZeroDurations: List<Duration> get() = durations.filter {it.isNotZero}
-	val nonZeroUnits: List<TimeUnit> get() = nonZeroDurations.map {it.unit}
+	val nonZeroDurations: List<Duration>
+		get() = durations.filter {it.isNotZero()}
+	val nonZeroUnits: List<TimeUnit>
+		get() = nonZeroDurations.map {it.unit}
 	
-	constructor(vararg duration: Duration) : this(duration.sumOf {it.asMillisecond()})
+	constructor(vararg durations: Duration) : this(durations.sumOf {it.asMilliseconds})
 	
 	init {
 		
 		val isNegative = value < 0
-		var year = 0
-		var month = 0
-		var day = 0
-		var hour = 0
-		var minute = 0
-		var second = 0
-		var millisecond = 0
-		var _duration = value.absoluteValue
+		var year: Long = 0
+		var month: Long = 0
+		var day: Long = 0
+		var hour: Long = 0
+		var minute: Long = 0
+		var second: Long = 0
+		var millisecond: Long = 0
+		var _duration: Long = value.absoluteValue
 		
 		while (true) {
 			
 			if (_duration >= TimeMillis.YEAR) {
-				year = (_duration / TimeMillis.YEAR).toInt()
+				year = (_duration / TimeMillis.YEAR)
 				if (isNegative) year = -year
 				_duration %= TimeMillis.YEAR
 			}
 			else if (_duration >= TimeMillis.MONTH) {
-				month = (_duration / TimeMillis.MONTH).toInt()
+				month = (_duration / TimeMillis.MONTH)
 				if (isNegative) month = -month
 				_duration %= TimeMillis.MONTH
 			}
 			else if (_duration >= TimeMillis.DAY) {
-				day = (_duration / TimeMillis.DAY).toInt()
+				day = (_duration / TimeMillis.DAY)
 				if (isNegative) day = -day
 				_duration %= TimeMillis.DAY
 			}
 			else if (_duration >= TimeMillis.HOUR) {
-				hour = (_duration / TimeMillis.HOUR).toInt()
+				hour = (_duration / TimeMillis.HOUR)
 				if (isNegative) hour = -hour
 				_duration %= TimeMillis.HOUR
 			}
 			else if (_duration >= TimeMillis.MINUTE) {
 				
-				minute = (_duration / TimeMillis.MINUTE).toInt()
+				minute = (_duration / TimeMillis.MINUTE)
 				if (isNegative) minute = -minute
 				_duration %= TimeMillis.MINUTE
 			}
 			else if (_duration >= TimeMillis.SECOND) {
-				second = (_duration / TimeMillis.SECOND).toInt()
+				second = (_duration / TimeMillis.SECOND)
 				if (isNegative) second = -second
 				_duration %= TimeMillis.SECOND
 			}
 			else {
-				millisecond = _duration.toInt()
+				millisecond = _duration
 				if (isNegative) millisecond = -millisecond
 				break
 			}
@@ -113,19 +115,6 @@ class TimeDuration(val value: Long = 0) {
 		val minuteDuration = Duration minutes minute
 		val secondDuration = Duration seconds second
 		val millisecondDuration = Duration milliseconds millisecond
-		
-		millisecondDuration.value.left = secondDuration.value
-		secondDuration.value.left = minuteDuration.value
-		minuteDuration.value.left = hourDuration.value
-		hourDuration.value.left = dayDuration.value
-		dayDuration.value.left = monthDuration.value
-		monthDuration.value.left = yearDuration.value
-		yearDuration.value.right = monthDuration.value
-		monthDuration.value.right = dayDuration.value
-		dayDuration.value.right = hourDuration.value
-		hourDuration.value.right = minuteDuration.value
-		minuteDuration.value.right = secondDuration.value
-		secondDuration.value.right = millisecondDuration.value
 		
 		durations = listOf(
 			yearDuration,
@@ -140,13 +129,13 @@ class TimeDuration(val value: Long = 0) {
 	
 	override fun toString() = "$year years $month months $day days $hour hours $minute minutes $second seconds $millisecond milliseconds"
 	
-	fun toString(format: String) = format.format(year.value.digitValue, month.value.digitValue, day.value.digitValue, hour.value.digitValue, minute.value.digitValue, second.value.digitValue, millisecond.value.digitValue)
+	fun toString(format: String) = format.format(year.value, month.value, day.value, hour.value, minute.value, second.value, millisecond.value)
 	
 	fun toString(vararg units: TimeUnit): String {
 		
 		return buildString {
 			for (duration in durations) {
-				if (units.contains(duration.unit)) append("${duration.value.digitValue} ${duration.unit}").append(" ")
+				if (units.contains(duration.unit)) append("${duration.value} ${duration.unit}").append(" ")
 			}
 		}.trim()
 	}
@@ -156,7 +145,7 @@ class TimeDuration(val value: Long = 0) {
 	operator fun compareTo(other: TimeDuration): Int = value.compareTo(other.value)
 	operator fun compareTo(other: Long): Int = value.compareTo(other)
 	
-	operator fun plus(duration: Duration) = TimeDuration(value + duration.asMillisecond())
+	operator fun plus(duration: Duration) = TimeDuration(value + duration.asMilliseconds)
 }
 
 fun main() {
