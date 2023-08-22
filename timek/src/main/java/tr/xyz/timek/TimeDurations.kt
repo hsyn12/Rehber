@@ -7,6 +7,9 @@ import tr.xyz.digit.Digit
 import tr.xyz.timek.unit.TimeUnit
 import kotlin.math.absoluteValue
 
+/**
+ * Defines the limit of time units.
+ */
 sealed class Limits {
 	
 	companion object {
@@ -22,13 +25,33 @@ sealed class Limits {
 				TimeUnit.MILLISECOND -> MILLISECOND
 			}
 		}
-		
+		/**
+		 *  The limit of the year.
+		 */
 		const val YEAR = 999999999
+		/**
+		 *  The limit of the month.
+		 */
 		const val MONTH = 12
+		/**
+		 *  The limit of the day.
+		 */
 		const val DAY = 30
+		/**
+		 *  The limit of the hour.
+		 */
 		const val HOUR = 24
+		/**
+		 *  The limit of the minute.
+		 */
 		const val MINUTE = 60
+		/**
+		 *  The limit of the second.
+		 */
 		const val SECOND = 60
+		/**
+		 *  The limit of the millisecond.
+		 */
 		const val MILLISECOND = 1000
 	}
 }
@@ -45,7 +68,7 @@ sealed class Limits {
  *
  * ```
  *
- * val timeDuration = TimeDuration(TimeMillis.MINUTE * 6565)
+ * val timeDuration = TimeDurations(TimeMillis.MINUTE * 6565)
  * println(timeDuration.toStringNonZero())
  * println(timeDuration.toString())
  * println(timeDuration.toString("%1\$04d years %2\$02d months %3\$02d days %4\$02d hours %5\$02d minutes %6\$02d seconds %7\$03d milliseconds"))
@@ -56,13 +79,13 @@ sealed class Limits {
  *
  * @property value  number of milliseconds to calculate the duration
  * @property durations list of calculated durations
- * @property year duration of year
- * @property month duration of month
- * @property day duration of day
- * @property hour duration of hour
- * @property minute duration of minute
- * @property second duration of second
- * @property millisecond duration of millisecond
+ * @property year calculated duration of year
+ * @property month calculated duration of month
+ * @property day calculated duration of day
+ * @property hour calculated duration of hour
+ * @property minute calculated duration of minute
+ * @property second calculated duration of second
+ * @property millisecond calculated duration of millisecond
  * @constructor Creates a new time duration with optional value of zero.
  * @see TimeMillis
  */
@@ -202,9 +225,24 @@ class TimeDurations(val value: Long = 0) {
 		}
 	}
 }
-
+/**
+ * Represents a duration of time with one unit (year, month, day, hour, minute, second, millisecond).
+ *
+ * Each unit has its own limit.
+ * For example, the duration of a month is exactly 30 days,
+ * an hour is exactly 60 minutes, and a minute is exactly 60 seconds etc.
+ *
+ * @property unit [TimeUnit] of the duration
+ * @property value value of the duration
+ * @property isNotZero indicates if the duration is not zero
+ * @property isZero indicates if the duration is zero
+ * @property toMilliseconds milliseconds equivalent of the duration
+ * @constructor Creates a new time duration with value and its unit.
+ * @see TimeMillis
+ * @see TimeUnit
+ * @see Digit
+ */
 class TimeDuration(value: Int, val unit: TimeUnit) {
-	
 	var value: Digit = Digit.newDigit(0, Limits.of(unit))
 	val isNotZero: Boolean get() = value.digitValue != 0
 	val isZero: Boolean get() = value.digitValue == 0
