@@ -34,7 +34,7 @@ interface Limited {
  * println(row) // 2
  * ```
  *
- * This prints `2` because `4 * 5 = 20` and the limit is `9`.
+ * This prints `2` because `4 * 5 = 20` and the max limit is `9`.
  * So, the maximum value of the digit is exceeded.
  * The `row` digit cycles two times to account for the result.
  * So, `2 * 9 = 18` and remains `2` to reach the `20`. The `row` digit take this `2`,
