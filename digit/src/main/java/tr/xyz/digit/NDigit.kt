@@ -83,6 +83,8 @@ interface Digit : Limited {
 	 */
 	var right: Digit?
 	
+	val range: Int
+	
 	operator fun inc(): Digit {
 		digitValue++
 		return this
@@ -160,7 +162,7 @@ interface Digit : Limited {
 
 class NDigit internal constructor(override val max: Int = Int.MAX_VALUE, override val min: Int = 0, digitValue: Int = 0) : Digit {
 	
-	private val interval = (max - min).absoluteValue
+	override val range = (max - min).absoluteValue
 	override var left: Digit? = null
 	override var right: Digit? = null
 	override var cycle = 0
@@ -175,51 +177,46 @@ class NDigit internal constructor(override val max: Int = Int.MAX_VALUE, overrid
 			field = if (value in min until max) value
 			else {
 				if (value >= max) {
-					val _cycle = value / interval
-					if (_cycle == 0) {
-						cycle = 1
-						min
-					}
-					else {
-						cycle = _cycle
-						value % interval
-					}
+					println("value >= max")
+					cycle = (value - max) / range
+					if (cycle == 0) cycle = 1
+					min + ((value - max) % range)
 				}
 				else { //+ value < min
-					val _cycle = min / interval
-					if (_cycle == 0) {
-						cycle = -1
-						value.absoluteValue % interval
-					}
-					else {
-						cycle = _cycle
-						value.absoluteValue % interval
-					}
+					println("value < min")
+					cycle = (min - value) / range
+					if (cycle == 0) cycle = -1
+					max - ((min - value) % range)
 				}
 			}
 		}
 	
 	init {
-		this.digitValue = digitValue
+		if (digitValue in min until max) this.digitValue = digitValue
+		else this.digitValue = min
 	}
 	
 	override fun toString(): String = "$digitValue"
 	
 	init {
-		require(interval >= 0) {"Interval must be positive"}
+		require(max > min) {"Max must be greater than min, but [$max < $min]"}
+		require(range > 0) {"Interval must be 1 at least"}
 	}
 }
 
 fun main() {
 	
-	val row = Digit.newDigit(min = 0, max = 9, digitValue = 4)
+	var row = Digit.newDigit(min = 5, max = 10, digitValue = 9)
 	val col = Digit.newDigit(5)
-	val anotherRow = Digit.newDigit(0)
+	val anotherRow = Digit.newDigit(0, 10, 0)
 	
 	row.left = anotherRow
+	// row.right = anotherRow
 	
-	row += 8
-	println(row) // 2
-	println(anotherRow) // 8
-	
+	println("row      : $row")
+	row.plusAssign(1)
+	println("row      : $row")
+	println("left     : ${row.left}")
+	println("right    : ${row.right}")
+	println("range    : ${row.range}")
 }
