@@ -82,47 +82,138 @@ interface Digit : Limited {
 	 * Right Digit.
 	 */
 	var right: Digit?
-	
+	/**
+	 * Range of the digit.
+	 */
 	val range: Int
 	
+	/**
+	 * Increments the digit value by one.
+	 *
+	 * @return this [Digit]
+	 */
 	operator fun inc(): Digit {
 		digitValue++
 		return this
 	}
 	
+	/**
+	 * Decrements the digit value by one.
+	 * @return this [Digit]
+	 */
 	operator fun dec(): Digit {
 		digitValue--
 		return this
 	}
 	
+	/**
+	 * Adds the value to the digit.
+	 * If the result overflows, it is truncated and
+	 * forwards the overflow count to the `right` digit for positive
+	 * to the `left` digit for negative (if exists) overflows.
+	 *
+	 * @param value value to add
+	 */
 	operator fun plusAssign(value: Int) {
 		digitValue += value
 	}
 	
+	/**
+	 * Subtracts the value from the digit.
+	 * If the result overflows, it is truncated and
+	 * forwards the overflow count to the `right` digit for positive
+	 * to the `left` digit for negative (if exists) overflows.
+	 *
+	 * @param value value to subtract
+	 */
 	operator fun minusAssign(value: Int) {
 		digitValue -= value
 	}
 	
+	/**
+	 * Adds the value to the digit.
+	 * If the result overflows, it is truncated and
+	 * forwards the overflow count to the `right` digit for positive
+	 * to the `left` digit for negative (if exists) overflows.
+	 *
+	 * @param value value to add
+	 */
 	operator fun plusAssign(value: Digit) {
 		digitValue += value.digitValue
 	}
 	
+	/**
+	 * Subtracts the value from the digit.
+	 * If the result overflows, it is truncated and
+	 * forwards the overflow count to the `right` digit for positive
+	 * to the `left` digit for negative (if exists) overflows.
+	 *
+	 * @param value value to subtract
+	 */
 	operator fun minusAssign(value: Digit) {
 		digitValue -= value.digitValue
 	}
 	
+	/**
+	 * Returns a new [Digit] with the value added to the current [Digit] value.
+	 * This operation does not impact the current [Digit].
+	 * If the result overflows, it is truncated.
+	 *
+	 * @param value value to add
+	 * @return new [Digit] with the value added to the current [Digit] value
+	 */
 	operator fun plus(value: Int): Digit = newDigit(min, max, digitValue + value)
 	
+	/**
+	 * Returns a new [Digit] with the value subtracted from the current [Digit] value.
+	 * This operation does not impact the current [Digit].
+	 * If the result overflows, it is truncated.
+	 *
+	 * @param value value to subtract
+	 * @return new [Digit] with the value subtracted from the current [Digit] value
+	 */
 	operator fun minus(value: Int): Digit = newDigit(min, max, digitValue - value)
 	
+	/**
+	 * Returns a new [Digit] with the value multiplied by the current [Digit] value.
+	 * This operation does not impact the current [Digit].
+	 * If the result overflows, it is truncated.
+	 *
+	 * @param value value to multiply
+	 * @return new [Digit] with the value multiplied by the current [Digit] value
+	 */
 	operator fun times(value: Int): Digit = newDigit(min, max, digitValue * value)
 	
+	/**
+	 * Returns a new [Digit] with the value multiplied by the current [Digit] value.
+	 * This operation does not impact the current [Digit].
+	 * If the result overflows, it is truncated.
+	 *
+	 * @param value value to multiply
+	 * @return new [Digit] with the value multiplied by the current [Digit] value
+	 */
 	operator fun times(value: Digit): Digit = newDigit(min, max, digitValue * value.digitValue)
 	
+	/**
+	 * Multiplies the current [Digit] value by the value.
+	 * If the result overflows, it is truncated and
+	 * forwards the overflow count to the `right` digit for positive
+	 * to the `left` digit for negative (if exists) overflows.
+	 *
+	 * @param value value to multiply
+	 */
 	operator fun timesAssign(value: Int) {
 		digitValue *= value
 	}
 	
+	/**
+	 * Multiplies the current [Digit] value by the value.
+	 * If the result overflows, it is truncated and
+	 * forwards the overflow count to the `right` digit for positive
+	 * to the `left` digit for negative (if exists) overflows.
+	 *
+	 * @param value value to multiply
+	 */
 	operator fun timesAssign(value: Digit) {
 		digitValue *= value.digitValue
 	}
@@ -131,8 +222,6 @@ interface Digit : Limited {
 	 * Called when [cycle] is set to other than `0`.
 	 *
 	 * @param cycle cycle count. This number can be negative.
-	 *              Positive values are forwarded to the `left` digit (if exists),
-	 *              negative values are forwarded to the `right` digit (if exists).
 	 */
 	fun onCycle(cycle: Int) {
 		digitValue += cycle
