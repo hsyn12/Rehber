@@ -41,7 +41,7 @@ sealed class Limits {
  * [TimeDurations] is a time duration,
  * not a time point. And each unit has its own limit.
  * For example, the duration of a month is exactly 30 days,
- * an hour is exactly 60 minutes, and a minute is exactly 60 seconds.
+ * an hour is exactly 60 minutes, and a minute is exactly 60 seconds etc.
  *
  * ```
  *
@@ -49,7 +49,7 @@ sealed class Limits {
  * println(timeDuration.toStringNonZero())
  * println(timeDuration.toString())
  * println(timeDuration.toString("%1\$04d years %2\$02d months %3\$02d days %4\$02d hours %5\$02d minutes %6\$02d seconds %7\$03d milliseconds"))
- * // toStringNonZero : 4 day 13 hour 25 minute
+ * // toStringNonZero : 4 days 13 hours 25 minutes
  * // toString        : 0 years 0 months 4 days 13 hours 25 minutes 0 seconds 0 milliseconds
  * // toString(format): 0000 years 00 months 04 days 13 hours 25 minutes 00 seconds 000 milliseconds
  * ```
@@ -243,20 +243,104 @@ class TimeDuration(value: Int, val unit: TimeUnit) {
 		return this
 	}
 	
+	/**
+	 * Returns a new [TimeDuration] with the value added.
+	 *
+	 * Caution : [other] duration must have the same unit as this, otherwise an exception will be thrown.
+	 * And after the addition, the result duration will have the same unit as this.
+	 * Moreover, if overflow occurs, the result will be truncated.
+	 *
+	 * ```
+	 *
+	 *    val timeDuration = TimeDuration minutes 55
+	 *    val otherDuration = TimeDuration minutes 10
+	 *
+	 *    println(timeDuration + otherDuration) // 5 minutes
+	 * ```
+	 *
+	 * Remember, [TimeDuration] always has a limit and certainly cannot exceed the limit.
+	 * This method is for the time durations that never cause overflow.
+	 * If you need to add durations that can cause overflow, use [plusAssign] and
+	 * set the [Digit.left] to observe the positive overflow or
+	 * set the [Digit.right] to observe the negative overflow.
+	 * Or set the both.
+	 * Because of the not returning a new [TimeDuration], the overflow will be observable.
+	 * While [TimeDuration] uses the [Digit] to represent the value,
+	 * the all is done with that.
+	 *
+	 * ```
+	 *
+	 *    val timeDuration = TimeDuration minutes 55
+	 *    val otherDuration = TimeDuration minutes 10
+	 *    val overflow = TimeDuration hours 0
+	 *    timeDuration.value.left = overflow.value
+	 *    timeDuration += otherDuration
+	 *    println("$overflow $timeDuration") // 1 hours 5 minutes
+	 * ```
+	 *
+	 * @param other [TimeDuration] to add
+	 * @return new [TimeDuration]
+	 */
+	operator fun plus(other: TimeDuration): TimeDuration {
+		if (other.unit != unit) throw IllegalArgumentException("Units must be same to be able to be operated : $unit and ${other.unit}")
+		return TimeDuration(value.digitValue + other.value.digitValue, unit)
+	}
+	/**
+	 * Returns a new [TimeDuration] with the value subtracted.
+	 *
+	 * Caution : [other] duration must have the same unit as this, otherwise an exception will be thrown.
+	 * And after the addition, the result duration will have the same unit as this.
+	 * Moreover, if overflow occurs, the result will be truncated.
+	 *
+	 * ```
+	 *
+	 *    val timeDuration = TimeDuration minutes 55
+	 *    val otherDuration = TimeDuration minutes 10
+	 *
+	 *    println(timeDuration + otherDuration) // 5 minutes
+	 * ```
+	 *
+	 * Remember, [TimeDuration] always has a limit and certainly cannot exceed the limit.
+	 * This method is for the time durations that never cause overflow.
+	 * If you need to add durations that can cause overflow, use [plusAssign] and
+	 * set the [Digit.left] to observe the positive overflow or
+	 * set the [Digit.right] to observe the negative overflow.
+	 * Or set the both.
+	 * Because of the not returning a new [TimeDuration], the overflow will be observable.
+	 * While [TimeDuration] uses the [Digit] to represent the value,
+	 * the all is done with that.
+	 *
+	 * ```
+	 *
+	 *    val timeDuration = TimeDuration minutes 55
+	 *    val otherDuration = TimeDuration minutes 10
+	 *    val overflow = TimeDuration hours 0
+	 *    timeDuration.value.left = overflow.value
+	 *    timeDuration += otherDuration
+	 *    println("$overflow $timeDuration") // 1 hours 5 minutes
+	 * ```
+	 * @param other TimeDuration
+	 * @return TimeDuration
+	 */
+	operator fun minus(other: TimeDuration): TimeDuration {
+		if (other.unit != unit) throw IllegalArgumentException("Units must be same to be able to be operated : $unit and ${other.unit}")
+		return TimeDuration(value.digitValue - other.value.digitValue, unit)
+	}
+	
 	operator fun plusAssign(other: TimeDuration) {
-		value += other.value
+		value.plusAssign(other.value)
 	}
 	
 	operator fun plusAssign(other: Int) {
-		value += other
+		value.plusAssign(other)
 	}
 	
 	operator fun minusAssign(other: TimeDuration) {
-		value -= other.value
+		value.minusAssign(other.value)
 	}
 	
 	operator fun minusAssign(other: Int) {
-		value.digitValue -= other
+		value.minusAssign(other)
 	}
 	
 	override fun toString(): String = "$value $unit"
@@ -276,17 +360,17 @@ class TimeDuration(value: Int, val unit: TimeUnit) {
 }
 
 fun main() {
-	val timeDuration = TimeDuration minutes 55
-	val left = TimeDuration hours 0
-	val right = TimeDuration seconds 0
+	val timeDuration = TimeDuration minutes 5
+	val otherDuration = TimeDuration minutes 10
 	
-	timeDuration.value.left = left.value
-	timeDuration.value.right = right.value
-	println(timeDuration)
-	timeDuration += 8
-	println(timeDuration)
-	println("left  : $left")
-	println("right : $right")
+	println(timeDuration - otherDuration)
+	
+	
+	/*val overflow = TimeDuration hours 0
+	timeDuration.value.left = overflow.value
+	timeDuration -= otherDuration
+	println("$overflow $timeDuration")*/
+	// println(timeDuration - otherDuration)
 	
 	
 }
