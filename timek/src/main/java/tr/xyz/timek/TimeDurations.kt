@@ -142,12 +142,6 @@ class TimeDurations(val value: Long = 0) {
 		val secondDuration = TimeDuration seconds second
 		val millisecondDuration = TimeDuration milliseconds millisecond
 		
-		yearDuration.value.right = monthDuration.value
-		monthDuration.value.right = dayDuration.value
-		dayDuration.value.right = hourDuration.value
-		hourDuration.value.right = minuteDuration.value
-		minuteDuration.value.right = secondDuration.value
-		secondDuration.value.right = millisecondDuration.value
 		millisecondDuration.value.left = secondDuration.value
 		secondDuration.value.left = minuteDuration.value
 		minuteDuration.value.left = hourDuration.value
@@ -294,15 +288,14 @@ class TimeDuration(value: Int, val unit: TimeUnit) {
 	 *
 	 * ```
 	 *
-	 *    val timeDuration = TimeDuration minutes 55
+	 *    val timeDuration = TimeDuration minutes 5
 	 *    val otherDuration = TimeDuration minutes 10
-	 *
-	 *    println(timeDuration + otherDuration) // 5 minutes
+	 *    println(timeDuration - otherDuration) // 55 minutes
 	 * ```
 	 *
 	 * Remember, [TimeDuration] always has a limit and certainly cannot exceed the limit.
 	 * This method is for the time durations that never cause overflow.
-	 * If you need to add durations that can cause overflow, use [plusAssign] and
+	 * If you need to add durations that can cause overflow, use [minusAssign] and
 	 * set the [Digit.left] to observe the positive overflow or
 	 * set the [Digit.right] to observe the negative overflow.
 	 * Or set the both.
@@ -312,12 +305,13 @@ class TimeDuration(value: Int, val unit: TimeUnit) {
 	 *
 	 * ```
 	 *
-	 *    val timeDuration = TimeDuration minutes 55
+	 *    val timeDuration = TimeDuration minutes 5
 	 *    val otherDuration = TimeDuration minutes 10
-	 *    val overflow = TimeDuration hours 0
-	 *    timeDuration.value.left = overflow.value
-	 *    timeDuration += otherDuration
-	 *    println("$overflow $timeDuration") // 1 hours 5 minutes
+	 *    val overflow = Digit.newDigit(3)
+	 *    timeDuration.value.right = overflow
+	 *    timeDuration -= otherDuration
+	 *    println("$timeDuration (overflow left $overflow)")
+	 *    // 55 minutes (overflow left 2)
 	 * ```
 	 * @param other TimeDuration
 	 * @return TimeDuration
@@ -362,8 +356,10 @@ class TimeDuration(value: Int, val unit: TimeUnit) {
 fun main() {
 	val timeDuration = TimeDuration minutes 5
 	val otherDuration = TimeDuration minutes 10
-	
-	println(timeDuration - otherDuration)
+	val overflow = Digit.newDigit(3)
+	timeDuration.value.right = overflow
+	timeDuration -= otherDuration
+	println("$timeDuration (overflow left $overflow)")
 	
 	
 	/*val overflow = TimeDuration hours 0

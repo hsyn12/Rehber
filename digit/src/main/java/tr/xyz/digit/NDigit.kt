@@ -177,13 +177,11 @@ class NDigit internal constructor(override val max: Int = Int.MAX_VALUE, overrid
 			field = if (value in min until max) value
 			else {
 				if (value >= max) {
-					println("value >= max")
 					cycle = (value - max) / range
 					if (cycle == 0) cycle = 1
 					min + ((value - max) % range)
 				}
 				else { //+ value < min
-					println("value < min")
 					cycle = (min - value) / range
 					if (cycle == 0) cycle = -1
 					max - ((min - value) % range)
@@ -192,16 +190,13 @@ class NDigit internal constructor(override val max: Int = Int.MAX_VALUE, overrid
 		}
 	
 	init {
+		
+		require(max > min) {"Max must be greater than min, but [max : $max - min : $min]"}
 		if (digitValue in min until max) this.digitValue = digitValue
 		else this.digitValue = min
 	}
 	
 	override fun toString(): String = "$digitValue"
-	
-	init {
-		require(max > min) {"Max must be greater than min, but [$max < $min]"}
-		require(range > 0) {"Interval must be 1 at least"}
-	}
 }
 
 fun main() {
