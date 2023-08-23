@@ -32,27 +32,27 @@ sealed class Limits {
 		/**
 		 *  The limit of the month.
 		 */
-		const val MONTH = 12
+		const val MONTH = 11
 		/**
 		 *  The limit of the day.
 		 */
-		const val DAY = 30
+		const val DAY = 29
 		/**
 		 *  The limit of the hour.
 		 */
-		const val HOUR = 24
+		const val HOUR = 23
 		/**
 		 *  The limit of the minute.
 		 */
-		const val MINUTE = 60
+		const val MINUTE = 59
 		/**
 		 *  The limit of the second.
 		 */
-		const val SECOND = 60
+		const val SECOND = 59
 		/**
 		 *  The limit of the millisecond.
 		 */
-		const val MILLISECOND = 1000
+		const val MILLISECOND = 999
 	}
 }
 
@@ -272,6 +272,13 @@ class TimeDuration(value: Int, val unit: TimeUnit) {
 			}
 		}
 	
+	private fun checkUnit(unit: TimeUnit) {
+		if (isNotUnit(unit)) throw IllegalArgumentException("Units must be same to be able to be operated : $unit and ${this.unit}")
+	}
+	
+	fun isUnit(unit: TimeUnit) = unit == this.unit
+	fun isNotUnit(unit: TimeUnit) = unit != this.unit
+	
 	operator fun inc(): TimeDuration {
 		value++
 		return this
@@ -321,12 +328,13 @@ class TimeDuration(value: Int, val unit: TimeUnit) {
 	 * @return new [TimeDuration]
 	 */
 	operator fun plus(other: TimeDuration): TimeDuration {
-		if (other.unit != unit) throw IllegalArgumentException("Units must be same to be able to be operated : $unit and ${other.unit}")
+		checkUnit(other.unit)
 		return TimeDuration(value.digitValue + other.value.digitValue, unit)
 	}
 	
 	/**
 	 * Returns a new [TimeDuration] with the value subtracted.
+	 * This operation will not be caused to change the value of this duration.
 	 *
 	 * Caution : [other] duration must have the same unit as this, otherwise an exception will be thrown.
 	 * And after the addition, the result duration will have the same unit as this.
@@ -359,13 +367,14 @@ class TimeDuration(value: Int, val unit: TimeUnit) {
 	 *    println("$timeDuration (overflow left $overflow)")
 	 *    // 55 minutes (overflow left 2)
 	 * ```
-	 * @param other TimeDuration
-	 * @return TimeDuration
+	 * @param other [TimeDuration] to subtract
+	 * @return new [TimeDuration]
 	 */
 	operator fun minus(other: TimeDuration): TimeDuration {
-		if (other.unit != unit) throw IllegalArgumentException("Units must be same to be able to be operated : $unit and ${other.unit}")
+		checkUnit(other.unit)
 		return TimeDuration(value.digitValue - other.value.digitValue, unit)
 	}
+	
 	/**
 	 * Adds another [TimeDuration] to this duration.
 	 * This operation will be caused to change the value of this duration.
@@ -393,24 +402,65 @@ class TimeDuration(value: Int, val unit: TimeUnit) {
 	 * Because this has no any meaning for time durations.
 	 *
 	 * Positive overflow will be occurred
-	 * when the addition result produces a duration value that greater than or equal to the [max] limit.
+	 * when the addition produces a duration value that greater than or equal to the [max] limit.
 	 *
 	 *
 	 * @param other TimeDuration
 	 */
 	operator fun plusAssign(other: TimeDuration) {
-		if (other.unit != unit) throw IllegalArgumentException("Units must be same to be able to be operated : $unit and ${other.unit}")
+		checkUnit(other.unit)
 		value.plusAssign(other.value)
 	}
-	
+	/**
+	 * Subtracts another [TimeDuration] from this duration.
+	 * This operation will be caused to change the value of this duration.
+	 *
+	 * Caution : [other] duration must have the same unit as this, otherwise an exception will be thrown.
+	 * And after the addition, if overflow occurs, the result will be truncated and
+	 * the (positive) overflow count will be forwarded to the `left` digit of this digit (if its exists).
+	 *
+	 * Positive overflow will be occurred
+	 * when the addition produces a duration value that greater than or equal to the `max` limit.
+	 *
+	 * ```
+	 *
+	 *    val timeDuration = TimeDuration minutes 55
+	 *    val otherDuration = 10
+	 *    val hour = TimeDuration hours 0
+	 *    timeDuration.value.left = hour.value
+	 *    timeDuration += otherDuration
+	 *    println("$hour $timeDuration")
+	 *    // 1 hours 5 minutes
+	 * ```
+	 *
+	 *
+	 * @param other value to subtract
+	 * @see Limits
+	 */
 	operator fun plusAssign(other: Int) {
 		value.plusAssign(other)
 	}
-	
+	/**
+	 * Subtracts another [TimeDuration] from this duration.
+	 * This operation will be caused to change the value of this duration.
+	 *
+	 * Caution : [other] duration must have the same unit as this, otherwise an exception will be thrown.
+	 * And after the subtraction, if overflow occurs, the result will be truncated and
+	 * the (negative) overflow count will be forwarded to the `right` digit of this digit (if its exists).
+	 *
+	 * @param other TimeDuration
+	 */
 	operator fun minusAssign(other: TimeDuration) {
 		value.minusAssign(other.value)
 	}
-	
+	/**
+	 * Subtracts another [Int] from this duration.
+	 * This operation will be caused to change the value of this duration.
+	 * And after the subtraction, if overflow occurs, the result will be truncated and
+	 * the (negative) overflow count will be forwarded to the `right` digit of this digit (if its exists).
+	 *
+	 * @param other Int
+	 */
 	operator fun minusAssign(other: Int) {
 		value.minusAssign(other)
 	}
@@ -424,7 +474,7 @@ class TimeDuration(value: Int, val unit: TimeUnit) {
 		infix fun seconds(@IntRange(from = 0, to = 59) value: Int): TimeDuration = TimeDuration(value, TimeUnit.SECOND)
 		infix fun minutes(@IntRange(from = 0, to = 59) value: Int): TimeDuration = TimeDuration(value, TimeUnit.MINUTE)
 		infix fun hours(@IntRange(from = 0, to = 23) value: Int): TimeDuration = TimeDuration(value, TimeUnit.HOUR)
-		infix fun days(@IntRange(from = 0, to = 30) value: Int): TimeDuration = TimeDuration(value, TimeUnit.DAY)
+		infix fun days(@IntRange(from = 0, to = 29) value: Int): TimeDuration = TimeDuration(value, TimeUnit.DAY)
 		infix fun months(@IntRange(from = 0, to = 11) value: Int): TimeDuration = TimeDuration(value, TimeUnit.MONTH)
 		infix fun years(@IntRange(from = 0, to = 999_999_999) value: Int): TimeDuration = TimeDuration(value, TimeUnit.YEAR)
 	}
@@ -433,11 +483,10 @@ class TimeDuration(value: Int, val unit: TimeUnit) {
 
 fun main() {
 	val timeDuration = TimeDuration minutes 55
-	println("$timeDuration")
-	// val otherDuration = TimeDuration minutes 10
-	// val hour = TimeDuration hours 0
-	// timeDuration.value.left = hour.value
-	// timeDuration += otherDuration
-	
+	val otherDuration = 10
+	val hour = TimeDuration hours 0
+	timeDuration.value.left = hour.value
+	timeDuration += otherDuration
+	println("$hour $timeDuration")
 	
 }
