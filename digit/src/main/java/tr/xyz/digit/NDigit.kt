@@ -290,15 +290,15 @@ class NDigit internal constructor(override val max: Int = Int.MAX_VALUE, overrid
 
 fun main() {
 	
-	var row = Digit.newDigit(min = 5, max = 10, digitValue = 9)
+	var row = Digit.newDigit(min = 5, max = 10, digitValue = 5)
 	val col = Digit.newDigit(5)
 	val anotherRow = Digit.newDigit(0, 10, 0)
 	
-	row.left = anotherRow
-	// row.right = anotherRow
+	// row.left = anotherRow
+	row.right = anotherRow
 	
 	println("row      : $row")
-	row.plusAssign(1)
+	row.minusAssign(1)
 	println("row      : $row")
 	println("left     : ${row.left}")
 	println("right    : ${row.right}")
