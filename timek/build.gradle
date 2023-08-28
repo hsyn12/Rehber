@@ -7,8 +7,10 @@ plugins {
 dependencies {
 	implementation project(path: ':kandom')
 	implementation project(path: ':digit')
+	implementation project(path: ':keext')
+	
 	implementation "androidx.annotation:annotation:${rootProject.androidx_annotation}"
-
+	
 }
 
 java {

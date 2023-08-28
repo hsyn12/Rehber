@@ -2,19 +2,18 @@
 
 package tr.xyz.timek
 
+import tr.xyz.keext.sure
 import tr.xyz.timek.unit.TimeDuration
 import tr.xyz.timek.unit.TimeUnit
 import kotlin.math.absoluteValue
 
 /**
- * Represents a duration of time with units (year, month, day, hour, minute, second, millisecond).
- * The duration is calculated based on a given value in milliseconds.
+ * Represents a duration of time with units (year, month, day, hour, minute, second, millisecond). The duration is calculated based on a given value in milliseconds.
+ *
  * ```
  * ```
- * [TimeDurations] is a time duration,
- * not a time point. And each unit has its own limit.
- * For example, the duration of a month is exactly 30 days,
- * an hour is exactly 60 minutes, and a minute is exactly 60 seconds etc.
+ *
+ * [TimeDurations] is a time duration, not a time point. And each unit has its own limit. For example, the duration of a month is exactly 30 days, an hour is exactly 60 minutes, and a minute is exactly 60 seconds etc.
  *
  * ```
  *
@@ -27,7 +26,8 @@ import kotlin.math.absoluteValue
  * // toString(format): 0000 years 00 months 04 days 13 hours 25 minutes 00 seconds 000 milliseconds
  * ```
  *
- * @property value  Number of milliseconds of the duration
+ * @constructor Creates a new time duration with optional value of zero.
+ * @property value Number of milliseconds of the duration
  * @property durations List of calculated time durations
  * @property year Year part of the duration
  * @property month Month part of the duration
@@ -36,7 +36,6 @@ import kotlin.math.absoluteValue
  * @property minute Minute part of the duration
  * @property second Second part of the duration
  * @property millisecond Millisecond part of the duration
- * @constructor Creates a new time duration with optional value of zero.
  * @see TimeMillis
  * @see TimeDuration
  */
@@ -54,7 +53,14 @@ class TimeDurations(val value: Long = 0) {
 	val nonZeroDurations: List<TimeDuration> get() = durations.filter {it.isNotZero}
 	val nonZeroUnits: List<TimeUnit> get() = nonZeroDurations.map {it.unit}
 	
+	/**
+	 * Creates a new time duration from a list of durations.
+	 *
+	 * @param durations List of durations
+	 */
 	constructor(vararg durations: Duration) : this(durations.sumOf {it.asMilliseconds})
+	
+	constructor(value: String) : this(ofMilliseconds(value))
 	
 	init {
 		
@@ -175,14 +181,29 @@ class TimeDurations(val value: Long = 0) {
 			TimeUnit.MILLISECOND -> millisecond.value -= duration.value
 		}
 	}
+	
+	companion object {
+		
+		fun ofMilliseconds(value: String): Long {
+			
+			val parts = value.split(":")
+			
+			if (parts.size < 2 || parts.size > 7) throw IllegalArgumentException("Invalid time format: $value")
+			
+			return when (parts.size) {
+				2    -> parts[0].toLong().sure {if (it in 0..999) it else throw IllegalArgumentException("Invalid time format: $value")} * 1000 + parts[1].toLong()
+				3    -> parts[0].toLong().sure {if (it in 0..59) it else throw IllegalArgumentException("Invalid time format: $value")} * 1000 * 60 + parts[1].toLong() * 60 + parts[2].toLong()
+				4    -> parts[0].toLong().sure {if (it in 0..59) it else throw IllegalArgumentException("Invalid time format: $value")} * 1000 * 60 * 60 + parts[1].toLong() * 60 * 60 + parts[2].toLong() * 60 + parts[3].toLong()
+				5    -> parts[0].toLong().sure {if (it in 0..23) it else throw IllegalArgumentException("Invalid time format: $value")} * 1000 * 60 * 60 * 24 + parts[1].toLong() * 60 * 60 * 24 + parts[2].toLong() * 60 * 60 + parts[3].toLong() * 60 + parts[4].toLong()
+				6    -> parts[0].toLong().sure {if (it in 0..31) it else throw IllegalArgumentException("Invalid time format: $value")} * 1000 * 60 * 60 * 24 * 365 + parts[1].toLong() * 60 * 60 * 24 * 365 + parts[2].toLong() * 60 * 60 * 24 + parts[3].toLong() * 60 * 60 + parts[4].toLong() * 60 + parts[5].toLong()
+				else -> parts[0].toLong().sure {if (it in 0..999_999_999) it else throw IllegalArgumentException("Invalid time format: $value")} * 1000 * 60 * 60 * 24 * 365 * 1000
+				
+			}
+		}
+	}
 }
 
 fun main() {
-	val timeDuration = TimeDuration minutes 55
-	val otherDuration = 10
-	val hour = TimeDuration hours 0
-	timeDuration.value.left = hour.value
-	timeDuration += otherDuration
-	println("$hour $timeDuration")
+	val timeDuration = TimeDurations("0:400")
 	
 }

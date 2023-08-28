@@ -5,6 +5,7 @@ import kotlin.contracts.contract
 
 /**
  * Tests any object for null.
+ *
  * @receiver any object
  */
 val Any?.isNull: Boolean
@@ -12,6 +13,7 @@ val Any?.isNull: Boolean
 
 /**
  * Tests any object for not null.
+ *
  * @receiver any object
  */
 val Any?.isNotNull: Boolean
@@ -33,10 +35,7 @@ fun Any?.isNotNull(): Boolean {
 }
 
 /**
- * Tests any object for true.
- * If the object is null, returns false.
- * If the object is boolean, returns boolean.
- * If the object is not null, returns true.
+ * Tests any object for true. If the object is null, returns false. If the object is boolean, returns boolean. If the object is not null, returns true.
  */
 val Any?.isTrue: Boolean
 	get() {
@@ -45,10 +44,7 @@ val Any?.isTrue: Boolean
 	}
 
 /**
- * Tests any object for false.
- *  Returns `true` if the object is null.
- *  Returns `true` if the object is boolean with value `false`.
- *  Returns `false` on any other possibility.
+ * Tests any object for false. Returns `true` if the object is null. Returns `true` if the object is boolean with value `false`. Returns `false` on any other possibility.
  */
 val Any?.isFalse: Boolean
 	get() {
@@ -93,11 +89,10 @@ fun Any?.isBoolean(): Boolean {
 /**
  * Tests any object for `not null`.
  *
- * @param T type of the object
  * @param action action to execute if the object is not null
+ * @param T type of the object
+ * @return if the object is boolean, returns boolean value. If the object is not boolean, returns `true` if not null, `false` otherwise.
  * @receiver any object
- * @return if the object is boolean, returns boolean value.
- * If the object is not boolean, returns `true` if not null, `false` otherwise.
  */
 @OptIn(ExperimentalContracts::class)
 inline infix fun <T> T?.ifTrue(action: (T) -> Unit): Boolean {
@@ -122,9 +117,8 @@ inline infix fun <T> T?.ifTrue(action: (T) -> Unit): Boolean {
  * Tests any object for `null`.
  *
  * @param action action to execute if the object is null or boolean is `false`
+ * @return if the object is boolean, returns `true` if it has false value, `false` otherwise. If the object is not boolean, returns `true` if null, `false` otherwise.
  * @receiver any object
- * @return if the object is boolean, returns `true` if it has false value, `false` otherwise.
- *  If the object is not boolean, returns `true` if null, `false` otherwise.
  */
 inline infix fun Any?.ifFalse(action: () -> Unit): Boolean {
 	
@@ -150,3 +144,5 @@ val Any?.bool: Boolean
 		if (this is Long) return this != 0L
 		return true
 	}
+
+
