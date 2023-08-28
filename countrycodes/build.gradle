@@ -6,7 +6,7 @@ dependencies {
 	implementation 'junit:junit:4.13.2'
 	testImplementation 'junit:junit:4.13.2'
 	compileOnly "org.jetbrains:annotations:$annotations"
-	implementation group: 'com.googlecode.libphonenumber', name: 'libphonenumber', version: '8.13.11'
+	implementation group: 'com.googlecode.libphonenumber', name: 'libphonenumber', version: '8.13.19'
 }
 
 

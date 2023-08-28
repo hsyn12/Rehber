@@ -232,6 +232,7 @@ interface Digit : Limited {
 		/**
 		 * Creates a new [Digit].
 		 *
+		 *
 		 * @param min minimum inclusive
 		 * @param max maximum exclusive
 		 * @param digitValue digit value
