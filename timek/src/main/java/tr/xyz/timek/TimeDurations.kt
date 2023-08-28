@@ -2,18 +2,21 @@
 
 package tr.xyz.timek
 
-import tr.xyz.keext.sure
+import tr.xyz.timek.unit.Limits
 import tr.xyz.timek.unit.TimeDuration
 import tr.xyz.timek.unit.TimeUnit
 import kotlin.math.absoluteValue
 
 /**
- * Represents a duration of time with units (year, month, day, hour, minute, second, millisecond). The duration is calculated based on a given value in milliseconds.
+ * Represents a duration of time with units (year, month, day, hour, minute, second, millisecond).
+ * The duration is calculated based on a given value in milliseconds.
  *
  * ```
  * ```
  *
- * [TimeDurations] is a time duration, not a time point. And each unit has its own limit. For example, the duration of a month is exactly 30 days, an hour is exactly 60 minutes, and a minute is exactly 60 seconds etc.
+ * [TimeDurations] is a time duration, not a time point. And each unit has its own limit. For
+ * example, the duration of a month is exactly 30 days, an hour is exactly 60 minutes, and a minute
+ * is exactly 60 seconds etc.
  *
  * ```
  *
@@ -184,26 +187,95 @@ class TimeDurations(val value: Long = 0) {
 	
 	companion object {
 		
+		private fun validateTimeDuration(value: Int, unit: TimeUnit) {
+			
+			require(Limits.isInLimits(value, unit)) {"Invalid time duration. '${unit.toString().uppercase()}' must be in the range [${Limits.getRange(unit)}] but it was '$value'"}
+		}
+		
+		/**
+		 * Converts the duration string to milliseconds.
+		 *
+		 * ```
+		 *
+		 *    val timeDuration = TimeDurations("11:21:0:44:0")
+		 *    println(timeDuration.toStringNonZero())
+		 *    // 11 days 21 hours 44 seconds
+		 * ```
+		 *
+		 * @param value Duration string in the format "`yyyy:mm:dd:hh:mm:ss:ms`". If not necessary to
+		 *     use higher units, can be used "`mm:dd:hh:mm:ss`" or "`dd:hh:mm:ss`" or "`hh:mm:ss`" or
+		 *     "`mm:ss`". If not necessary to use lower units, can be used zeros like that,
+		 *     "`dd:0:mm:0`"
+		 * @return milliseconds equivalent of the duration
+		 */
 		fun ofMilliseconds(value: String): Long {
 			
 			val parts = value.split(":")
 			
-			if (parts.size < 2 || parts.size > 7) throw IllegalArgumentException("Invalid time format: $value")
+			parts.forEach {
+				if (it.isEmpty()) throw IllegalArgumentException("Invalid time format: '$value'")
+			}
+			
+			if (parts.size < 2 || parts.size > 7) throw IllegalArgumentException("Invalid time format: '$value'")
 			
 			return when (parts.size) {
-				2    -> parts[0].toLong().sure {if (it in 0..999) it else throw IllegalArgumentException("Invalid time format: $value")} * 1000 + parts[1].toLong()
-				3    -> parts[0].toLong().sure {if (it in 0..59) it else throw IllegalArgumentException("Invalid time format: $value")} * 1000 * 60 + parts[1].toLong() * 60 + parts[2].toLong()
-				4    -> parts[0].toLong().sure {if (it in 0..59) it else throw IllegalArgumentException("Invalid time format: $value")} * 1000 * 60 * 60 + parts[1].toLong() * 60 * 60 + parts[2].toLong() * 60 + parts[3].toLong()
-				5    -> parts[0].toLong().sure {if (it in 0..23) it else throw IllegalArgumentException("Invalid time format: $value")} * 1000 * 60 * 60 * 24 + parts[1].toLong() * 60 * 60 * 24 + parts[2].toLong() * 60 * 60 + parts[3].toLong() * 60 + parts[4].toLong()
-				6    -> parts[0].toLong().sure {if (it in 0..31) it else throw IllegalArgumentException("Invalid time format: $value")} * 1000 * 60 * 60 * 24 * 365 + parts[1].toLong() * 60 * 60 * 24 * 365 + parts[2].toLong() * 60 * 60 * 24 + parts[3].toLong() * 60 * 60 + parts[4].toLong() * 60 + parts[5].toLong()
-				else -> parts[0].toLong().sure {if (it in 0..999_999_999) it else throw IllegalArgumentException("Invalid time format: $value")} * 1000 * 60 * 60 * 24 * 365 * 1000
+				2    -> {
+					validateTimeDuration(parts[0].toInt(), TimeUnit.SECOND)
+					validateTimeDuration(parts[1].toInt(), TimeUnit.MILLISECOND)
+					parts[0].toLong() * 1000 + parts[1].toLong()
+				}
 				
+				3    -> {
+					validateTimeDuration(parts[0].toInt(), TimeUnit.MINUTE)
+					validateTimeDuration(parts[1].toInt(), TimeUnit.SECOND)
+					validateTimeDuration(parts[2].toInt(), TimeUnit.MILLISECOND)
+					parts[0].toLong() * TimeMillis.MINUTE + parts[1].toLong() * 1000 + parts[2].toLong()
+				}
+				
+				4    -> {
+					validateTimeDuration(parts[0].toInt(), TimeUnit.HOUR)
+					validateTimeDuration(parts[1].toInt(), TimeUnit.MINUTE)
+					validateTimeDuration(parts[2].toInt(), TimeUnit.SECOND)
+					validateTimeDuration(parts[3].toInt(), TimeUnit.MILLISECOND)
+					parts[0].toLong() * TimeMillis.HOUR + parts[1].toLong() * TimeMillis.MINUTE + parts[2].toLong() * 1000 + parts[3].toLong()
+				}
+				
+				5    -> {
+					validateTimeDuration(parts[0].toInt(), TimeUnit.DAY)
+					validateTimeDuration(parts[1].toInt(), TimeUnit.HOUR)
+					validateTimeDuration(parts[2].toInt(), TimeUnit.MINUTE)
+					validateTimeDuration(parts[3].toInt(), TimeUnit.SECOND)
+					validateTimeDuration(parts[4].toInt(), TimeUnit.MILLISECOND)
+					parts[0].toLong() * TimeMillis.DAY + parts[1].toLong() * TimeMillis.HOUR + parts[2].toLong() * TimeMillis.MINUTE + parts[3].toLong() * 1000 + parts[4].toLong()
+				}
+				
+				6    -> {
+					validateTimeDuration(parts[0].toInt(), TimeUnit.MONTH)
+					validateTimeDuration(parts[1].toInt(), TimeUnit.DAY)
+					validateTimeDuration(parts[2].toInt(), TimeUnit.HOUR)
+					validateTimeDuration(parts[3].toInt(), TimeUnit.MINUTE)
+					validateTimeDuration(parts[4].toInt(), TimeUnit.SECOND)
+					validateTimeDuration(parts[5].toInt(), TimeUnit.MILLISECOND)
+					parts[0].toLong() * TimeMillis.MONTH + parts[1].toLong() * TimeMillis.DAY + parts[2].toLong() * TimeMillis.HOUR + parts[3].toLong() * TimeMillis.MINUTE + parts[4].toLong() * 1000 + parts[5].toLong()
+				}
+				
+				else -> {
+					validateTimeDuration(parts[0].toInt(), TimeUnit.YEAR)
+					validateTimeDuration(parts[1].toInt(), TimeUnit.MONTH)
+					validateTimeDuration(parts[2].toInt(), TimeUnit.DAY)
+					validateTimeDuration(parts[3].toInt(), TimeUnit.HOUR)
+					validateTimeDuration(parts[4].toInt(), TimeUnit.MINUTE)
+					validateTimeDuration(parts[5].toInt(), TimeUnit.SECOND)
+					validateTimeDuration(parts[6].toInt(), TimeUnit.MILLISECOND)
+					parts[0].toLong() * TimeMillis.YEAR + parts[1].toLong() * TimeMillis.MONTH + parts[2].toLong() * TimeMillis.DAY + parts[3].toLong() * TimeMillis.HOUR + parts[4].toLong() * TimeMillis.MINUTE + parts[5].toLong() * 1000 + parts[6].toLong()
+				}
 			}
 		}
 	}
 }
 
 fun main() {
-	val timeDuration = TimeDurations("0:400")
+	val timeDuration = TimeDurations("11:21:0:44:0")
+	println(timeDuration.toStringNonZero())
 	
 }

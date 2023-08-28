@@ -10,7 +10,7 @@ dependencies {
 	implementation project(path: ':keext')
 	
 	implementation "androidx.annotation:annotation:${rootProject.androidx_annotation}"
-	
+	// implementation "com.google.guava:guava:${rootProject.guava}"
 }
 
 java {
