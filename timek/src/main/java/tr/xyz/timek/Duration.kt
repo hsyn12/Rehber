@@ -1,6 +1,5 @@
 package tr.xyz.timek
 
-import tr.xyz.timek.unit.TimeUnit
 import java.util.*
 import kotlin.reflect.KProperty
 

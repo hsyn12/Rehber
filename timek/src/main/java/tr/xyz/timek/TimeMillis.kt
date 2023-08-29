@@ -1,23 +1,34 @@
 package tr.xyz.timek
 
 /**
- * Zaman birimlerinin milisaniye değerlerini tanımlar.
- * Bu değerler sabittir ve en kaba şekilde değerlendirilir.<br></br><br></br>
- *
- * Mesela 1 gün daima 24 saattir.<br></br>
- * Mesela 1 ay daima 30 gündür.<br></br>
- * Mesela 1 yıl daima 365 gündür.<br></br><br></br>
- *
- * Bu sebeple, bu değerler üzerinden ince hesap yapmak doğru değildir.
- *
+ * Defines all time units in milliseconds.
  */
 interface TimeMillis {
+	
 	companion object {
+		/**
+		 * Milliseconds in a second
+		 */
 		const val SECOND = 1000L
+		/**
+		 * Milliseconds in a minute
+		 */
 		const val MINUTE = SECOND * 60
+		/**
+		 * Milliseconds in an hour
+		 */
 		const val HOUR = MINUTE * 60
+		/**
+		 * Milliseconds in a day
+		 */
 		const val DAY = HOUR * 24
+		/**
+		 * Milliseconds in a month
+		 */
 		const val MONTH = DAY * 30
+		/**
+		 * Milliseconds in a year
+		 */
 		const val YEAR = DAY * 365
 	}
 }
