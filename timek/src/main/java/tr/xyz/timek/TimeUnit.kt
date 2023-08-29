@@ -3,7 +3,7 @@ package tr.xyz.timek
 import java.util.*
 
 /**
- * Type of the time unit.
+ * Type of the time units.
  */
 enum class TimeUnit {
 	YEAR,

@@ -60,7 +60,10 @@ class TimeDurations(val value: Long = 0) {
 	/**
 	 * Creates a new time duration from a string that in form of '`23:59:59`'.
 	 */
-	constructor(value: String) : this(of(value))
+	constructor(value: String) : this(of(value)) {
+		
+		println("value: $value, millis : ${this.value}")
+	}
 	
 	init {
 		
@@ -377,15 +380,17 @@ class TimeDurations(val value: Long = 0) {
 		 *
 		 * @return new [TimeDurations]
 		 */
-		fun build(): TimeDurations = TimeDurations(of("$year:$month:$day:$hour:$minute:$second:$millisecond"))
+		fun build(): TimeDurations = TimeDurations("$year:$month:$day:$hour:$minute:$second:$millisecond")
 	}
 }
 
 fun main() {
-	val timeDuration = TimeDurations.builder()
+	
+	val timeDuration = TimeDurations(59001)
+	/* val timeDuration = TimeDurations.builder()
 		.milliseconds(1)
 		.seconds(59)
-		.build()
+		.build() */
 	println(timeDuration.toStringNonZero())
 	
 }
