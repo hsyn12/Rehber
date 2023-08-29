@@ -1,11 +1,6 @@
-@file:JvmName("TimedDurations")
-
 package tr.xyz.timek
 
 import androidx.annotation.IntRange
-import tr.xyz.timek.unit.Limits
-import tr.xyz.timek.unit.TimeDuration
-import tr.xyz.timek.unit.TimeUnit
 import kotlin.math.absoluteValue
 
 /**
@@ -305,7 +300,7 @@ class TimeDurations(val value: Long = 0) {
 		 * @param value year
 		 * @return this [TimeDurationBuilder]
 		 */
-		fun years(@IntRange(from = 0, to = Limits.YEAR.toLong()) value: Int): TimeDurationBuilder {
+		fun years(@IntRange(from = 0, to = 999_999_999) value: Int): TimeDurationBuilder {
 			year = value
 			return this
 		}
@@ -316,7 +311,7 @@ class TimeDurations(val value: Long = 0) {
 		 * @param value month
 		 * @return this [TimeDurationBuilder]
 		 */
-		fun months(@IntRange(from = 0, to = Limits.MONTH.toLong()) value: Int): TimeDurationBuilder {
+		fun months(@IntRange(from = 0, to = 11) value: Int): TimeDurationBuilder {
 			month = value
 			return this
 		}
@@ -327,7 +322,7 @@ class TimeDurations(val value: Long = 0) {
 		 * @param value day
 		 * @return this [TimeDurationBuilder]
 		 */
-		fun days(@IntRange(from = 0, to = Limits.DAY.toLong()) value: Int): TimeDurationBuilder {
+		fun days(@IntRange(from = 0, to = 29) value: Int): TimeDurationBuilder {
 			day = value
 			return this
 		}
@@ -338,7 +333,7 @@ class TimeDurations(val value: Long = 0) {
 		 * @param value hour
 		 * @return this [TimeDurationBuilder]
 		 */
-		fun hours(@IntRange(from = 0, to = Limits.HOUR.toLong()) value: Int): TimeDurationBuilder {
+		fun hours(@IntRange(from = 0, to = 23) value: Int): TimeDurationBuilder {
 			hour = value
 			return this
 		}
@@ -349,7 +344,7 @@ class TimeDurations(val value: Long = 0) {
 		 * @param value minute
 		 * @return this [TimeDurationBuilder]
 		 */
-		fun minutes(@IntRange(from = 0, to = Limits.MINUTE.toLong()) value: Int): TimeDurationBuilder {
+		fun minutes(@IntRange(from = 0, to = 59) value: Int): TimeDurationBuilder {
 			minute = value
 			return this
 		}
@@ -360,7 +355,7 @@ class TimeDurations(val value: Long = 0) {
 		 * @param value second
 		 * @return this [TimeDurationBuilder]
 		 */
-		fun seconds(@IntRange(from = 0, to = Limits.SECOND.toLong()) value: Int): TimeDurationBuilder {
+		fun seconds(@IntRange(from = 0, to = 59) value: Int): TimeDurationBuilder {
 			second = value
 			return this
 		}
@@ -371,7 +366,7 @@ class TimeDurations(val value: Long = 0) {
 		 * @param value millisecond
 		 * @return this [TimeDurationBuilder]
 		 */
-		fun milliseconds(@IntRange(from = 0, to = Limits.MILLISECOND.toLong()) value: Int): TimeDurationBuilder {
+		fun milliseconds(@IntRange(from = 0, to = 999) value: Int): TimeDurationBuilder {
 			millisecond = value
 			return this
 		}

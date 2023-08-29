@@ -1,8 +1,7 @@
-package tr.xyz.timek.unit
+package tr.xyz.timek
 
 import androidx.annotation.IntRange
 import tr.xyz.digit.Digit
-import tr.xyz.timek.TimeMillis
 
 /**
  * Provides to define a duration of time with one unit (year, month, day, hour, minute, second, millisecond).

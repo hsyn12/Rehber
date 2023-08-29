@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-
+	
 	implementation project(path: ':xlog')
 	implementation project(path: ':regex')
 	implementation project(path: ':pair')
@@ -14,6 +14,6 @@ dependencies {
 }
 
 java {
-	sourceCompatibility = rootProject.ext.java_version
-	targetCompatibility = rootProject.ext.java_version
+	sourceCompatibility = java_version
+	targetCompatibility = java_version
 }

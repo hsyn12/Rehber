@@ -1,14 +1,9 @@
-@file:JvmName("TimeUnits")
-
-package tr.xyz.timek.unit
+package tr.xyz.timek
 
 import java.util.*
 
 /**
  * Type of the time unit.
- *
- * @param LIMIT limit of the time unit
- * @param ORDER order of the time unit
  */
 enum class TimeUnit {
 	YEAR,

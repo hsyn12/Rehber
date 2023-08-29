@@ -3,16 +3,16 @@ plugins {
 }
 
 dependencies {
-
-	//noinspection AnnotationProcessorOnCompilePath
+	
+	// noinspection AnnotationProcessorOnCompilePath
 	implementation 'com.google.auto.service:auto-service:1.0.1'
 	annotationProcessor 'com.google.auto.service:auto-service:1.0.1'
-	//implementation 'com.squareup:javapoet:1.13.0'
-
+	// implementation 'com.squareup:javapoet:1.13.0'
+	
 	implementation project(path: ':warnerlabel')
 }
 
 java {
-	sourceCompatibility = rootProject.ext.java_version
-	targetCompatibility = rootProject.ext.java_version
+	sourceCompatibility = java_version
+	targetCompatibility = java_version
 }

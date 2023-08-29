@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-
+	
 	implementation project(path: ':random')
 	implementation project(path: ':collection')
 	implementation project(path: ':scaler')
@@ -11,6 +11,6 @@ dependencies {
 }
 
 java {
-	sourceCompatibility = rootProject.ext.java_version
-	targetCompatibility = rootProject.ext.java_version
+	sourceCompatibility = java_version
+	targetCompatibility = java_version
 }

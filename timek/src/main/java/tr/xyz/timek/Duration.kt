@@ -1,5 +1,3 @@
-@file:JvmName("Durations")
-
 package tr.xyz.timek
 
 import tr.xyz.timek.unit.TimeUnit
@@ -44,6 +42,7 @@ class Duration(val value: Long, val unit: TimeUnit) {
 	 *  `true` if the duration is zero
 	 */
 	fun isZero(): Boolean = value == 0L
+	
 	/**
 	 *  `true` if the duration is not zero
 	 */
@@ -53,26 +52,32 @@ class Duration(val value: Long, val unit: TimeUnit) {
 	 * Millisecond equivalent of the current duration
 	 */
 	val asMilliseconds: Long by ValueConvertor(TimeUnit.MILLISECOND)
+	
 	/**
 	 *  Seconds equivalent of the current duration
 	 */
 	val asSeconds: Long by ValueConvertor(TimeUnit.SECOND)
+	
 	/**
 	 *  Minutes equivalent of the current duration
 	 */
 	val asMinutes: Long by ValueConvertor(TimeUnit.MINUTE)
+	
 	/**
 	 *  Hours equivalent of the current duration
 	 */
 	val asHours: Long by ValueConvertor(TimeUnit.HOUR)
+	
 	/**
 	 *  Days equivalent of the current duration
 	 */
 	val asDays: Long by ValueConvertor(TimeUnit.DAY)
+	
 	/**
 	 *  Months equivalent of the current duration
 	 */
 	val asMonths: Long by ValueConvertor(TimeUnit.MONTH)
+	
 	/**
 	 *  Years equivalent of the current duration
 	 */

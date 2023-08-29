@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-
+	
 	implementation project(path: ':time')
 	implementation project(path: ':label')
 	implementation project(path: ':identity')
@@ -15,11 +15,10 @@ dependencies {
 	implementation project(path: ':tryme')
 	compileOnly "org.jetbrains:annotations:${rootProject.annotations}"
 	compileOnly "androidx.annotation:annotation:${rootProject.androidx_annotation}"
-
-
+	
 }
 
 java {
-	sourceCompatibility = rootProject.ext.java_version
-	targetCompatibility = rootProject.ext.java_version
+	sourceCompatibility = java_version
+	targetCompatibility = java_version
 }

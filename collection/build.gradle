@@ -3,12 +3,12 @@ plugins {
 }
 
 dependencies {
-
+	
 	implementation project(path: ':xlog')
 	compileOnly "org.jetbrains:annotations:${rootProject.annotations}"
 }
 
 java {
-	sourceCompatibility = rootProject.ext.java_version
-	targetCompatibility = rootProject.ext.java_version
+	sourceCompatibility = java_version
+	targetCompatibility = java_version
 }

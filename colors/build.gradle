@@ -5,15 +5,15 @@ plugins {
 android {
 	namespace 'com.tr.hsyn.colors'
 	compileSdk rootProject.compileSdk
-
+	
 	defaultConfig {
 		minSdk rootProject.minSdk
 		targetSdk rootProject.targetSdk
-
+		
 		testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 		consumerProguardFiles "consumer-rules.pro"
 	}
-
+	
 	buildTypes {
 		release {
 			minifyEnabled false
@@ -21,13 +21,13 @@ android {
 		}
 	}
 	compileOptions {
-		sourceCompatibility rootProject.ext.java_version
-		targetCompatibility rootProject.ext.java_version
+		sourceCompatibility java_version
+		targetCompatibility java_version
 	}
 }
 
 dependencies {
-
+	
 	implementation "androidx.appcompat:appcompat:${rootProject.appcompat}"
 	implementation rootProject.ext.material
 	implementation project(path: ':rescolors')

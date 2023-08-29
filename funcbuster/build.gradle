@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-
+	
 	implementation project(path: ':integer')
 	implementation project(path: ':datakey')
 	implementation project(path: ':xlog')
@@ -11,6 +11,6 @@ dependencies {
 }
 
 java {
-	sourceCompatibility = rootProject.java_version
-	targetCompatibility = rootProject.java_version
+	sourceCompatibility = java_version
+	targetCompatibility = java_version
 }
