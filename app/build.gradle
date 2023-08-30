@@ -98,6 +98,7 @@ android {
 dependencies {
 	
 	// region local dependencies
+	implementation project(path: ':phonenumber')
 	implementation project(path: ':xlog')
 	implementation project(path: ':klog')
 	implementation project(path: ':kkey')

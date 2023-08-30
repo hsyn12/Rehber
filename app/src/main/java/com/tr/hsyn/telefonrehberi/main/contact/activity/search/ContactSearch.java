@@ -1,6 +1,5 @@
 package com.tr.hsyn.telefonrehberi.main.contact.activity.search;
 
-
 import android.content.Intent;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -12,7 +11,6 @@ import com.tr.hsyn.activity.ActivityView;
 import com.tr.hsyn.bungee.Bungee;
 import com.tr.hsyn.collection.Lister;
 import com.tr.hsyn.colors.Colors;
-import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.gate.AutoGate;
 import com.tr.hsyn.gate.DigiGate;
 import com.tr.hsyn.gate.Gate;
@@ -26,7 +24,6 @@ import com.tr.hsyn.telefonrehberi.dev.Phone;
 import com.tr.hsyn.telefonrehberi.dev.ResourceUtil;
 import com.tr.hsyn.telefonrehberi.dev.android.ui.swipe.ContactSwipeCallBack;
 import com.tr.hsyn.telefonrehberi.main.contact.activity.detail.ContactDetails;
-import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
 import com.tr.hsyn.xbox.Blue;
 import com.tr.hsyn.xlog.xlog;
 
@@ -34,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import tr.xyz.contact.Contact;
 
 /**
  * <h1>ContactSearch</h1>
@@ -133,7 +131,7 @@ public class ContactSearch extends ActivityView implements OnSearchViewListener,
 		
 		xlog.d("Swiped : %s", contact.getName());
 		
-		List<String> numbers = contact.getData(ContactKey.NUMBERS);
+		List<String> numbers = com.tr.hsyn.telefonrehberi.main.contact.data.ContactKeyKt.getNumbers(contact);
 		
 		if (numbers != null && !numbers.isEmpty()) {
 			
@@ -153,7 +151,7 @@ public class ContactSearch extends ActivityView implements OnSearchViewListener,
 		
 		for (int i = 0; i < contacts.size(); ) {
 			
-			List<String> numbers = contacts.get(i).getData(ContactKey.NUMBERS);
+			List<String> numbers = com.tr.hsyn.telefonrehberi.main.contact.data.ContactKeyKt.getNumbers(contacts.get(i));
 			
 			//- Biden fazla numarası olanlar
 			if (numbers != null && numbers.size() > 1) {
@@ -164,8 +162,7 @@ public class ContactSearch extends ActivityView implements OnSearchViewListener,
 				for (String number : numbers) {
 					
 					Contact _contact = new Contact(contact);
-					
-					ContactKey.setNumbers(_contact, Lister.listOf(number));
+					com.tr.hsyn.telefonrehberi.main.contact.data.ContactKeyKt.setNumbers(_contact, Lister.listOf(number));
 					contacts.add(i++, _contact);
 				}
 			}

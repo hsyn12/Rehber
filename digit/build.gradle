@@ -7,3 +7,7 @@ java {
 	sourceCompatibility = rootProject.ext.java_version
 	targetCompatibility = rootProject.ext.java_version
 }
+
+dependencies {
+	testImplementation 'junit:junit:4.13.2'
+}

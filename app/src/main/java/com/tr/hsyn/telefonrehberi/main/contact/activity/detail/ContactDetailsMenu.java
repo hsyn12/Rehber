@@ -1,6 +1,5 @@
 package com.tr.hsyn.telefonrehberi.main.contact.activity.detail;
 
-
 import android.annotation.SuppressLint;
 import android.content.ContentUris;
 import android.content.Intent;
@@ -16,12 +15,10 @@ import androidx.annotation.NonNull;
 import com.tr.hsyn.bungee.Bungee;
 import com.tr.hsyn.message.SMessage;
 import com.tr.hsyn.telefonrehberi.R;
-import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.contact.data.bank.system.SystemContacts;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
 import com.tr.hsyn.time.Time;
 import com.tr.hsyn.xlog.xlog;
-
 
 /**
  * Welcome to the contact details menu.
@@ -92,18 +89,18 @@ public class ContactDetailsMenu extends CallSummary {
 		try {
 			
 			Intent intent = new Intent(Intent.ACTION_EDIT);
-			intent.setData(ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, contact.getContactId()));
+			intent.setData(ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, contact.getId()));
 			intent.putExtra("finishActivityOnSaveCompleted", true);
 			
 			editCallBack.launch(intent);
-			//startActivityForResult(intent, RC_EDIT_CONTACT);
+			// startActivityForResult(intent, RC_EDIT_CONTACT);
 		}
 		catch (Exception e) {
 			
 			SMessage.builder()
-					.message("Bu işlem için yüklü bir uygulama bulunmuyor")
-					.build()
-					.showOn(this);
+				.message("Bu işlem için yüklü bir uygulama bulunmuyor")
+				.build()
+				.showOn(this);
 		}
 	}
 	
@@ -123,7 +120,7 @@ public class ContactDetailsMenu extends CallSummary {
 	protected void onClickDeleteMenu() {
 		
 		//- Nihai silme işlemi bu kişiyi dönüşte kontrol edecek olan kişiye ait.
-		contact.setData(ContactKey.DELETED_DATE, Time.now());
+		com.tr.hsyn.telefonrehberi.main.contact.data.ContactKeyKt.setDeletedDate(contact, Time.now());
 		
 		//- Dön
 		onBackPressed();

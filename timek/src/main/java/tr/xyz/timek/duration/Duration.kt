@@ -1,4 +1,4 @@
-package tr.xyz.timek
+package tr.xyz.timek.duration
 
 import java.util.*
 import kotlin.reflect.KProperty
@@ -6,10 +6,10 @@ import kotlin.reflect.KProperty
 /**
  * Represents a duration.
  *
- * Duration is an amount of time with certain unit (year, month, day, hour, minute, second, millisecond).
- * And this duration **is not** a time duration.
- * So, the time units have no limit.
- * For example, can be defined a duration of a month with value `2_000`.
+ * Duration is an amount of time with certain unit (year, month, day,
+ * hour, minute, second, millisecond). And this duration **is not** a time
+ * duration. So, the time units have no limit. For example, can be defined
+ * a duration of a month with value `2_000`.
  *
  * ```
  *
@@ -28,22 +28,21 @@ import kotlin.reflect.KProperty
  *
  * If a duration is converted to bigger unit, it will be truncated.
  *
- *
+ * @constructor Creates a new duration
  * @property value value of the duration.
  * @property unit unit of the duration
- * @constructor Creates a new duration
  * @see TimeUnit
  */
 class Duration(val value: Long, val unit: TimeUnit) {
 	
 	// region Properties
 	/**
-	 *  `true` if the duration is zero
+	 * `true` if the duration is zero
 	 */
 	fun isZero(): Boolean = value == 0L
 	
 	/**
-	 *  `true` if the duration is not zero
+	 * `true` if the duration is not zero
 	 */
 	fun isNotZero(): Boolean = value != 0L
 	
@@ -53,32 +52,32 @@ class Duration(val value: Long, val unit: TimeUnit) {
 	val asMilliseconds: Long by ValueConvertor(TimeUnit.MILLISECOND)
 	
 	/**
-	 *  Seconds equivalent of the current duration
+	 * Seconds equivalent of the current duration
 	 */
 	val asSeconds: Long by ValueConvertor(TimeUnit.SECOND)
 	
 	/**
-	 *  Minutes equivalent of the current duration
+	 * Minutes equivalent of the current duration
 	 */
 	val asMinutes: Long by ValueConvertor(TimeUnit.MINUTE)
 	
 	/**
-	 *  Hours equivalent of the current duration
+	 * Hours equivalent of the current duration
 	 */
 	val asHours: Long by ValueConvertor(TimeUnit.HOUR)
 	
 	/**
-	 *  Days equivalent of the current duration
+	 * Days equivalent of the current duration
 	 */
 	val asDays: Long by ValueConvertor(TimeUnit.DAY)
 	
 	/**
-	 *  Months equivalent of the current duration
+	 * Months equivalent of the current duration
 	 */
 	val asMonths: Long by ValueConvertor(TimeUnit.MONTH)
 	
 	/**
-	 *  Years equivalent of the current duration
+	 * Years equivalent of the current duration
 	 */
 	val asYears: Long by ValueConvertor(TimeUnit.YEAR)
 	
@@ -165,33 +164,33 @@ class Duration(val value: Long, val unit: TimeUnit) {
 	// region private class UnitConvertor(private val unit: TimeUnit) {
 	private class UnitConvertor(val unit: TimeUnit) {
 		@Suppress("NOTHING_TO_INLINE")
-		inline operator fun getValue(ref: Duration, property: KProperty<*>): Duration = ref.asUnit(unit)
+		inline operator fun getValue(ref: Duration, property: KProperty<*>): Duration = ref.toUnit(unit)
 	}
 	// endregion
 	
 	// region Member functions
-	fun asUnit(unit: TimeUnit): Duration {
+	fun toUnit(unit: TimeUnit): Duration {
 		return when (unit) {
-			TimeUnit.MILLISECOND -> Duration milliseconds asMilliseconds
-			TimeUnit.SECOND      -> Duration seconds asSeconds
-			TimeUnit.MINUTE      -> Duration minutes asMinutes
-			TimeUnit.HOUR        -> Duration hours asHours
-			TimeUnit.DAY         -> Duration days asDays
-			TimeUnit.MONTH       -> Duration months asMonths
-			TimeUnit.YEAR        -> Duration years asYears
+			TimeUnit.MILLISECOND -> asMilliseconds milliseconds dDuration
+			TimeUnit.SECOND      -> asSeconds seconds dDuration
+			TimeUnit.MINUTE      -> asMinutes minutes dDuration
+			TimeUnit.HOUR        -> asHours hours dDuration
+			TimeUnit.DAY         -> asDays days dDuration
+			TimeUnit.MONTH       -> asMonths months dDuration
+			TimeUnit.YEAR        -> asYears years dDuration
 		}
 	}
 	
-	infix fun to(unit: TimeUnit): Duration = asUnit(unit)
+	infix fun to(unit: TimeUnit): Duration = toUnit(unit)
 	fun newDuration(value: Long) = Duration(value, unit)
 	// endregion
 	
 	// region Operator functions
 	operator fun plus(duration: Long): Duration = newDuration(value + duration)
 	
-	operator fun plus(duration: Duration): Duration = newDuration(value + duration.asUnit(unit).value)
+	operator fun plus(duration: Duration): Duration = newDuration(value + duration.toUnit(unit).value)
 	
-	operator fun minus(duration: Duration): Duration = newDuration(value - duration.asUnit(unit).value)
+	operator fun minus(duration: Duration): Duration = newDuration(value - duration.toUnit(unit).value)
 	
 	operator fun minus(duration: Long): Duration = newDuration(value - duration)
 	// endregion
@@ -214,14 +213,6 @@ class Duration(val value: Long, val unit: TimeUnit) {
 		infix fun years(value: Long): Duration = Duration(value, TimeUnit.YEAR)
 	}
 	// endregion
-}
-
-fun main() {
-	
-	val _duration = Duration months 2000 to TimeUnit.YEAR
-	println(_duration)
-	println(_duration to TimeUnit.DAY)
-	
 }
 
 

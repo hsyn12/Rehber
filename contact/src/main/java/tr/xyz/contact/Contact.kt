@@ -11,18 +11,19 @@ import tr.xyz.dict.DatBox
  * @property contactName name
  */
 class Contact(contactId: Long, _name: String?) : DatBox() {
-
+	
 	val id: Long = contactId
 	val name: String = _name ?: ""
 	val contactId: ContactId = ContactId(contactId)
 	val contactName: ContactName = ContactName(_name)
-
+	
 	constructor(contactId: Long) : this(contactId, null)
-
+	constructor(contact: Contact) : this(contact.id, contact.name)
+	
 	override fun equals(other: Any?): Boolean = other is Contact && id == other.id
 	override fun hashCode(): Int = id.hashCode()
 	override fun toString(): String = "Contact($id, $name)"
-
+	
 	/**
 	 * Compares this object with the specified object by [contactName].
 	 *

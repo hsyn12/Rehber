@@ -1,6 +1,5 @@
 package com.tr.hsyn.telefonrehberi.main.call.data;
 
-
 import android.annotation.SuppressLint;
 
 import androidx.annotation.NonNull;
@@ -8,16 +7,15 @@ import androidx.annotation.Nullable;
 import androidx.annotation.Size;
 
 import com.tr.hsyn.calldata.Type;
-import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.random.Randoom;
 import com.tr.hsyn.telefonrehberi.main.call.cast.base.Generator;
-import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
 import com.tr.hsyn.time.Time;
 import com.tr.hsyn.xlog.xlog;
 
 import java.util.List;
 
+import tr.xyz.contact.Contact;
 
 /**
  * Rastgele arama kaydı üreticisi.
@@ -48,17 +46,17 @@ public class CallGenerator implements Generator<com.tr.hsyn.calldata.Call> {
 	 * @param trackFree   Takip bilgisi eklensinsin mi
 	 */
 	public CallGenerator(
-			@Size(min = 1) @NonNull List<Contact> contacts,
-			long startDate,
-			long endDate,
-			int maxDuration,
-			@NonNull Integer[] types,
-			boolean trackFree) {
+		@Size(min = 1) @NonNull List<Contact> contacts,
+		long startDate,
+		long endDate,
+		int maxDuration,
+		@NonNull Integer[] types,
+		boolean trackFree) {
 		
 		this.contacts    = contacts;
 		this.maxDuration = maxDuration < 1 ? 10 : maxDuration;
 		this.trackFree   = trackFree;
-		this.types       = types.length > 1 ? types : new Integer[]{Type.INCOMING, Type.OUTGOING};
+		this.types       = types.length > 1 ? types : new Integer[]{ Type.INCOMING, Type.OUTGOING };
 		today            = Time.now();
 		
 		//- Başlama zamanı bugünden büyükse biraz geri alalım
@@ -87,7 +85,7 @@ public class CallGenerator implements Generator<com.tr.hsyn.calldata.Call> {
 		while (true) {
 			
 			contact = getContact();
-			numbers = contact.getData(ContactKey.NUMBERS);
+			numbers = com.tr.hsyn.telefonrehberi.main.contact.data.ContactKeyKt.getNumbers(contact);
 			
 			if (numbers == null) {
 				
@@ -113,7 +111,7 @@ public class CallGenerator implements Generator<com.tr.hsyn.calldata.Call> {
 		
 		
 		int  typeIndex       = Randoom.getInt(types.length);
-		int  callType        = types[typeIndex];
+		int  callType        = types[ typeIndex ];
 		long date            = end == 0 ? Randoom.getLong(start, today) : Randoom.getLong(start, end);
 		int  duration        = 0;
 		int  trackType       = trackFree ? Randoom.getInt(-1, 2) : 0;

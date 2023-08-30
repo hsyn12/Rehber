@@ -1,6 +1,5 @@
 package com.tr.hsyn.telefonrehberi.main.code.comment.dialog;
 
-
 import android.app.Activity;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -9,13 +8,13 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tr.hsyn.colors.Colors;
-import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.telefonrehberi.R;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import tr.xyz.contact.Contact;
 
 /**
  * The list of contacts.

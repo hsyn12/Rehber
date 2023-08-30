@@ -1,4 +1,4 @@
-package tr.xyz.timek
+package tr.xyz.timek.duration
 
 /**
  * Defines the limit of time units.

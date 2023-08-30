@@ -1,6 +1,5 @@
 package com.tr.hsyn.warnerbros;
 
-
 import com.google.auto.service.AutoService;
 import com.tr.hsyn.warnerlabel.Remember;
 
@@ -14,15 +13,13 @@ import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 
-
-@SupportedAnnotationTypes({"com.tr.hsyn.warnerlabel.Remember"})
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedAnnotationTypes({ "com.tr.hsyn.warnerlabel.Remember" })
+@SupportedSourceVersion(javax.lang.model.SourceVersion.RELEASE_20)
 @AutoService(Processor.class)
 public class WarnTurner extends AbstractProcessor {
 	
@@ -59,23 +56,23 @@ public class WarnTurner extends AbstractProcessor {
 		
 		Element enclosed = element.getEnclosingElement();
 		
-		//noinspection StringBufferReplaceableByString
+		// noinspection StringBufferReplaceableByString
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("Remember ")
-				.append("\"")
-				.append(name)
-				.append("\"")
-				.append(" in the <")
-				.append(enclosed)
-				.append("> [")
-				.append("note=")
-				.append(note.isEmpty() ? "-" : note).append(", ")
-				.append("time=")
-				.append(time.isEmpty() ? "-" : time).append(", ")
-				.append("writer=")
-				.append(writer.isEmpty() ? "-" : writer)
-				.append("]");
+			.append("\"")
+			.append(name)
+			.append("\"")
+			.append(" in the <")
+			.append(enclosed)
+			.append("> [")
+			.append("note=")
+			.append(note.isEmpty() ? "-" : note).append(", ")
+			.append("time=")
+			.append(time.isEmpty() ? "-" : time).append(", ")
+			.append("writer=")
+			.append(writer.isEmpty() ? "-" : writer)
+			.append("]");
 		
 		log(sb.toString());
 		

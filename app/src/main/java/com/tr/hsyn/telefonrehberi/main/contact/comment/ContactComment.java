@@ -1,12 +1,10 @@
 package com.tr.hsyn.telefonrehberi.main.contact.comment;
 
-
 import android.app.Activity;
 import android.view.View;
 
 import androidx.annotation.ColorInt;
 
-import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
@@ -20,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
+import tr.xyz.contact.Contact;
 
 /**
  * This interface defines how to comment on a contact.
@@ -78,6 +77,7 @@ public interface ContactComment extends Threaded {
 	 *
 	 * @param resourceId the resource ID to be used to get the string
 	 * @param args       the arguments to be used in the string
+	 *
 	 * @return the string
 	 */
 	default String getString(int resourceId, Object... args) {
@@ -99,8 +99,8 @@ public interface ContactComment extends Threaded {
 	default Span[] getTextStyle() {
 		
 		return new Span[]{
-				Spans.foreground(getTextColor()),
-				Spans.bold()
+			Spans.foreground(getTextColor()),
+			Spans.bold()
 		};
 	}
 	
@@ -109,6 +109,7 @@ public interface ContactComment extends Threaded {
 	 *
 	 * @param word  the word to make plural
 	 * @param count the count
+	 *
 	 * @return the plural form of the word
 	 */
 	@NotNull
@@ -123,13 +124,14 @@ public interface ContactComment extends Threaded {
 	 * Returns the spans for the clickable text.
 	 *
 	 * @param listener the listener to be used for the click
+	 *
 	 * @return the spans
 	 */
 	default Span[] getClickSpans(View.OnClickListener listener) {
 		
 		return new Span[]{
-				Spans.click(listener, getClickColor()),
-				Spans.underline()
+			Spans.click(listener, getClickColor()),
+			Spans.underline()
 		};
 	}
 	
@@ -147,6 +149,7 @@ public interface ContactComment extends Threaded {
 	 *
 	 * @param text the text
 	 * @param args the arguments
+	 *
 	 * @return the formatted text
 	 */
 	default @NotNull String fmt(String text, Object... args) {

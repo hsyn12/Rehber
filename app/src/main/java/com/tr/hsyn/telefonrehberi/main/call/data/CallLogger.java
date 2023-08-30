@@ -1,9 +1,7 @@
 package com.tr.hsyn.telefonrehberi.main.call.data;
 
-
 import com.tr.hsyn.calldata.Call;
 import com.tr.hsyn.collection.Lister;
-import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.keep.Keep;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.main.data.CallMap;
@@ -14,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import tr.xyz.contact.Contact;
 
 @Keep
 public class CallLogger implements CallLog {
@@ -25,37 +24,6 @@ public class CallLogger implements CallLog {
 		
 		this.calls = calls != null ? calls : new ArrayList<>(0);
 		callMap    = new CallMap(this.calls, CallLog::getKey);
-	}
-	
-	@Override
-	public @NotNull List<Call> getCalls(@NotNull Contact contact, int @NotNull ... callTypes) {
-		
-		List<Call> list = getById(contact.getId());
-		
-		if (callTypes.length == 0) return list;
-		
-		return list.stream().filter(c -> Lister.contains(callTypes, c.getCallType())).collect(Collectors.toList());
-	}
-	
-	@Override
-	@NotNull
-	public List<Call> getById(long contactId) {
-		
-		return callMap.get(String.valueOf(contactId));
-	}
-	
-	@Override
-	public @NotNull List<Call> getById(String contactId) {
-		
-		if (Stringx.isNoboe(contactId) || isEmpty()) return new ArrayList<>(0);
-		
-		return callMap.get(contactId);
-	}
-	
-	@Override
-	public @NotNull List<Call> getCalls() {
-		
-		return calls;
 	}
 	
 	/**
@@ -110,5 +78,36 @@ public class CallLogger implements CallLog {
 			// put it back in
 			callMap.put(firstKey, calls);
 		}
+	}
+	
+	@Override
+	public @NotNull List<Call> getCalls(@NotNull Contact contact, int @NotNull ... callTypes) {
+		
+		List<Call> list = getById(contact.getId());
+		
+		if (callTypes.length == 0) return list;
+		
+		return list.stream().filter(c -> Lister.contains(callTypes, c.getCallType())).collect(Collectors.toList());
+	}
+	
+	@Override
+	@NotNull
+	public List<Call> getById(long contactId) {
+		
+		return callMap.get(String.valueOf(contactId));
+	}
+	
+	@Override
+	public @NotNull List<Call> getById(String contactId) {
+		
+		if (Stringx.isNoboe(contactId) || isEmpty()) return new ArrayList<>(0);
+		
+		return callMap.get(contactId);
+	}
+	
+	@Override
+	public @NotNull List<Call> getCalls() {
+		
+		return calls;
 	}
 }

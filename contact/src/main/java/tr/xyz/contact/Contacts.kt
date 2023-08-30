@@ -3,15 +3,15 @@ package tr.xyz.contact
 /**
  * Contacts
  *
- * @property contacts List of contacts
  * @constructor Create new Contacts
+ * @property contacts List of contacts
  */
 class Contacts(val contacts: List<Contact>) {
 	
 	/**
 	 * Map object that associated contact ID with contact.
 	 */
-	private val map: Map<Long, Contact> = contacts.associateBy(Contact::contactId)
+	private val map: Map<Long, Contact> = contacts.associateBy(Contact::id)
 	
 	/**
 	 * Gets contact by ID

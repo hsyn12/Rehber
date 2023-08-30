@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.view.View;
 
 import com.tr.hsyn.calldata.Call;
-import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.dev.android.dialog.ShowCall;
@@ -23,65 +22,66 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.function.Consumer;
 
+import tr.xyz.contact.Contact;
 
 public class LastCallComment implements ContactComment {
-
+	
 	private final CallLog                  callLog = getCallLogs();
 	private final Spanner                  comment = new Spanner();
 	private       Activity                 activity;
 	private       Consumer<ContactComment> callback;
-
+	
 	@Override
 	public boolean isTurkish() {
-
+		
 		return false;
 	}
-
+	
 	@Override
 	public Activity getActivity() {
-
+		
 		return activity;
 	}
-
+	
 	@Override
 	public @NotNull CharSequence getComment() {
-
+		
 		return comment;
 	}
-
+	
 	@Override
 	public Topic getTopic() {
-
+		
 		return Topic.LAST_CALL;
 	}
-
+	
 	@Override
 	public void createComment(@NotNull Contact contact, @NotNull Activity activity, @NotNull Consumer<ContactComment> callback, boolean isTurkish) {
-
+		
 		this.callback = callback;
 		this.activity = activity;
-
+		
 		if (callLog == null) {
-
+			
 			xlog.d("callCollection is null");
 			returnComment();
 			return;
 		}
-
-		History                   history         = callLog.getHistory(contact);
-		com.tr.hsyn.calldata.Call lastCall        = history.getLastCall();
-		int                       type            = lastCall.getCallType();
-		int[]                     callTypes       = CallLog.getCallTypes(type);
-		List<Call>                typedCalls      = history.filter(callTypes);
-		String                    typeStr         = Res.Call.getCallType(getActivity(), type);
-		Duration                  timeBefore      = Time.howLongBefore(lastCall.getTime());
-		ShowCall                  showCall        = new ShowCall(getActivity(), lastCall);
-		View.OnClickListener      listener1       = view -> showCall.show();
-		ShowCallsDialog           showCallsDialog = new ShowCallsDialog(getActivity(), typedCalls, history.getContact().getName(), Stringx.format("%d %s", typedCalls.size(), typeStr));
-		View.OnClickListener      listener        = view -> showCallsDialog.show();
-
+		
+		com.tr.hsyn.telefonrehberi.main.code.data.History history         = callLog.getHistory(contact);
+		com.tr.hsyn.calldata.Call                         lastCall        = history.getLastCall();
+		int                                               type            = lastCall.getCallType();
+		int[]                                             callTypes       = CallLog.getCallTypes(type);
+		List<Call>                                        typedCalls      = history.filter(callTypes);
+		String                                            typeStr         = Res.Call.getCallType(getActivity(), type);
+		Duration                                          timeBefore      = Time.howLongBefore(lastCall.getTime());
+		ShowCall                                          showCall        = new ShowCall(getActivity(), lastCall);
+		View.OnClickListener                              listener1       = view -> showCall.show();
+		ShowCallsDialog                                   showCallsDialog = new ShowCallsDialog(getActivity(), typedCalls, history.getContact().getName(), Stringx.format("%d %s", typedCalls.size(), typeStr));
+		View.OnClickListener                              listener        = view -> showCallsDialog.show();
+		
 		if (isTurkish) {
-
+			
 			// bu arama 3 gün önce olan bir cevapsız çağrı
 			comment.append(getString(R.string.word_the_last_call), getClickSpans(listener1))
 				.append(" ")
@@ -93,9 +93,9 @@ public class LastCallComment implements ContactComment {
 				.append(" ")
 				.append(Stringx.format("%s", typeStr.toLowerCase()), Spans.bold())
 				.append(". ");
-
+			
 			if (typedCalls.size() == 1) {
-
+				
 				comment.append("Ve bu ")
 					.append(Stringx.format("%s", typeStr.toLowerCase()), Spans.bold())
 					.append(" kişiye ait tek ")
@@ -103,7 +103,7 @@ public class LastCallComment implements ContactComment {
 					.append(". ");
 			}
 			else {
-
+				
 				comment.append("Ve bu ")
 					.append(Stringx.format("%s", typeStr.toLowerCase()), Spans.bold())
 					.append(" kişiye ait ")
@@ -112,7 +112,7 @@ public class LastCallComment implements ContactComment {
 			}
 		}
 		else {
-
+			
 			// this call is from 3 days ago
 			comment.append(getString(R.string.word_the_last_call), getClickSpans(listener1))
 				.append(" ")
@@ -127,9 +127,9 @@ public class LastCallComment implements ContactComment {
 				.append(Stringx.format("%s", timeBefore.getValue() > 1 ? "s " : " "))
 				.append(getString(R.string.word_is_ago))
 				.append(". ");
-
+			
 			if (typedCalls.size() == 1) {
-
+				
 				comment.append("And this ")
 					.append(Stringx.format("%s", typeStr.toLowerCase()), Spans.bold())
 					.append(" is only single ")
@@ -137,7 +137,7 @@ public class LastCallComment implements ContactComment {
 					.append(" of this contact. ");
 			}
 			else {
-				//and this call is one of the 33 outgoing calls
+				// and this call is one of the 33 outgoing calls
 				comment.append("And this ")
 					.append(Stringx.format("%s", typeStr.toLowerCase()), Spans.bold())
 					.append(" is one of the ")
@@ -145,13 +145,13 @@ public class LastCallComment implements ContactComment {
 					.append(". ");
 			}
 		}
-
+		
 		returnComment();
 	}
-
+	
 	@Override
 	public @NotNull Consumer<ContactComment> getCallback() {
-
+		
 		return callback;
 	}
 }

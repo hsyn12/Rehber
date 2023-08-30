@@ -1,9 +1,7 @@
 package com.tr.hsyn.telefonrehberi.main.contact.comment.commentator;
 
-
 import android.app.Activity;
 
-import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.key.Key;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
 import com.tr.hsyn.telefonrehberi.main.code.comment.CommentEditor;
@@ -16,6 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+import tr.xyz.contact.Contact;
 
 /**
  * The <code>ContactCommentator</code> interface defines the contract
@@ -62,6 +61,7 @@ public interface ContactCommentator extends Commentator<Contact>, CommentEditor 
 	 * for commenting on different contacts.
 	 *
 	 * @param contact the contact to be commented on
+	 *
 	 * @return a CharSequence representing the comment on the contact
 	 */
 	@Override

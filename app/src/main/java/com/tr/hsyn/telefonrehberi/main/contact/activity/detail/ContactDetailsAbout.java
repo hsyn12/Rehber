@@ -1,6 +1,5 @@
 package com.tr.hsyn.telefonrehberi.main.contact.activity.detail;
 
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.text.method.LinkMovementMethod;
@@ -24,7 +23,6 @@ import com.tr.hsyn.vanimator.ViewAnimator;
 import com.tr.hsyn.xlog.xlog;
 
 import org.jetbrains.annotations.NotNull;
-
 
 /**
  * This class interested contact information based on the call history.
@@ -53,6 +51,34 @@ public class ContactDetailsAbout extends ContactDetailsMenu {
 	private       boolean   reComment = true;
 	
 	/**
+	 * Creates a new instance of a {@link ContactCommentator}
+	 * based on the current mood of the app.
+	 *
+	 * @param activity the activity object
+	 *
+	 * @return a new instance of a {@link ContactCommentator}
+	 */
+	private static @NotNull ContactCommentator createCommentator(@NotNull Activity activity) {
+		
+		Moody                        moody = Moody.getMood();
+		@NotNull ContactCommentStore store = ContactCommentStore.createCommentStore(activity, moody);
+		
+		switch (moody) {
+			
+			case DEFAULT:
+				
+				DefaultContactCommentator commentator = new DefaultContactCommentator(store);
+				xlog.d("Default Commentator");
+				return commentator;
+			case HAPPY:
+				xlog.d("Not yet happy");
+		}
+		
+		xlog.d("Wrong moody : %d", moody.ordinal());
+		return new DefaultContactCommentator(store);
+	}
+	
+	/**
 	 * Activity codes must be start from here after <code>super</code> call.<br>
 	 * Because the call history of the contact must be updated before any actions are performed.<br>
 	 * İf no call history means no comment is generated.<br>
@@ -66,7 +92,7 @@ public class ContactDetailsAbout extends ContactDetailsMenu {
 		super.onHistoryLoad();
 		
 		// The contact must have one call at least
-		if (history != null && history.size() > 0) {
+		if (history != null && history.getSize() > 0) {
 			
 			reComment = true;
 			setupCommentViews();
@@ -80,11 +106,11 @@ public class ContactDetailsAbout extends ContactDetailsMenu {
 	private void setupCommentViews() {
 		
 		view_about_content =
-				(ViewGroup) getLayoutInflater()
-						.inflate(
-								R.layout.contact_about_content,
-								mainContainer,
-								false);
+			(ViewGroup) getLayoutInflater()
+				            .inflate(
+					            R.layout.contact_about_content,
+					            mainContainer,
+					            false);
 		text_about         = findView(view_about_content, R.id.text_about);
 		text_about.setMovementMethod(new LinkMovementMethod());
 		
@@ -93,8 +119,8 @@ public class ContactDetailsAbout extends ContactDetailsMenu {
 		ImageView image_about_icon  = findView(view_about_content, R.id.about_icon);
 		
 		Colors.setTintDrawable(
-				image_about_icon.getDrawable(),
-				Colors.lighter(Colors.getPrimaryColor(), 0.2f));
+			image_about_icon.getDrawable(),
+			Colors.lighter(Colors.getPrimaryColor(), 0.2f));
 		view_about_header.setBackgroundResource(ripple);
 		
 		addToDetailView(view_about_content);
@@ -131,8 +157,8 @@ public class ContactDetailsAbout extends ContactDetailsMenu {
 			reComment = false;
 			
 			Work.on(this::getCommentator)
-					.onSuccess(this::onCommentatorReady)
-					.execute();
+				.onSuccess(this::onCommentatorReady)
+				.execute();
 		}
 		else {
 			
@@ -189,33 +215,6 @@ public class ContactDetailsAbout extends ContactDetailsMenu {
 			
 			ViewAnimator.on(findView(view_about_content, R.id.expand_indicator)).rotation(0, 180).duration(500).start();
 		}
-	}
-	
-	/**
-	 * Creates a new instance of a {@link ContactCommentator}
-	 * based on the current mood of the app.
-	 *
-	 * @param activity the activity object
-	 * @return a new instance of a {@link ContactCommentator}
-	 */
-	private static @NotNull ContactCommentator createCommentator(@NotNull Activity activity) {
-		
-		Moody                        moody = Moody.getMood();
-		@NotNull ContactCommentStore store = ContactCommentStore.createCommentStore(activity, moody);
-		
-		switch (moody) {
-			
-			case DEFAULT:
-				
-				DefaultContactCommentator commentator = new DefaultContactCommentator(store);
-				xlog.d("Default Commentator");
-				return commentator;
-			case HAPPY:
-				xlog.d("Not yet happy");
-		}
-		
-		xlog.d("Wrong moody : %d", moody.ordinal());
-		return new DefaultContactCommentator(store);
 	}
 	
 }

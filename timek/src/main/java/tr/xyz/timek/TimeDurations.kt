@@ -1,6 +1,10 @@
 package tr.xyz.timek
 
 import androidx.annotation.IntRange
+import tr.xyz.timek.duration.Duration
+import tr.xyz.timek.duration.Limits
+import tr.xyz.timek.duration.TimeDuration
+import tr.xyz.timek.duration.TimeUnit
 import kotlin.math.absoluteValue
 
 /**
@@ -56,14 +60,12 @@ class TimeDurations(val value: Long = 0) {
 	 * @param durations List of durations
 	 */
 	constructor(vararg durations: Duration) : this(durations.sumOf {it.asMilliseconds})
+	constructor(vararg durations: TimeDuration) : this(durations.sumOf {it.toMilliseconds})
 	
 	/**
 	 * Creates a new time duration from a string that in form of '`23:59:59`'.
 	 */
-	constructor(value: String) : this(of(value)) {
-		
-		println("value: $value, millis : ${this.value}")
-	}
+	constructor(value: String) : this(of(value))
 	
 	init {
 		
@@ -163,25 +165,25 @@ class TimeDurations(val value: Long = 0) {
 	
 	operator fun plusAssign(duration: TimeDuration) {
 		when (duration.unit) {
-			TimeUnit.YEAR        -> year.value += duration.value
-			TimeUnit.MONTH       -> month.value += duration.value
-			TimeUnit.DAY         -> day.value += duration.value
-			TimeUnit.HOUR        -> hour.value += duration.value
-			TimeUnit.MINUTE      -> minute.value += duration.value
-			TimeUnit.SECOND      -> second.value += duration.value
-			TimeUnit.MILLISECOND -> millisecond.value += duration.value
+			TimeUnit.YEAR        -> year += duration
+			TimeUnit.MONTH       -> month += duration
+			TimeUnit.DAY         -> day += duration
+			TimeUnit.HOUR        -> hour += duration
+			TimeUnit.MINUTE      -> minute += duration
+			TimeUnit.SECOND      -> second += duration
+			TimeUnit.MILLISECOND -> millisecond += duration
 		}
 	}
 	
 	operator fun minusAssign(duration: TimeDuration) {
 		when (duration.unit) {
-			TimeUnit.YEAR        -> year.value -= duration.value
-			TimeUnit.MONTH       -> month.value -= duration.value
-			TimeUnit.DAY         -> day.value -= duration.value
-			TimeUnit.HOUR        -> hour.value -= duration.value
-			TimeUnit.MINUTE      -> minute.value -= duration.value
-			TimeUnit.SECOND      -> second.value -= duration.value
-			TimeUnit.MILLISECOND -> millisecond.value -= duration.value
+			TimeUnit.YEAR        -> year -= duration
+			TimeUnit.MONTH       -> month -= duration
+			TimeUnit.DAY         -> day -= duration
+			TimeUnit.HOUR        -> hour -= duration
+			TimeUnit.MINUTE      -> minute -= duration
+			TimeUnit.SECOND      -> second -= duration
+			TimeUnit.MILLISECOND -> millisecond -= duration
 		}
 	}
 	
@@ -287,7 +289,19 @@ class TimeDurations(val value: Long = 0) {
 		fun builder(): TimeDurationBuilder = TimeDurationBuilder()
 		
 	}
-	
+	/**
+	 * Time durations builder.
+	 *
+	 * ```
+	 *
+	 *    val timeDuration = TimeDurations.builder()
+	 *          .milliseconds(1)
+	 *          .seconds(59)
+	 *          .build()
+	 *    println(timeDuration.toStringNonZero())
+	 *    // 59 seconds 1 milliseconds
+	 * ```
+	 */
 	class TimeDurationBuilder {
 		
 		private var year = 0
@@ -382,15 +396,4 @@ class TimeDurations(val value: Long = 0) {
 		 */
 		fun build(): TimeDurations = TimeDurations("$year:$month:$day:$hour:$minute:$second:$millisecond")
 	}
-}
-
-fun main() {
-	
-	val timeDuration = TimeDurations(59001)
-	/* val timeDuration = TimeDurations.builder()
-		.milliseconds(1)
-		.seconds(59)
-		.build() */
-	println(timeDuration.toStringNonZero())
-	
 }

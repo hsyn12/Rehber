@@ -1,10 +1,8 @@
 package com.tr.hsyn.telefonrehberi.main.contact.comment.topics;
 
-
 import android.app.Activity;
 import android.view.View;
 
-import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
@@ -14,7 +12,6 @@ import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationData;
 import com.tr.hsyn.telefonrehberi.main.code.comment.dialog.MostDurationDialog;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.CallRank;
 import com.tr.hsyn.telefonrehberi.main.contact.comment.ContactComment;
-import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
 import com.tr.hsyn.telefonrehberi.main.data.ContactLog;
 import com.tr.hsyn.text.Spanner;
 import com.tr.hsyn.time.Time;
@@ -28,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import tr.xyz.contact.Contact;
 
 public class CallDurationComment implements ContactComment {
 	
@@ -96,30 +94,30 @@ public class CallDurationComment implements ContactComment {
 				DurationGroup duration = Time.toDuration(totalDuration);
 				//+ The object that to convert the duration to string.
 				DurationGroup.Stringer stringer = DurationGroup.Stringer.builder()
-						.formatter(duration1 -> fmt("%d %s", duration1.getValue(), makePlural(duration1.getUnit().toString(), duration1.getValue())))//_ the formatted string to be used.
-						.units(Unit.YEAR, Unit.MONTH, Unit.DAY, Unit.HOUR, Unit.MINUTE)//_ the units should be used.
-						.zeros(false);//_ the zero durations should not be used.
+					                                  .formatter(duration1 -> fmt("%d %s", duration1.getValue(), makePlural(duration1.getUnit().toString(), duration1.getValue())))//_ the formatted string to be used.
+					                                  .units(Unit.YEAR, Unit.MONTH, Unit.DAY, Unit.HOUR, Unit.MINUTE)//_ the units should be used.
+					                                  .zeros(false);//_ the zero durations should not be used.
 				
 				
 				if (isTurkish) {
 					
 					comment.append("Bu arama geçmişi süresi boyunca bu kişi ile aranızda toplam ")
-							.append(fmt("%s", stringer.durations(duration.getDurations()).toString()), getTextStyle())
-							.append(" konuşma gerçekleşti. Ve bu süre ile ")
-							.append("en çok konuştuğun", getClickSpans(listener))
-							.append(" kişiler listesinde ")
-							.append(fmt("%s", rank), getTextStyle())
-							.append(". sırada. ");
+						.append(fmt("%s", stringer.durations(duration.getDurations()).toString()), getTextStyle())
+						.append(" konuşma gerçekleşti. Ve bu süre ile ")
+						.append("en çok konuştuğun", getClickSpans(listener))
+						.append(" kişiler listesinde ")
+						.append(fmt("%s", rank), getTextStyle())
+						.append(". sırada. ");
 				}
 				else {
 					
 					comment.append("During this call history duration, there was a total of ")
-							.append(fmt("%s", stringer.durations(duration.getDurations()).toString()), getTextStyle())
-							.append(" of conversation between you and this contact. And this duration is in the ")
-							.append(fmt("%s", rank), getTextStyle())
-							.append(". order in the list of ")
-							.append("the people you talk to the most", getClickSpans(listener))
-							.append(" . ");
+						.append(fmt("%s", stringer.durations(duration.getDurations()).toString()), getTextStyle())
+						.append(" of conversation between you and this contact. And this duration is in the ")
+						.append(fmt("%s", rank), getTextStyle())
+						.append(". order in the list of ")
+						.append("the people you talk to the most", getClickSpans(listener))
+						.append(" . ");
 				}
 			}
 			else {//+ no speaking
@@ -142,6 +140,7 @@ public class CallDurationComment implements ContactComment {
 	 * Creates a list of most duration items.
 	 *
 	 * @param rankMap the map of rank
+	 *
 	 * @return the list of most duration items
 	 */
 	@NotNull
@@ -165,7 +164,7 @@ public class CallDurationComment implements ContactComment {
 				if (name == null || name.trim().isEmpty())
 					name = getContactName(callRank.getCalls().get(0).getNumber(), contacts);
 				
-				long contactId = contact.getContactId();
+				long contactId = contact.getId();
 				
 				MostDurationData data = new MostDurationData(name, Time.formatSeconds((int) callRank.getTotalDuration()), rank);
 				
@@ -185,6 +184,7 @@ public class CallDurationComment implements ContactComment {
 	 * Returns the name of the contact.
 	 *
 	 * @param number the phone number
+	 *
 	 * @return the name or the number
 	 */
 	@NotNull
@@ -195,7 +195,7 @@ public class CallDurationComment implements ContactComment {
 		
 		for (Contact contact : contacts) {
 			
-			List<String> numbers = ContactKey.getNumbers(contact);
+			List<String> numbers = com.tr.hsyn.telefonrehberi.main.contact.data.ContactKeyKt.getNumbers(contact);
 			
 			if (numbers == null || numbers.isEmpty()) continue;
 			

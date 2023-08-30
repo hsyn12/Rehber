@@ -1,6 +1,5 @@
 package com.tr.hsyn.telefonrehberi.main.call.activity.random.listener;
 
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,6 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tr.hsyn.colors.Colors;
-import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.textdrawable.TextDrawable;
@@ -21,6 +19,7 @@ import com.tr.hsyn.textdrawable.TextDrawable;
 import java.util.List;
 import java.util.Set;
 
+import tr.xyz.contact.Contact;
 
 interface CheckListener {
 	
@@ -43,11 +42,11 @@ public class AdapterSelectContacts extends RecyclerView.Adapter<AdapterSelectCon
 		
 		if (isCheck) {
 			
-			selectedIndexes.add(String.valueOf(contacts.get(index).getContactId()));
+			selectedIndexes.add(String.valueOf(contacts.get(index).getId()));
 		}
 		else {
 			
-			selectedIndexes.remove(String.valueOf(contacts.get(index).getContactId()));
+			selectedIndexes.remove(String.valueOf(contacts.get(index).getId()));
 		}
 	}
 	
@@ -64,13 +63,13 @@ public class AdapterSelectContacts extends RecyclerView.Adapter<AdapterSelectCon
 		Contact contact = contacts.get(position);
 		
 		holder.name.setText(contact.getName());
-		holder.selected.setChecked(selectedIndexes.contains(String.valueOf(contact.getContactId())));
+		holder.selected.setChecked(selectedIndexes.contains(String.valueOf(contact.getId())));
 		
 		TextDrawable img = TextDrawable.builder()
-				.beginConfig()
-				.useFont(ResourcesCompat.getFont(holder.itemView.getContext(), com.tr.hsyn.resfont.R.font.z))
-				.endConfig()
-				.buildRound(Stringx.getLetter(contact.getName()), Colors.getRandomColor());
+			                   .beginConfig()
+			                   .useFont(ResourcesCompat.getFont(holder.itemView.getContext(), com.tr.hsyn.resfont.R.font.z))
+			                   .endConfig()
+			                   .buildRound(Stringx.getLetter(contact.getName()), Colors.getRandomColor());
 		
 		holder.image.setImageDrawable(img);
 	}
@@ -89,9 +88,9 @@ public class AdapterSelectContacts extends RecyclerView.Adapter<AdapterSelectCon
 				
 				Contact c = contacts.get(i);
 				
-				if (!selectedIndexes.contains(String.valueOf(c.getContactId()))) {
+				if (!selectedIndexes.contains(String.valueOf(c.getId()))) {
 					
-					selectedIndexes.add(String.valueOf(c.getContactId()));
+					selectedIndexes.add(String.valueOf(c.getId()));
 					notifyItemChanged(i);
 				}
 			}
@@ -102,9 +101,9 @@ public class AdapterSelectContacts extends RecyclerView.Adapter<AdapterSelectCon
 				
 				Contact c = contacts.get(i);
 				
-				if (selectedIndexes.contains(String.valueOf(c.getContactId()))) {
+				if (selectedIndexes.contains(String.valueOf(c.getId()))) {
 					
-					selectedIndexes.remove(String.valueOf(c.getContactId()));
+					selectedIndexes.remove(String.valueOf(c.getId()));
 					notifyItemChanged(i);
 				}
 				else i++;

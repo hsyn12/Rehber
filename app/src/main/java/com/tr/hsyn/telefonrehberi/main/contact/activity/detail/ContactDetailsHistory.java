@@ -24,6 +24,7 @@ import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.telefonrehberi.main.call.activity.history.ActivityCallList;
 import com.tr.hsyn.telefonrehberi.main.call.data.CallLog;
 import com.tr.hsyn.telefonrehberi.main.cast.PermissionHolder;
+import com.tr.hsyn.telefonrehberi.main.code.data.History;
 import com.tr.hsyn.telefonrehberi.main.dev.Over;
 import com.tr.hsyn.xbox.Blue;
 import com.tr.hsyn.xlog.xlog;
@@ -32,7 +33,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
-
 
 /**
  * This class has duty is to take the call log
@@ -55,7 +55,7 @@ import java.util.Map;
  */
 public abstract class ContactDetailsHistory extends ContactDetailsHeadWay
 	implements PermissionHolder {
-
+	
 	/**
 	 * The request code for call log permissions
 	 */
@@ -95,7 +95,7 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay
 	private         boolean needShowHistory;
 	/** Flag indicating whether the permissions are requested */
 	private         boolean isPermissionsRequested;
-
+	
 	/**
 	 * @inheritDoc Prepares the activity for display by loading the call history for the selected contact.
 	 * 	This method gets called only one time by the superclass while the activity has been settings up.
@@ -104,17 +104,17 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay
 	 */
 	@Override
 	protected void prepare() {
-		//Warn This call must be first.
+		// Warn This call must be first.
 		super.prepare();
-
+		
 		//+ If no any phone numbers, then no history
-
+		
 		if (Lister.exist(phoneNumbers)) {
-
+			
 			setHistory();
 		}
 	}
-
+	
 	/**
 	 * Callback method called when a permission requested.
 	 * The activity must call the {@link #onPermissionResult(int, String[], int[])} method
@@ -129,54 +129,54 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay
 	@CallSuper
 	@Override
 	public void onPermissionsResult(int requestCode, Map<String, Boolean> result) {
-
+		
 		if (requestCode == RC_CALL_LOG) {
-
+			
 			//- Arama kayıtları izinleri var mı
 			boolean grant = result.values().stream().allMatch(Boolean::booleanValue);
-
+			
 			if (grant) {
-
+				
 				//- Gerekli izni aldık, geçmişi yenileyelim
 				if (needShowHistory) refreshHistory();
 				else setHistory();
-
+				
 				//- Yukarıdakileri de uyarmayı unutmayalım
 				onCallPermissionsGrant();
 			}
 			else {
-
+				
 				xlog.d("Arama kaydı izinleri reddedildi ");
 				needShowHistory = false;
 				onCallPermissionsDenied();
 			}
 		}
-
+		
 		isPermissionsRequested = false;
 	}
-
+	
 	@Override
 	protected void onResume() {
-
+		
 		super.onResume();
-
+		
 		//- Arama kayıtlarında bir güncelleme varsa bilgilerin tekrar düzenlenmesi gerek
-
+		
 		if (Over.Content.CallLog.Calls.isUpdated(Bool.NONE).bool()) {
-
+			
 			xlog.d("There is an update of call log");
 			setHistory();
 		}
 	}
-
+	
 	@Override
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
+		
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
+		
 		onPermissionResult(requestCode, permissions, grantResults);
 	}
-
+	
 	/**
 	 * Start to load the call history for the contact associated with this activity.
 	 * This method gets called when the activity first created,
@@ -184,14 +184,14 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay
 	 * This method is the starting point to get the contact history.
 	 */
 	private void setHistory() {
-
+		
 		Runny.run(this::showProgress);
 		Work.on(this::getCallHistory)
 			.onSuccess(this::addContactHistoryView)
 			.onLast(this::hideProgress)
 			.execute();
 	}
-
+	
 	/**
 	 * Requests call log permissions {@link PermissionHolder#CALL_LOG_PERMISSIONS} from the user.
 	 *
@@ -202,17 +202,17 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay
 	 */
 	@CallSuper
 	protected void requestCallPermissions() {
-
+		
 		if (isPermissionsRequested) {
-
+			
 			xlog.d("İzinler zaten istendi");
 			return;
 		}
-
+		
 		isPermissionsRequested = true;
 		askPermissions(RC_CALL_LOG, CALL_LOG_PERMISSIONS);
 	}
-
+	
 	/**
 	 * Handles cases where call log permissions granted.
 	 * Override this method to perform actions when permissions get granted.
@@ -220,9 +220,9 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay
 	 * @see #requestCallPermissions()
 	 */
 	protected void onCallPermissionsGrant() {
-
+		
 	}
-
+	
 	/**
 	 * Handles cases where call log permissions denied.
 	 * Override this method to perform actions when permissions get denied.
@@ -230,19 +230,19 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay
 	 * @see #requestCallPermissions()
 	 */
 	protected void onCallPermissionsDenied() {
-
+		
 	}
-
+	
 	/**
 	 * Callback method called when the history each load.
 	 * Override this method to perform actions when the history loaded
 	 * or at the first loading.
 	 */
 	protected void onHistoryLoad() {
-
+		
 		xlog.dx("Call history is updated");
 	}
-
+	
 	/**
 	 * Loads the call history for the contact associated with this activity.
 	 *
@@ -251,68 +251,68 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay
 	 */
 	@NotNull
 	private History getCallHistory() {
-
+		
 		//- Eğer arama kayıtları en az bir kez yüklenmiş ise sorun yok
 		//- Ancak yüklenmemiş ise, kayıtların buradan yüklenmesi biraz karışıklık yaratabilir.
 		callLog = Blue.getObject(Key.CALL_LOG);
-
+		
 		//- Öncelikle arama kayıtları izinlerine bakılmalı
 		if (callLog == null || callLog.isEmpty()) {
-
+			
 			//- Arama kayıtları izinleri, kayıtların en az bir kez yüklendiğini gösterir
 			//- Ancak bu yükleme, yükleme istasyonunda mı yoksa burada mı gerçekleşti bilmiyoruz
 			//- Kullanıcı uygulamayı ilk kez açıp, kişiler listesinden bir tıkla buraya gelmiş olabilir
 			//- Durum böyle ise bu değişkenin null olması gerek
 			if (hasCallLogPermissions()) {
-
+				
 				//- Burada anlıyoruz ki kullanıcı yükleme istasyonuna gitmemiş
 				//- Bu durumda arama kayıtlarını buradan yüklememiz gerek
-
+				
 				if (gateLoading.enter()) {
-
+					
 					var list = Over.Content.CallLog.getCallLogManager().load();
-
+					
 					callLog = CallLog.createGlobal(list);
-
-					List<Call> calls = callLog.getById(contact.getContactId());
-
+					
+					List<Call> calls = callLog.getById(contact.getId());
+					
 					calls.sort((x, y) -> Long.compare(y.getTime(), x.getTime()));
 					gateLoading.exit();
 					//_ This is the 'call history' of the selected contact
-					return History.of(contact, calls);
+					return new History(contact, calls);
 				}
 				else {
-
+					
 					xlog.i("There is a loading please wait");
 				}
 			}
 		}
 		else {
-
+			
 			return callLog.getHistory(contact);
 		}
-
+		
 		//- İzinler yok
 		//- Demek ki zor yoldan ilerleyeceğiz
 		//- İzinlerin cevabı geldiğinde yeni liste oluşturacağız
 		//- İzinleri şimdi sormuyoruz çünkü kullanıcının tıklaması gerek
 		//- Şimdilik boş dönüyoruz
-
-		return History.ofEmpty(contact);
+		
+		return new History(contact, new java.util.ArrayList<>());
 	}
-
+	
 	private void setHistoryView() {
-
+		
 		View historyView = getLayoutInflater().inflate(R.layout.show_contact_history, mainContainer, false);
 		mainContainer.addView(historyView);
-
+		
 		ImageView icon = historyView.findViewById(R.id.contact_history_icon);
 		Colors.setTintDrawable(icon.getDrawable(), Colors.lighter(Colors.getPrimaryColor(), 0.2f));
 		View view = historyView.findViewById(R.id.contact_history_item);
 		view.setBackgroundResource(Colors.getRipple());
 		view.setOnClickListener(this::onShowHistory);
 	}
-
+	
 	/**
 	 * Adds the view for showing the contact history.
 	 * If the user touches this view, the history gets shown by starting new activity.
@@ -321,96 +321,96 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay
 	 * @param history The call history for the contact.
 	 */
 	private void addContactHistoryView(@NonNull History history) {
-
+		
 		this.history = history;
-
+		
 		//- Kişinin geçmişine yönlendirecek olan görünüm sadece bir kez eklenmeli
 		if (!historyViewAdded) {
-
+			
 			historyViewAdded = true;
 			setHistoryView();
 		}
-
+		
 		//- Geçmişin boş olması, ya gerçekten herhangi bir geçmiş kayıt olmadığı
 		//- yada izinlerden dolayı boş geldiği anlamına gelir
-
+		
 		if (history.isEmpty()) {
-
+			
 			if (hasCallLogPermissions()) {
-
+				
 				//- Geçmiş, izinlerden dolayı değil gerçekten olmadığı için boş
 				//- Dolayısıyla hiç bir işlem yapmaya gerek yok
 				TextView text = findViewById(R.id.text_show_calls);
 				text.setText(getString(R.string.no_contact_history));
 			}
 			else {
-
+				
 				//- Geçmiş, izinlerden dolayı boş
-
+				
 				xlog.d("Kişinin geçmişi için izinler bekleniyor");
 			}
 		}
-
+		
 		// Burada arama geçmişinin güncellendiğini bildiriyoruz.
 		// Bu sınıftaki görsel tıklandığında tüm geçmiş gösterilir.
 		// Ama henüz böyle bir şey yok.
 		// Sadece geçmiş ayarlandı.
 		onHistoryLoad();
 	}
-
+	
 	/**
 	 * Listener for the show history click event.
 	 *
 	 * @param view Clicked view
 	 */
 	protected final void onShowHistory(View view) {
-
+		
 		xlog.i("Click show history");
-
+		
 		//- view null ise bu metodu biz kendimiz çağırmışız demektir
 		//- Kapıya takılmamak için bunu kontrol etmemiz gerek
 		//- Çünkü geçmişi yenilerken kapının açılma süresinden daha önce gelmiş olma ihtimalimiz yüksek
 		//- Eğer görünüme kullanıcı tıklıyorsa kapıya takılmak zorunda,
 		//- biz tıklıyorsak (metodu biz çağırıyorsak) direk girmemiz lazım
-
+		
 		if (gateHistory.enter() || view == null) {
-
+			
 			//- Karışıklık burada başlıyor
 			//- Çünkü kişinin geçmişine gidildiyse ve bir silme işlemi gerçekleşti ise
 			//- arama kayıtları için bir yenileme bilgisi kaydedilir
 			//- Bu bilgi aslında ana ekran için
 			//- Ancak kullanıcı buradan çıkmadığı için bazı ayarlamalar yapmamız gerekiyor
 			if (Over.Content.CallLog.Calls.isUpdated().bool()) {
-
+				
 				//- Evet kayıtların yenilenmesi gerek
 				//- Ancak bu bilgiye ana ekranın ihtiyaç duyması silinmesini engelliyor
 				//- Biz de kendi değişkenimizi kullanıyoruz
 				if (!isNewHistory) {
-
+					
 					//- Arama kayıtları her yüklendiğinde isNewHistory true oluyor
 					//- Eğer true değilse tekrar yenilememiz gerek
 					refreshHistory();
 					return;
 				}
-
+				
 				//- Kayıtlar yenilenmiş, bir sonraki yenileme için false yapıyoruz
 				//- Eğer bunu yapmazsak activity kısır bir döngüye girer
 				isNewHistory = false;
 			}
-
+			
 			needShowHistory = false;
-
+			
 			if (history != null) {
-
+				
 				if (!history.isEmpty()) {
-
+					
 					showCalls(history.getCalls());
 				}
 				else {
-
+					
 					//- İzin gerekli ise iste
 					if (!hasCallLogPermissions()) {
-
+						
 						needShowHistory = true;
 						requestCallPermissions();
 					}
@@ -419,33 +419,33 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay
 			}
 		}
 	}
-
+	
 	/**
 	 * Shows a progress indicator.
 	 */
 	protected void showProgress() {
-
+		
 		progressBar.setVisibility(View.VISIBLE);
 	}
-
+	
 	/**
 	 * Hides the progress indicator.
 	 */
 	protected void hideProgress() {
-
+		
 		progressBar.setVisibility(View.GONE);
 	}
-
+	
 	/**
 	 * Refreshes the call history for the contact associated with this activity.
 	 */
 	private void refreshHistory() {
-
+		
 		Runny.run(this::showProgress);
-
+		
 		Work.on(this::getCallHistory)
 			.onSuccess(h -> {
-
+				
 				history      = h;
 				isNewHistory = true;
 				onShowHistory(null);
@@ -455,26 +455,26 @@ public abstract class ContactDetailsHistory extends ContactDetailsHeadWay
 			.onLast(this::hideProgress)
 			.execute();
 	}
-
+	
 	/**
 	 * Shows the call history for the contact associated with this activity.
 	 */
 	protected final void showCalls(List<Call> calls) {
-
+		
 		//+ keep closed
 		if (gateShowHistory.enter()) {
-
+			
 			xlog.dx("Show call history for : %s", contact.getName());
-
+			
 			//- Geçmişi kaydet
 			Blue.box(Key.SHOW_CALLS, calls);
-
+			
 			Runny.run(() -> {
-
+				
 				startActivity(new Intent(this, ActivityCallList.class));
 				Bungee.slideRight(this);
 			}, 150);
 		}
 	}
-
+	
 }

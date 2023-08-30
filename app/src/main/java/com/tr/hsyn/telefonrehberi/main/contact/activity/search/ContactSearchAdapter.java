@@ -1,6 +1,5 @@
 package com.tr.hsyn.telefonrehberi.main.contact.activity.search;
 
-
 import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -16,13 +15,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.common.base.CharMatcher;
 import com.tr.hsyn.colors.Colors;
-import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.execution.Runny;
 import com.tr.hsyn.phone_numbers.PhoneNumbers;
 import com.tr.hsyn.selection.ItemIndexListener;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
-import com.tr.hsyn.telefonrehberi.main.contact.data.ContactKey;
 import com.tr.hsyn.text.Spanner;
 import com.tr.hsyn.text.Spans;
 import com.tr.hsyn.textdrawable.TextDrawable;
@@ -34,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import tr.xyz.contact.Contact;
 
 public class ContactSearchAdapter extends RecyclerView.Adapter<ContactSearchAdapter.Holder> implements TextChangeListener {
 	
@@ -67,14 +65,14 @@ public class ContactSearchAdapter extends RecyclerView.Adapter<ContactSearchAdap
 		
 		String name = contact.getName();
 		
-		if (name == null || name.trim().isEmpty()) {
+		if (name.trim().isEmpty()) {
 			
 			name = "(adsız)";
 		}
 		
 		holder.name.setText(name);
 		
-		List<String> numbers = contact.getData(ContactKey.NUMBERS);
+		List<String> numbers = com.tr.hsyn.telefonrehberi.main.contact.data.ContactKeyKt.getNumbers(contact);
 		
 		if (numbers != null && !numbers.isEmpty()) {
 			
@@ -87,16 +85,16 @@ public class ContactSearchAdapter extends RecyclerView.Adapter<ContactSearchAdap
 		}
 		
 		
-		String pic   = contact.getPic();
+		String pic   = com.tr.hsyn.telefonrehberi.main.contact.data.ContactKeyKt.getPic(contact);
 		int    color = Colors.getRandomColor();
 		
 		if (pic == null) {
 			
 			Drawable image = TextDrawable.builder()
-					.beginConfig()
-					.useFont(ResourcesCompat.getFont(holder.itemView.getContext(), com.tr.hsyn.resfont.R.font.z))
-					.endConfig()
-					.buildRound(Stringx.getLetter(contact.getName()), color);
+				                 .beginConfig()
+				                 .useFont(ResourcesCompat.getFont(holder.itemView.getContext(), com.tr.hsyn.resfont.R.font.z))
+				                 .endConfig()
+				                 .buildRound(Stringx.getLetter(contact.getName()), color);
 			
 			holder.image.setImageDrawable(image);
 		}
@@ -177,7 +175,7 @@ public class ContactSearchAdapter extends RecyclerView.Adapter<ContactSearchAdap
 			
 			var indexes = Stringx.findIndexes(name, searchText);
 			
-			//xlog.d(Arrays.toString(indexes));
+			// xlog.d(Arrays.toString(indexes));
 			
 			Spanner spanner = new Spanner(name);
 			
@@ -208,16 +206,16 @@ public class ContactSearchAdapter extends RecyclerView.Adapter<ContactSearchAdap
 	private List<Contact> searchByName(String searchText) {
 		
 		return contacts.stream()
-				.filter(c -> c.getName() != null)
-				.filter(c -> Stringx.isMatch(c.getName(), searchText))
-				.collect(Collectors.toList());
+			       .filter(c -> c.getName() != null)
+			       .filter(c -> Stringx.isMatch(c.getName(), searchText))
+			       .collect(Collectors.toList());
 	}
 	
 	@SuppressWarnings("ConstantConditions")
 	private List<Contact> searchByNumber(String searchText) {
 		
 		xlog.d("searchByNumber: " + searchText);
-		return contacts.stream().filter(c -> c.getData(ContactKey.NUMBERS) != null && !ContactKey.getNumbers(c).isEmpty() && PhoneNumbers.containsNumber(ContactKey.getNumbers(c), searchText)).collect(Collectors.toList());
+		return contacts.stream().filter(c -> com.tr.hsyn.telefonrehberi.main.contact.data.ContactKeyKt.getNumbers(c) != null && !com.tr.hsyn.telefonrehberi.main.contact.data.ContactKeyKt.getNumbers(c).isEmpty() && PhoneNumbers.containsNumber(com.tr.hsyn.telefonrehberi.main.contact.data.ContactKeyKt.getNumbers(c), searchText)).collect(Collectors.toList());
 	}
 	
 	static final class Holder extends RecyclerView.ViewHolder {

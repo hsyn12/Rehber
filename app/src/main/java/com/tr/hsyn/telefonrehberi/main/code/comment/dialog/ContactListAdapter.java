@@ -1,6 +1,5 @@
 package com.tr.hsyn.telefonrehberi.main.code.comment.dialog;
 
-
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -13,7 +12,6 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tr.hsyn.colors.Colors;
-import com.tr.hsyn.contactdata.Contact;
 import com.tr.hsyn.string.Stringx;
 import com.tr.hsyn.telefonrehberi.R;
 import com.tr.hsyn.textdrawable.TextDrawable;
@@ -22,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import tr.xyz.contact.Contact;
 
 public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.Holder> {
 	
@@ -50,16 +49,16 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
 		
 		holder.name.setText(name);
 		
-		String pic   = contact.getPic();
+		String pic   = com.tr.hsyn.telefonrehberi.main.contact.data.ContactKeyKt.getPic(contact);
 		int    color = Colors.getRandomColor();
 		
 		if (pic == null) {
 			
 			Drawable image = TextDrawable.builder()
-					.beginConfig()
-					.useFont(ResourcesCompat.getFont(holder.itemView.getContext(), com.tr.hsyn.resfont.R.font.z))
-					.endConfig()
-					.buildRound(Stringx.getLetter(contact.getName()), color);
+				                 .beginConfig()
+				                 .useFont(ResourcesCompat.getFont(holder.itemView.getContext(), com.tr.hsyn.resfont.R.font.z))
+				                 .endConfig()
+				                 .buildRound(Stringx.getLetter(contact.getName()), color);
 			
 			holder.image.setImageDrawable(image);
 		}

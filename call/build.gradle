@@ -11,6 +11,7 @@ dependencies {
 	implementation project(path: ':kiext')
 	implementation project(path: ':kbext')
 	implementation project(path: ':phonenumber')
+	implementation 'androidx.annotation:annotation-jvm:1.6.0'
 	
 }
 

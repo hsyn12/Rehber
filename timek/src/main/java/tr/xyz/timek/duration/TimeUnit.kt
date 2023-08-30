@@ -1,4 +1,4 @@
-package tr.xyz.timek
+package tr.xyz.timek.duration
 
 import java.util.*
 
