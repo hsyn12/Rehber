@@ -397,3 +397,11 @@ class TimeDurations(val value: Long = 0) {
 		fun build(): TimeDurations = TimeDurations("$year:$month:$day:$hour:$minute:$second:$millisecond")
 	}
 }
+
+fun main() {
+	val timeDuration = TimeDurations.builder()
+		.milliseconds(1)
+		.seconds(60)
+		.build()
+	println(timeDuration.toStringNonZero())
+}

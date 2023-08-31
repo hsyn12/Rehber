@@ -11,27 +11,29 @@ package tr.xyz.digit
  *    println(row) // 20
  * ```
  *
- * A digit can have a limit.
+ * A digit can have a limit. The `min` value is included in the digit, and
+ * the `max` value is excluded.
  *
  * ```
  *
- *    val row = Digit.newDigit(min = 0, max = 9, digitValue = 4)
+ *    val row = Digit.newDigit(min = 0, max = 10, digitValue = 4)
  *    val col = Digit.newDigit(6)
  *    row *= col
  *    println(row) // 4
  * ```
  *
- * This prints `4` because `4 * 6 = 24` and the max limit is `9`. So, the
- * maximum value of the digit is exceeded. The `row` digit cycles two times
- * to account for the result. Range of the `row` is `10` (included zero)
- * and remains `4` to reach the `20` after two cycles. The `row` digit
- * take this `4`, because this number is in the range of `0` to `9` limits
- * (___included zero and `9`___). If the `row` digit were connected to
- * any digit, the occurring two cycle would be forwarded to that digit.
+ * This prints `4` because `4 * 6 = 24` and the max limit is `10`. So,
+ * the maximum value of the digit is exceeded. The `row` digit cycles two
+ * times to account for the result. Range of the `row` is `10` (included
+ * zero) and remains `4` to reach the `20` after two cycles. The `row`
+ * digit take this `4`, because this number is in the range of `0` to `10`
+ * limits (___included zero and excluded `10`___). If the `row` digit were
+ * connected to any digit, the occurring two cycle would be forwarded to
+ * that digit.
  *
  * ```
  *
- *    val row = Digit.newDigit(min = 0, max = 9, digitValue = 4)
+ *    val row = Digit.newDigit(min = 0, max = 10, digitValue = 4)
  *    val col = Digit.newDigit(6)
  *    val anotherRow = Digit.newDigit(6)
  *
@@ -54,11 +56,11 @@ package tr.xyz.digit
  *
  * ```
  *
- *    val digit = Digit.newDigit(0, 5, 5)
+ *    val digit = Digit.newDigit(0, 5, 4)
  *    digit += 1
  *    println("$digit") // 0
  *    digit -= 1
- *    println("$digit") // 5
+ *    println("$digit") // 4
  * ```
  *
  * @property digitValue digit value
@@ -193,6 +195,7 @@ interface Digit : Limited {
 	 * @param value value to multiply
 	 */
 	operator fun timesAssign(value: Digit) {
+		println("$digitValue * $value")
 		digitValue *= value.digitValue
 	}
 	
@@ -234,3 +237,4 @@ interface Digit : Limited {
 		fun newDigit(digitValue: Int = 0): Digit = NDigit(digitValue = digitValue)
 	}
 }
+

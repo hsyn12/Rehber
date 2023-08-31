@@ -19,38 +19,29 @@ class NDigitTest {
 	
 	@Test
 	fun testNDigitPositiveOverflow() {
-		
-		val digit = Digit.newDigit(0, 5, 5)
+		val digit = Digit.newDigit(0, 5, 4)
 		digit += 1
-		println("$digit") // 0
-		digit -= 1
-		val expected = 5
-		println("$digit") // 0
+		val expected = 0
 		assertEquals(expected, digit.digitValue)
 	}
 	
 	@Test
 	fun testNDigitNegativeOverflow() {
-		val digitValue = 0
-		val max = 5
-		val min = 0
-		
-		val digit = NDigit(max, min, digitValue)
+		val digit = Digit.newDigit(0, 5, 0)
 		digit -= 1
-		val expected = 5
+		val expected = 4
 		assertEquals(expected, digit.digitValue)
 	}
 	
 	@Test
 	fun testNDigitTimes() {
 		
-		val row = Digit.newDigit(min = 0, max = 9, digitValue = 4)
+		val row = Digit.newDigit(min = 0, max = 10, digitValue = 4)
 		val col = Digit.newDigit(6)
 		val anotherRow = Digit.newDigit(6)
 		row.left = anotherRow
 		row *= col
-		println(row) // 4
-		println(anotherRow) // 8
+		println("row = $row")
 		val expected = 4
 		assertEquals(expected, row.digitValue)
 	}

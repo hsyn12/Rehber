@@ -287,7 +287,7 @@ class TimeDuration(value: Int, val unit: TimeUnit) {
 	 */
 	override fun toString(): String = "$value $unit"
 	
-	fun with(tDuration: TimeDuration): TimeDurations = TimeDurations(this, tDuration)
+	infix fun with(tDuration: TimeDuration): TimeDurations = TimeDurations(this, tDuration)
 	
 	companion object {
 		/**
@@ -331,4 +331,9 @@ class TimeDuration(value: Int, val unit: TimeUnit) {
 		infix fun years(@IntRange(from = 0, to = 999_999_999) value: Int): TimeDuration = TimeDuration(value, TimeUnit.YEAR)
 	}
 	
+}
+
+fun main() {
+	val timeDuration = TimeDuration hours 0
+	println(timeDuration)
 }

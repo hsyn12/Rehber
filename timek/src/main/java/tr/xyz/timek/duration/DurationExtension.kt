@@ -39,10 +39,10 @@ infix fun Long.years         (duration: dDuration)      : Duration     = Duratio
 
 
 fun main() {
-	val duration = 45 seconds tDuration
+	val duration = 45 seconds tDuration with (1 minutes tDuration)
 	val duration2 = 1 minutes tDuration
 	
-	println(duration.with(duration2).toStringNonZero())
+	println(duration.toStringNonZero())
 }
 
 

@@ -14,28 +14,28 @@ sealed class Limits {
 		/**
 		 * The limit of the month.
 		 */
-		const val MONTH       = 11
+		const val MONTH       = 12
 		/**
 		 * The limit of the day.
 		 */
-		const val DAY         = 29
+		const val DAY         = 30
 		/**
 		 * The limit of the hour.
 		 */
-		const val HOUR        = 23
+		const val HOUR        = 24
 		/**
 		 * The limit of the minute.
 		 */
-		const val MINUTE      = 59
+		const val MINUTE      = 60
 		/**
 		 * The limit of the second.
 		 */
-		const val SECOND      = 59
+		const val SECOND      = 60
 		
 		/**
 		 * The limit of the millisecond.
 		 */
-		const val MILLISECOND = 999
+		const val MILLISECOND = 1000
 		
 		val YEAR_RANGE        = 0..YEAR
 		val MONTH_RANGE       = 0..MONTH
