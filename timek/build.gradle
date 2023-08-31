@@ -10,6 +10,7 @@ dependencies {
 	implementation project(path: ':keext')
 	
 	implementation "androidx.annotation:annotation:${rootProject.androidx_annotation}"
+	testImplementation 'junit:junit:4.13.2'
 	// implementation "com.google.guava:guava:${rootProject.guava}"
 }
 

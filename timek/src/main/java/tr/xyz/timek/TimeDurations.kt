@@ -8,13 +8,12 @@ import tr.xyz.timek.duration.TimeUnit
 import kotlin.math.absoluteValue
 
 /**
- * Represents a duration of time with units (year, month, day, hour,
- * minute, second, millisecond). The duration is calculated based on a
- * given value in milliseconds.
+ * Represents a duration of time with units (year, month, day, hour, minute, second, millisecond).
+ * The duration is calculated based on a given value in milliseconds.
  *
- * [TimeDurations] is a time duration, not a time point. And each unit has
- * its own limit. For example, the duration of a month is exactly 30 days,
- * an hour is exactly 60 minutes, and a minute is exactly 60 seconds, etc.
+ * [TimeDurations] is a time duration, not a time point. And each unit has its own limit. For
+ * example, the duration of a month is exactly 30 days, an hour is exactly 60 minutes, and a minute
+ * is exactly 60 seconds, etc.
  *
  * ```
  *
@@ -190,15 +189,15 @@ class TimeDurations(val value: Long = 0) {
 	companion object {
 		
 		/**
-		 * Checks the given value whether it is in the given unit range. If not,
-		 * throws an [IllegalArgumentException].
+		 * Checks the given value whether it is in the given unit range. If not, throws an
+		 * [IllegalArgumentException].
 		 *
 		 * @param value duration value
 		 * @param unit duration unit
 		 */
-		private fun validateTimeDuration(value: Int, unit: TimeUnit) {
+		fun validateTimeDuration(value: Int, unit: TimeUnit) {
 			
-			require(Limits.isInLimits(value, unit)) {"Invalid time duration. '${unit.toString().uppercase()}' must be in the range [${Limits.getRange(unit)}] but it was '$value'"}
+			require(Limits.isInLimits(value, unit)) {"Invalid time duration. '${unit.toString().uppercase()}' must be in the range [${Limits.rangeOf(unit)}] but it was '$value'"}
 		}
 		
 		/**
@@ -211,10 +210,10 @@ class TimeDurations(val value: Long = 0) {
 		 *    // 11 days 21 hours 44 seconds
 		 * ```
 		 *
-		 * @param value Duration string in the format "`yyyy:mm:dd:hh:mm:ss:ms`".
-		 *     If not necessary to use higher units, can be used "`mm:dd:hh:mm:ss`"
-		 *     or "`dd:hh:mm:ss`" or "`hh:mm:ss`" or "`mm:ss`". If not necessary to
-		 *     use lower units, can be used zeros like that, "`dd:0:mm:0`"
+		 * @param value Duration string in the format "`yyyy:mm:dd:hh:mm:ss:ms`". If not necessary to
+		 *     use higher units, can be used "`mm:dd:hh:mm:ss`" or "`dd:hh:mm:ss`" or "`hh:mm:ss`" or
+		 *     "`mm:ss`". If not necessary to use lower units, can be used zeros like that,
+		 *     "`dd:0:mm:0`"
 		 * @return milliseconds equivalent of the duration
 		 */
 		fun of(value: String): Long {
@@ -313,78 +312,78 @@ class TimeDurations(val value: Long = 0) {
 		private var millisecond = 0
 		
 		/**
-		 * Sets the year.
+		 * Sets the years.
 		 *
 		 * @param value year
 		 * @return this [TimeDurationBuilder]
 		 */
-		fun years(@IntRange(from = 0, to = 999_999_999) value: Int): TimeDurationBuilder {
+		fun years(@IntRange(from = 0L, to = 999_999_999L) value: Int): TimeDurationBuilder {
 			year = value
 			return this
 		}
 		
 		/**
-		 * Sets the month.
+		 * Sets the months.
 		 *
 		 * @param value month
 		 * @return this [TimeDurationBuilder]
 		 */
-		fun months(@IntRange(from = 0, to = 11) value: Int): TimeDurationBuilder {
+		fun months(@IntRange(from = 0L, to = 11L) value: Int): TimeDurationBuilder {
 			month = value
 			return this
 		}
 		
 		/**
-		 * Sets the day.
+		 * Sets the days.
 		 *
 		 * @param value day
 		 * @return this [TimeDurationBuilder]
 		 */
-		fun days(@IntRange(from = 0, to = 29) value: Int): TimeDurationBuilder {
+		fun days(@IntRange(from = 0L, to = 29L) value: Int): TimeDurationBuilder {
 			day = value
 			return this
 		}
 		
 		/**
-		 * Sets the hour.
+		 * Sets the hours.
 		 *
 		 * @param value hour
 		 * @return this [TimeDurationBuilder]
 		 */
-		fun hours(@IntRange(from = 0, to = 23) value: Int): TimeDurationBuilder {
+		fun hours(@IntRange(from = 0L, to = 23L) value: Int): TimeDurationBuilder {
 			hour = value
 			return this
 		}
 		
 		/**
-		 * Sets the minute.
+		 * Sets the minutes.
 		 *
 		 * @param value minute
 		 * @return this [TimeDurationBuilder]
 		 */
-		fun minutes(@IntRange(from = 0, to = 59) value: Int): TimeDurationBuilder {
+		fun minutes(@IntRange(from = 0L, to = 59L) value: Int): TimeDurationBuilder {
 			minute = value
 			return this
 		}
 		
 		/**
-		 * Sets the second.
+		 * Sets the seconds.
 		 *
 		 * @param value second
 		 * @return this [TimeDurationBuilder]
 		 */
-		fun seconds(@IntRange(from = 0, to = 59) value: Int): TimeDurationBuilder {
+		fun seconds(@IntRange(from = 0L, to = 59L) value: Int): TimeDurationBuilder {
 			second = value
 			return this
 		}
 		
 		/**
-		 * Sets the millisecond.
+		 * Sets the milliseconds.
 		 *
 		 * @param value millisecond
 		 * @return this [TimeDurationBuilder]
 		 */
-		fun milliseconds(@IntRange(from = 0, to = 999) value: Int): TimeDurationBuilder {
+		fun milliseconds(@IntRange(from = 0L, to = 999L) value: Int): TimeDurationBuilder {
 			millisecond = value
 			return this
 		}
@@ -401,7 +400,7 @@ class TimeDurations(val value: Long = 0) {
 fun main() {
 	val timeDuration = TimeDurations.builder()
 		.milliseconds(1)
-		.seconds(60)
+		.seconds(59)
 		.build()
 	println(timeDuration.toStringNonZero())
 }
