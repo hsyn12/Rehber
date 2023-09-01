@@ -20,13 +20,13 @@ import java.time.format.DateTimeFormatter
  * Represents a time in the timeline.
  *
  * @constructor Creates a new time point with optional milliseconds.
- * @property millis The number of milliseconds since January 1, 1970
- *     00:00:00 GMT. If the value is negative, it represents a time before
- *     January 1, 1970 00:00:00 GMT. If skipped, it represents the current
- *     time.
+ * @property millis The number of milliseconds since January 1, 1970 00:00:00 GMT. If the value is
+ *     negative, it represents a time before January 1, 1970 00:00:00 GMT. If skipped, it represents
+ *     the current time.
  */
 class Time(val millis: Long = currentTimeMillis) {
 	
+	val localDateTime: LocalDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(millis), DEFAULT_ZONE_OFFSET)
 	operator fun minus(time: Time): Time = Time(millis - time.millis)
 	operator fun plus(time: Time): Time = Time(millis + time.millis)
 	operator fun compareTo(time: Time): Int = millis.compareTo(time.millis)
@@ -45,8 +45,7 @@ class Time(val millis: Long = currentTimeMillis) {
 	 */
 	constructor(year: Int = 0, month: Int = 1, day: Int = 1, hour: Int = 0, minute: Int = 0) : this(LocalDateTime.of(year, month, day, hour, minute).toEpochSecond(ZoneOffset.UTC) * 1000)
 	/**
-	 * @return formatted time string with default pattern
-	 *     [DEFAULT_DATE_TIME_PATTERN]
+	 * @return formatted time string with default pattern [DEFAULT_DATE_TIME_PATTERN]
 	 */
 	override fun toString() = toString(DEFAULT_DATE_TIME_PATTERN)
 	/**
@@ -116,13 +115,12 @@ class Time(val millis: Long = currentTimeMillis) {
 		const val DEFAULT_DATE_TIME_PATTERN = "d MMMM yyyy EEEE HH:mm"
 		
 		/**
-		 * Milliseconds of the current time according to the system time. That
-		 * milliseconds are the number of milliseconds since January 1, 1970
-		 * 00:00:00 GMT.
+		 * Milliseconds of the current time according to the system time. That milliseconds are the
+		 * number of milliseconds since January 1, 1970 00:00:00 GMT.
 		 */
 		val currentTimeMillis: Long get() = System.currentTimeMillis()
-		
 		val DEFAULT_ZONE_OFFSET: ZoneOffset = ZoneOffset.of(ZoneId.systemDefault().rules.getOffset(Instant.now()).id)
+		
 		/**
 		 * @param time time
 		 * @param pattern pattern
@@ -131,7 +129,7 @@ class Time(val millis: Long = currentTimeMillis) {
 		 */
 		fun toString(time: Long, pattern: String = DEFAULT_DATE_TIME_PATTERN): String = LocalDateTime.ofInstant(Instant.ofEpochMilli(time), ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(pattern));
 		/**
-		 * Returns the duration between now and the given time point.
+		 * Returns the duration with biggest time unit between now and the given time point.
 		 *
 		 * @param time time point to compare to the now
 		 * @return [Duration]
@@ -141,22 +139,22 @@ class Time(val millis: Long = currentTimeMillis) {
 			val now: LocalDateTime = LocalDateTime.now()
 			val date: LocalDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(time), DEFAULT_ZONE_OFFSET)
 			
-			require(!date.isAfter(now)) {"The time must be before now"}
+			require(date.isBefore(now)) {"The time must be before now"}
 			
-			val year = (now.year - date.year).toLong()
+			val year = now.year - date.year
 			if (year >= 1) return year years dDuration
 			
-			val days = (now.dayOfYear - date.dayOfYear).toLong()
+			val days = now.dayOfYear - date.dayOfYear
 			if (days > 30) return (days / 30) months dDuration
 			if (days >= 1) return days days dDuration
 			
-			val hours = (now.minusHours(date.hour.toLong()).hour).toLong()
+			val hours = now.minusHours(date.hour.toLong()).hour
 			if (hours >= 1) return hours hours dDuration
 			
-			val minute = (now.minusMinutes(date.minute.toLong()).minute).toLong()
+			val minute = now.minusMinutes(date.minute.toLong()).minute
 			if (minute >= 1) return minute minutes dDuration
 			
-			return (now.minusSeconds(date.second.toLong()).second).toLong() seconds dDuration
+			return (now.minusSeconds(date.second.toLong()).second) seconds dDuration
 		}
 	}
 }

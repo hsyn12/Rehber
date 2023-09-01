@@ -1,10 +1,7 @@
-package tr.xyz.timek
+package tr.xyz.timek.duration
 
 import androidx.annotation.IntRange
-import tr.xyz.timek.duration.Duration
-import tr.xyz.timek.duration.Limits
-import tr.xyz.timek.duration.TimeDuration
-import tr.xyz.timek.duration.TimeUnit
+import tr.xyz.timek.TimeMillis
 import kotlin.math.absoluteValue
 
 /**

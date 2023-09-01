@@ -6,10 +6,9 @@ import kotlin.reflect.KProperty
 /**
  * Represents a duration.
  *
- * Duration is an amount of time with certain unit (year, month, day,
- * hour, minute, second, millisecond). And this duration **is not** a time
- * duration. So, the time units have no limit. For example, can be defined
- * a duration of a month with value `2_000`.
+ * Duration is an amount of time with certain unit (year, month, day, hour, minute, second,
+ * millisecond). And this duration **is not** a time duration. So, the time units have no limit. For
+ * example, can be defined a duration of a month with value `2_000`.
  *
  * ```
  *
@@ -164,12 +163,19 @@ class Duration(val value: Long, val unit: TimeUnit) {
 	// region private class UnitConvertor(private val unit: TimeUnit) {
 	private class UnitConvertor(val unit: TimeUnit) {
 		@Suppress("NOTHING_TO_INLINE")
-		inline operator fun getValue(ref: Duration, property: KProperty<*>): Duration = ref.toUnit(unit)
+		inline operator fun getValue(ref: Duration, property: KProperty<*>): Duration = ref to unit
 	}
 	// endregion
 	
 	// region Member functions
-	fun toUnit(unit: TimeUnit): Duration {
+	/**
+	 * Converts the duration to the given unit.
+	 *
+	 * @param unit [TimeUnit] convert to
+	 * @return new [Duration] with the specified unit. If unit is bigger than the current unit, it
+	 *     will be truncated
+	 */
+	infix fun to(unit: TimeUnit): Duration {
 		return when (unit) {
 			TimeUnit.MILLISECOND -> asMilliseconds milliseconds dDuration
 			TimeUnit.SECOND      -> asSeconds seconds dDuration
@@ -180,18 +186,52 @@ class Duration(val value: Long, val unit: TimeUnit) {
 			TimeUnit.YEAR        -> asYears years dDuration
 		}
 	}
-	
-	infix fun to(unit: TimeUnit): Duration = toUnit(unit)
+	/**
+	 * Returns a new [Duration] with the value and the same current unit.
+	 *
+	 * @param value The value of the new duration
+	 * @return A new [Duration] object with the value and the same current unit
+	 */
 	fun newDuration(value: Long) = Duration(value, unit)
 	// endregion
 	
 	// region Operator functions
+	/**
+	 * Adds the given [duration] to the current duration and returns a new [Duration] object.
+	 *
+	 * @param duration The duration to be added.
+	 * @return A new [Duration] object representing the sum of the current duration and the given
+	 *     duration.
+	 */
 	operator fun plus(duration: Long): Duration = newDuration(value + duration)
-	
-	operator fun plus(duration: Duration): Duration = newDuration(value + duration.toUnit(unit).value)
-	
-	operator fun minus(duration: Duration): Duration = newDuration(value - duration.toUnit(unit).value)
-	
+	/**
+	 * Adds the given [duration] to the current duration and returns a new [Duration] object.
+	 *
+	 * @param duration The duration to be added.
+	 * @return A new [Duration] object representing the sum of the current duration and the given
+	 *     duration. If the given duration unit is different than the current duration unit, it will
+	 *     be converted to the current duration unit and if it is bigger than the current unit, it
+	 *     will be truncated.
+	 */
+	operator fun plus(duration: Duration): Duration = newDuration(value + (duration to unit).value)
+	/**
+	 * Subtracts the given [duration] to the current duration and returns a new [Duration] object.
+	 *
+	 * @param duration The duration to be subtracted.
+	 * @return A new [Duration] object representing the minus of the current duration and the given
+	 *     duration. If the given duration unit is different than the current duration unit, it will
+	 *     be converted to the current duration unit and if it is bigger than the current unit, it
+	 *     will be truncated.
+	 */
+	operator fun minus(duration: Duration): Duration = newDuration(value - (duration to unit).value)
+	/**
+	 * Subtracts the given [duration] from the current duration and returns a new [Duration] with the
+	 * result.
+	 *
+	 * @param duration The duration to be subtracted
+	 * @return A new [Duration] object representing the minus of the current duration and the given
+	 *     duration.
+	 */
 	operator fun minus(duration: Long): Duration = newDuration(value - duration)
 	// endregion
 	
@@ -203,13 +243,62 @@ class Duration(val value: Long, val unit: TimeUnit) {
 	
 	// region Companion functions
 	companion object {
-		fun newDuration(value: Long, unit: TimeUnit) = Duration(value, unit)
+		/**
+		 * Returns a new [Duration] with the value and unit.
+		 *
+		 * @param value value
+		 * @param unit [TimeUnit]
+		 * @return new [Duration]
+		 */
+		fun of(value: Long, unit: TimeUnit) = Duration(value, unit)
+		/**
+		 * Returns a new [Duration] with the value in milliseconds.
+		 *
+		 * @param value value
+		 * @return new [Duration]
+		 */
 		infix fun milliseconds(value: Long): Duration = Duration(value, TimeUnit.MILLISECOND)
+		/**
+		 * Returns a new [Duration] with the value in seconds.
+		 *
+		 * @param value value
+		 * @return new [Duration]
+		 */
 		infix fun seconds(value: Long): Duration = Duration(value, TimeUnit.SECOND)
+		/**
+		 * Returns a new [Duration] with the value in minutes.
+		 *
+		 * @param value value
+		 * @return new [Duration]
+		 */
 		infix fun minutes(value: Long): Duration = Duration(value, TimeUnit.MINUTE)
+		/**
+		 * Returns a new [Duration] with the value in hours.
+		 *
+		 * @param value value
+		 * @return new [Duration]
+		 */
 		infix fun hours(value: Long): Duration = Duration(value, TimeUnit.HOUR)
+		/**
+		 * Returns a new [Duration] with the value in days.
+		 *
+		 * @param value value
+		 * @return new [Duration]
+		 */
 		infix fun days(value: Long): Duration = Duration(value, TimeUnit.DAY)
+		/**
+		 * Returns a new [Duration] with the value in months.
+		 *
+		 * @param value value
+		 * @return new [Duration]
+		 */
 		infix fun months(value: Long): Duration = Duration(value, TimeUnit.MONTH)
+		/**
+		 * Returns a new [Duration] with the value in years.
+		 *
+		 * @param value value
+		 * @return new [Duration]
+		 */
 		infix fun years(value: Long): Duration = Duration(value, TimeUnit.YEAR)
 	}
 	// endregion

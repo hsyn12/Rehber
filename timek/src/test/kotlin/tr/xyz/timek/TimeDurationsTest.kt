@@ -2,6 +2,7 @@ package tr.xyz.timek
 
 import org.junit.Assert.fail
 import org.junit.Test
+import tr.xyz.timek.duration.TimeDurations
 import tr.xyz.timek.duration.TimeUnit
 
 class TimeDurationsTest {

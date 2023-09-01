@@ -1,7 +1,7 @@
 package tr.xyz.timek.duration
 
 /**
- * Defines the limit of time units.
+ * Defines the limit of the time units.
  */
 sealed class Limits {
 	
