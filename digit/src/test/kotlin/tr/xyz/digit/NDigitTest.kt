@@ -28,9 +28,10 @@ class NDigitTest {
 	@Test
 	fun testNDigitNegativeOverflow() {
 		val digit = Digit.newDigit(0, 5, 0)
-		digit -= 1
-		val expected = 4
-		assertEquals(expected, digit.digitValue)
+		val digit2 = Digit.newDigit(0, 5, 1)
+		val result = digit - digit2
+		val expected = Digit.newDigit(4)
+		assertEquals(expected, result)
 	}
 	
 	@Test

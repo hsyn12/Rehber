@@ -49,6 +49,9 @@ class NDigit internal constructor(override val max: Int = Int.MAX_VALUE, overrid
 	}
 	
 	override fun toString(): String = "$digitValue"
+	
+	override fun equals(other: Any?): Boolean = other is Digit && digitValue == other.digitValue
+	override fun hashCode(): Int = digitValue
 }
 
 fun main() {

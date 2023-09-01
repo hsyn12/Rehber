@@ -2,7 +2,6 @@ package tr.xyz.timek.duration
 
 import androidx.annotation.IntRange
 import tr.xyz.timek.TimeMillis
-import kotlin.math.absoluteValue
 
 /**
  * Represents a duration of time with units (year, month, day, hour, minute, second, millisecond).
@@ -64,53 +63,46 @@ class TimeDurations(val value: Long = 0) {
 	constructor(value: String) : this(of(value))
 	
 	init {
+		require(value >= 0) {"Value must be non-negative : $value"}
 		
-		val isNegative = value < 0
 		var year = 0
 		var month = 0
 		var day = 0
 		var hour = 0
 		var minute = 0
 		var second = 0
-		var millisecond = 0
-		var _duration = value.absoluteValue
+		val millisecond: Int
+		var value = this.value
 		
 		while (true) {
 			
-			if (_duration >= TimeMillis.YEAR) {
-				year = (_duration / TimeMillis.YEAR).toInt()
-				if (isNegative) year = -year
-				_duration %= TimeMillis.YEAR
+			if (value >= TimeMillis.YEAR) {
+				year = (value / TimeMillis.YEAR).toInt()
+				value %= TimeMillis.YEAR
 			}
-			else if (_duration >= TimeMillis.MONTH) {
-				month = (_duration / TimeMillis.MONTH).toInt()
-				if (isNegative) month = -month
-				_duration %= TimeMillis.MONTH
+			else if (value >= TimeMillis.MONTH) {
+				month = (value / TimeMillis.MONTH).toInt()
+				value %= TimeMillis.MONTH
 			}
-			else if (_duration >= TimeMillis.DAY) {
-				day = (_duration / TimeMillis.DAY).toInt()
-				if (isNegative) day = -day
-				_duration %= TimeMillis.DAY
+			else if (value >= TimeMillis.DAY) {
+				day = (value / TimeMillis.DAY).toInt()
+				value %= TimeMillis.DAY
 			}
-			else if (_duration >= TimeMillis.HOUR) {
-				hour = (_duration / TimeMillis.HOUR).toInt()
-				if (isNegative) hour = -hour
-				_duration %= TimeMillis.HOUR
+			else if (value >= TimeMillis.HOUR) {
+				hour = (value / TimeMillis.HOUR).toInt()
+				value %= TimeMillis.HOUR
 			}
-			else if (_duration >= TimeMillis.MINUTE) {
+			else if (value >= TimeMillis.MINUTE) {
 				
-				minute = (_duration / TimeMillis.MINUTE).toInt()
-				if (isNegative) minute = -minute
-				_duration %= TimeMillis.MINUTE
+				minute = (value / TimeMillis.MINUTE).toInt()
+				value %= TimeMillis.MINUTE
 			}
-			else if (_duration >= TimeMillis.SECOND) {
-				second = (_duration / TimeMillis.SECOND).toInt()
-				if (isNegative) second = -second
-				_duration %= TimeMillis.SECOND
+			else if (value >= TimeMillis.SECOND) {
+				second = (value / TimeMillis.SECOND).toInt()
+				value %= TimeMillis.SECOND
 			}
 			else {
-				millisecond = _duration.toInt()
-				if (isNegative) millisecond = -millisecond
+				millisecond = value.toInt()
 				break
 			}
 		}

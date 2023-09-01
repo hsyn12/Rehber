@@ -32,4 +32,18 @@ class TimeDurationsTest {
 		// Assert
 		assertEquals(expected, result)
 	}
+	
+	@Test
+	fun testMinusOperatorWhenAddingTwoTimeDurationsForOverflowThenResultIsCorrect() {
+		// Arrange
+		val timeDuration1 = TimeDurations("0:0:0:2:2:2:2")
+		val timeDuration2 = TimeDurations("0:0:0:1:1:1:1")
+		val expected = TimeDurations("0:0:0:23:59:59:999")
+		
+		// Act
+		val result = timeDuration2 - timeDuration1
+		println("result: $result")
+		// Assert
+		assertEquals(expected, result)
+	}
 }
