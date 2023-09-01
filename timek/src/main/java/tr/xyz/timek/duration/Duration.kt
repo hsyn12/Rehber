@@ -83,9 +83,14 @@ class Duration(val value: Long, val unit: TimeUnit) {
 	// endregion
 	
 	// region private class ValueConvertor(private val unit: TimeUnit) {
+	/**
+	 * A utility class for converting durations between different time units.
+	 *
+	 * @property unit The target time unit for conversion.
+	 */
 	private class ValueConvertor(private val unit: TimeUnit) {
-		@Suppress("NOTHING_TO_INLINE")
-		inline operator fun getValue(ref: Duration, property: KProperty<*>): Long = when (unit) {
+		
+		operator fun getValue(ref: Duration, property: KProperty<*>): Long = when (unit) {
 			
 			TimeUnit.MILLISECOND -> when (ref.unit) {
 				TimeUnit.MILLISECOND -> ref.value
@@ -157,13 +162,6 @@ class Duration(val value: Long, val unit: TimeUnit) {
 				TimeUnit.YEAR        -> ref.value
 			}
 		}
-	}
-	// endregion
-	
-	// region private class UnitConvertor(private val unit: TimeUnit) {
-	private class UnitConvertor(val unit: TimeUnit) {
-		@Suppress("NOTHING_TO_INLINE")
-		inline operator fun getValue(ref: Duration, property: KProperty<*>): Duration = ref to unit
 	}
 	// endregion
 	
