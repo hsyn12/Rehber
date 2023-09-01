@@ -3,6 +3,7 @@
 package tr.xyz.timek
 
 import tr.xyz.timek.duration.Duration
+import tr.xyz.timek.duration.TimeDurations
 import tr.xyz.timek.duration.dDuration
 import tr.xyz.timek.duration.days
 import tr.xyz.timek.duration.hours
@@ -53,6 +54,10 @@ class Time(val millis: Long = currentTimeMillis) {
 	 * @return formatted time string
 	 */
 	fun toString(pattern: String) = toString(millis, pattern)
+	/**
+	 * Converts the [Time] object into a [TimeDurations] object.
+	 */
+	val toTimeDurations: TimeDurations get() = TimeDurations(millis)
 	
 	companion object {
 		

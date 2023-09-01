@@ -157,6 +157,7 @@ class TimeDurations(val value: Long = 0) {
 	fun toStringNonZero(): String = toString(*nonZeroUnits.toTypedArray())
 	
 	operator fun compareTo(other: TimeDurations): Int = value.compareTo(other.value)
+	
 	operator fun compareTo(other: Long): Int = value.compareTo(other)
 	
 	operator fun plusAssign(duration: TimeDuration) {
@@ -182,6 +183,35 @@ class TimeDurations(val value: Long = 0) {
 			TimeUnit.MILLISECOND -> millisecond -= duration
 		}
 	}
+	
+	operator fun plus(duration: TimeDurations): TimeDurations {
+		
+		return builder()
+			.years((year + duration.year).value.digitValue)
+			.months((month + duration.month).value.digitValue)
+			.days((day + duration.day).value.digitValue)
+			.hours((hour + duration.hour).value.digitValue)
+			.minutes((minute + duration.minute).value.digitValue)
+			.seconds((second + duration.second).value.digitValue)
+			.milliseconds((millisecond + duration.millisecond).value.digitValue)
+			.build()
+	}
+	
+	operator fun minus(duration: TimeDurations): TimeDurations {
+		
+		return builder()
+			.years((year - duration.year).value.digitValue)
+			.months((month - duration.month).value.digitValue)
+			.days((day - duration.day).value.digitValue)
+			.hours((hour - duration.hour).value.digitValue)
+			.minutes((minute - duration.minute).value.digitValue)
+			.seconds((second - duration.second).value.digitValue)
+			.milliseconds((millisecond - duration.millisecond).value.digitValue)
+			.build()
+	}
+	
+	override fun equals(other: Any?): Boolean = other is TimeDurations && value == other.value
+	override fun hashCode(): Int = value.hashCode()
 	
 	companion object {
 		
@@ -285,6 +315,7 @@ class TimeDurations(val value: Long = 0) {
 		fun builder(): TimeDurationBuilder = TimeDurationBuilder()
 		
 	}
+	
 	/**
 	 * Time durations builder.
 	 *
@@ -392,12 +423,4 @@ class TimeDurations(val value: Long = 0) {
 		 */
 		fun build(): TimeDurations = TimeDurations("$year:$month:$day:$hour:$minute:$second:$millisecond")
 	}
-}
-
-fun main() {
-	val timeDuration = TimeDurations.builder()
-		.milliseconds(1)
-		.seconds(59)
-		.build()
-	println(timeDuration.toStringNonZero())
 }
