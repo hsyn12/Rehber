@@ -33,7 +33,7 @@ class TimeDuration(value: Int, val unit: TimeUnit) {
 	/**
 	 * [Digit] object that represents the duration
 	 */
-	var value: Digit = Digit.newDigit(0, Limits.maxOf(unit) + 1)
+	var value: Digit = Digit(0, 0, Limits.maxOf(unit))
 	
 	/**
 	 * Indicates if the duration is not zero

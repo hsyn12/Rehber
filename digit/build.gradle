@@ -10,4 +10,7 @@ java {
 
 dependencies {
 	testImplementation 'junit:junit:4.13.2'
+	implementation project(path: ':keext')
+	implementation project(path: ':kiext')
+	implementation "androidx.annotation:annotation:${rootProject.androidx_annotation}"
 }
