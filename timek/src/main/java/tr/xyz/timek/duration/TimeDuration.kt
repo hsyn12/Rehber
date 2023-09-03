@@ -314,5 +314,33 @@ class TimeDuration(value: Int, val unit: TimeUnit) {
 		 * Returns a new [TimeDuration] with the value in years.
 		 */
 		infix fun years(@IntRange(from = 0, to = 1_000_000) value: Int): TimeDuration = TimeDuration(value, TimeUnit.YEAR)
+		
+		/**
+		 * Formats the given [milliseconds] into a string in form of "`02:14:25:45`" (day,hour,
+		 * minute, second).
+		 *
+		 * @param milliseconds milliseconds. It must be positive, otherwise an exception will be
+		 *     thrown
+		 * @return formatted string
+		 */
+		fun formatMilliseconds(milliseconds: Long): String {
+			
+			if (milliseconds < 0) throw IllegalArgumentException("Milliseconds must be positive")
+			val day: Long = milliseconds / TimeMillis.DAY
+			val hour: Long = milliseconds % TimeMillis.DAY / TimeMillis.HOUR
+			val minute: Long = milliseconds % TimeMillis.DAY % TimeMillis.HOUR / TimeMillis.MINUTE
+			val second: Long = milliseconds % TimeMillis.DAY % TimeMillis.HOUR % TimeMillis.MINUTE / TimeMillis.SECOND
+			return if (day == 0L) if (hour == 0L) "%02d:%02d".format(minute, second) else "%02d:%02d:%02d".format(hour, minute, second) else "%02d:%02d:%02d:%02d".format(day, hour, minute, second)
+		}
+		
+		/**
+		 * Formats the given [seconds] into a string in form of "`02:14:25:45`" (day,hour, minute,
+		 * second).
+		 *
+		 * @param seconds seconds. It must be positive, otherwise an exception will be thrown.
+		 * @return formatted string
+		 */
+		fun formatSeconds(seconds: Int): String = formatMilliseconds(seconds * TimeMillis.SECOND)
+		
 	}
 }

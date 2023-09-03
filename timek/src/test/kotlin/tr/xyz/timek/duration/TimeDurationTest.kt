@@ -222,4 +222,44 @@ class TimeDurationTest {
 		Assert.assertTrue(result.durations.contains(duration1))
 		Assert.assertTrue(result.durations.contains(duration2))
 	}
+	
+	@Test
+	fun testFormatMillisecondsWithDifferentInputs() {
+		// Arrange
+		val inputOutputPairs = mapOf(
+			0L to "00:00",
+			60000L to "01:00",
+			3600000L to "01:00:00",
+			86400000L to "01:00:00:00",
+			90061000L to "01:01:01:01",
+		)
+		
+		// Act and Assert
+		for ((input, expectedOutput) in inputOutputPairs) {
+			val actualOutput = TimeDuration.formatMilliseconds(input)
+			Assert.assertEquals(expectedOutput, actualOutput)
+		}
+	}
+	
+	@Test
+	fun testFormatMillisecondsWithZeroMilliseconds() {
+		// Arrange
+		val milliseconds = 0L
+		val expected = "00:00"
+		
+		// Act
+		val actual = TimeDuration.formatMilliseconds(milliseconds)
+		
+		// Assert
+		Assert.assertEquals(expected, actual)
+	}
+	
+	@Test(expected = IllegalArgumentException::class)
+	fun testFormatMillisecondsWithNegativeMilliseconds() {
+		// Arrange
+		val milliseconds = -1L
+		
+		// Act
+		val actual = TimeDuration.formatMilliseconds(milliseconds)
+	}
 }
