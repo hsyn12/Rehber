@@ -42,7 +42,35 @@ class TimeDurationsTest {
 		
 		// Act
 		val result = timeDuration2 - timeDuration1
-		println("result: $result")
+		
+		// Assert
+		assertEquals(expected, result)
+	}
+	
+	@Test
+	fun testWithWhenTimeDurationIsNonZeroThenReturnsIncreasedTimeDurations() {
+		// Arrange
+		val timeDurations = TimeDurations("0:0:0:5:5:5:5")
+		val timeDuration = TimeDuration.minutes(5)
+		val expected = TimeDurations("0:0:0:5:10:5:5")
+		
+		// Act
+		val result = timeDurations with timeDuration
+		
+		// Assert
+		assertEquals(expected, result)
+	}
+	
+	@Test
+	fun testWithWhenTimeDurationIsZeroThenReturnsSameTimeDurations() {
+		// Arrange
+		val timeDurations = TimeDurations("0:0:0:5:5:5:5")
+		val timeDuration = TimeDuration.minutes(0)
+		val expected = TimeDurations("0:0:0:5:5:5:5")
+		
+		// Act
+		val result = timeDurations with timeDuration
+		
 		// Assert
 		assertEquals(expected, result)
 	}

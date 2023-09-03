@@ -205,6 +205,14 @@ class TimeDurations(val value: Long = 0) {
 	override fun equals(other: Any?): Boolean = other is TimeDurations && value == other.value
 	override fun hashCode(): Int = value.hashCode()
 	
+	/**
+	 * Adds the given [TimeDuration] to this [TimeDurations].
+	 *
+	 * @param duration [TimeDuration] to add
+	 * @return new [TimeDurations] with the given [TimeDuration] added
+	 */
+	infix fun with(duration: TimeDuration): TimeDurations = TimeDurations(value + duration.toMilliseconds)
+	
 	companion object {
 		
 		/**

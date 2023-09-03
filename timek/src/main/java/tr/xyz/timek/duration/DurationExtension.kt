@@ -6,6 +6,7 @@ package tr.xyz.timek.duration
  * The object that indicates the [Duration].
  */
 object dDuration
+
 /**
  * The object that indicates the [TimeDuration].
  */
@@ -240,13 +241,6 @@ infix fun Long.months        (duration: dDuration)      : Duration     = Duratio
 infix fun Long.years         (duration: dDuration)      : Duration     = Duration years this 
 //@on
 
-
-fun main() {
-	val duration = 45 seconds tDuration with (1 minutes tDuration)
-	val duration2 = 1 minutes tDuration
-	
-	println(duration.toStringNonZero())
-}
 
 
 

@@ -8,6 +8,7 @@ dependencies {
 	implementation project(path: ':kandom')
 	implementation project(path: ':digit')
 	implementation project(path: ':keext')
+	implementation project(path: ':klext')
 	
 	implementation "androidx.annotation:annotation:${rootProject.androidx_annotation}"
 	testImplementation 'junit:junit:4.13.2'

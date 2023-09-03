@@ -10,7 +10,7 @@ sealed class Limits {
 		/**
 		 * The limit of the year.
 		 */
-		const val YEAR        = 999999999
+		const val YEAR        = 1_000_000
 		/**
 		 * The limit of the month.
 		 */

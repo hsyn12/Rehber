@@ -2,7 +2,9 @@ package tr.xyz.timek.duration
 
 import androidx.annotation.IntRange
 import tr.xyz.digit.Digit
+import tr.xyz.klext.then
 import tr.xyz.timek.TimeMillis
+import java.util.*
 
 /**
  * Provides to define a duration of time with one unit (year, month, day, hour, minute, second,
@@ -113,10 +115,10 @@ class TimeDuration(value: Int, val unit: TimeUnit) {
 	 *
 	 * Remember, [TimeDuration] always has a limit and certainly cannot exceed the limit. This method
 	 * is for the time durations that never cause overflow. If you need to add durations that can
-	 * cause overflow, use [plusAssign] and set the [Digit.left] to observe the positive overflow or
-	 * set the [Digit.right] to observe the negative overflow. Or set the both. Because of the not
-	 * returning a new [TimeDuration], the overflow will be observable. While [TimeDuration] uses the
-	 * [Digit] to represent the value, the all is done with that.
+	 * cause overflow, use [plusAssign] and set the [Digit.left] to observe the positive overflow
+	 * or set the [Digit.right] to observe the negative overflow. Or set the both. In this way
+	 * because of the not returning a new [TimeDuration], the overflow will be observable. While
+	 * [TimeDuration] uses the [Digit] to represent the value, the all is done with that.
 	 *
 	 * ```
 	 *
@@ -131,10 +133,7 @@ class TimeDuration(value: Int, val unit: TimeUnit) {
 	 * @param other [TimeDuration] to add
 	 * @return new [TimeDuration]
 	 */
-	operator fun plus(other: TimeDuration): TimeDuration {
-		checkUnit(other.unit)
-		return TimeDuration(value.digitValue + other.value.digitValue, unit)
-	}
+	operator fun plus(other: TimeDuration): TimeDuration = checkUnit(other.unit) then {TimeDuration(value.digitValue + other.value.digitValue, unit)}
 	
 	/**
 	 * Returns a new [TimeDuration] with the value subtracted. This operation will not be caused to
@@ -172,10 +171,7 @@ class TimeDuration(value: Int, val unit: TimeUnit) {
 	 * @param other [TimeDuration] to subtract
 	 * @return new [TimeDuration]
 	 */
-	operator fun minus(other: TimeDuration): TimeDuration {
-		checkUnit(other.unit)
-		return TimeDuration(value.digitValue - other.value.digitValue, unit)
-	}
+	operator fun minus(other: TimeDuration): TimeDuration = checkUnit(other.unit) then {TimeDuration(value.digitValue - other.value.digitValue, unit)}
 	
 	/**
 	 * Adds another [TimeDuration] to this duration. This operation will be caused to change the
@@ -208,10 +204,7 @@ class TimeDuration(value: Int, val unit: TimeUnit) {
 	 *
 	 * @param other TimeDuration
 	 */
-	operator fun plusAssign(other: TimeDuration) {
-		checkUnit(other.unit)
-		value.plusAssign(other.value)
-	}
+	operator fun plusAssign(other: TimeDuration) = checkUnit(other.unit) then {value.plusAssign(other.value)}
 	
 	/**
 	 * Subtracts another [TimeDuration] from this duration. This operation will be caused to change
@@ -238,9 +231,7 @@ class TimeDuration(value: Int, val unit: TimeUnit) {
 	 * @param other value to subtract
 	 * @see Limits
 	 */
-	operator fun plusAssign(other: Int) {
-		value.plusAssign(other)
-	}
+	operator fun plusAssign(other: Int) = value.plusAssign(other)
 	
 	/**
 	 * Subtracts another [TimeDuration] from this duration. This operation will be caused to change
@@ -253,9 +244,7 @@ class TimeDuration(value: Int, val unit: TimeUnit) {
 	 *
 	 * @param other TimeDuration
 	 */
-	operator fun minusAssign(other: TimeDuration) {
-		value.minusAssign(other.value)
-	}
+	operator fun minusAssign(other: TimeDuration) = checkUnit(other.unit) then {value.minusAssign(other.value)}
 	
 	/**
 	 * Subtracts another [Int] from this duration. This operation will be caused to change the value
@@ -274,7 +263,15 @@ class TimeDuration(value: Int, val unit: TimeUnit) {
 	 * unit` (for example `1 hours`).
 	 */
 	override fun toString(): String = "$value $unit"
+	override fun equals(other: Any?): Boolean = other is TimeDuration && value == other.value && unit == other.unit
+	override fun hashCode(): Int = Objects.hash(value, unit)
 	
+	/**
+	 * Couples with the given [TimeDuration] and returns a new [TimeDurations].
+	 *
+	 * @param tDuration [TimeDuration] to couple
+	 * @return new [TimeDurations] consisting of this and the given [TimeDuration]
+	 */
 	infix fun with(tDuration: TimeDuration): TimeDurations = TimeDurations(this, tDuration)
 	
 	companion object {
@@ -316,6 +313,6 @@ class TimeDuration(value: Int, val unit: TimeUnit) {
 		/**
 		 * Returns a new [TimeDuration] with the value in years.
 		 */
-		infix fun years(@IntRange(from = 0, to = 999_999_999) value: Int): TimeDuration = TimeDuration(value, TimeUnit.YEAR)
+		infix fun years(@IntRange(from = 0, to = 1_000_000) value: Int): TimeDuration = TimeDuration(value, TimeUnit.YEAR)
 	}
 }
