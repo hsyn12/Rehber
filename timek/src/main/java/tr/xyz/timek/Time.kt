@@ -11,6 +11,8 @@ import tr.xyz.timek.duration.minutes
 import tr.xyz.timek.duration.months
 import tr.xyz.timek.duration.seconds
 import tr.xyz.timek.duration.years
+import tr.xyz.timek.extensions.localDateTime
+import tr.xyz.timek.extensions.milliseconds
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -34,6 +36,7 @@ class Time(val millis: Long = currentTimeMillis) {
 	operator fun compareTo(time: Long): Int = millis.compareTo(time)
 	operator fun contains(time: Time): Boolean = millis >= time.millis
 	operator fun contains(time: Long): Boolean = millis >= time
+	
 	/**
 	 * Creates a new time point.
 	 *
@@ -45,15 +48,18 @@ class Time(val millis: Long = currentTimeMillis) {
 	 * @constructor Creates a new time point.
 	 */
 	constructor(year: Int = 0, month: Int = 1, day: Int = 1, hour: Int = 0, minute: Int = 0) : this(LocalDateTime.of(year, month, day, hour, minute).toEpochSecond(ZoneOffset.UTC) * 1000)
+	
 	/**
 	 * @return formatted time string with default pattern [DEFAULT_DATE_TIME_PATTERN]
 	 */
 	override fun toString() = toString(DEFAULT_DATE_TIME_PATTERN)
+	
 	/**
 	 * @param pattern pattern
 	 * @return formatted time string
 	 */
 	fun toString(pattern: String) = toString(millis, pattern)
+	
 	/**
 	 * Converts the [Time] object into a [TimeDurations] object.
 	 */
@@ -133,8 +139,9 @@ class Time(val millis: Long = currentTimeMillis) {
 		 * @see [DEFAULT_DATE_TIME_PATTERN]
 		 */
 		fun toString(time: Long, pattern: String = DEFAULT_DATE_TIME_PATTERN): String = LocalDateTime.ofInstant(Instant.ofEpochMilli(time), ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(pattern));
+		
 		/**
-		 * Returns the duration with biggest time unit between now and the given time point.
+		 * Returns the duration with the biggest time unit between `now` and the given time point.
 		 *
 		 * @param time time point to compare to the now
 		 * @return [Duration]
@@ -142,9 +149,9 @@ class Time(val millis: Long = currentTimeMillis) {
 		fun howLongBefore(time: Long): Duration {
 			
 			val now: LocalDateTime = LocalDateTime.now()
-			val date: LocalDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(time), DEFAULT_ZONE_OFFSET)
+			val date: LocalDateTime = time.localDateTime
 			
-			require(date.isBefore(now)) {"The time must be before now"}
+			require(date.isBefore(now)) {"The time must be before now : ${now.milliseconds} - $time = ${now.milliseconds - time}ms"}
 			
 			val year = now.year - date.year
 			if (year >= 1) return year years dDuration
